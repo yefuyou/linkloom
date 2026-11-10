@@ -101,7 +101,7 @@ def test_routing_wire_still_accepts_valid_tools_with_text(content):
     from linkloom.ui.structured_router import route_payload
     from tests.unit.test_structured_router import context
     fields = dict(decision='ROUTE', operation='READ', intent='CURRENT', candidate_id='c0',
-                  mentions=['联调报告'], unresolved_names=[], time_id='none', reason_code='NONE')
+                  mentions=['联调报告'], unresolved_names=[], time_text='', time_role='NONE', reason_code='NONE')
     def message(arguments):
         return dict(content=content, tool_calls=[dict(type='function', function=dict(
             name='submit_route', arguments=arguments))])

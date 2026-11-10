@@ -197,7 +197,7 @@ def test_strict_deepseek_wire_call_is_one_proposal_with_only_offered_ids():
             assert tool['parameters']['properties']['candidate_id']['enum'] == ['', 'c0']
             fields = dict(decision='CLARIFY', operation='READ', intent='AS_OF', candidate_id='c0',
                           mentions=['not in original', '联调报告'], unresolved_names=[],
-                          time_id='point', reason_code='NONE')
+                          time_text='2026-10-07', time_role='AS_OF', reason_code='NONE')
             response = {'model': CONFIG['model_id'], 'choices': [{'finish_reason': 'tool_calls', 'message': {
                 'content': None, 'tool_calls': [{'type': 'function', 'function': {
                     'name': 'submit_route', 'arguments': json.dumps(fields)}}]}}]}
@@ -287,7 +287,7 @@ def test_native_tool_operation_and_reason_are_both_terminal_safety_signals(opera
     from linkloom.ui.structured_router import route_payload,route_with_adapter
     ctx=context('请处理素材卡片')
     args=dict(decision='CLARIFY',operation=operation,intent='OTHER',candidate_id='',
-              mentions=[],unresolved_names=[],time_id='none',reason_code=reason)
+              mentions=[],unresolved_names=[],time_text='',time_role='NONE',reason_code=reason)
     message=dict(content=None,tool_calls=[dict(type='function',function=dict(name='submit_route',arguments=json.dumps(args)))])
     raw=_route_text(message,route_payload(ctx))
     adapter=SimpleNamespace(complete=lambda _:ModelResponse(action=ModelAction.final(raw)))

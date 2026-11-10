@@ -45,24 +45,11 @@ def get_slot_embedder() -> Any:
 
 _RELATION_VERBS = frozenset("uses use has have is are of the a an".split())
 
-_RELATIVE_DATE = re.compile(
-    r"(?:上|下|本|这|前|后)(?:个)?(?:月|周|年|季度|星期)|去年|今年|明年|"
-    r"昨天|前天|今天|明天|后天|当时|以前|之前|过去|至今|迄今|早上|上午|下午|晚上|点|时|"
-    r"\b(last|previous|this|next|past)\s+(month|year|week|quarter)|"
-    r"\b(today|yesterday|tomorrow|tonight|ago|then|before|after|during)\b|"
-    r"\b(january|february|march|april|may|june|july|august|september|october|november|december)\b|"
-    r"\b(jan|feb|mar|apr|jun|jul|aug|sep|sept|oct|nov|dec)\b|"
-    r"\d{4}年|\d{1,2}月|\b\d{4}-\d{2}(?!-\d{2})\b|\b\d{4}\b|\bq[1-4]\b",
-    re.IGNORECASE,
-)
-_VAGUE_RECENCY = re.compile(r"最近|近期|\b(?:recently|lately)\b", re.I)
+# Exact date formats only. The host does not guess whether other wording is a time expression;
+# the router model quotes it and the host locates the quote (structured_router.resolve_time_text).
 _ISO_TIMESTAMP = re.compile(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?(?:Z|[+-]\d{2}:\d{2})?", re.IGNORECASE)
 _ISO_DATE = re.compile(r"(?<!\d)\d{4}-\d{2}-\d{2}(?!\d)")
 _CHINESE_DATE = re.compile(r"(\d{4})\s*年\s*(\d{1,2})\s*月\s*(\d{1,2})\s*[日号]")
-_DATE_RANGE = re.compile(
-    r"\b(between|since|until)\b|\b(before|after|from)\s+\d|"
-    r"\b(to|and|through|until)\s+(now|today|present)\b|"
-    r"从.*\d.*(?:到|至)|\d.*(?:到|至).*\d|至今|迄今|到现在|到今天", re.IGNORECASE)
 
 
 
@@ -112,8 +99,7 @@ def _unexplained_terms(query: str, matched_phrases: list[str]) -> list[str]:
 
 
 def _without_dates(query: str) -> str:
-    return _VAGUE_RECENCY.sub(" ", _RELATIVE_DATE.sub(" ", _CHINESE_DATE.sub(" ", _ISO_DATE.sub(" ",
-        _ISO_TIMESTAMP.sub(" ", query))))).strip(" ,，:：")
+    return _CHINESE_DATE.sub(" ", _ISO_DATE.sub(" ", _ISO_TIMESTAMP.sub(" ", query))).strip(" ,，:：")
 
 
 # Closed grammatical reference forms, not a vocabulary of workspace topics.
@@ -493,7 +479,7 @@ def entity_check(query: str, snapshot: WorkspaceSnapshot) -> dict[str, Any]:
     # Only remove a leading time expression for legacy grammatical frames.
     # General entity scanning below always receives the original text. Never
     # delete loose time characters (e.g. 时) from a registered name.
-    for pattern in (_ISO_TIMESTAMP, _ISO_DATE, _CHINESE_DATE, _RELATIVE_DATE):
+    for pattern in (_ISO_TIMESTAMP, _ISO_DATE, _CHINESE_DATE):
         match = pattern.match(query)
         if match and len(match[0]) > 1 and not any(a == 0 for a, _ in _name_spans(query, names)):
             query = query[match.end():].lstrip(" ,，:：")
@@ -631,9 +617,12 @@ def discover_scope(query: str, slots: list[dict[str, Any]], resolver: FrozenRela
 
 
 def resolve_query_date(query: str, selected: object) -> tuple[str | None, dict[str, str] | None]:
-    """Resolve exact dates only; as_of is a point, never an invented month day."""
+    """Resolve exact dates only; as_of is a point, never an invented month day.
+
+    Only date formats are checked here. Relative periods and ranges are not recognised by the host.
+    """
     clarification = {"code": "DATE_SCOPE_REQUIRED",
-                     "message": "Choose one exact valid-time date (00:00 UTC). Relative periods, ranges and conflicting dates need clarification."}
+                     "message": "Choose one exact valid-time date (00:00 UTC). Incomplete and conflicting dates need clarification."}
     try:
         timestamp = _parse_as_of(selected)
         timestamps = _ISO_TIMESTAMP.findall(query)
@@ -645,17 +634,10 @@ def resolve_query_date(query: str, selected: object) -> tuple[str | None, dict[s
         distinct = {_parse_as_of(point) for point in points}
         mismatch = bool(timestamp and ((timestamps and timestamp not in distinct)
                         or (dates and any(timestamp.date().isoformat() != day for day in dates))))
-        if len(distinct) > 1 or mismatch or (_DATE_RANGE.search(query) and (points or _RELATIVE_DATE.search(query))):
+        if len(distinct) > 1 or mismatch:
             return None, clarification
         if timestamp:
             return str(selected), None
-        if distinct:
-            remainder = _CHINESE_DATE.sub(" ", _ISO_DATE.sub(" ", without_times))
-            if _RELATIVE_DATE.search(remainder):
-                return None, clarification
-            return points[0], None
-        if _RELATIVE_DATE.search(query):
-            return None, clarification
-        return None, None
+        return (points[0], None) if distinct else (None, None)
     except ProductApplicationError as error:
         return None, {"code": error.code, "message": str(error)}

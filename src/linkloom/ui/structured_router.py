@@ -38,8 +38,10 @@ including an unconfirmed slot; the host will return NO_CONFIRMED_RECORD. Never s
 Copy the shortest exact names of the requested root and its qualifiers, preferably from matched_terms. Keep a named
 object even if unmatched. Do not copy surrounding grammatical words. In a quoted statement, a proposed field value
 is not the root. Use the host default only for first-person references. Never substitute similar objects.
-Choose one supplied time ID: none for present state, unresolved if unusable, point for state at a date,
-or a meeting ID for a meeting. Report unmatched named objects in unresolved_names as exact question text.
+Copy the question's own time expression exactly into time_text; leave it empty if the question states no time.
+time_role: NONE without a time, AS_OF for state at one exact date, MEETING_DATE for a meeting on a date, RANGE for
+a period or an open-ended before/after, UNRESOLVED for a relative or vague time. Names and identifiers are not time.
+Report unmatched named objects in unresolved_names as exact question text.
 Mentions are optional hints. Omit terms you cannot copy exactly.
 If there is no candidate for an explicitly named object use ENTITY_NOT_FOUND. Ambiguity uses ENTITY_AMBIGUOUS.
 TIME_SCOPE_UNRESOLVED means a valid supported time is missing. NO_CONFIRMED_RECORD means the object lacks confirmation.
@@ -147,6 +149,33 @@ def routing_domain(candidate_domain, intent):
     return candidate_domain
 
 
+def resolve_time_text(context, text, role):
+    """Locate the model's quoted time text in the question; only exact date formats become a time reference.
+
+    The model decides whether wording is a time expression and which role it has. The host never guesses
+    that: it rejects text that is not in the question, and maps a quoted time to one of its own lexed date
+    options when the quote contains one. Any other real time expression stays UNRESOLVED.
+    """
+    if not isinstance(text, str) or len(text) > 160 or role not in TIME_ROLES:
+        raise RouterInvalid("ROUTER_SCHEMA_INVALID")
+    if not text.strip():
+        if role == "NONE":
+            return [], "NONE"
+        if role == "AS_OF" and context.required_as_of == "point":
+            return ["point"], "AS_OF"  # The date was selected outside the question text.
+        raise RouterInvalid("TIME_TEXT_NOT_LITERAL")
+    found = mention_spans(context.query, text)
+    if not found:
+        raise RouterInvalid("TIME_TEXT_NOT_LITERAL")
+    if role in {"NONE", "UNRESOLVED"}:
+        return [], role
+    start, end = found[0]
+    inside = [key for key, option in context.time_options.items() if option.role == role
+              and (option.spans or key == context.required_as_of)
+              and all(start <= a and b <= end for a, b in option.spans)]
+    return ([inside[0]], role) if len(inside) == 1 else ([], "UNRESOLVED")
+
+
 def validate_output(raw, context, *, offered=None):
     if not isinstance(raw, str) or len(raw.encode("utf8")) > CONFIG["max_response_bytes"]:
         raise RouterInvalid("ROUTER_SCHEMA_INVALID")
@@ -154,10 +183,15 @@ def validate_output(raw, context, *, offered=None):
         data = json.loads(raw, object_pairs_hook=_unique_object, parse_constant=_reject_constant)
     except (ValueError, RecursionError) as exc:
         raise RouterInvalid("ROUTER_SCHEMA_INVALID") from exc
-    soft = isinstance(data, dict) and data.get("schema_version") == "router/v3"
+    quoted = isinstance(data, dict) and data.get("schema_version") == "router/v4"
+    soft = quoted or isinstance(data, dict) and data.get("schema_version") == "router/v3"
     fields = FIELDS | {"unresolved_names"} if soft else FIELDS
-    if not isinstance(data, dict) or set(data) != fields or data["schema_version"] not in {"router/v2", "router/v3"}:
+    if quoted:
+        fields = fields - {"time_ref_ids"} | {"time_text"}
+    if not isinstance(data, dict) or set(data) != fields or data["schema_version"] not in {"router/v2", "router/v3", "router/v4"}:
         raise RouterInvalid("ROUTER_SCHEMA_INVALID")
+    if quoted:
+        data["time_ref_ids"], data["time_role"] = resolve_time_text(context, data.pop("time_text"), data["time_role"])
     unresolved = data.get("unresolved_names", [])
     if (not isinstance(unresolved, list) or len(unresolved) > 8
             or any(not isinstance(value, str) or len(value) > 160 for value in unresolved)):
@@ -228,7 +262,10 @@ def validate_output(raw, context, *, offered=None):
         raise RouterInvalid("TIME_CONFLICT")
     if any(context.time_options[key].role != role for key in refs):
         raise RouterInvalid("TIME_CONFLICT")
-    if decision == "ROUTE" and (intent == "AS_OF") != (role == "AS_OF") and intent in {"CURRENT", "AS_OF"}:
+    # A quoted time the host cannot turn into an exact date is refused at admission
+    # (TIME_SCOPE_UNRESOLVED), whatever intent the model paired with it.
+    unusable = quoted and role in {"RANGE", "UNRESOLVED"}
+    if decision == "ROUTE" and (intent == "AS_OF") != (role == "AS_OF") and intent in {"CURRENT", "AS_OF"} and not unusable:
         raise RouterInvalid("TIME_CONFLICT")
     if decision == "ROUTE" and context.required_as_of and (role != "AS_OF" or refs != (context.required_as_of,)):
         raise RouterInvalid("TIME_CONFLICT")
@@ -253,7 +290,6 @@ def validate_output(raw, context, *, offered=None):
 
 def route_payload(context):
     data = context.public()
-    data["time_options"] += [{"id": "none", "role": "NONE"}, {"id": "unresolved", "role": "UNRESOLVED"}]
     # Exact mention hits precede weaker recall; retrieval order breaks ties.
     ranked = sorted(data["candidates"], key=lambda row: not row["matched_terms"])
     data["candidates"] = []
