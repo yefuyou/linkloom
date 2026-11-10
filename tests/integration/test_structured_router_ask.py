@@ -180,6 +180,38 @@ def test_cascade_runs_rules_first_and_does_not_send_unknown_names(decisions):
     assert not model.requests
 
 
+def quoted(data, time_text, time_role, intent):
+    supplier = next(c for c in data['candidates'] if 'uses supplier' in c['label'])
+    fields = output(schema_version='router/v4', domain='DECISION', intent=intent, candidate_ids=[supplier['id']],
+                    mentions=['supplier'], unresolved_names=[], time_text=time_text, time_role=time_role)
+    del fields['time_ref_ids']
+    return fields
+
+
+def test_cascade_hands_every_exact_date_to_the_model_which_judges_point_or_range(decisions):
+    workspace = decisions.app._workspace_id()
+    def service(reply):
+        model = ScriptedRouter(reply)
+        return model, UnifiedAskService(decisions.app, lambda: None, graph_service=False,
+                                        router_provider=RouterProvider(model, mode='cascade'), slot_embedder=None)
+    open_ended = 'What supplier did Launch use 2026-10-01 to now?'
+    model, ask = service(lambda data: quoted(data, '2026-10-01 to now', 'RANGE', 'CURRENT'))
+    result, status = ask.ask(dict(query=open_ended, workspace_id=workspace))
+    assert status == 200 and len(model.requests) == 1 and result['status'] == 'NEEDS_SCOPE'
+    assert result['router']['reason_code'] == 'TIME_SCOPE_UNRESOLVED' and result['router']['source'] == 'llm'
+    assert not result['evidence'] and not result['conclusions'] and not result['scope'].get('as_of')
+    # A plain date goes to the model too; quoted as a point it becomes the as-of date.
+    model, ask = service(lambda data: quoted(data, '2026-10-01', 'AS_OF', 'AS_OF'))
+    result, status = ask.ask(dict(query='What supplier did Launch use on 2026-10-01?', workspace_id=workspace))
+    assert status == 200 and len(model.requests) == 1
+    assert result['router']['time_role'] == 'AS_OF' and result['router']['source'] == 'llm'
+    # Model unusable: the rules fallback clarifies and never turns the range into 2026-10-01.
+    model, ask = service(lambda _: 'not JSON')
+    result, status = ask.ask(dict(query=open_ended, workspace_id=workspace))
+    assert status == 200 and len(model.requests) == 1 and result['router']['source'] == 'rule'
+    assert result['error']['code'] == 'DATE_SCOPE_REQUIRED' and not result['conclusions']
+
+
 @pytest.mark.parametrize('query,reason', [
     ('What supplier does Juniper use?', 'WORKSPACE_DENIED'),
     ('What supplier does Cedar use?', 'NO_CONFIRMED_RECORD'),

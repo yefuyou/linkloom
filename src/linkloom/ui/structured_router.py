@@ -160,20 +160,20 @@ def resolve_time_text(context, text, role):
         raise RouterInvalid("ROUTER_SCHEMA_INVALID")
     if not text.strip():
         if role == "NONE":
-            return [], "NONE"
+            return [], "NONE", None
         if role == "AS_OF" and context.required_as_of == "point":
-            return ["point"], "AS_OF"  # The date was selected outside the question text.
+            return ["point"], "AS_OF", None  # The date was selected outside the question text.
         raise RouterInvalid("TIME_TEXT_NOT_LITERAL")
     found = mention_spans(context.query, text)
     if not found:
         raise RouterInvalid("TIME_TEXT_NOT_LITERAL")
-    if role in {"NONE", "UNRESOLVED"}:
-        return [], role
     start, end = found[0]
+    if role in {"NONE", "UNRESOLVED"}:
+        return [], role, (start, end)
     inside = [key for key, option in context.time_options.items() if option.role == role
               and (option.spans or key == context.required_as_of)
               and all(start <= a and b <= end for a, b in option.spans)]
-    return ([inside[0]], role) if len(inside) == 1 else ([], "UNRESOLVED")
+    return ([inside[0]], role, (start, end)) if len(inside) == 1 else ([], "UNRESOLVED", (start, end))
 
 
 def validate_output(raw, context, *, offered=None):
@@ -190,8 +190,10 @@ def validate_output(raw, context, *, offered=None):
         fields = fields - {"time_ref_ids"} | {"time_text"}
     if not isinstance(data, dict) or set(data) != fields or data["schema_version"] not in {"router/v2", "router/v3", "router/v4"}:
         raise RouterInvalid("ROUTER_SCHEMA_INVALID")
+    quote = None
     if quoted:
-        data["time_ref_ids"], data["time_role"] = resolve_time_text(context, data.pop("time_text"), data["time_role"])
+        data["time_ref_ids"], data["time_role"], quote = resolve_time_text(
+            context, data.pop("time_text"), data["time_role"])
     unresolved = data.get("unresolved_names", [])
     if (not isinstance(unresolved, list) or len(unresolved) > 8
             or any(not isinstance(value, str) or len(value) > 160 for value in unresolved)):
@@ -283,6 +285,9 @@ def validate_output(raw, context, *, offered=None):
     # equivalent UI value but cannot swallow another literal qualifier.
     if decision == "ROUTE" and context.date_spans:
         covered = set().union(*(context.time_options[key].spans for key in refs))
+        if unusable and quote:
+            # A date quoted inside a range or relative expression is accounted for; admission refuses it.
+            covered |= {(a, b) for a, b in context.date_spans if quote[0] <= a and b <= quote[1]}
         if not set(context.date_spans) <= covered:
             raise RouterInvalid("TIME_CONFLICT")
     return RouteDecision(decision, intent, domain, op, ids, tuple(spans), refs, role, reason, unresolved, soft)

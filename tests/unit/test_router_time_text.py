@@ -6,7 +6,9 @@ from types import SimpleNamespace
 import pytest
 
 from linkloom.agents.model_adapter import ModelAction, ModelResponse
-from linkloom.ui.router_context import RouteCandidate, RouterContext, admit_route, handoff_blocker, time_context
+from linkloom.ui.router_context import (
+    RouteCandidate, RouterContext, admit_route, handoff_blocker, has_exact_date, router_query_date, time_context,
+)
 from linkloom.ui.router_provider import _route_text, _submission
 from linkloom.ui.scope_discovery import resolve_query_date
 from linkloom.ui.structured_router import RouterInvalid, request_for, route_payload, route_with_adapter
@@ -40,7 +42,7 @@ def test_tool_schema_asks_for_time_text_and_role_instead_of_a_host_time_id():
 def test_identifier_digits_are_not_a_time_scope():
     ctx = context('Who owns INC-2291?', 'INC-2291')
     assert not ctx.unresolved_time and handoff_blocker(ctx) is None
-    assert resolve_query_date(ctx.query, None) == (None, None)
+    assert router_query_date(ctx.query, None) == (None, None)
     route = model_route(ctx, 'INC-2291', '', 'NONE')
     assert route.time_role == 'NONE' and admit_route(ctx, route).executor == 'graph'
 
@@ -49,7 +51,7 @@ def test_before_clause_is_left_to_the_model_and_only_checked_as_a_literal_quote(
     query = 'Before the security review starts, who owns the rollout checklist?'
     ctx = context(query, 'rollout checklist')
     assert not ctx.unresolved_time and handoff_blocker(ctx) is None
-    assert resolve_query_date(query, None) == (None, None)
+    assert router_query_date(query, None) == (None, None)
     assert admit_route(ctx, model_route(ctx, 'rollout checklist', '', 'NONE')).executor == 'graph'
     quoted = model_route(ctx, 'rollout checklist', 'Before the security review starts', 'UNRESOLVED')
     assert quoted.time_role == 'UNRESOLVED' and admit_route(ctx, quoted).reason == 'TIME_SCOPE_UNRESOLVED'
@@ -99,6 +101,34 @@ def test_selected_as_of_needs_no_quote_from_the_question():
     ('ticket 2291-05 supplier', None, None, None),
     ('2026-10 supplier', None, None, None),
 ])
-def test_host_keeps_exact_date_format_validation(query, selected, resolved, error):
-    value, failure = resolve_query_date(query, selected)
+def test_model_mode_host_keeps_only_exact_date_format_validation(query, selected, resolved, error):
+    value, failure = router_query_date(query, selected)
     assert value == resolved and (failure or {}).get('code') == error
+
+
+OPEN_ENDED = [('2026-10-01至今联调报告归谁？', '2026-10-01至今'),
+              ('联调报告 2026-10-01 to now 归谁？', '2026-10-01 to now'),
+              ('联调报告 between 2026-10-01 and now 归谁？', 'between 2026-10-01 and now')]
+
+
+@pytest.mark.parametrize('query,quote', OPEN_ENDED)
+def test_model_judges_whether_an_exact_date_is_a_point_or_the_edge_of_a_range(query, quote):
+    ctx = context(query, '联调报告')
+    assert has_exact_date(query) and not ctx.unresolved_time and handoff_blocker(ctx) is None
+    ranged = model_route(ctx, '联调报告', quote, 'RANGE')
+    admission = admit_route(ctx, ranged)
+    assert ranged.time_role == 'UNRESOLVED' and not ranged.time_ref_ids
+    assert admission.executor is None and admission.reason == 'TIME_SCOPE_UNRESOLVED' and admission.as_of is None
+    with pytest.raises(RouterInvalid, match='TIME_CONFLICT'):  # The model may not ignore the literal date.
+        model_route(ctx, '联调报告', '', 'NONE')
+
+
+@pytest.mark.parametrize('query', [q for q, _ in OPEN_ENDED] + ['上个月联调报告归谁？', 'INC-2291 supplier'])
+def test_rules_mode_only_detects_a_time_expression_and_never_sets_a_date(query):
+    value, failure = resolve_query_date(query, None)
+    assert value is None and failure['code'] == 'DATE_SCOPE_REQUIRED'
+
+
+def test_rules_mode_keeps_a_plain_iso_date_as_the_as_of_point():
+    assert resolve_query_date('2026-10-01的支付网关', None) == ('2026-10-01', None)
+    assert not has_exact_date('上个月的支付网关') and has_exact_date('2026-10-01的支付网关')
