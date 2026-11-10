@@ -107,6 +107,17 @@ def test_product_fact_metadata_survives_cold_reload_and_does_not_bypass_evidence
             assert record.value_normalized!='dog'
             assert json.loads(record.fact_details_json)=={'value_normalized': normalized, 'event_time_text': event}
             assert record.effective_at==datetime(2026,3,12,9,tzinfo=UTC)
+            from linkloom.fact_memory.ask import answer
+            seen=[]
+            class Capture:
+                def complete(self,request):
+                    seen.append(json.loads(request.user_input.split('Records: ',1)[1]))
+                    return ModelResponse(action=ModelAction.final('{"status":"UNKNOWN"}'))
+            answer('What pet did I adopt?',datetime(2026,4,1,tzinfo=UTC),(record,),Capture)
+            assert seen[0][0]['event_time_text']==event
+            assert seen[0][0]['source_stated_at']==record.effective_at.isoformat()
+            assert 'value_normalized_display' not in seen[0][0]
+
         else:
             with pytest.raises(ProductApplicationError) as blocked:
                 app.handle_post(f'/api/review/candidates/{candidate.candidate_id}/approve', request)

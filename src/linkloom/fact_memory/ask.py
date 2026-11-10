@@ -113,7 +113,6 @@ def answer(question: str, as_of: datetime, records: tuple[FactRecord, ...],
         if details:
             item["event_time_text"] = details.get("event_time_text")
             item["event_time_resolution"] = "UNRESOLVED" if details.get("event_time_text") else "NOT_STATED"
-            item["value_normalized_display"] = details.get("value_normalized")
             item["source_stated_at"] = record.effective_at.isoformat()
     prompt = PROMPT.format(as_of=as_of.isoformat(), question=question,
                            records=json.dumps(payload, ensure_ascii=False, separators=(",", ":")))
