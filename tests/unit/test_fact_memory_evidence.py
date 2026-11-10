@@ -1,4 +1,4 @@
-"""Value evidence (full sentence + key content) and time-ordered fact queries."""
+"""Value evidence (literal source span in a full sentence) and time-ordered fact queries."""
 from __future__ import annotations
 
 from datetime import UTC, datetime
@@ -6,7 +6,7 @@ import json
 
 from linkloom.agents.model_adapter import ModelAction, ModelResponse, ModelUsage
 from linkloom.fact_memory.ask import PROMPT, answer, relevant_records
-from linkloom.fact_memory.evidence import key_content, sentences, verify_value
+from linkloom.fact_memory.evidence import sentences, verify_value
 from linkloom.fact_memory.normalize import normalize_value
 from linkloom.fact_memory.store import FactRecord, fact_id_for, slot_key_for
 
@@ -15,7 +15,7 @@ QUOTE = ("Quick update on my hobbies. I've added seventeen new postcards to my c
 
 
 def test_evidence_is_the_full_verbatim_sentence():
-    result = verify_value("17 postcards added since restarting", QUOTE)
+    result = verify_value("seventeen new postcards", QUOTE)
     assert result.reason is None
     assert result.sentence == "I've added seventeen new postcards to my collection since I started again!"
     assert QUOTE[result.start:result.end] == result.sentence
@@ -23,47 +23,46 @@ def test_evidence_is_the_full_verbatim_sentence():
     assert [QUOTE[a:b] for a, b in sentences(QUOTE)][-1].startswith("Mrs. Okafor")
 
 
-def test_different_number_and_date_notation_with_the_same_value_passes():
-    assert verify_value("3 bikes", "I own three bikes now.").reason is None
-    assert verify_value("twenty-five dollars", "It cost $25 in the end.").reason is None
-    assert verify_value("$400,000", "We were pre-approved for 400 thousand dollars.").reason is None
-    assert verify_value("2,500 steps", "I walked 2500 steps.").reason is None
-    assert verify_value("March 3", "She sent them on 3rd of March, 2026.").reason is None
-    assert verify_value("2026-03-03", "She sent them on March 3rd, 2026.").reason is None
-    assert verify_value("met twice", "We have met 2 times so far.").reason is None
+def test_rewritten_numbers_and_dates_are_not_source_evidence():
+    assert verify_value("3 bikes", "I own three bikes now.").reason == "FACT_VALUE_NOT_IN_SOURCE"
+    assert verify_value("twenty-five dollars", "It cost $25 in the end.").reason == "FACT_VALUE_NOT_IN_SOURCE"
+    assert verify_value("$400,000", "We were pre-approved for 400 thousand dollars.").reason == "FACT_VALUE_NOT_IN_SOURCE"
+    assert verify_value("2,500 steps", "I walked 2500 steps.").reason == "FACT_VALUE_NOT_IN_SOURCE"
+    assert verify_value("March 3", "She sent them on 3rd of March, 2026.").reason == "FACT_VALUE_NOT_IN_SOURCE"
+    assert verify_value("2026-03-03", "She sent them on March 3rd, 2026.").reason == "FACT_VALUE_NOT_IN_SOURCE"
+    assert verify_value("met twice", "We have met 2 times so far.").reason == "FACT_VALUE_NOT_IN_SOURCE"
     assert verify_value("25:50", "My best 5K was 25:50 last week.").reason is None
 
 
-def test_reworded_value_with_consistent_key_content_passes():
+def test_reworded_value_is_rejected_even_when_numbers_and_names_agree():
     result = verify_value("two postcards sent from Lisbon by Mrs. Okafor", QUOTE)
-    assert result.reason is None and set(result.keys) == {"num:2", "name:lisbon", "name:okafor"}
-    assert result.sentence.startswith("Mrs. Okafor from the club")
+    assert result.reason == "FACT_VALUE_NOT_IN_SOURCE" and result.keys == ()
+    assert result.sentence is None
 
 
-def test_key_content_that_does_not_match_is_rejected():
-    assert verify_value("18 postcards since restarting", QUOTE).reason == "FACT_VALUE_UNGROUNDED"
-    assert verify_value("postcards from Porto", QUOTE).reason == "FACT_VALUE_UNGROUNDED"
-    assert verify_value("sent on March 4", QUOTE).reason == "FACT_VALUE_UNGROUNDED"
-    assert verify_value("sent on March 3, 2025", QUOTE).reason == "FACT_VALUE_UNGROUNDED"
-    assert verify_value("5", "My best 5K was 25:50.").reason == "FACT_VALUE_UNGROUNDED"
+def test_values_not_found_in_one_source_sentence_are_rejected():
+    assert verify_value("18 postcards since restarting", QUOTE).reason == "FACT_VALUE_NOT_IN_SOURCE"
+    assert verify_value("postcards from Porto", QUOTE).reason == "FACT_VALUE_NOT_IN_SOURCE"
+    assert verify_value("sent on March 4", QUOTE).reason == "FACT_VALUE_NOT_IN_SOURCE"
+    assert verify_value("sent on March 3, 2025", QUOTE).reason == "FACT_VALUE_NOT_IN_SOURCE"
+    assert verify_value("5", "My best 5K was 25:50.").reason == "FACT_VALUE_NOT_IN_SOURCE"
     # An opening name that the sentence does not contain is not dropped silently.
     assert verify_value("Sunrise Bakery", "I finally picked a bakery near the station.").reason \
-        == "FACT_VALUE_UNGROUNDED"
-    # Every key item must be in ONE sentence; pieces from two sentences do not combine.
-    assert verify_value("17 postcards from Lisbon", QUOTE).reason == "FACT_VALUE_UNGROUNDED"
+        == "FACT_VALUE_NOT_IN_SOURCE"
+    # Pieces from two sentences cannot be combined into one source value.
+    assert verify_value("17 postcards from Lisbon", QUOTE).reason == "FACT_VALUE_NOT_IN_SOURCE"
 
 
-def test_vague_values_without_key_content_are_rejected():
-    for vague in ("a lot of fun", "in the bedroom", "really happy about it", "最喜欢的颜色"):
-        assert key_content(vague) == ()
-        assert verify_value(vague, "It was a lot of fun in the bedroom.").reason == "FACT_VALUE_UNVERIFIABLE"
+def test_plain_values_are_verified_only_by_the_source_span():
+    for vague, expected in (("a lot of fun", None), ("in the bedroom", None),
+                            ("really happy about it", "FACT_VALUE_NOT_IN_SOURCE"),
+                            ("最喜欢的颜色", "FACT_VALUE_NOT_IN_SOURCE")):
+        assert verify_value(vague, "It was a lot of fun in the bedroom.").reason == expected
+        assert verify_value(vague, vague + ".").reason is None
     assert verify_value(None, QUOTE).reason == "FACT_VALUE_MISSING"
-    # A word capitalized only because it opens a clause is not a proper noun.
-    assert verify_value("Pros: lots of shared memories", "Pros: lots of shared memories.").reason \
-        == "FACT_VALUE_UNVERIFIABLE"
-    # The same opening word is a name when the source capitalizes it mid-sentence.
+    assert verify_value("Pros: lots of shared memories", "Pros: lots of shared memories.").reason is None
     assert verify_value("Lisbon", "We moved to Lisbon in spring.").reason is None
-    assert verify_value("Lisbon", "Lisbon is lovely.").reason == "FACT_VALUE_UNVERIFIABLE"
+    assert verify_value("Lisbon", "Lisbon is lovely.").reason is None
 
 
 def test_query_matching_folds_plural_and_verb_suffixes():

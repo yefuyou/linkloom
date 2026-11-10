@@ -4,8 +4,8 @@ A FACT candidate reaches this channel only after the unchanged decision
 policy refused it. The channel admits it when, and only when:
 
 * the candidate's evidence span still verifies against the current version
-  of an active source, and one full sentence of that quote carries every
-  piece of key content of the value (see ``fact_memory.evidence``);
+  of an active source, and the value is located literally within
+  one full sentence of that quote (see ``fact_memory.evidence``);
 * the subject lands on an entity (first person -> the message's speaker,
   the speaker's own label, or a mention inside the quote);
 * the host-normalized attribute key is non-empty;
@@ -63,8 +63,7 @@ def assess(candidate: CandidateDecisionFact, source: FactSource, *, subject: str
         reasons.append("FACT_SOURCE_TIME_MISSING")
     if reasons:
         return None, tuple(dict.fromkeys(reasons))
-    # The value may be the model's wording; its key content was verified above
-    # and the stored evidence is the verbatim source sentence.
+    # The value was located in the source; its normalized display form is not evidence.
     value_text = " ".join(candidate.value.split())
     if quote[evidence.start:evidence.end] != evidence.sentence:
         return None, ("FACT_EVIDENCE_INVALID",)

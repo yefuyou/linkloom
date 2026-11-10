@@ -174,8 +174,8 @@ def test_rejected_facts_report_every_reason(app, monkeypatch):
     assert "RELATION_UNRESOLVED" in pronoun.value.reason_codes  # decision reasons are kept too
     with pytest.raises(ProductApplicationError) as ungrounded:
         approve(app, pending["Sunrise Bakery"])
-    assert ungrounded.value.code == "FACT_VALUE_UNGROUNDED"
-    assert ungrounded.value.reason_codes[-1] == "FACT_VALUE_UNGROUNDED"
+    assert ungrounded.value.code == "FACT_VALUE_NOT_IN_SOURCE"
+    assert ungrounded.value.reason_codes[-1] == "FACT_VALUE_NOT_IN_SOURCE"
     assert app.fact_store.list(app._workspace_id()) == ()
     assert set(pending_by_value(app)) == set(pending)
 
@@ -243,7 +243,7 @@ def test_http_approval_error_lists_all_reasons_only_with_the_switch(app, monkeyp
         worker.join(timeout=2)
     assert response.value.code == 409
     if enabled:
-        assert error["code"] == "FACT_VALUE_UNGROUNDED"
-        assert {"RELATION_UNRESOLVED", "FACT_VALUE_UNGROUNDED"} <= set(error["reason_codes"])
+        assert error["code"] == "FACT_VALUE_NOT_IN_SOURCE"
+        assert {"RELATION_UNRESOLVED", "FACT_VALUE_NOT_IN_SOURCE"} <= set(error["reason_codes"])
     else:
         assert set(error) == {"code", "message"}
