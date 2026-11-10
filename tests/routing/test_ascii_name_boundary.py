@@ -60,3 +60,21 @@ def test_unknown_latin_name_next_to_cjk_is_still_unbound_by_its_own_extent(query
     assert all(name.isascii() for name in check["unbound_names"] + check["unbound_proper_names"])
     result = r.route_question(query, SLOTS, RESOLVER, workspace_id="one", embedder=None)
     assert result["scope"] is None
+
+
+# With fix/no-field-only-binding underneath: the no-space forms of its cases.
+@pytest.mark.parametrize("query", ["ghostwood里search_engine是什么？", "ghostwood里的search_engine是什么？",
+                                   "ghostwood目前的search_engine是什么？",
+                                   "项目“星砂渡口”的payment_gateway当前值是什么？"])
+def test_unknown_project_next_to_cjk_never_borrows_the_matching_slot(query):
+    result = r.route_question(query, SLOTS, RESOLVER, workspace_id="one", embedder=None)
+    assert result["scope"] is None and result["route"] in {"CLARIFY", "NO_MATCH"}
+
+
+def test_no_space_named_project_binds_and_field_only_clarifies_with_candidate():
+    named = r.route_question("Tamarack的search_engine是什么？", SLOTS, RESOLVER, workspace_id="one", embedder=None)
+    assert named["route"] == "CURRENT" and named["scope"] == {"subject": "Tamarack", "relation": "search_engine"}
+    field_only = r.route_question("search_engine现在是什么？", SLOTS, RESOLVER, workspace_id="one", embedder=None)
+    assert field_only["route"] == "CLARIFY" and field_only["scope"] is None
+    assert {"subject": "Tamarack", "relation": "search_engine"} in [
+        {k: c[k] for k in ("subject", "relation")} for c in field_only["discovery"]["candidates"]]
