@@ -65,6 +65,20 @@ def _tool_arguments(message, tool):
         return None
 
 
+def _single_call_arguments(message, tool):
+    calls = message.get("tool_calls")
+    if not isinstance(calls, list) or len(calls) != 1:
+        return "{}"
+    try:
+        call = calls[0]
+        if call["type"] != "function" or call["function"]["name"] != tool["function"]["name"]:
+            return "{}"
+        arguments = call["function"]["arguments"]
+        return arguments if isinstance(arguments, str) else "{}"
+    except (KeyError, TypeError):
+        return "{}"
+
+
 def _route_text(message, context):
     args = _tool_arguments(message, _submission(context))
     if args is None:
@@ -124,8 +138,9 @@ class _DeepSeekJSONClient:
             raw = "{}"
             if choice.get("finish_reason") == "tool_calls":
                 if self._purpose == "security":
-                    args = _tool_arguments(choice["message"], tool)
-                    raw = json.dumps(args) if args is not None else "{}"
+                    # Pass the single submit_safety argument text through unchanged so
+                    # security_gate.classify validates it and can record the raw reply.
+                    raw = _single_call_arguments(choice["message"], tool)
                 else:
                     raw = _route_text(choice["message"], context)
             choice["message"] = {"content": raw}

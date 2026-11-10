@@ -253,7 +253,7 @@ def test_allowed_identity_claim_still_obeys_capability_and_date_checks(decisions
         def __init__(self): self.requests = []
         def complete(self, request):
             self.requests.append(request)
-            return ModelResponse(action=ModelAction.final('{"decision":"ALLOW","reason_code":"NONE"}'))
+            return ModelResponse(action=ModelAction.final('{"reason_code":"NONE"}'))
     gate = Allow()
     model = ScriptedRouter(lambda _: 'not JSON')
     ask = UnifiedAskService(decisions.app, lambda: None, graph_service=False,
