@@ -77,7 +77,8 @@ def _mentions(query: str, phrase: str) -> bool:
         return False
     if re.search(r"[\u3400-\u9fff]", phrase):
         return phrase in query.casefold()
-    return re.search(r"(?<!\w)" + re.escape(phrase) + r"(?!\w)", query.casefold()) is not None
+    # ASCII word boundary: a Latin name directly followed or preceded by CJK text is still a mention.
+    return re.search(r"(?<![A-Za-z0-9_])" + re.escape(phrase) + r"(?![A-Za-z0-9_])", query.casefold()) is not None
 
 
 def _tokens(text: str) -> set[str]:
@@ -169,7 +170,7 @@ def _organization_labels(query: str, bound_names: set[str]) -> list[str]:
         known_suffixes = [(a, b) for a, b in _name_spans(prefix, bound_names) if b == len(prefix)]
         if known_suffixes:
             start = min(a for a, _ in known_suffixes)
-            leading = re.search(r"(?:[A-Z][\w-]*\s+)+$", prefix[:start])
+            leading = re.search(r"(?:[A-Z][A-Za-z0-9_-]*\s+)+$", prefix[:start])
             leading_han = re.search(r"[\u3400-\u9fff]+$", prefix[:start].rstrip())
             if leading and any(not _grammar_token(w) for w in leading[0].split()):
                 label = leading[0] + prefix[start:]
@@ -180,7 +181,7 @@ def _organization_labels(query: str, bound_names: set[str]) -> list[str]:
                 label = prefix[start:]
             labels.append(label)
             continue
-        latin = re.search(r"[A-Za-z][\w-]*(?:[ \t]+[A-Za-z][\w-]*)*$", prefix)
+        latin = re.search(r"[A-Za-z][A-Za-z0-9_-]*(?:[ \t]+[A-Za-z][A-Za-z0-9_-]*)*$", prefix)
         if latin:
             words = latin[0].split()
             selected = []
@@ -259,7 +260,7 @@ def _query_bindings(query: str, relation_names: set[str], known_values: set[str]
                 subjects.extend(part for part in _parts(actor) if not _deictic(part))
     # Possessive Chinese noun phrases. Workspace terms/values remain topic/value
     # arguments, while any explicit object name must resolve in this workspace.
-    for match in re.finditer(r"([A-Za-z][\w-]*|[\u3400-\u9fff]+)\s*的", text):
+    for match in re.finditer(r"([A-Za-z][A-Za-z0-9_-]*|[\u3400-\u9fff]+)\s*的", text):
         phrase = _clean_binding(match[1]).casefold()
         if phrase in subject_names:
             subjects.append(phrase)
@@ -479,7 +480,7 @@ def _passive_modifier_capture(query: str, match: re.Match[str], bound_names: set
 def _named(phrase: str) -> bool:
     # Name-shaped tokens in explicit grammatical positions. A broad Chinese
     # clause is not a proper name merely because an old regex captured it.
-    return bool(re.fullmatch(r"[A-Za-z][\w-]*|(?:[A-Z][\w-]*\s+)+[A-Z][\w-]*|"
+    return bool(re.fullmatch(r"[A-Za-z][A-Za-z0-9_-]*|(?:[A-Z][A-Za-z0-9_-]*\s+)+[A-Z][A-Za-z0-9_-]*|"
                              r"(?i:project)\s+\d+|[\u3400-\u9fff]+项目", phrase))
 
 
@@ -500,9 +501,9 @@ def entity_check(query: str, snapshot: WorkspaceSnapshot) -> dict[str, Any]:
     positions, actors = [], []
     for position_kind, pattern in enumerate((
         r"\b(?:does|did|do|is|are|was|were|has|have|had)\s+(?!(?:currently|now|already|still|being|been|not)\b)([\w-]+(?:\s+[\w-]+)*?)\s+(?:(?:currently|now|already|still)\s+)?(?:use|using|used|adopt|adopted|choose|chosen|pick|picked|select|selected|decide|decided|on|with)\b",
-        r"\b((?-i:[A-Z][\w-]*(?:\s+[A-Z][\w-]*)*)|[A-Za-z][\w-]*)['’]s\b",
-        r"^([A-Za-z][\w-]*|[\u3400-\u9fff]+项目)\s*(?:现在|当前|目前)?(?:采用|使用|选用|用的是|用的|用|选了|是)",
-        r"([A-Za-z][\w-]*(?:\s*项目)?|[\u3400-\u9fff]+项目)\s*的",
+        r"\b((?-i:[A-Z][A-Za-z0-9_-]*(?:\s+[A-Z][A-Za-z0-9_-]*)*)|[A-Za-z][A-Za-z0-9_-]*)['’]s\b",
+        r"^([A-Za-z][A-Za-z0-9_-]*|[\u3400-\u9fff]+项目)\s*(?:现在|当前|目前)?(?:采用|使用|选用|用的是|用的|用|选了|是)",
+        r"([A-Za-z][A-Za-z0-9_-]*(?:\s*项目)?|[\u3400-\u9fff]+项目)\s*的",
         r"\bfrom\s+([\w-]+)\s+to\s+([\w-]+)",
         r"\b(?:was|is)\s+([\w-]+)\s+(?:replaced|superseded)\s+by\s+([\w-]+)",
         r"\bwith\s+([\w-]+)(?=[?.!]|$)",
