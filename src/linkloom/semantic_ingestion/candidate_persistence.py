@@ -175,7 +175,7 @@ def deserialize_candidate(payload_json: str) -> CandidateDecisionFact:
     document = data.get("source_format") == "document_text"
     if payload["record_version"] == "candidate-decision-fact/v2" and not document:
         raise ValueError("v2 payload requires document source format")
-    if task_version and data["source_format"] not in {"document_text", "timestamped_text"}:
+    if (task_version or fact_version) and data["source_format"] not in {"document_text", "timestamped_text"}:
         raise ValueError("unsupported task candidate source format")
     raw_span = data["provenance"]
     if not isinstance(raw_span, dict):

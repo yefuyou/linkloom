@@ -91,6 +91,10 @@ def test_product_fact_metadata_survives_cold_reload_and_does_not_bypass_evidence
         candidate = pending[0]
         encoded, _ = serialize_candidate(candidate)
         assert deserialize_candidate(encoded).fact_details == FactDetails(normalized, event)
+        corrupted=json.loads(encoded)
+        corrupted["candidate"]["source_format"]="unsupported"
+        with pytest.raises(ValueError):
+            deserialize_candidate(json.dumps(corrupted))
         monkeypatch.delenv('LINKLOOM_FACT_MEMORY', raising=False)
         assert deserialize_candidate(encoded).fact_details == candidate.fact_details
         monkeypatch.setenv('LINKLOOM_FACT_MEMORY', '1')
