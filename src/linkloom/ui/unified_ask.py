@@ -322,9 +322,12 @@ class UnifiedAskService:
                         routed.update(route="CLARIFY", scope=None, decided_by="fallback")
                 date_blocker = None
                 if cascade:
-                    from linkloom.ui.router_context import router_query_date
+                    from linkloom.ui.router_context import has_exact_date, router_query_date
                     _, time_error = router_query_date(run.query, payload.get("as_of"))
                     date_blocker = rule_date_blocker(time_error, has_scope=bool(routed["scope"]))
+                    # The rules never decide whether a literal date is one point or the edge of a range.
+                    if date_blocker is None and has_exact_date(run.query):
+                        return self._route_ordinary(run, payload)
                 if cascade and rule_needs_router(routed["route"], blocker=date_blocker):
                     return self._route_ordinary(run, payload)
                 if date_blocker:

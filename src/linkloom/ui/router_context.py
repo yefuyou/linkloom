@@ -84,7 +84,13 @@ _INTERROGATIVE_TIME = re.compile(r"什么时候|什么时间|何时|几点")
 def router_query_date(query, selected):
     # A request to report a time is not itself an as-of qualifier.
     # Preserve every explicit date/range and keep source character offsets.
-    return resolve_query_date(_INTERROGATIVE_TIME.sub(lambda match: " " * len(match[0]), query), selected)
+    return resolve_query_date(_INTERROGATIVE_TIME.sub(lambda match: " " * len(match[0]), query), selected,
+                              rule_mode=False)
+
+
+def has_exact_date(query):
+    """A literal date or timestamp is present; whether it is a point or a range is the model's call."""
+    return bool(_TIMESTAMP.search(query) or date_tokens(_TIMESTAMP.sub(lambda m: " " * len(m.group()), query)))
 
 
 def time_context(query, selected):
@@ -129,7 +135,9 @@ def _decision_candidates(query, snapshot, view, point, embedder, default_subject
             *row.get("subject_aliases", []), *row.get("values", [])]))
         yield RouteCandidate("DECISION", "decision_slot", f"{subject} · {relation}"[:160], anchors,
             int(current["status"] == "FOUND"), int(dated["status"] == "FOUND") if dated else None,
-            len(effective["history"]), "CONFLICT" in effective["status"], (subject, relation),
+            # A slot that has records, just none yet at the asked date, is confirmed: admission then
+            # reports NO_VALID_RECORD_AT_TIME instead of NO_CONFIRMED_RECORD.
+            len(effective["history"]) or len(current["history"]), "CONFLICT" in effective["status"], (subject, relation),
             tuple(sorted(a for a in anchors if _mentions(query.casefold(), a))[:8]),
             references if subject == default_subject else ())
 

@@ -45,6 +45,9 @@ def get_slot_embedder() -> Any:
 
 _RELATION_VERBS = frozenset("uses use has have is are of the a an".split())
 
+# Rules mode only (router off, or fallback when the model is unavailable). These word lists can tell
+# that a question carries a time expression; they never compute a date. Model routing does not consult
+# them: there the model quotes the time text and the host locates it (structured_router.resolve_time_text).
 _RELATIVE_DATE = re.compile(
     r"(?:上|下|本|这|前|后)(?:个)?(?:月|周|年|季度|星期)|去年|今年|明年|"
     r"昨天|前天|今天|明天|后天|当时|以前|之前|过去|至今|迄今|早上|上午|下午|晚上|点|时|"
@@ -649,8 +652,24 @@ def discover_scope(query: str, slots: list[dict[str, Any]], resolver: FrozenRela
             "decided_by": "rule" if explicit and matched else "slot_match" if matched else "fallback"}
 
 
-def resolve_query_date(query: str, selected: object) -> tuple[str | None, dict[str, str] | None]:
-    """Resolve exact dates only; as_of is a point, never an invented month day."""
+def rule_time_expression(query: str, *, exact_dates: bool, selected: bool) -> bool:
+    """Rules mode only: does the question carry a time expression the host cannot use as one exact date?
+
+    Detection only. It never derives a date and never sets as_of; a hit means clarification.
+    """
+    if _DATE_RANGE.search(query) and (exact_dates or _RELATIVE_DATE.search(query)):
+        return True
+    if selected:
+        return False
+    remainder = _CHINESE_DATE.sub(" ", _ISO_DATE.sub(" ", _ISO_TIMESTAMP.sub(" ", query)))
+    return bool(_RELATIVE_DATE.search(remainder))
+
+
+def resolve_query_date(query: str, selected: object, *, rule_mode: bool = True) -> tuple[str | None, dict[str, str] | None]:
+    """Resolve exact dates only; as_of is a point, never an invented month day.
+
+    rule_mode=False is the model-routing entry: only exact date formats and conflicts are checked.
+    """
     clarification = {"code": "DATE_SCOPE_REQUIRED",
                      "message": "Choose one exact valid-time date (00:00 UTC). Relative periods, ranges and conflicting dates need clarification."}
     try:
@@ -664,17 +683,11 @@ def resolve_query_date(query: str, selected: object) -> tuple[str | None, dict[s
         distinct = {_parse_as_of(point) for point in points}
         mismatch = bool(timestamp and ((timestamps and timestamp not in distinct)
                         or (dates and any(timestamp.date().isoformat() != day for day in dates))))
-        if len(distinct) > 1 or mismatch or (_DATE_RANGE.search(query) and (points or _RELATIVE_DATE.search(query))):
+        if len(distinct) > 1 or mismatch or (rule_mode and rule_time_expression(
+                query, exact_dates=bool(points), selected=bool(timestamp))):
             return None, clarification
         if timestamp:
             return str(selected), None
-        if distinct:
-            remainder = _CHINESE_DATE.sub(" ", _ISO_DATE.sub(" ", without_times))
-            if _RELATIVE_DATE.search(remainder):
-                return None, clarification
-            return points[0], None
-        if _RELATIVE_DATE.search(query):
-            return None, clarification
-        return None, None
+        return (points[0], None) if distinct else (None, None)
     except ProductApplicationError as error:
         return None, {"code": error.code, "message": str(error)}
