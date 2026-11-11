@@ -614,18 +614,36 @@ def discover_scope(query: str, slots: list[dict[str, Any]], resolver: FrozenRela
     margin = candidates[0]["score"] - candidates[1]["score"] if len(candidates) > 1 else float("inf")
     if candidates and candidates[0].get("history_anchor"):
         margin = float("inf")
+    # A field/slot name alone never binds a slot. The question must name the slot's project
+    # (subject or alias), mention a recorded value that belongs to that one slot only, or use a
+    # first-person workspace reference (the existing default-project rule; the confidence and
+    # margin checks below still decide). Otherwise the slot stays a candidate for clarification.
+    from linkloom.ui.router_context import _FIRST_PERSON_WORKSPACE  # local import: avoids a cycle
+    value_slots = {}
+    for slot in snapshot.slots:
+        for value in slot.get("values", []):
+            value_slots.setdefault(normalize_temporal_component(str(value)), set()).add(slot["slot_id"])
+    value_anchored = {next(iter(ids)) for value, ids in value_slots.items()
+                      if len(ids) == 1 and _mentions(query.casefold(), value)}
+    entity_anchored = bool(candidates) and (
+        normalize_temporal_component(candidates[0]["subject"]) in subject_hits
+        or candidates[0].get("slot_id") in value_anchored
+        or _FIRST_PERSON_WORKSPACE.search(query) is not None)
     matched = bool(candidates and not safety["hard_veto"] and not safety["unbound_proper_names"] and (explicit or (
         confidence >= SLOT_MATCH_MIN_SCORE and margin >= SLOT_MATCH_MIN_MARGIN
         and candidates[0].get("topic_anchored", True)
-        and not candidates[0].get("conflicting_mentions"))))
+        and not candidates[0].get("conflicting_mentions")
+        and entity_anchored)))
     status = "EXPLICIT" if explicit and matched else "MATCHED" if matched else "AMBIGUOUS" if candidates else "NO_MATCH"
     if safety["hard_veto"]:
         status = "NO_MATCH"
     return {"status": status, "scope": {k: candidates[0][k] for k in ("subject", "relation")} if matched else None,
             "candidates": candidates[:SLOT_LLM_CANDIDATES], "candidate_count": len(candidates),
             "raw_candidates": raw, "clues": clues, "entity_check": safety,
-            "confidence": confidence, "basis": [],
+            "confidence": confidence, "basis": [], "entity_anchored": entity_anchored or explicit,
             "reason": "One reviewed slot clears the global confidence and margin." if matched else
+                      "The question names a field but not its project; confirm the candidate project."
+                      if candidates and not (entity_anchored or explicit) else
                       "Candidates require disambiguation." if candidates else "No related reviewed slot was retrieved.",
             "decided_by": "rule" if explicit and matched else "slot_match" if matched else "fallback"}
 
