@@ -614,15 +614,21 @@ def discover_scope(query: str, slots: list[dict[str, Any]], resolver: FrozenRela
     margin = candidates[0]["score"] - candidates[1]["score"] if len(candidates) > 1 else float("inf")
     if candidates and candidates[0].get("history_anchor"):
         margin = float("inf")
-    # A field/slot name alone never binds a slot: the question must name the slot's project
-    # (subject or alias). A first-person workspace reference in a single-project workspace keeps
-    # the existing default-project rule. Otherwise the slot stays a candidate for clarification.
+    # A field/slot name alone never binds a slot. The question must name the slot's project
+    # (subject or alias), mention a recorded value that belongs to that one slot only, or use a
+    # first-person workspace reference (the existing default-project rule; the confidence and
+    # margin checks below still decide). Otherwise the slot stays a candidate for clarification.
     from linkloom.ui.router_context import _FIRST_PERSON_WORKSPACE  # local import: avoids a cycle
-    workspace_subjects = {normalize_temporal_component(s["subject"]) for s in snapshot.slots}
-    anchors = set(subject_hits)
-    if _FIRST_PERSON_WORKSPACE.search(query) and len(workspace_subjects) == 1:
-        anchors |= workspace_subjects
-    entity_anchored = bool(candidates) and normalize_temporal_component(candidates[0]["subject"]) in anchors
+    value_slots = {}
+    for slot in snapshot.slots:
+        for value in slot.get("values", []):
+            value_slots.setdefault(normalize_temporal_component(str(value)), set()).add(slot["slot_id"])
+    value_anchored = {next(iter(ids)) for value, ids in value_slots.items()
+                      if len(ids) == 1 and _mentions(query.casefold(), value)}
+    entity_anchored = bool(candidates) and (
+        normalize_temporal_component(candidates[0]["subject"]) in subject_hits
+        or candidates[0].get("slot_id") in value_anchored
+        or _FIRST_PERSON_WORKSPACE.search(query) is not None)
     matched = bool(candidates and not safety["hard_veto"] and not safety["unbound_proper_names"] and (explicit or (
         confidence >= SLOT_MATCH_MIN_SCORE and margin >= SLOT_MATCH_MIN_MARGIN
         and candidates[0].get("topic_anchored", True)

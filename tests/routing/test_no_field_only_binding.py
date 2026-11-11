@@ -58,3 +58,14 @@ def test_first_person_reference_keeps_the_single_project_default():
     # Without the first-person reference the same field-only question is not bound.
     result = route("What search_engine is used now?", single)
     assert result["scope"] is None and result["route"] == "CLARIFY"
+
+
+QUARTZ_SLOTS = [dict(subject="Juniper", relation="uses platform", aliases=["platform"], values=["Quartz"],
+                     slot_id="platform", workspace_id="one", reviewed=True)]
+
+
+@pytest.mark.xfail(reason="不存在的项目 + 已知的值仍可能错绑", strict=False)
+def test_known_risk_unknown_project_with_a_known_value_may_still_bind():
+    result = r.route_question("项目“星砂渡口”还在用 Quartz 吗？", QUARTZ_SLOTS, FrozenRelationResolver(("uses platform",)),
+                              workspace_id="one", embedder=None)
+    assert result["scope"] is None

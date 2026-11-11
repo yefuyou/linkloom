@@ -22,7 +22,8 @@ def test_current_and_exact_historical_question_discover_without_model_calls(demo
     demo.configure_agent(external_provider=True)
     for query, value, date in (
         ("我们现在采用哪家供应商？", "Wrenwell", None),
-        ("2026 年 10 月 6 日采用哪家供应商？", "Birchline", "2026-10-06"),
+        # Names the project so the question still reaches the exact-date path.
+        ("2026 年 10 月 6 日 Launch 采用哪家供应商？", "Birchline", "2026-10-06"),
     ):
         status, payload = ask(demo, query)
         result = payload["result"]
@@ -35,6 +36,11 @@ def test_current_and_exact_historical_question_discover_without_model_calls(demo
         assert result["receipts"] and all(item["verified"] for item in result["evidence"])
         if date:
             assert result["scope"]["as_of"].startswith(date)
+    # Without the project name only the field matches: clarify with the slot as a candidate.
+    _, payload = ask(demo, "2026 年 10 月 6 日采用哪家供应商？")
+    result = payload["result"]
+    assert result["route"]["route"] == "CLARIFY" and result["conclusions"] == []
+    assert ("Launch", "uses supplier") in [(c["subject"], c["relation"]) for c in result["discovery"]["candidates"]]
     assert demo.transports == []
 
 
@@ -66,16 +72,24 @@ def test_no_match_and_proposal_only_subject_never_create_authoritative_scope(dem
 def test_relative_date_clarification_and_explicit_resolution(demo):
     query = "上个月这个项目用的是哪家供应商？"
     _, payload = ask(demo, query)
-    assert payload["result"]["error"]["code"] == "DATE_SCOPE_REQUIRED"
+    # No project is named ("这个项目"), so the field alone does not bind; either clarification is acceptable.
+    assert payload["result"]["conclusions"] == []
+    assert payload["result"]["route"]["route"] == "CLARIFY"
+    assert payload["result"]["error"]["code"] in {"DATE_SCOPE_REQUIRED", "DECISION_SCOPE_AMBIGUOUS"}
     _, payload = ask(demo, query, as_of="2026-09-15")
     assert payload["result"]["scope"]["as_of"].startswith("2026-09-15")
     assert payload["result"]["conclusions"] == []  # Decisions did not yet exist.
     for interval in ("What supplier did Launch use 2026-10-01 to now?",
                      "What supplier did Launch use 2026-10-01 and now?",
-                     "2026-10-01至今采用哪家供应商？"):
+                     "2026-10-01至今 Launch 采用哪家供应商？"):
         _, payload = ask(demo, interval)
         assert payload["result"]["error"]["code"] == "DATE_SCOPE_REQUIRED"
         assert payload["result"]["conclusions"] == []
+    # Without the project name only the field matches: clarify with the slot as a candidate.
+    _, payload = ask(demo, "2026-10-01至今采用哪家供应商？")
+    assert payload["result"]["route"]["route"] == "CLARIFY" and payload["result"]["conclusions"] == []
+    assert ("Launch", "uses supplier") in [
+        (c["subject"], c["relation"]) for c in payload["result"]["discovery"]["candidates"]]
 
 
 def test_approved_future_only_slot_remains_compatible_with_explicit_as_of(demo):

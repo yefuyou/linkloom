@@ -142,7 +142,8 @@ def test_offline_evaluate_never_builds_provider(monkeypatch):
     assert report["execution"]["completed"] == 60
     assert report["llm_metrics"]["calls"] == 0
     assert report["llm_usage"] is None
-    assert report["metrics"]["joint_correct"]["correct"] == 58
+    # 5 field-only cases (no project, value or first person) now clarify: R002 R013 R018 R023 R036.
+    assert report["metrics"]["joint_correct"]["correct"] == 53
 
 
 def test_live_payload_is_independent_of_expected_labels(tmp_path, monkeypatch):
