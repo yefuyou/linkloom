@@ -201,14 +201,21 @@ def test_cascade_hands_every_exact_date_to_the_model_which_judges_point_or_range
     assert result['router']['reason_code'] == 'TIME_SCOPE_UNRESOLVED' and result['router']['source'] == 'llm'
     assert not result['evidence'] and not result['conclusions'] and not result['scope'].get('as_of')
     # A plain date goes to the model too; quoted as a point it becomes the as-of date.
-    plain = dict(query='What supplier did Launch use on 2026-10-20?', workspace_id=workspace)
+    plain = dict(query='What supplier did Launch use on 2026-10-04?', workspace_id=workspace)
     rules, _ = UnifiedAskService(decisions.app, lambda: None, graph_service=False, slot_embedder=None).ask(plain)
-    model, ask = service(lambda data: quoted(data, '2026-10-20', 'AS_OF', 'AS_OF'))
+    model, ask = service(lambda data: quoted(data, '2026-10-04', 'AS_OF', 'AS_OF'))
     result, status = ask.ask(plain)
     assert status == 200 and len(model.requests) == 1 and result['status'] == 'COMPLETED'
     assert result['router']['time_role'] == 'AS_OF' and result['router']['source'] == 'llm'
-    assert result['scope']['as_of'] == rules['scope']['as_of'] == '2026-10-20T00:00:00+00:00'
-    assert result['conclusions'] and result['conclusions'] == rules['conclusions']
+    assert result['scope']['as_of'] == rules['scope']['as_of'] == '2026-10-04T00:00:00+00:00'
+    assert result['conclusions'] == rules['conclusions']
+    assert [item['value'] for item in result['conclusions']] == ['Birchline']
+    # A date before the slot's first record: the slot is confirmed, it only has no value at that time.
+    model, ask = service(lambda data: quoted(data, '2026-10-01', 'AS_OF', 'AS_OF'))
+    result, status = ask.ask(dict(query='What supplier did Launch use on 2026-10-01?', workspace_id=workspace))
+    assert status == 200 and len(model.requests) == 1 and result['status'] == 'NEEDS_SCOPE'
+    assert result['router']['reason_code'] == result['error']['code'] == 'NO_VALID_RECORD_AT_TIME'
+    assert result['router']['time_role'] == 'AS_OF' and not result['conclusions']
     # Model unusable: the rules fallback clarifies and never turns the range into 2026-10-01.
     model, ask = service(lambda _: 'not JSON')
     result, status = ask.ask(dict(query=open_ended, workspace_id=workspace))

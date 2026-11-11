@@ -135,7 +135,9 @@ def _decision_candidates(query, snapshot, view, point, embedder, default_subject
             *row.get("subject_aliases", []), *row.get("values", [])]))
         yield RouteCandidate("DECISION", "decision_slot", f"{subject} · {relation}"[:160], anchors,
             int(current["status"] == "FOUND"), int(dated["status"] == "FOUND") if dated else None,
-            len(effective["history"]), "CONFLICT" in effective["status"], (subject, relation),
+            # A slot that has records, just none yet at the asked date, is confirmed: admission then
+            # reports NO_VALID_RECORD_AT_TIME instead of NO_CONFIRMED_RECORD.
+            len(effective["history"]) or len(current["history"]), "CONFLICT" in effective["status"], (subject, relation),
             tuple(sorted(a for a in anchors if _mentions(query.casefold(), a))[:8]),
             references if subject == default_subject else ())
 
