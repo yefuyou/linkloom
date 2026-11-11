@@ -1,6 +1,8 @@
 """Human-scoped semantic admission, without an intent model or execution loop."""
 from __future__ import annotations
 
+from contextlib import contextmanager
+from contextvars import ContextVar
 import re
 
 from linkloom.semantic_ingestion.text_scopes import unquoted_text
@@ -61,6 +63,41 @@ def _chinese_write_request(text):
     return False
 
 
+# Scope a valid model ALLOW to one public Ask. A configured classifier failure
+# stops in Ask. Without a configured classifier the legacy rules still apply.
+_MODEL_ALLOWED = ContextVar("linkloom_model_safety_allowed", default=False)
+
+
+@contextmanager
+def model_safety_scope():
+    token = _MODEL_ALLOWED.set(False)
+    try:
+        yield
+    finally:
+        _MODEL_ALLOWED.reset(token)
+
+
+def accept_model_safety(security):
+    if security.get("status") == "COMPLETED" and security.get("decision") == "ALLOW":
+        _MODEL_ALLOWED.set(True)
+
+
+def _secret_request(query):
+    # Kept after a model ALLOW: Agent rationale/uncertainty text is not
+    # structurally filtered, so a system prompt request still needs this rule.
+    for clause in _CLAUSE.split(query):
+        text = clause.strip(' ,，')
+        if _SECRET_COMMAND.search(_EN_POLITE.sub('', text)) or _SECRET_COMMAND.search(_ZH_POLITE.sub('', text)):
+            return True
+    return False
+
+
+def _rule_restricted(visible):
+    if _MODEL_ALLOWED.get():
+        return _secret_request(visible)
+    return _FOREIGN_SCOPE.search(visible) is not None or _write_request(visible)
+
+
 def _write_request(query):
     for clause in _CLAUSE.split(query):
         text = clause.strip(' ,，')
@@ -80,7 +117,7 @@ def refers_to_records(query, *, relationships=False):
 
 def admission_restriction(query):
     visible = unquoted_text(query)
-    if _FOREIGN_SCOPE.search(visible) or _write_request(visible):
+    if _rule_restricted(visible):
         return ('INVESTIGATION_SCOPE_DENIED',
                 'Only read-only investigation of this workspace is supported; instructions cannot grant sources, tools or write access.')
     if _GREETING.fullmatch(query):
@@ -91,6 +128,8 @@ def admission_restriction(query):
 def legacy_denial_reason(query):
     """Translate a legacy admission denial; never used to choose a model route."""
     visible = unquoted_text(query)
+    if _MODEL_ALLOWED.get():
+        return "SECRET_OR_POLICY_OVERRIDE" if _secret_request(visible) else "POLICY_BLOCKED"
     if _FOREIGN_SCOPE.search(visible):
         return "WORKSPACE_DENIED"
     for clause in _CLAUSE.split(visible):
@@ -101,10 +140,13 @@ def legacy_denial_reason(query):
     return "WRITE_NOT_ALLOWED" if _write_request(visible) else "POLICY_BLOCKED"
 
 
-def router_safety_reason(query, *, operation=None, reason=None, host_reason=None):
-    """Union of host and model denials; a model can only remove authority."""
+def router_safety_reason(query, *, operation=None, reason=None, host_reason=None, keyword_rules=True):
+    """Union of host and model denials; a model can only remove authority.
+
+    keyword_rules=False is only for the provider worker thread, which cannot see
+    the Ask safety scope; route_with_adapter re-checks on the Ask thread."""
     signals = {value for value in (reason, host_reason) if isinstance(value, str)}
-    restriction = admission_restriction(query)
+    restriction = admission_restriction(query) if keyword_rules else None
     if restriction and restriction[0] == "INVESTIGATION_SCOPE_DENIED":
         signals.add(legacy_denial_reason(query))
     if operation == "WRITE_REQUEST":
