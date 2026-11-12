@@ -74,7 +74,9 @@ def test_single_character_cjk_topic_inside_unspaced_question_is_retrievable():
         for term, value in (("云", "一号"), ("库", "二号"))
     ]
     result = route_question("云现在用哪个？", slots, resolver, workspace_id="one", embedder=None)
-    assert result["scope"] == {"subject": "甲", "relation": "云"}
+    # A field name alone no longer binds: the formerly bound slot is offered for clarification.
+    assert result["route"] == "CLARIFY" and result["scope"] is None
+    assert ("甲", "云") in [(c["subject"], c["relation"]) for c in result["discovery"]["candidates"]]
     assert {"云", "平", "台", "平台"} <= scope._tokens("云平台")
 
 

@@ -45,6 +45,9 @@ def get_slot_embedder() -> Any:
 
 _RELATION_VERBS = frozenset("uses use has have is are of the a an".split())
 
+# Rules mode only (router off, or fallback when the model is unavailable). These word lists can tell
+# that a question carries a time expression; they never compute a date. Model routing does not consult
+# them: there the model quotes the time text and the host locates it (structured_router.resolve_time_text).
 _RELATIVE_DATE = re.compile(
     r"(?:上|下|本|这|前|后)(?:个)?(?:月|周|年|季度|星期)|去年|今年|明年|"
     r"昨天|前天|今天|明天|后天|当时|以前|之前|过去|至今|迄今|早上|上午|下午|晚上|点|时|"
@@ -77,7 +80,8 @@ def _mentions(query: str, phrase: str) -> bool:
         return False
     if re.search(r"[\u3400-\u9fff]", phrase):
         return phrase in query.casefold()
-    return re.search(r"(?<!\w)" + re.escape(phrase) + r"(?!\w)", query.casefold()) is not None
+    # ASCII word boundary: a Latin name directly followed or preceded by CJK text is still a mention.
+    return re.search(r"(?<![A-Za-z0-9_])" + re.escape(phrase) + r"(?![A-Za-z0-9_])", query.casefold()) is not None
 
 
 def _tokens(text: str) -> set[str]:
@@ -169,7 +173,7 @@ def _organization_labels(query: str, bound_names: set[str]) -> list[str]:
         known_suffixes = [(a, b) for a, b in _name_spans(prefix, bound_names) if b == len(prefix)]
         if known_suffixes:
             start = min(a for a, _ in known_suffixes)
-            leading = re.search(r"(?:[A-Z][\w-]*\s+)+$", prefix[:start])
+            leading = re.search(r"(?:[A-Z][A-Za-z0-9_-]*\s+)+$", prefix[:start])
             leading_han = re.search(r"[\u3400-\u9fff]+$", prefix[:start].rstrip())
             if leading and any(not _grammar_token(w) for w in leading[0].split()):
                 label = leading[0] + prefix[start:]
@@ -180,7 +184,7 @@ def _organization_labels(query: str, bound_names: set[str]) -> list[str]:
                 label = prefix[start:]
             labels.append(label)
             continue
-        latin = re.search(r"[A-Za-z][\w-]*(?:[ \t]+[A-Za-z][\w-]*)*$", prefix)
+        latin = re.search(r"[A-Za-z][A-Za-z0-9_-]*(?:[ \t]+[A-Za-z][A-Za-z0-9_-]*)*$", prefix)
         if latin:
             words = latin[0].split()
             selected = []
@@ -259,7 +263,7 @@ def _query_bindings(query: str, relation_names: set[str], known_values: set[str]
                 subjects.extend(part for part in _parts(actor) if not _deictic(part))
     # Possessive Chinese noun phrases. Workspace terms/values remain topic/value
     # arguments, while any explicit object name must resolve in this workspace.
-    for match in re.finditer(r"([A-Za-z][\w-]*|[\u3400-\u9fff]+)\s*的", text):
+    for match in re.finditer(r"([A-Za-z][A-Za-z0-9_-]*|[\u3400-\u9fff]+)\s*的", text):
         phrase = _clean_binding(match[1]).casefold()
         if phrase in subject_names:
             subjects.append(phrase)
@@ -479,7 +483,7 @@ def _passive_modifier_capture(query: str, match: re.Match[str], bound_names: set
 def _named(phrase: str) -> bool:
     # Name-shaped tokens in explicit grammatical positions. A broad Chinese
     # clause is not a proper name merely because an old regex captured it.
-    return bool(re.fullmatch(r"[A-Za-z][\w-]*|(?:[A-Z][\w-]*\s+)+[A-Z][\w-]*|"
+    return bool(re.fullmatch(r"[A-Za-z][A-Za-z0-9_-]*|(?:[A-Z][A-Za-z0-9_-]*\s+)+[A-Z][A-Za-z0-9_-]*|"
                              r"(?i:project)\s+\d+|[\u3400-\u9fff]+项目", phrase))
 
 
@@ -500,9 +504,9 @@ def entity_check(query: str, snapshot: WorkspaceSnapshot) -> dict[str, Any]:
     positions, actors = [], []
     for position_kind, pattern in enumerate((
         r"\b(?:does|did|do|is|are|was|were|has|have|had)\s+(?!(?:currently|now|already|still|being|been|not)\b)([\w-]+(?:\s+[\w-]+)*?)\s+(?:(?:currently|now|already|still)\s+)?(?:use|using|used|adopt|adopted|choose|chosen|pick|picked|select|selected|decide|decided|on|with)\b",
-        r"\b((?-i:[A-Z][\w-]*(?:\s+[A-Z][\w-]*)*)|[A-Za-z][\w-]*)['’]s\b",
-        r"^([A-Za-z][\w-]*|[\u3400-\u9fff]+项目)\s*(?:现在|当前|目前)?(?:采用|使用|选用|用的是|用的|用|选了|是)",
-        r"([A-Za-z][\w-]*(?:\s*项目)?|[\u3400-\u9fff]+项目)\s*的",
+        r"\b((?-i:[A-Z][A-Za-z0-9_-]*(?:\s+[A-Z][A-Za-z0-9_-]*)*)|[A-Za-z][A-Za-z0-9_-]*)['’]s\b",
+        r"^([A-Za-z][A-Za-z0-9_-]*|[\u3400-\u9fff]+项目)\s*(?:现在|当前|目前)?(?:采用|使用|选用|用的是|用的|用|选了|是)",
+        r"([A-Za-z][A-Za-z0-9_-]*(?:\s*项目)?|[\u3400-\u9fff]+项目)\s*的",
         r"\bfrom\s+([\w-]+)\s+to\s+([\w-]+)",
         r"\b(?:was|is)\s+([\w-]+)\s+(?:replaced|superseded)\s+by\s+([\w-]+)",
         r"\bwith\s+([\w-]+)(?=[?.!]|$)",
@@ -614,24 +618,58 @@ def discover_scope(query: str, slots: list[dict[str, Any]], resolver: FrozenRela
     margin = candidates[0]["score"] - candidates[1]["score"] if len(candidates) > 1 else float("inf")
     if candidates and candidates[0].get("history_anchor"):
         margin = float("inf")
+    # A field/slot name alone never binds a slot. The question must name the slot's project
+    # (subject or alias), mention a recorded value that belongs to that one slot only, or use a
+    # first-person workspace reference (the existing default-project rule; the confidence and
+    # margin checks below still decide). Otherwise the slot stays a candidate for clarification.
+    from linkloom.ui.router_context import _FIRST_PERSON_WORKSPACE  # local import: avoids a cycle
+    value_slots = {}
+    for slot in snapshot.slots:
+        for value in slot.get("values", []):
+            value_slots.setdefault(normalize_temporal_component(str(value)), set()).add(slot["slot_id"])
+    value_anchored = {next(iter(ids)) for value, ids in value_slots.items()
+                      if len(ids) == 1 and _mentions(query.casefold(), value)}
+    entity_anchored = bool(candidates) and (
+        normalize_temporal_component(candidates[0]["subject"]) in subject_hits
+        or candidates[0].get("slot_id") in value_anchored
+        or _FIRST_PERSON_WORKSPACE.search(query) is not None)
     matched = bool(candidates and not safety["hard_veto"] and not safety["unbound_proper_names"] and (explicit or (
         confidence >= SLOT_MATCH_MIN_SCORE and margin >= SLOT_MATCH_MIN_MARGIN
         and candidates[0].get("topic_anchored", True)
-        and not candidates[0].get("conflicting_mentions"))))
+        and not candidates[0].get("conflicting_mentions")
+        and entity_anchored)))
     status = "EXPLICIT" if explicit and matched else "MATCHED" if matched else "AMBIGUOUS" if candidates else "NO_MATCH"
     if safety["hard_veto"]:
         status = "NO_MATCH"
     return {"status": status, "scope": {k: candidates[0][k] for k in ("subject", "relation")} if matched else None,
             "candidates": candidates[:SLOT_LLM_CANDIDATES], "candidate_count": len(candidates),
             "raw_candidates": raw, "clues": clues, "entity_check": safety,
-            "confidence": confidence, "basis": [],
+            "confidence": confidence, "basis": [], "entity_anchored": entity_anchored or explicit,
             "reason": "One reviewed slot clears the global confidence and margin." if matched else
+                      "The question names a field but not its project; confirm the candidate project."
+                      if candidates and not (entity_anchored or explicit) else
                       "Candidates require disambiguation." if candidates else "No related reviewed slot was retrieved.",
             "decided_by": "rule" if explicit and matched else "slot_match" if matched else "fallback"}
 
 
-def resolve_query_date(query: str, selected: object) -> tuple[str | None, dict[str, str] | None]:
-    """Resolve exact dates only; as_of is a point, never an invented month day."""
+def rule_time_expression(query: str, *, exact_dates: bool, selected: bool) -> bool:
+    """Rules mode only: does the question carry a time expression the host cannot use as one exact date?
+
+    Detection only. It never derives a date and never sets as_of; a hit means clarification.
+    """
+    if _DATE_RANGE.search(query) and (exact_dates or _RELATIVE_DATE.search(query)):
+        return True
+    if selected:
+        return False
+    remainder = _CHINESE_DATE.sub(" ", _ISO_DATE.sub(" ", _ISO_TIMESTAMP.sub(" ", query)))
+    return bool(_RELATIVE_DATE.search(remainder))
+
+
+def resolve_query_date(query: str, selected: object, *, rule_mode: bool = True) -> tuple[str | None, dict[str, str] | None]:
+    """Resolve exact dates only; as_of is a point, never an invented month day.
+
+    rule_mode=False is the model-routing entry: only exact date formats and conflicts are checked.
+    """
     clarification = {"code": "DATE_SCOPE_REQUIRED",
                      "message": "Choose one exact valid-time date (00:00 UTC). Relative periods, ranges and conflicting dates need clarification."}
     try:
@@ -645,17 +683,11 @@ def resolve_query_date(query: str, selected: object) -> tuple[str | None, dict[s
         distinct = {_parse_as_of(point) for point in points}
         mismatch = bool(timestamp and ((timestamps and timestamp not in distinct)
                         or (dates and any(timestamp.date().isoformat() != day for day in dates))))
-        if len(distinct) > 1 or mismatch or (_DATE_RANGE.search(query) and (points or _RELATIVE_DATE.search(query))):
+        if len(distinct) > 1 or mismatch or (rule_mode and rule_time_expression(
+                query, exact_dates=bool(points), selected=bool(timestamp))):
             return None, clarification
         if timestamp:
             return str(selected), None
-        if distinct:
-            remainder = _CHINESE_DATE.sub(" ", _ISO_DATE.sub(" ", without_times))
-            if _RELATIVE_DATE.search(remainder):
-                return None, clarification
-            return points[0], None
-        if _RELATIVE_DATE.search(query):
-            return None, clarification
-        return None, None
+        return (points[0], None) if distinct else (None, None)
     except ProductApplicationError as error:
         return None, {"code": error.code, "message": str(error)}

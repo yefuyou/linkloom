@@ -105,7 +105,9 @@ def test_complete_lexical_alias_is_independent_of_low_dense_similarity():
         def encode(self, texts):
             return np.asarray([[1., 0.] if "uses platform" in t else [0., 1.] for t in texts])
     result = r.route_question("Which platform?", SLOTS, RESOLVER, workspace_id="one", embedder=Orthogonal())
-    assert result["route"] == "CURRENT" and result["scope"]["subject"] == "Launch"
+    # A field name alone no longer binds: the formerly bound slot is offered for clarification.
+    assert result["route"] == "CLARIFY" and result["scope"] is None
+    assert ("Launch", "uses platform") in [(c["subject"], c["relation"]) for c in result["discovery"]["candidates"]]
     assert result["discovery"]["raw_candidates"][0]["dense_score"] is None
 
 

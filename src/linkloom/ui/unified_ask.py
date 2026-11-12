@@ -196,9 +196,10 @@ class UnifiedAskService:
             if provider.external_provider:
                 with owner._starts.operation(request.run_id):
                     session = provider.reserve(self.app, owner, request, validate)
-                    decision = classify(session.bind(provider.security_adapter, "ask-security"), request)
+                    decision = classify(session.bind(provider.security_adapter, "ask-security"), request,
+                                        record=result)
             else:
-                decision = classify(provider.security_adapter, request)
+                decision = classify(provider.security_adapter, request, record=result)
             result.update(status="COMPLETED", **decision)
         except (RouterInvalid, BackgroundWorkStopped, OSError, ValueError) as error:
             result["fallback_reason"] = str(error) if isinstance(error, RouterInvalid) else "PROVIDER_UNAVAILABLE"
@@ -241,6 +242,14 @@ class UnifiedAskService:
                         blocked, status = self._router_stop(run, None, security["reason_code"])
                         blocked["router"]["source"] = blocked["decided_by"] = "llm"
                         return blocked, status
+                    # A configured security model whose classification fails or is invalid never
+                    # releases the input to keyword rules or routing. Without a configured security
+                    # model the rule mode keeps its existing behavior; missing user consent is not
+                    # a model failure and also keeps its existing handling.
+                    if (self.router_provider.security_adapter is not None
+                            and security.get("status") != "COMPLETED"
+                            and security.get("fallback_reason") != "PROVIDER_PERMISSION_REQUIRED"):
+                        return self._router_stop(run, None, "MODEL_UNAVAILABLE")
                 ordinary_router = (use_router and self.router_provider is not None and not context
                                    and not (values["subject"] or values["relation"]))
                 cascade = ordinary_router and self.router_provider.mode == "cascade"
@@ -314,9 +323,12 @@ class UnifiedAskService:
                         routed.update(route="CLARIFY", scope=None, decided_by="fallback")
                 date_blocker = None
                 if cascade:
-                    from linkloom.ui.router_context import router_query_date
+                    from linkloom.ui.router_context import has_exact_date, router_query_date
                     _, time_error = router_query_date(run.query, payload.get("as_of"))
                     date_blocker = rule_date_blocker(time_error, has_scope=bool(routed["scope"]))
+                    # The rules never decide whether a literal date is one point or the edge of a range.
+                    if date_blocker is None and has_exact_date(run.query):
+                        return self._route_ordinary(run, payload)
                 if cascade and rule_needs_router(routed["route"], blocker=date_blocker):
                     return self._route_ordinary(run, payload)
                 if date_blocker:

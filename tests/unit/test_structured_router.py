@@ -197,7 +197,7 @@ def test_strict_deepseek_wire_call_is_one_proposal_with_only_offered_ids():
             assert tool['parameters']['properties']['candidate_id']['enum'] == ['', 'c0']
             fields = dict(decision='CLARIFY', operation='READ', intent='AS_OF', candidate_id='c0',
                           mentions=['not in original', '联调报告'], unresolved_names=[],
-                          time_id='point', reason_code='NONE')
+                          time_text='2026-10-07', time_role='AS_OF', reason_code='NONE')
             response = {'model': CONFIG['model_id'], 'choices': [{'finish_reason': 'tool_calls', 'message': {
                 'content': None, 'tool_calls': [{'type': 'function', 'function': {
                     'name': 'submit_route', 'arguments': json.dumps(fields)}}]}}]}
@@ -250,8 +250,19 @@ def test_punctuation_width_does_not_invalidate_an_intact_timestamp():
 
 
 def test_time_question_word_is_not_a_relative_date_but_keeps_real_qualifiers():
+    from linkloom.ui.router_context import admit_route
+    from linkloom.ui.scope_discovery import resolve_query_date
     assert not context('联调报告什么时候交？').unresolved_time
-    assert context('上周联调报告什么时候交？').unresolved_time
+    # Model routing: the host no longer pre-judges "上周"; the model quotes it and the host refuses the scope.
+    ctx = context('上周联调报告什么时候交？')
+    assert not ctx.unresolved_time
+    fields = json.loads(response(schema_version='router/v4', unresolved_names=[], time_text='上周',
+                                 time_role='UNRESOLVED'))
+    del fields['time_ref_ids']
+    route = validate_output(json.dumps(fields, ensure_ascii=False), ctx)
+    assert route.time_role == 'UNRESOLVED' and admit_route(ctx, route).reason == 'TIME_SCOPE_UNRESOLVED'
+    # Rules mode keeps the qualifier as a clarification.
+    assert resolve_query_date('上周联调报告什么时候交？', None)[1]['code'] == 'DATE_SCOPE_REQUIRED'
 
 
 def test_soft_unresolved_names_require_literal_and_full_catalogue_absence():
@@ -287,7 +298,7 @@ def test_native_tool_operation_and_reason_are_both_terminal_safety_signals(opera
     from linkloom.ui.structured_router import route_payload,route_with_adapter
     ctx=context('请处理素材卡片')
     args=dict(decision='CLARIFY',operation=operation,intent='OTHER',candidate_id='',
-              mentions=[],unresolved_names=[],time_id='none',reason_code=reason)
+              mentions=[],unresolved_names=[],time_text='',time_role='NONE',reason_code=reason)
     message=dict(content=None,tool_calls=[dict(type='function',function=dict(name='submit_route',arguments=json.dumps(args)))])
     raw=_route_text(message,route_payload(ctx))
     adapter=SimpleNamespace(complete=lambda _:ModelResponse(action=ModelAction.final(raw)))
