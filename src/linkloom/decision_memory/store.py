@@ -284,16 +284,15 @@ class TemporalDecisionStore:
         *,
         source_registry: SourceReferenceRegistry | None = None,
         check_same_thread: bool = True,
+        read_only: bool = False,
     ) -> None:
         raw_path = str(db_path)
-        if raw_path != ":memory:":
+        if not read_only and raw_path != ":memory:":
             Path(raw_path).parent.mkdir(parents=True, exist_ok=True)
         self.db_path = raw_path
         self._source_registry = source_registry or SourceReferenceRegistry()
-        if check_same_thread:
-            self._connection = sqlite3.connect(raw_path)
-        else:
-            self._connection = sqlite3.connect(raw_path, check_same_thread=False)
+        target = Path(raw_path).resolve().as_uri() + "?mode=ro" if read_only else raw_path
+        self._connection = sqlite3.connect(target, uri=read_only, check_same_thread=check_same_thread)
         self._connection.row_factory = sqlite3.Row
         self._connection.execute("PRAGMA foreign_keys = ON")
         initial_version = int(self._connection.execute("PRAGMA user_version").fetchone()[0])
@@ -303,6 +302,11 @@ class TemporalDecisionStore:
                 f"database schema version {initial_version} is newer than supported "
                 f"version {_LATEST_SCHEMA_VERSION}"
             )
+        if read_only:
+            if initial_version != _LATEST_SCHEMA_VERSION:
+                self._connection.close()
+                raise RuntimeError("Open the database in LinkLoom to migrate it before using MCP.")
+            return
         self._connection.executescript(_SCHEMA)
         self._ensure_column(
             "decision",

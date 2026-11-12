@@ -320,20 +320,21 @@ python -m linkloom.ui --database work/task-demo.sqlite --port 8765 --offline-tas
 
 ### 作为 MCP server 使用（只读）
 
-安装 `python -m pip install -e ".[mcp]"`（固定 `mcp==2.3.0`），传输方式为 stdio。
+在仓库外创建虚拟环境 `python -m venv <venv>`，从仓库运行 `"<venv-python>" -m pip install -e ".[mcp]"`（固定 `mcp==2.3.0`）。
+将 `<venv-python>` 替换为该环境 Python 的绝对路径（Windows 为 `Scripts/python.exe`，macOS / Linux 为 `bin/python`）。
 工具：`ask`、`list_decisions`、`get_decision_history`、`list_tasks`，全部只读，结果带证据（会话、原句、时间）。
 每个工具都要传 `workspace`（工作区 ID），且只能是产品当前选中的工作区；拒绝或追问时返回 `reason_code`。
 
 Claude Code：
 
 ```bash
-claude mcp add linkloom -- python -m linkloom.mcp_server --database work/product.sqlite
+claude mcp add linkloom -- "<venv-python>" -m linkloom.mcp_server --database "<product-db>"
 ```
 
 Claude Desktop 在 `claude_desktop_config.json` 的 `mcpServers` 下加入（路径用绝对路径）：
 
 ```json
-{"linkloom": {"command": "python", "args": ["-m", "linkloom.mcp_server", "--database", "/path/to/product.sqlite"]}}
+{"linkloom": {"command": "<venv-python>", "args": ["-m", "linkloom.mcp_server", "--database", "/path/to/product.sqlite"]}}
 ```
 
 默认不向外部模型发送问题；加 `--allow-external-provider` 才允许 `ask` 调用已配置的路由/安全模型。
