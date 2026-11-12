@@ -28,6 +28,7 @@ def _submission(context):
         "candidate_id": enum(["", *(row["id"] for row in context["candidates"])]),
         "mentions": {"type": "array", "items": {"type": "string"}},
         "unresolved_names": {"type": "array", "items": {"type": "string"}},
+        "entity_mentions": {"type": "array", "items": {"type": "string"}},
         "time_text": {"type": "string"},
         "time_role": enum(TIME_ROLES),
         "reason_code": enum(["NONE", *sorted(SAFETY | CAPABILITY)]),
@@ -49,10 +50,11 @@ def _tool_arguments(message, tool):
         args = json.loads(call["function"]["arguments"], object_pairs_hook=_unique_object,
                           parse_constant=_reject_constant)
         schema = tool["function"]["parameters"]["properties"]
-        if not isinstance(args, dict) or set(args) != set(schema):
+        # A reply without entity_mentions stays valid; the host then keeps its own name check (router/v4).
+        if not isinstance(args, dict) or set(args) | {"entity_mentions"} != set(schema):
             return None
-        for key, prop in schema.items():
-            value = args[key]
+        for key, value in args.items():
+            prop = schema[key]
             if prop["type"] == "array":
                 if not isinstance(value, list) or any(not isinstance(item, str) for item in value):
                     return None
@@ -98,7 +100,8 @@ def _route_text(message, context):
               "OTHER" if proposed_operation == "OTHER" or args["intent"] == "OTHER" and args["reason_code"] == "UNSUPPORTED_QUERY" else "READ")
         domain = next((row["domain"] for row in context["candidates"] if row["id"] == candidate), "NONE")
         # The host resolves the quoted time text itself (structured_router.resolve_time_text).
-        return json.dumps(dict(args, schema_version="router/v4", domain=routing_domain(domain, args["intent"]),
+        version = "router/v5" if "entity_mentions" in args else "router/v4"
+        return json.dumps(dict(args, schema_version=version, domain=routing_domain(domain, args["intent"]),
                                operation=op, candidate_ids=[candidate] if candidate else []), ensure_ascii=False)
     except (AssertionError, KeyError, TypeError, ValueError, RecursionError):
         return "{}"

@@ -177,7 +177,9 @@ def test_cascade_runs_rules_first_and_does_not_send_unknown_names(decisions):
     result, status = ask.ask(dict(query='What supplier is UnlistedProject using?', workspace_id=workspace))
     assert status == 200 and result['status'] == 'NEEDS_SCOPE' and not result['evidence']
     assert result['router']['reason_code'] == 'ENTITY_NOT_FOUND'
-    assert not model.requests
+    # Entity names are now the model's to report: the question reaches it once. Its reply is unusable,
+    # so the rules' own name check decides and keeps its reason code.
+    assert len(model.requests) == 1
 
 
 def quoted(data, time_text, time_role, intent):
