@@ -205,6 +205,7 @@ class UnifiedAskService:
             result["fallback_reason"] = str(error) if isinstance(error, RouterInvalid) else "PROVIDER_UNAVAILABLE"
         finally:
             if session is not None:
+                session.record_validation(result)
                 session.close(timeout=0)
             result["seconds"] = round(monotonic() - started, 4)
         validate()
@@ -556,6 +557,7 @@ class UnifiedAskService:
                 raise ProductApplicationError('INVESTIGATION_CONTEXT_CHANGED', 'Refresh the source selection and ask again.', status=409)
         session = None
         attempted = False
+        reply_record = {}
         try:
             context = self._router_context(run, payload, snapshot_hash)
             blocker = blocked_entity_reason(run.query, context.blocked_entities)
@@ -578,9 +580,10 @@ class UnifiedAskService:
             if provider.external_provider:
                 with owner._starts.operation(request.run_id):
                     session = provider.reserve(self.app, owner, request, validate_snapshot)
-                    route = route_with_adapter(session.bind(provider.adapter, 'ask-router'), request, context)
+                    route = route_with_adapter(session.bind(provider.adapter, 'ask-router'), request, context,
+                                               record=reply_record)
             else:
-                route = route_with_adapter(provider.adapter, request, context)
+                route = route_with_adapter(provider.adapter, request, context, record=reply_record)
             validate_snapshot()
         except BackgroundWorkStopped:
             return self._router_stop(run, None, 'POLICY_BLOCKED', http=503)
@@ -590,8 +593,14 @@ class UnifiedAskService:
             validate_sources()
             if str(error) == "EVIDENCE_INVALID":
                 return self._router_stop(run, None, "EVIDENCE_INVALID", http=409)
+            if str(error) == "ROUTER_OUTPUT_TRUNCATED":
+                result, status = self._router_stop(run, None, "MODEL_UNAVAILABLE")
+                result["router"].update(fallback_reason=str(error), attempted=attempted, **reply_record)
+                return result, status
             with pass_router_reservation(session):
-                return rules(str(error), attempted)
+                result, status = rules(str(error), attempted)
+                result["router"].update(reply_record)
+                return result, status
         except (ImportError, OSError, ValueError):
             # Optional local retrieval can fail without any usable catalogue.
             validate_sources()
@@ -599,11 +608,16 @@ class UnifiedAskService:
                 if value_only:
                     return rules('RETRIEVAL_UNAVAILABLE', attempted)
                 return self._legacy_router_fallback(run, payload, 'RETRIEVAL_UNAVAILABLE')
+        finally:
+            if session is not None:
+                session.record_validation(reply_record)
         if value_only and route.decision == "ROUTE" and not route.entity_mentions:
             with pass_router_reservation(session):
                 return rules('ENTITY_MENTIONS_MISSING', attempted)
         with pass_router_reservation(session):
-            return self._execute_router(run, payload, context, route)
+            result, status = self._execute_router(run, payload, context, route)
+            result["router"].update(reply_record)
+            return result, status
 
     def _router_stop(self, run, route, reason, *, http=200):
         from linkloom.ui.structured_router import SAFETY

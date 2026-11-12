@@ -105,6 +105,14 @@ class TaskProviderSession:
     def bind(self, adapter, stage):
         return _BudgetedTaskAdapter(self, adapter, stage)
 
+    def record_validation(self, record):
+        fields = {key: record[key] for key in ("provider_reply", "invalid_response_counts") if key in record}
+        if fields:
+            with self.lock:
+                if self.attempts:
+                    self.attempts[-1].update(fields)
+                    self._save()
+
     def _save(self):
         # Fsync reservations before crossing the transport. No credentials,
         # original quotes or provider continuation are copied into this journal.
@@ -184,7 +192,11 @@ class TaskProviderSession:
                              or response.error.code == 'MODEL_TIMEOUT')
                 row.update(outcome='UNCERTAIN' if uncertain else 'FAILED', code=response.error.code,
                            error=response.error.to_dict())
-                return self._error('PROVIDER_UNCERTAIN' if uncertain else response.error.code, uncertain=uncertain)
+                failure = self._error('PROVIDER_UNCERTAIN' if uncertain else response.error.code, uncertain=uncertain)
+                if response.finish_reason == 'length':
+                    return replace(failure, finish_reason=response.finish_reason, usage=response.usage,
+                                   provider_metadata=response.provider_metadata)
+                return failure
             if ((response.usage.input_tokens or 0) > size or (response.usage.output_tokens or 0) > output
                     or (response.usage.total_tokens or 0) > size + output):
                 row['outcome'] = 'FAILED'

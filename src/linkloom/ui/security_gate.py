@@ -5,7 +5,9 @@ import re
 from uuid import uuid4
 
 from linkloom.agents.model_adapter import ModelGenerationOptions, ModelTurnRequest
-from linkloom.ui.structured_router import CONFIG, SAFETY, RouterInvalid, _reject_constant, _unique_object
+from linkloom.ui.structured_router import (
+    CONFIG, SAFETY, RouterInvalid, _reject_constant, _unique_object, record_reply, record_invalid,
+)
 
 PROMPT = """Classify only the current Ask input for safety. Ask is read-only and confined to the trusted current workspace.
 Return exactly one submit_safety result containing only reason_code; no explanation.
@@ -45,7 +47,7 @@ def request_for(query, workspace_id):
     return ModelTurnRequest(run_id=identifier, task_id=identifier, turn_id=identifier,
         agent_id="ask-security", sequence=1, user_input=text, observation=None,
         available_tools=[], model_id=None,
-        generation_options=ModelGenerationOptions(max_output_tokens=min(128, CONFIG["max_output_tokens"])))
+        generation_options=ModelGenerationOptions(max_output_tokens=CONFIG["security_max_output_tokens"]))
 
 
 def redacted_response(text):
@@ -65,6 +67,8 @@ def classify(adapter, request, record=None):
         response = adapter.complete(request)
     except Exception as exc:
         raise RouterInvalid("PROVIDER_UNAVAILABLE") from exc
+    if record_reply(response, record):
+        raise RouterInvalid("SECURITY_OUTPUT_TRUNCATED")
     if getattr(response, "error", None) is not None:
         raise RouterInvalid("PROVIDER_UNAVAILABLE")
     metadata = getattr(response, "provider_metadata", {})
@@ -75,13 +79,18 @@ def classify(adapter, request, record=None):
     if record is not None and action is not None:
         record["raw_response"] = redacted_response(getattr(action, "final_answer", None))
     if action is None or action.kind != "final" or len(action.final_answer.encode("utf8")) > CONFIG["max_response_bytes"]:
+        record_invalid(record, "schema_invalid")
         raise RouterInvalid("SECURITY_SCHEMA_INVALID")
     try:
         result = json.loads(action.final_answer, object_pairs_hook=_unique_object, parse_constant=_reject_constant)
-        if (not isinstance(result, dict) or set(result) != {"reason_code"}
-                or not isinstance(result["reason_code"], str) or result["reason_code"] not in REASON_CODES):
-            raise ValueError("invalid classification")
     except (TypeError, ValueError, RecursionError) as exc:
+        record_invalid(record, "schema_invalid")
         raise RouterInvalid("SECURITY_SCHEMA_INVALID") from exc
+    if not isinstance(result, dict) or set(result) != {"reason_code"}:
+        record_invalid(record, "missing_fields" if isinstance(result, dict) and "reason_code" not in result else "schema_invalid")
+        raise RouterInvalid("SECURITY_SCHEMA_INVALID")
+    if result["reason_code"] not in REASON_CODES:
+        record_invalid(record, "invalid_enum")
+        raise RouterInvalid("SECURITY_SCHEMA_INVALID")
     code = result["reason_code"]
     return dict(decision="ALLOW" if code == "NONE" else "BLOCK", reason_code=code)
