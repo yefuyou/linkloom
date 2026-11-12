@@ -291,8 +291,13 @@ class TemporalDecisionStore:
             Path(raw_path).parent.mkdir(parents=True, exist_ok=True)
         self.db_path = raw_path
         self._source_registry = source_registry or SourceReferenceRegistry()
-        target = Path(raw_path).resolve().as_uri() + "?mode=ro" if read_only else raw_path
-        self._connection = sqlite3.connect(target, uri=read_only, check_same_thread=check_same_thread)
+        if read_only:
+            target = Path(raw_path).resolve().as_uri() + "?mode=ro"
+            self._connection = sqlite3.connect(target, uri=True, check_same_thread=check_same_thread)
+        elif check_same_thread:
+            self._connection = sqlite3.connect(raw_path)
+        else:
+            self._connection = sqlite3.connect(raw_path, check_same_thread=False)
         self._connection.row_factory = sqlite3.Row
         self._connection.execute("PRAGMA foreign_keys = ON")
         initial_version = int(self._connection.execute("PRAGMA user_version").fetchone()[0])
