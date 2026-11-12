@@ -63,6 +63,37 @@ Safety refusals carry no candidate. Write requests use WRITE_NOT_ALLOWED. A quot
 class RouterInvalid(ValueError):
     """Only finite local codes cross the API boundary."""
 
+    def __init__(self, code, *, category=None):
+        super().__init__(code)
+        self.category = category
+
+
+INVALID_RESPONSE_CATEGORIES = ("truncated", "missing_fields", "invalid_enum", "invalid_combination", "schema_invalid")
+
+
+def record_invalid(record, category):
+    if record is not None:
+        counts = record.setdefault("invalid_response_counts", dict.fromkeys(INVALID_RESPONSE_CATEGORIES, 0))
+        counts[category] += 1
+
+
+def record_reply(response, record):
+    finish = getattr(response, "finish_reason", None)
+    metadata = getattr(response, "provider_metadata", {})
+    usage = getattr(response, "usage", None)
+    thinking = metadata.get("reasoning_tokens", 0 if metadata.get("provider") == "deepseek" else None)
+    output = getattr(usage, "output_tokens", None)
+    if record is not None and (finish or output is not None or thinking is not None):
+        record["provider_reply"] = dict(
+            finish_reason=finish, thinking_tokens=thinking,
+            visible_output_tokens=output - thinking if output is not None and thinking is not None and output >= thinking else None,
+            output_tokens=output, input_tokens=getattr(usage, "input_tokens", None),
+        )
+    truncated = finish in {"MAX_TOKENS", "length"}
+    if truncated:
+        record_invalid(record, "truncated")
+    return truncated
+
 
 @dataclass(frozen=True)
 class RouteDecision:
@@ -170,7 +201,9 @@ def resolve_time_text(context, text, role):
     that: it rejects text that is not in the question, and maps a quoted time to one of its own lexed date
     options when the quote contains one. Any other real time expression stays UNRESOLVED.
     """
-    if not isinstance(text, str) or len(text) > 160 or role not in TIME_ROLES:
+    if role not in TIME_ROLES:
+        raise RouterInvalid("ROUTER_SCHEMA_INVALID", category="invalid_enum")
+    if not isinstance(text, str) or len(text) > 160:
         raise RouterInvalid("ROUTER_SCHEMA_INVALID")
     if not text.strip():
         if role == "NONE":
@@ -217,6 +250,9 @@ def validate_output(raw, context, *, offered=None):
         data = json.loads(raw, object_pairs_hook=_unique_object, parse_constant=_reject_constant)
     except (ValueError, RecursionError) as exc:
         raise RouterInvalid("ROUTER_SCHEMA_INVALID") from exc
+    if isinstance(data, dict) and "schema_version" in data and data["schema_version"] not in (
+            "router/v2", "router/v3", "router/v4", "router/v5"):
+        raise RouterInvalid("ROUTER_SCHEMA_INVALID", category="invalid_enum")
     listed = isinstance(data, dict) and data.get("schema_version") == "router/v5"
     quoted = listed or isinstance(data, dict) and data.get("schema_version") == "router/v4"
     soft = quoted or isinstance(data, dict) and data.get("schema_version") == "router/v3"
@@ -225,8 +261,9 @@ def validate_output(raw, context, *, offered=None):
         fields = fields - {"time_ref_ids"} | {"time_text"}
     if listed:
         fields = fields | {"entity_mentions"}
-    if not isinstance(data, dict) or set(data) != fields or data["schema_version"] not in {
-            "router/v2", "router/v3", "router/v4", "router/v5"}:
+    if isinstance(data, dict) and fields - data.keys():
+        raise RouterInvalid("ROUTER_SCHEMA_INVALID", category="missing_fields")
+    if not isinstance(data, dict) or set(data) != fields:
         raise RouterInvalid("ROUTER_SCHEMA_INVALID")
     entities = None
     if listed:
@@ -245,7 +282,7 @@ def validate_output(raw, context, *, offered=None):
                            ("operation", ("READ", "WRITE_REQUEST", "OTHER")),
                            ("reason_code", (*SAFETY, *CAPABILITY, "NONE"))):
         if not isinstance(data[field], str) or data[field] not in allowed:
-            raise RouterInvalid("ROUTER_SCHEMA_INVALID")
+            raise RouterInvalid("ROUTER_SCHEMA_INVALID", category="invalid_enum")
     ids = _ids(data["candidate_ids"], context.candidates if offered is None else offered, CONFIG["max_candidates"], "CANDIDATE_OUT_OF_SET")
     refs = _ids(data["time_ref_ids"], context.time_options, 2, "TIME_CONFLICT")
     mentions = data["mentions"]
@@ -364,11 +401,13 @@ def request_for(context):
                                                  temperature=CONFIG["temperature"]))
 
 
-def route_with_adapter(adapter, request, context):
+def route_with_adapter(adapter, request, context, record=None):
     try:
         response = adapter.complete(request)
     except Exception as exc:
         raise RouterInvalid("PROVIDER_UNAVAILABLE") from exc
+    if record_reply(response, record):
+        raise RouterInvalid("ROUTER_OUTPUT_TRUNCATED")
     if getattr(response, "error", None) is not None:
         code = response.error.code
         if response.error.details.get("reason") == "TASK_SOURCE_AUTHORIZATION_CHANGED":
@@ -376,6 +415,7 @@ def route_with_adapter(adapter, request, context):
         if response.error.details.get("reason") == "TASK_PROVIDER_BUDGET_EXHAUSTED":
             raise RouterInvalid("BUDGET_EXHAUSTED")
         if code in {"MODEL_RESPONSE_MALFORMED", "MODEL_RESPONSE_UNSUPPORTED", "MODEL_TOOL_CALL_PARSE_FAILED"}:
+            record_invalid(record, "schema_invalid")
             raise RouterInvalid("ROUTER_SCHEMA_INVALID")
         raise RouterInvalid("PROVIDER_UNAVAILABLE")
     metadata = getattr(response, "provider_metadata", {})
@@ -383,11 +423,13 @@ def route_with_adapter(adapter, request, context):
         raise RouterInvalid("PROVIDER_MODEL_MISMATCH")
     action = getattr(response, "action", None)
     if action is None or action.kind != "final":
+        record_invalid(record, "schema_invalid")
         raise RouterInvalid("ROUTER_SCHEMA_INVALID")
     # Even a malformed positive proposal may safely remove authority. It
     # cannot turn a host refusal into a lookup or execute an unvalidated ID.
     from linkloom.ui.ask_admission import router_safety_reason
-    proposed_operation = proposed_reason = None
+    from linkloom.ui.router_context import blocked_entity_reason, name_missing
+    proposal = proposed_operation = proposed_reason = None
     try:
         proposal = json.loads(action.final_answer, object_pairs_hook=_unique_object,
                               parse_constant=_reject_constant)
@@ -396,10 +438,43 @@ def route_with_adapter(adapter, request, context):
             proposed_reason = proposal.get("reason_code")
     except (TypeError, ValueError, RecursionError):
         pass
-    safety = router_safety_reason(context.query, operation=proposed_operation, reason=proposed_reason)
+    if isinstance(proposal, dict) and proposal.get("wire_invalid") in INVALID_RESPONSE_CATEGORIES and set(proposal) == {"wire_invalid"}:
+        record_invalid(record, proposal["wire_invalid"])
+        raise RouterInvalid("ROUTER_SCHEMA_INVALID")
+    host_reason = blocked_entity_reason(context.query, context.blocked_entities)
+    safety = router_safety_reason(context.query, operation=proposed_operation, reason=proposed_reason, host_reason=host_reason)
+    if (safety == "WORKSPACE_DENIED" and not host_reason and proposed_operation == "READ"
+            and isinstance(proposal, dict) and proposal.get("intent") == "AS_OF"
+            and proposal.get("time_role") == "AS_OF"
+            and not router_safety_reason(context.query)):
+        # A model-only denial paired with an unusable date and a local, grounded
+        # candidate can be corrected to a clarification. It still cannot execute.
+        try:
+            checked = validate_output(action.final_answer, context)
+            names = checked.entity_mentions
+            offered = {row["id"] for row in route_payload(context)["candidates"]}
+            ids = proposal.get("candidate_ids")
+            if (checked.time_role == "UNRESOLVED" and names and isinstance(ids, list)
+                    and len(ids) == 1 and ids[0] in offered and not context.missing_names
+                    and any(normalize_mention(name) in {normalize_mention(anchor)
+                            for anchor in context.candidates[ids[0]].anchors} for name in names)
+                    and not any(name_missing(name, context.catalogue_names) for name in (*names, *checked.unresolved_names))
+                    and not blocked_entity_reason(context.query, context.blocked_entities, mentions=names)):
+                return RouteDecision("CLARIFY", "AS_OF", "NONE", "READ", (), (), (),
+                                     "UNRESOLVED", "TIME_SCOPE_UNRESOLVED")
+        except RouterInvalid:
+            pass
     if safety:
         return RouteDecision("REFUSE", "OTHER", "NONE",
             "WRITE_REQUEST" if safety == "WRITE_NOT_ALLOWED" else "READ",
             (), (), (), "NONE", safety)
     offered = {row["id"] for row in route_payload(context)["candidates"]}
-    return validate_output(action.final_answer, context, offered=offered)
+    try:
+        return validate_output(action.final_answer, context, offered=offered)
+    except RouterInvalid as error:
+        category = error.category or (
+            "invalid_combination" if str(error) in {"ROUTER_COMBINATION_INVALID", "TIME_CONFLICT",
+                "TIME_TEXT_NOT_LITERAL", "CANDIDATE_DOMAIN_MISMATCH", "CANDIDATE_OUT_OF_SET"}
+            else "schema_invalid")
+        record_invalid(record, category)
+        raise

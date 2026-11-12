@@ -96,8 +96,28 @@ def test_bad_output_falls_back_once_and_keeps_legacy_reviewed_answer(decisions):
     result,status = ask.ask(query)
     assert status == code == 200 and baseline['status']=='COMPLETED', baseline
     assert result['conclusions'] == baseline['conclusions'] and result['evidence'] == baseline['evidence']
-    assert result['router']==dict(source='rule',fallback_reason='ROUTER_SCHEMA_INVALID',attempted=True)
+    assert result['router']==dict(source='rule',fallback_reason='ROUTER_SCHEMA_INVALID',attempted=True,
+        invalid_response_counts=dict(truncated=0, missing_fields=0, invalid_enum=0,
+                                     invalid_combination=0, schema_invalid=1))
     assert len(model.requests)==1
+
+
+def test_truncated_router_reply_does_not_fall_back_to_a_lookup(decisions):
+    from types import SimpleNamespace
+    from linkloom.agents.model_adapter import ModelUsage
+
+    reply = ModelResponse(action=ModelAction.final('{"decision":'), finish_reason='MAX_TOKENS',
+                          usage=ModelUsage(input_tokens=500, output_tokens=2048),
+                          provider_metadata={'reasoning_tokens': 2040})
+    ask = UnifiedAskService(decisions.app, lambda: None, graph_service=False, slot_embedder=None,
+        router_provider=RouterProvider(SimpleNamespace(complete=lambda _: reply)))
+    result, status = ask.ask(dict(query='What supplier is Launch currently using?',
+                                  workspace_id=decisions.app._workspace_id()))
+    assert status == 200 and result['router']['decision'] == 'CLARIFY'
+    assert result['router']['fallback_reason'] == 'ROUTER_OUTPUT_TRUNCATED'
+    assert result['router']['invalid_response_counts']['truncated'] == 1
+    assert result['router']['provider_reply']['visible_output_tokens'] == 8
+    assert not result['evidence'] and not result['conclusions']
 
 
 def test_host_denies_foreign_workspace_before_candidate_or_model(decisions):

@@ -156,6 +156,35 @@ def test_authorized_classifier_is_one_budgeted_call_before_capability(decisions)
     assert not session.pending_task_ids()
 
 
+def test_truncated_security_reply_clarifies_and_is_persisted_separately(decisions):
+    from linkloom.agents.model_adapter import ModelUsage
+
+    class TruncatedGate:
+        def complete(self, _):
+            return ModelResponse(action=ModelAction.final('{"reason_code":'),
+                                 finish_reason='MAX_TOKENS', usage=ModelUsage(input_tokens=50, output_tokens=2048),
+                                 provider_metadata={'reasoning_tokens': 2040})
+
+    ask = service(decisions, TruncatedGate(), 'cascade', external_provider=True)
+    owner = decisions.configure_agent()
+    ask.investigation = lambda: owner
+    result, status = ask.ask(dict(query='What supplier is Launch currently using?',
+        workspace_id=decisions.app._workspace_id(), allow_external_provider=True))
+    assert status == 200 and result['router']['decision'] == 'CLARIFY'
+    assert result['error']['code'] == 'MODEL_UNAVAILABLE' and not ask.router_provider.adapter.requests
+    gate = result['security_gate']
+    assert gate['fallback_reason'] == 'SECURITY_OUTPUT_TRUNCATED'
+    session, = owner._provider_sessions
+    with (session.root / 'budget.json').open(encoding='utf8') as stream:
+        attempt, = json.load(stream)['attempts']
+    assert attempt['invalid_response_counts'] == gate['invalid_response_counts']
+    assert attempt['invalid_response_counts']['truncated'] == 1
+    assert attempt['provider_reply'] == gate['provider_reply']
+    assert attempt['provider_reply']['finish_reason'] == 'MAX_TOKENS'
+    assert attempt['provider_reply']['thinking_tokens'] == 2040
+    assert attempt['provider_reply']['visible_output_tokens'] == 8
+
+
 def test_graph_fallback_reentry_does_not_classify_again(decisions, monkeypatch):
     from types import SimpleNamespace
     gate = Gate()
