@@ -292,10 +292,25 @@ def name_missing(name, catalogue_names):
             and normalized.removesuffix("项目") not in catalogue_names)
 
 
-def handoff_blocker(context):
+def value_only_binding(query, scope, slots):
+    """The rules bound this slot although the question names neither its project nor a first-person default.
+
+    The binding then rests on a recorded value alone, so cascade mode lets the model report the entities
+    the question names before any lookup.
+    """
+    if not scope or _FIRST_PERSON_WORKSPACE.search(query):
+        return False
+    subject = normalize_mention(scope["subject"])
+    return not any(_mentions(query.casefold(), name) for slot in slots
+                   if normalize_mention(slot["subject"]) == subject
+                   for name in (slot["subject"], *slot.get("subject_aliases", ())))
+
+
+def handoff_blocker(context, *, model_entities=False):
+    """model_entities: the model will report the question's entity names; rule-detected names do not gate."""
     if context.unresolved_time:
         return "TIME_SCOPE_UNRESOLVED"
-    if context.missing_names:
+    if context.missing_names and not model_entities:
         return "ENTITY_NOT_FOUND"
     if not context.candidates:
         return "NO_ROUTER_CANDIDATES"
@@ -350,10 +365,16 @@ class RouterAdmission:
     as_of: str | None = None
 
 
-def admit_route(context, route):
-    """Choose only installed read paths after authority and semantic validation."""
+def admit_route(context, route, *, model_entities=False):
+    """Choose only installed read paths after authority and semantic validation.
+
+    model_entities (cascade mode): entity names come from the model's entity_mentions, each already located
+    in the question. One that is not a known name or alias of this workspace is an unknown entity: the
+    request clarifies with ENTITY_NOT_FOUND and no candidate or recorded value may bind in its place.
+    """
+    listed = route.entity_mentions if model_entities else None
     blocker = blocked_entity_reason(context.query, context.blocked_entities,
-                                    mentions=(text for text, _, _ in route.mentions))
+                                    mentions=(*(text for text, _, _ in route.mentions), *(listed or ())))
     from linkloom.ui.ask_admission import router_safety_reason
     safety = router_safety_reason(context.query, operation=route.operation,
                                   reason=route.reason_code, host_reason=blocker)
@@ -361,7 +382,9 @@ def admit_route(context, route):
         return RouterAdmission(None, safety)
     if blocker:
         return RouterAdmission(None, blocker)
-    if context.missing_names or any(name_missing(name, context.catalogue_names) for name in route.unresolved_names):
+    missing = (context.missing_names if listed is None else
+               any(name_missing(name, context.catalogue_names) for name in listed))
+    if missing or any(name_missing(name, context.catalogue_names) for name in route.unresolved_names):
         return RouterAdmission(None, "ENTITY_NOT_FOUND")
     if any(context.candidates[key].status != "confirmed" for key in route.candidate_ids):
         return RouterAdmission(None, "NO_CONFIRMED_RECORD")

@@ -42,6 +42,8 @@ Copy the question's own time expression exactly into time_text; leave it empty i
 time_role: NONE without a time, AS_OF for state at one exact date, MEETING_DATE for a meeting on a date, RANGE for
 a period or an open-ended before/after, UNRESOLVED for a relative or vague time. Names and identifiers are not time.
 Report unmatched named objects in unresolved_names as exact question text.
+entity_mentions: every project, task, person, named value or other name in the question, copied exactly, matched or not.
+Pronouns and generic words are not names.
 Mentions are optional hints. Omit terms you cannot copy exactly.
 If there is no candidate for an explicitly named object use ENTITY_NOT_FOUND. Ambiguity uses ENTITY_AMBIGUOUS.
 TIME_SCOPE_UNRESOLVED means a valid supported time is missing. NO_CONFIRMED_RECORD means the object lacks confirmation.
@@ -66,6 +68,9 @@ class RouteDecision:
     reason_code: str
     unresolved_names: tuple[str, ...] = ()
     soft_mentions: bool = False
+    # Entity names the model saw, kept only when the host found the exact text in the question.
+    # None: the reply's schema carries no such list.
+    entity_mentions: tuple[str, ...] | None = None
 
     def public(self):
         # Candidate IDs are request-local handles, not storage identities.
@@ -176,6 +181,26 @@ def resolve_time_text(context, text, role):
     return ([inside[0]], role, (start, end)) if len(inside) == 1 else ([], "UNRESOLVED", (start, end))
 
 
+def resolve_entity_mentions(query, mentions):
+    """Keep the model's entity mentions that are exact question text; the host never guesses names itself.
+
+    A mention the host cannot find in the question is invalid and dropped. Whether a located mention is a
+    known entity of the workspace is decided at admission (router_context.admit_route).
+    """
+    if (not isinstance(mentions, list) or len(mentions) > 8
+            or any(not isinstance(value, str) or len(value) > 160 for value in mentions)):
+        raise RouterInvalid("ROUTER_SCHEMA_INVALID")
+    located = []
+    for value in mentions:
+        found = mention_spans(query, value)
+        if not found:
+            logging.getLogger(__name__).info("Router dropped one nonliteral entity_mentions item")
+            continue
+        start, end = found[0]
+        located.append(query[start:end])
+    return tuple(dict.fromkeys(located))
+
+
 def validate_output(raw, context, *, offered=None):
     if not isinstance(raw, str) or len(raw.encode("utf8")) > CONFIG["max_response_bytes"]:
         raise RouterInvalid("ROUTER_SCHEMA_INVALID")
@@ -183,13 +208,20 @@ def validate_output(raw, context, *, offered=None):
         data = json.loads(raw, object_pairs_hook=_unique_object, parse_constant=_reject_constant)
     except (ValueError, RecursionError) as exc:
         raise RouterInvalid("ROUTER_SCHEMA_INVALID") from exc
-    quoted = isinstance(data, dict) and data.get("schema_version") == "router/v4"
+    listed = isinstance(data, dict) and data.get("schema_version") == "router/v5"
+    quoted = listed or isinstance(data, dict) and data.get("schema_version") == "router/v4"
     soft = quoted or isinstance(data, dict) and data.get("schema_version") == "router/v3"
     fields = FIELDS | {"unresolved_names"} if soft else FIELDS
     if quoted:
         fields = fields - {"time_ref_ids"} | {"time_text"}
-    if not isinstance(data, dict) or set(data) != fields or data["schema_version"] not in {"router/v2", "router/v3", "router/v4"}:
+    if listed:
+        fields = fields | {"entity_mentions"}
+    if not isinstance(data, dict) or set(data) != fields or data["schema_version"] not in {
+            "router/v2", "router/v3", "router/v4", "router/v5"}:
         raise RouterInvalid("ROUTER_SCHEMA_INVALID")
+    entities = None
+    if listed:
+        entities = resolve_entity_mentions(context.query, data.pop("entity_mentions"))
     quote = None
     if quoted:
         data["time_ref_ids"], data["time_role"], quote = resolve_time_text(
@@ -290,7 +322,7 @@ def validate_output(raw, context, *, offered=None):
             covered |= {(a, b) for a, b in context.date_spans if quote[0] <= a and b <= quote[1]}
         if not set(context.date_spans) <= covered:
             raise RouterInvalid("TIME_CONFLICT")
-    return RouteDecision(decision, intent, domain, op, ids, tuple(spans), refs, role, reason, unresolved, soft)
+    return RouteDecision(decision, intent, domain, op, ids, tuple(spans), refs, role, reason, unresolved, soft, entities)
 
 
 def route_payload(context):
