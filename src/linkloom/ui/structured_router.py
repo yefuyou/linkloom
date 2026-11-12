@@ -38,9 +38,18 @@ including an unconfirmed slot; the host will return NO_CONFIRMED_RECORD. Never s
 Copy the shortest exact names of the requested root and its qualifiers, preferably from matched_terms. Keep a named
 object even if unmatched. Do not copy surrounding grammatical words. In a quoted statement, a proposed field value
 is not the root. Use the host default only for first-person references. Never substitute similar objects.
-Copy the question's own time expression exactly into time_text; leave it empty if the question states no time.
-time_role: NONE without a time, AS_OF for state at one exact date, MEETING_DATE for a meeting on a date, RANGE for
-a period or an open-ended before/after, UNRESOLVED for a relative or vague time. Names and identifiers are not time.
+When 现在, 目前, 当前, at the moment, right now, currently, or now only asks for the current state,
+always use intent CURRENT, time_role NONE, and empty time_text.
+Examples (all CURRENT, NONE, empty time_text):
+- 联调报告现在归谁？
+- 目前选用的是哪个支付网关？
+- Who owns the rollout checklist at the moment?
+- What is the payment gateway right now?
+For a historical time or a range, copy the question's exact time expression into time_text. A present-state
+word inside a range (such as "from March to now") does not turn the range into a current-state lookup.
+time_role: NONE without a time or for current state, AS_OF for state at one exact date, MEETING_DATE for
+a meeting on a date, RANGE for an explicit range or open-ended before/after, UNRESOLVED for an unanchored
+relative or vague time such as last week. Names and identifiers are not time.
 Report unmatched named objects in unresolved_names as exact question text.
 entity_mentions: every project, task, person, named value or other name in the question, copied exactly, matched or not.
 Pronouns and generic words are not names.

@@ -47,6 +47,34 @@ def test_identifier_digits_are_not_a_time_scope():
     assert route.time_role == 'NONE' and admit_route(ctx, route).executor == 'graph'
 
 
+@pytest.mark.parametrize('query,task', [
+    ('联调报告现在归谁？', '联调报告'),
+    ('联调报告目前归谁？', '联调报告'),
+    ('Who owns the rollout checklist at the moment?', 'rollout checklist'),
+    ('Who owns the rollout checklist right now?', 'rollout checklist'),
+])
+def test_present_state_model_reply_needs_no_time_quote(query, task):
+    ctx = context(query, task)
+    route = model_route(ctx, task, '', 'NONE')
+    admission = admit_route(ctx, route)
+    assert route.intent == 'CURRENT' and route.time_role == 'NONE' and not route.time_ref_ids
+    assert admission.executor == 'graph' and admission.as_of is None
+
+
+@pytest.mark.parametrize('query,task,quote', [
+    ('上个月联调报告归谁？', '联调报告', '上个月'),
+    ('Who owned the rollout checklist last week?', 'rollout checklist', 'last week'),
+    ('去年联调报告归谁？', '联调报告', '去年'),
+    ('两周前联调报告归谁？', '联调报告', '两周前'),
+])
+def test_relative_past_model_reply_still_needs_time_clarification(query, task, quote):
+    ctx = context(query, task)
+    route = model_route(ctx, task, quote, 'UNRESOLVED', 'AS_OF')
+    admission = admit_route(ctx, route)
+    assert route.time_role == 'UNRESOLVED' and not route.time_ref_ids
+    assert admission.reason == 'TIME_SCOPE_UNRESOLVED' and admission.executor is None
+
+
 def test_before_clause_is_left_to_the_model_and_only_checked_as_a_literal_quote():
     query = 'Before the security review starts, who owns the rollout checklist?'
     ctx = context(query, 'rollout checklist')
