@@ -6,6 +6,7 @@ import os
 from pathlib import Path
 from urllib.request import HTTPRedirectHandler, Request, build_opener
 
+from linkloom.agents.model_adapter import ModelAction, ModelResponse, ModelUsage
 from linkloom.agents.providers.deepseek_api import DeepSeekProviderAdapter
 from linkloom.ui.structured_router import (
     CAPABILITY, CONFIG, INTENTS, PROMPT, SAFETY, TIME_ROLES, _reject_constant, _unique_object, routing_domain,
@@ -28,6 +29,7 @@ def _submission(context):
         "candidate_id": enum(["", *(row["id"] for row in context["candidates"])]),
         "mentions": {"type": "array", "items": {"type": "string"}},
         "unresolved_names": {"type": "array", "items": {"type": "string"}},
+        "entity_mentions": {"type": "array", "items": {"type": "string"}},
         "time_text": {"type": "string"},
         "time_role": enum(TIME_ROLES),
         "reason_code": enum(["NONE", *sorted(SAFETY | CAPABILITY)]),
@@ -38,7 +40,7 @@ def _submission(context):
                         additionalProperties=False)))
 
 
-def _tool_arguments(message, tool):
+def _tool_arguments(message, tool, diagnostic=None):
     calls = message.get("tool_calls")
     if not isinstance(calls, list) or len(calls) != 1:
         return None
@@ -49,10 +51,15 @@ def _tool_arguments(message, tool):
         args = json.loads(call["function"]["arguments"], object_pairs_hook=_unique_object,
                           parse_constant=_reject_constant)
         schema = tool["function"]["parameters"]["properties"]
-        if not isinstance(args, dict) or set(args) != set(schema):
+        # A reply without entity_mentions stays valid; the host then keeps its own name check (router/v4).
+        if isinstance(args, dict) and set(schema) - args.keys() - {"entity_mentions"}:
+            if diagnostic is not None:
+                diagnostic["wire_invalid"] = "missing_fields"
             return None
-        for key, prop in schema.items():
-            value = args[key]
+        if not isinstance(args, dict) or set(args) | {"entity_mentions"} != set(schema):
+            return None
+        for key, value in args.items():
+            prop = schema[key]
             if prop["type"] == "array":
                 if not isinstance(value, list) or any(not isinstance(item, str) for item in value):
                     return None
@@ -60,6 +67,8 @@ def _tool_arguments(message, tool):
                 if not isinstance(value, str):
                     return None
             elif value not in prop["enum"]:
+                if diagnostic is not None:
+                    diagnostic["wire_invalid"] = "invalid_enum"
                 return None
         if message.get("content"):
             logging.getLogger(__name__).debug("Ignoring text accompanying a validated %s call: %r",
@@ -83,10 +92,11 @@ def _single_call_arguments(message, tool):
         return "{}"
 
 
-def _route_text(message, context):
-    args = _tool_arguments(message, _submission(context))
+def _route_text(message, context, *, diagnostics=False):
+    diagnostic = {"wire_invalid": "schema_invalid"} if diagnostics else None
+    args = _tool_arguments(message, _submission(context), diagnostic)
     if args is None:
-        return "{}"
+        return json.dumps(diagnostic or {})
     try:
         proposed_operation = args.pop("operation")
         candidate = args.pop("candidate_id")
@@ -99,10 +109,11 @@ def _route_text(message, context):
               "OTHER" if proposed_operation == "OTHER" or args["intent"] == "OTHER" and args["reason_code"] == "UNSUPPORTED_QUERY" else "READ")
         domain = next((row["domain"] for row in context["candidates"] if row["id"] == candidate), "NONE")
         # The host resolves the quoted time text itself (structured_router.resolve_time_text).
-        return json.dumps(dict(args, schema_version="router/v4", domain=routing_domain(domain, args["intent"]),
+        version = "router/v5" if "entity_mentions" in args else "router/v4"
+        return json.dumps(dict(args, schema_version=version, domain=routing_domain(domain, args["intent"]),
                                operation=op, candidate_ids=[candidate] if candidate else []), ensure_ascii=False)
     except (AssertionError, KeyError, TypeError, ValueError, RecursionError):
-        return "{}"
+        return json.dumps(diagnostic or {})
 
 
 class _DeepSeekJSONClient:
@@ -137,6 +148,8 @@ class _DeepSeekJSONClient:
         choices = response.get("choices", [])
         if len(choices) == 1 and isinstance(choices[0].get("message"), dict):
             choice = choices[0]
+            if choice.get("finish_reason") == "length":
+                return response
             raw = "{}"
             if choice.get("finish_reason") == "tool_calls":
                 if self._purpose == "security":
@@ -144,10 +157,52 @@ class _DeepSeekJSONClient:
                     # security_gate.classify validates it and can record the raw reply.
                     raw = _single_call_arguments(choice["message"], tool)
                 else:
-                    raw = _route_text(choice["message"], context)
+                    raw = _route_text(choice["message"], context, diagnostics=True)
             choice["message"] = {"content": raw}
             choice["finish_reason"] = "stop"
         return response
+
+
+class GeminiRouterAdapter:
+    """Use Gemini's JSON schema for a single safety classification or routing proposal."""
+
+    def __init__(self, client, *, purpose="route"):
+        self.client, self.purpose = client, purpose
+
+    def complete(self, request):
+        if self.purpose == "security":
+            from linkloom.ui.security_gate import PROMPT as prompt, submission
+        else:
+            prompt, submission = PROMPT, _submission
+        if not request.user_input.startswith(prompt):
+            raise ValueError("ROUTER_PROMPT_MISMATCH")
+        context = json.loads(request.user_input[len(prompt):])
+        tool = submission(context)["function"]
+        response = self.client.models.generate_content(
+            model="gemini-3.8-flash", contents=request.user_input,
+            config=dict(response_mime_type="application/json", response_json_schema=tool["parameters"],
+                        thinking_config={"thinking_level": "LOW"},
+                        max_output_tokens=request.generation_options.max_output_tokens,
+                        automatic_function_calling={"disable": True}),
+        )
+        raw = response.model_dump(mode="json", exclude_none=True)
+        candidates = raw.get("candidates") or []
+        finish = candidates[0].get("finish_reason") if len(candidates) == 1 else None
+        usage = raw.get("usage_metadata") or {}
+        visible = usage.get("candidates_token_count")
+        thinking = usage.get("thoughts_token_count")
+        input_tokens, total = usage.get("prompt_token_count"), usage.get("total_token_count")
+        if thinking is None and None not in (visible, input_tokens, total):
+            thinking = max(0, total - input_tokens - visible)
+        text = (response.text or "") if len(candidates) == 1 and finish == "STOP" else ""
+        if self.purpose == "route" and text:
+            message = {"tool_calls": [{"type": "function", "function": {"name": tool["name"], "arguments": text}}]}
+            text = _route_text(message, context, diagnostics=True)
+        output = visible + thinking if None not in (visible, thinking) else (
+            max(0, total - input_tokens) if None not in (total, input_tokens) else None)
+        return ModelResponse(action=ModelAction.final(text or "{}"),
+                             usage=ModelUsage(input_tokens=input_tokens, output_tokens=output, total_tokens=total),
+                             finish_reason=finish, provider_metadata={"provider": "gemini", "reasoning_tokens": thinking})
 
 
 @dataclass(frozen=True)
@@ -159,7 +214,9 @@ class RouterProvider:
 
     def reserve(self, app, owner, request, validate):
         models = owner.task_models
-        limits = getattr(models, "provider_limits", None) or TaskProviderLimits(1, 12000, 512, .02, 6, 6, .00656)
+        limits = getattr(models, "provider_limits", None) or TaskProviderLimits(
+            1, 12000, max(CONFIG["max_output_tokens"], CONFIG["security_max_output_tokens"]),
+            .03, 6, 6, .00656)
         limits = replace(limits, max_requests=1, request_timeout_seconds=min(limits.request_timeout_seconds, CONFIG["timeout_seconds"]))
         root = Path(app.repository.database_path).parent / "router-provider" / request.run_id
         session = TaskProviderSession(root, limits, validate)
@@ -175,6 +232,16 @@ def configured_router():
         mode = "llm_first"
     if mode not in {"llm_first", "cascade"}:
         return None
+    if os.environ.get("LINKLOOM_ROUTER_PROVIDER", "").strip().casefold() == "gemini":
+        key = os.environ.get("GEMINI_API_KEY", "").strip()
+        if not key:
+            return RouterProvider(None, external_provider=True, mode=mode)
+        from google import genai
+        from google.genai import types
+        client = genai.Client(api_key=key, http_options=types.HttpOptions(
+            timeout=CONFIG["timeout_seconds"] * 1000, retry_options=types.HttpRetryOptions(attempts=1)))
+        return RouterProvider(GeminiRouterAdapter(client), external_provider=True, mode=mode,
+                              security_adapter=GeminiRouterAdapter(client, purpose="security"))
     key = os.environ.get("DEEPSEEK_API_KEY", "").strip()
     adapter = DeepSeekProviderAdapter(_DeepSeekJSONClient(key), model_id=CONFIG["model_id"],
                                     json_output=True) if key else None

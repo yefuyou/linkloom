@@ -820,9 +820,16 @@ class ProviderNeutralSemanticExtractor:
         recall_profile = task_input is not None and task_input['profile'] == TaskDiscoveryProfile.TASK_RECALL_V3.value
         field_profile = product_profile or recall_profile or (task_input is not None and task_input['profile'] == TaskDiscoveryProfile.FIELD_GROUNDED_V2.value)
         schema = _product_field_schema() if product_profile else _recall_schema() if recall_profile else _field_schema() if field_profile else _EXTRACTION_SCHEMA
-        schema_sha256 = _sha256(_canonical_json(schema)) if field_profile else _EXTRACTION_SCHEMA_SHA256
+        from linkloom.fact_memory import fact_memory_enabled
+        from linkloom.fact_memory.extraction import fact_prompt, fact_schema, parse_fact_claim
+        fact_profile = fact_memory_enabled() and (isolate_product_tasks or task_input is None)
+        if fact_profile:
+            schema = fact_schema()
+        schema_sha256 = _sha256(_canonical_json(schema)) if field_profile or fact_profile else _EXTRACTION_SCHEMA_SHA256
         prompt = (_product_field_prompt(segment, context, self.prompt_version, task_input) if product_profile else _recall_prompt(segment, task_input) if recall_profile else _field_prompt(segment, task_input) if field_profile else _task_prompt(segment, task_input) if task_input is not None
                   else _prompt(segment, context, self.prompt_version))
+        if fact_profile:
+            prompt = fact_prompt(segment, context)
         prompt_sha256 = _sha256(prompt.encode("utf-8"))
         generation_options = self.generation_options
         if isolate_product_tasks:
@@ -1022,10 +1029,10 @@ class ProviderNeutralSemanticExtractor:
                 if isolate_product_tasks:
                     from linkloom.semantic_ingestion.product_task_stages import parse_stage_one_claims, check_stage_one_safety
                     check_stage_one_safety(raw_claims, context.expected_workspace_id)
-                    parsed_claims, isolated = parse_stage_one_claims(raw_claims)
+                    parsed_claims, isolated = parse_stage_one_claims(raw_claims, fact_profile=fact_profile)
                     response_evidence['product_task_core'] = isolated
                 else:
-                    parsed_claims = tuple(_parse_claim(item) for item in raw_claims)
+                    parsed_claims = tuple((parse_fact_claim if fact_profile else _parse_claim)(item) for item in raw_claims)
                 if product_profile and any(c.claim_type in {ClaimType.PLAN, ClaimType.ACTION} and
                         (c.task is None or c.task.grounding_policy_version != PRODUCT_TASK_FIELDS_VERSION)
                         for c in parsed_claims):

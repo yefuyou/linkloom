@@ -1,11 +1,12 @@
 """Offline safety boundary and strict shared DeepSeek transport contracts."""
 from io import BytesIO
 import json
+from types import SimpleNamespace
 import pytest
 
 from linkloom.agents.model_adapter import ModelAction, ModelResponse
 from linkloom.agents.providers.deepseek_api import DeepSeekProviderAdapter
-from linkloom.ui.router_provider import _DeepSeekJSONClient, _route_text, configured_router
+from linkloom.ui.router_provider import GeminiRouterAdapter, _DeepSeekJSONClient, _route_text, configured_router
 from linkloom.ui.security_gate import PROMPT, classify, request_for
 from linkloom.ui.structured_router import CONFIG, RouterInvalid
 
@@ -151,3 +152,49 @@ def test_provider_thread_leaves_keyword_rules_to_the_ask_thread():
         route = route_with_adapter(adapter, route_request(ctx), ctx)
         assert route.reason_code != 'WRITE_NOT_ALLOWED'
     assert route_with_adapter(adapter, route_request(ctx), ctx).reason_code == 'WRITE_NOT_ALLOWED'
+
+
+@pytest.mark.parametrize('finish,text,code', [
+    ('STOP', '{"reason_code":"NONE"}', None),
+    ('MAX_TOKENS', '{"reason', 'SECURITY_OUTPUT_TRUNCATED'),
+])
+def test_gemini_security_uses_json_schema_and_reports_truncation(finish, text, code):
+    def generate_content(**args):
+        config = args['config']
+        assert config['response_mime_type'] == 'application/json'
+        assert config['response_json_schema']['required'] == ['reason_code']
+        assert config['thinking_config'] == {'thinking_level': 'LOW'}
+        assert config['max_output_tokens'] == CONFIG['security_max_output_tokens'] == 2048
+        return SimpleNamespace(text=text, model_dump=lambda **_: dict(
+            candidates=[dict(finish_reason=finish)], usage_metadata=dict(
+                prompt_token_count=100, candidates_token_count=8, thoughts_token_count=120, total_token_count=228)))
+    adapter = GeminiRouterAdapter(SimpleNamespace(models=SimpleNamespace(generate_content=generate_content)),
+                                  purpose='security')
+    request, record = request_for('normal lookup', 'w'), {}
+    if code:
+        with pytest.raises(RouterInvalid, match=code):
+            classify(adapter, request, record=record)
+        assert record['invalid_response_counts']['truncated'] == 1
+        assert record['invalid_response_counts']['schema_invalid'] == 0
+    else:
+        assert classify(adapter, request, record=record)['decision'] == 'ALLOW'
+    assert record['provider_reply'] == dict(finish_reason=finish, thinking_tokens=120,
+                                           visible_output_tokens=8, output_tokens=128, input_tokens=100)
+
+
+def test_deepseek_security_length_keeps_provider_usage():
+    class Opener:
+        def open(self, request, *, timeout):
+            return BytesIO(json.dumps(dict(model=CONFIG['model_id'], choices=[dict(
+                finish_reason='length', message=dict(content=None))],
+                usage=dict(prompt_tokens=90, completion_tokens=32, total_tokens=122))).encode())
+
+    client = _DeepSeekJSONClient('offline-placeholder', purpose='security')
+    client._opener = Opener()
+    record = {}
+    with pytest.raises(RouterInvalid, match='SECURITY_OUTPUT_TRUNCATED'):
+        classify(DeepSeekProviderAdapter(client, model_id=CONFIG['model_id'], json_output=True),
+                 request_for('normal lookup', 'w'), record=record)
+    assert record['provider_reply']['finish_reason'] == 'length'
+    assert record['provider_reply']['visible_output_tokens'] == 32
+    assert record['invalid_response_counts']['truncated'] == 1

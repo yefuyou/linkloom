@@ -3,12 +3,13 @@ from __future__ import annotations
 
 from copy import deepcopy
 from dataclasses import dataclass, replace
-from datetime import datetime
+from datetime import UTC, datetime
 import os
 import re
 from threading import Lock
 from typing import Any, Callable
 
+from linkloom.fact_memory import fact_memory_enabled
 from linkloom.ui.product import ProductApplication, ProductApplicationError
 from linkloom.ui.investigation import ProductInvestigationService
 from linkloom.ui.scope_discovery import AUTO_EMBEDDER, decision_slot_id, resolve_query_date
@@ -207,6 +208,7 @@ class UnifiedAskService:
             result["fallback_reason"] = str(error) if isinstance(error, RouterInvalid) else "PROVIDER_UNAVAILABLE"
         finally:
             if session is not None:
+                session.record_validation(result)
                 session.close(timeout=0)
             result["seconds"] = round(monotonic() - started, 4)
         validate()
@@ -329,9 +331,13 @@ class UnifiedAskService:
                     from linkloom.ui.router_context import has_exact_date, router_query_date
                     _, time_error = router_query_date(run.query, payload.get("as_of"))
                     date_blocker = rule_date_blocker(time_error, has_scope=bool(routed["scope"]))
+                    # A rule binding that rests on a recorded value alone is not final: the model first
+                    # reports the entities the question names, and an unknown one stops the lookup.
+                    from linkloom.ui.router_context import value_only_binding
+                    value_only = date_blocker is None and value_only_binding(run.query, routed["scope"], slots)
                     # The rules never decide whether a literal date is one point or the edge of a range.
-                    if date_blocker is None and has_exact_date(run.query):
-                        return self._route_ordinary(run, payload)
+                    if date_blocker is None and (value_only or has_exact_date(run.query)):
+                        return self._route_ordinary(run, payload, value_only=value_only)
                 if cascade and rule_needs_router(routed["route"], blocker=date_blocker):
                     return self._route_ordinary(run, payload)
                 if date_blocker:
@@ -348,6 +354,12 @@ class UnifiedAskService:
                 if discovery["scope"] is None:
                     if date_blocker:
                         return self._router_stop(run, None, date_blocker)
+                    if (fact_memory_enabled() and discovery["status"] == "NO_MATCH"
+                            and not (values["subject"] or values["relation"])):
+                        # Only after the unchanged decision discovery found nothing.
+                        fact = self._fact_request(run, result, payload)
+                        if fact is not None:
+                            return fact
                     result["path"] = None
                     return self._failure(result, "DECISION_SCOPE_" + discovery["status"],
                                          discovery["reason"], status="NEEDS_SCOPE"), 200
@@ -368,6 +380,47 @@ class UnifiedAskService:
                 if reason:
                     return self._router_stop(run, None, reason, http=error.status)
             return self._failure(result, error.code, str(error)), error.status
+
+    def _fact_request(self, run, result, payload):
+        """Answer from reviewed fact records; None leaves the existing NO_MATCH reply."""
+        from linkloom.fact_memory.ask import answer
+        from linkloom.ui.product import _parse_as_of
+        records = self.app.fact_records(run.workspace_id)
+        if not records:
+            return None
+        as_of = _parse_as_of(payload.get("as_of")) or datetime.now(UTC)
+        service = self.investigation()
+        factory = None
+        if service is not None and service.model_factory is not None and not getattr(service, "task_only", False):
+            if service.external_provider and payload.get("allow_external_provider") is not True:
+                return self._failure(result, "EXTERNAL_PROVIDER_PERMISSION_REQUIRED", "Allow this bounded external investigation before source text is sent or model costs are incurred.", category="permission"), 403
+            factory = lambda: service.model_factory(run.query)
+        outcome = answer(run.query, as_of, records, factory)
+        if outcome["status"] == "NO_MATCH":
+            return None
+        result.update(path="FACT", scope=dict(result["scope"], as_of=as_of.isoformat()))
+        result["route"] = dict(result["route"], code=outcome["code"])
+        result["evidence"] = [{"fact_id": record.fact_id, "subject": record.subject_label,
+                               "attribute": record.attribute_name, "attribute_key": record.attribute_key,
+                               "value": record.value_text, "effective_at": record.effective_at.isoformat(),
+                               "supersedes_fact_id": record.supersedes_fact_id,
+                               "superseded_by_fact_id": record.superseded_by_fact_id,
+                               "evidence_sentence": record.evidence_sentence,
+                               "quote": record.quote, "evidence_ref": record.evidence_ref,
+                               "source_id": record.artifact_id, "source_version": record.artifact_version_id}
+                              for record in outcome["cited"]]
+        result["facts_offered"] = outcome["offered"]
+        if outcome["status"] == "ANSWERED":
+            result["status"] = "COMPLETED"
+            result["conclusions"] = [{"kind": "FACT_ANSWER", "value": outcome["answer"],
+                                      "fact_ids": [record.fact_id for record in outcome["cited"]]}]
+            return result, 200
+        if outcome["status"] == "UNKNOWN":
+            result["status"] = "INSUFFICIENT"
+            result["uncertainty"] = {"unknown_fields": ["value"],
+                                     "statement": "The reviewed facts do not answer this question."}
+            return result, 200
+        return self._failure(result, outcome["code"], "The fact answer could not be verified.", category="runtime"), 200
 
     def _decision_request(self, run, result, payload, values, as_of):
         view = self.app.recover_decision(values["subject"], values["relation"], as_of, _workspace_id=run.workspace_id)
@@ -456,18 +509,24 @@ class UnifiedAskService:
     def _legacy_router_fallback(self, run, payload, reason, prior=None):
         result, status = self._ask(payload, use_graph=False, use_router=False, allow_selector=False)
         metadata = dict(source='rule', fallback_reason=reason, attempted=prior is not None)
+        rule_reason = (result.get('router') or {}).get('reason_code')
         legacy_code = (result.get('error') or {}).get('code')
         if legacy_code == 'INVESTIGATION_SCOPE_DENIED':
             from linkloom.ui.ask_admission import legacy_denial_reason
             metadata.update(decision='REFUSE', reason_code=legacy_denial_reason(run.query), reason_class='SAFETY')
         elif legacy_code == 'EXTERNAL_PROVIDER_PERMISSION_REQUIRED':
             metadata.update(decision='REFUSE', reason_code='PROVIDER_PERMISSION_REQUIRED', reason_class='SAFETY')
+        elif result.get('status') == 'NEEDS_SCOPE' and (rule_reason or legacy_code):
+            metadata.update(decision='CLARIFY', reason_code=rule_reason or legacy_code, reason_class='CAPABILITY')
         if prior:
             metadata['llm'] = prior
         result['router'] = metadata
         return result, status
 
-    def _route_ordinary(self, run, payload):
+    def _route_ordinary(self, run, payload, *, value_only=False):
+        """value_only (cascade): the rules could bind this question by a recorded value alone. Such a
+        binding needs a valid model reply whose entity_mentions hold no unknown entity; without one the
+        request clarifies and the rules are not asked again."""
         from linkloom.ui.structured_router import RouterInvalid, request_for, route_with_adapter
         from linkloom.ui.router_context import blocked_entity_reason, handoff_blocker
         from linkloom.ui.task_provider import pass_router_reservation
@@ -478,10 +537,23 @@ class UnifiedAskService:
             return self._router_stop(run, None, safety)
         provider = self.router_provider
         owner = self.investigation()
+        def rules(reason, attempted=False):
+            # The model gave no usable answer. A value-only binding clarifies; otherwise the rules decide,
+            # and in cascade mode their own name check keeps its reason code.
+            missing_names = provider.mode == "cascade" and context is not None and context.missing_names
+            if value_only or missing_names:
+                result, status = self._router_stop(run, None, "ENTITY_NOT_FOUND" if missing_names else "ENTITY_AMBIGUOUS")
+                result['router'].update(fallback_reason=reason, attempted=attempted)
+                return result, status
+            result, status = self._legacy_router_fallback(run, payload, reason)
+            result['router']['attempted'] = attempted
+            return result, status
+        context = None
         if provider.adapter is None or provider.external_provider and owner is None:
-            return self._legacy_router_fallback(run, payload, 'MODEL_UNAVAILABLE')
+            return rules('MODEL_UNAVAILABLE') if value_only else self._legacy_router_fallback(run, payload, 'MODEL_UNAVAILABLE')
         if provider.external_provider and payload.get('allow_external_provider') is not True:
-            return self._legacy_router_fallback(run, payload, 'PROVIDER_PERMISSION_REQUIRED')
+            return (rules('PROVIDER_PERMISSION_REQUIRED') if value_only else
+                    self._legacy_router_fallback(run, payload, 'PROVIDER_PERMISSION_REQUIRED'))
         snapshot_hash = source_context(self.app, run.workspace_id)['snapshot_hash']
         def validate_sources():
             self._check_workspace(run.workspace_id)
@@ -489,15 +561,16 @@ class UnifiedAskService:
                 raise ProductApplicationError('INVESTIGATION_CONTEXT_CHANGED', 'Refresh the source selection and ask again.', status=409)
         session = None
         attempted = False
+        reply_record = {}
         try:
             context = self._router_context(run, payload, snapshot_hash)
             blocker = blocked_entity_reason(run.query, context.blocked_entities)
             if blocker:
                 return self._router_stop(run, None, blocker)
             if provider.mode == "cascade":
-                reason = handoff_blocker(context)
+                reason = handoff_blocker(context, model_entities=True)
                 if reason == "NO_ROUTER_CANDIDATES":
-                    return self._legacy_router_fallback(run, payload, reason)
+                    return rules(reason) if value_only else self._legacy_router_fallback(run, payload, reason)
                 if reason:
                     return self._router_stop(run, None, reason)
             request = request_for(context)
@@ -511,9 +584,10 @@ class UnifiedAskService:
             if provider.external_provider:
                 with owner._starts.operation(request.run_id):
                     session = provider.reserve(self.app, owner, request, validate_snapshot)
-                    route = route_with_adapter(session.bind(provider.adapter, 'ask-router'), request, context)
+                    route = route_with_adapter(session.bind(provider.adapter, 'ask-router'), request, context,
+                                               record=reply_record)
             else:
-                route = route_with_adapter(provider.adapter, request, context)
+                route = route_with_adapter(provider.adapter, request, context, record=reply_record)
             validate_snapshot()
         except BackgroundWorkStopped:
             return self._router_stop(run, None, 'POLICY_BLOCKED', http=503)
@@ -523,17 +597,31 @@ class UnifiedAskService:
             validate_sources()
             if str(error) == "EVIDENCE_INVALID":
                 return self._router_stop(run, None, "EVIDENCE_INVALID", http=409)
+            if str(error) == "ROUTER_OUTPUT_TRUNCATED":
+                result, status = self._router_stop(run, None, "MODEL_UNAVAILABLE")
+                result["router"].update(fallback_reason=str(error), attempted=attempted, **reply_record)
+                return result, status
             with pass_router_reservation(session):
-                result, status = self._legacy_router_fallback(run, payload, str(error))
-            result['router']['attempted'] = attempted
-            return result, status
+                result, status = rules(str(error), attempted)
+                result["router"].update(reply_record)
+                return result, status
         except (ImportError, OSError, ValueError):
             # Optional local retrieval can fail without any usable catalogue.
             validate_sources()
             with pass_router_reservation(session):
+                if value_only:
+                    return rules('RETRIEVAL_UNAVAILABLE', attempted)
                 return self._legacy_router_fallback(run, payload, 'RETRIEVAL_UNAVAILABLE')
+        finally:
+            if session is not None:
+                session.record_validation(reply_record)
+        if value_only and route.decision == "ROUTE" and not route.entity_mentions:
+            with pass_router_reservation(session):
+                return rules('ENTITY_MENTIONS_MISSING', attempted)
         with pass_router_reservation(session):
-            return self._execute_router(run, payload, context, route)
+            result, status = self._execute_router(run, payload, context, route)
+            result["router"].update(reply_record)
+            return result, status
 
     def _router_stop(self, run, route, reason, *, http=200):
         from linkloom.ui.structured_router import SAFETY
@@ -549,7 +637,7 @@ class UnifiedAskService:
 
     def _execute_router(self, run, payload, context, route):
         from linkloom.ui.router_context import admit_route
-        admission = admit_route(context, route)
+        admission = admit_route(context, route, model_entities=self.router_provider.mode == "cascade")
         candidate, as_of = admission.candidate, admission.as_of
         if admission.executor is None:
             result, status = self._router_stop(run, route, admission.reason)

@@ -5,10 +5,10 @@ from types import SimpleNamespace
 
 import pytest
 
-from linkloom.agents.model_adapter import ModelAction, ModelResponse
+from linkloom.agents.model_adapter import ModelAction, ModelResponse, ModelUsage
 from linkloom.agents.providers.deepseek_api import DeepSeekProviderAdapter
 from linkloom.ui.router_context import RouteCandidate, RouterContext, bind_candidate, time_context
-from linkloom.ui.structured_router import CONFIG, RouterInvalid, request_for, validate_output
+from linkloom.ui.structured_router import CONFIG, RouterInvalid, request_for, route_with_adapter, validate_output
 from linkloom.ui.task_provider import TaskProviderLimits, TaskProviderSession, pass_router_reservation
 
 
@@ -48,6 +48,40 @@ def response(**changes):
 def test_invalid_structured_output_never_becomes_a_route(raw, code):
     with pytest.raises(RouterInvalid, match=code):
         validate_output(raw, context())
+
+
+@pytest.mark.parametrize('raw,finish,category,code', [
+    ('{"decision":', 'MAX_TOKENS', 'truncated', 'ROUTER_OUTPUT_TRUNCATED'),
+    ('{"schema_version":"router/v2"}', 'STOP', 'missing_fields', 'ROUTER_SCHEMA_INVALID'),
+    (response(intent='DELETE'), 'STOP', 'invalid_enum', 'ROUTER_SCHEMA_INVALID'),
+    (response(time_role='AS_OF'), 'STOP', 'invalid_combination', 'TIME_CONFLICT'),
+])
+def test_route_response_failures_are_counted_separately(raw, finish, category, code):
+    ctx = context()
+    request, record = request_for(ctx), {}
+    assert request.generation_options.max_output_tokens == 2048
+    result = ModelResponse(action=ModelAction.final(raw), finish_reason=finish,
+                           usage=ModelUsage(input_tokens=15, output_tokens=150),
+                           provider_metadata={'reasoning_tokens': 140})
+    adapter = SimpleNamespace(complete=lambda _: result)
+    with pytest.raises(RouterInvalid, match=code):
+        route_with_adapter(adapter, request, ctx, record=record)
+    assert record['invalid_response_counts'][category] == sum(record['invalid_response_counts'].values()) == 1
+    assert record['provider_reply']['visible_output_tokens'] == 10
+    assert record['provider_reply']['thinking_tokens'] == 140
+
+
+def test_local_relative_date_cannot_be_mislabeled_as_workspace_denial():
+    ctx = replace(context('去年联调报告归谁？'), catalogue_names=frozenset({'联调报告'}))
+    raw = dict(schema_version='router/v5', decision='REFUSE', operation='READ', intent='AS_OF', domain='TASK',
+               candidate_ids=['c0'], mentions=['联调报告'], unresolved_names=[], entity_mentions=['联调报告'],
+               time_text='去年', time_role='AS_OF', reason_code='WORKSPACE_DENIED')
+    adapter = SimpleNamespace(complete=lambda _: ModelResponse(action=ModelAction.final(json.dumps(raw))))
+    route = route_with_adapter(adapter, request_for(ctx), ctx)
+    assert (route.decision, route.reason_code, route.time_role, route.candidate_ids) == (
+        'CLARIFY', 'TIME_SCOPE_UNRESOLVED', 'UNRESOLVED', ())
+    restricted = replace(ctx, blocked_entities=(('联调报告', 'WORKSPACE_DENIED'),))
+    assert route_with_adapter(adapter, request_for(restricted), restricted).reason_code == 'WORKSPACE_DENIED'
 
 
 def test_confirmation_and_unique_binding_are_host_facts():
