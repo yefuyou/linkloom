@@ -1,6 +1,9 @@
 """In-process MCP client against the read-only server; scripted providers only."""
 from datetime import UTC, datetime
+import sqlite3
+import subprocess
 import sys
+from contextlib import closing
 
 import pytest
 from mcp import Client
@@ -220,4 +223,23 @@ async def test_stdio_leaves_database_contents_and_mtime_unchanged(tmp_path):
         result = await client.call_tool("ask", {"workspace": workspace, "question": QUESTION})
         assert not result.is_error, result
 
+    assert (path.read_bytes(), path.stat().st_mtime_ns) == before
+
+
+def test_stdio_refuses_old_database_without_modifying_it(tmp_path):
+    path = tmp_path / "old-product.sqlite"
+    ProductApplication(database_path=path, extractor=None).close()
+    with closing(sqlite3.connect(path)) as db:
+        (current_version,) = db.execute("PRAGMA user_version").fetchone()
+        assert current_version > 0
+        db.execute(f"PRAGMA user_version = {current_version - 1}")
+    before = path.read_bytes(), path.stat().st_mtime_ns
+
+    result = subprocess.run(
+        [sys.executable, "-X", "utf8", "-m", "linkloom.mcp_server", "--database", str(path)],
+        input="", capture_output=True, encoding="utf-8", timeout=30,
+    )
+
+    assert result.returncode != 0
+    assert "先用 LinkLoom 完成迁移" in result.stderr
     assert (path.read_bytes(), path.stat().st_mtime_ns) == before

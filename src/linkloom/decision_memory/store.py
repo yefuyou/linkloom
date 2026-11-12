@@ -310,7 +310,7 @@ class TemporalDecisionStore:
         if read_only:
             if initial_version != _LATEST_SCHEMA_VERSION:
                 self._connection.close()
-                raise RuntimeError("Open the database in LinkLoom to migrate it before using MCP.")
+                raise RuntimeError("请先用 LinkLoom 完成迁移，再启动 MCP server。")
             return
         self._connection.executescript(_SCHEMA)
         self._ensure_column(
