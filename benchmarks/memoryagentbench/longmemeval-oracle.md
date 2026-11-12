@@ -1,5 +1,7 @@
 # LongMemEval 保留集 Oracle 对比
 
+数据来源为 [LongMemEval-S cleaned](https://huggingface.co/datasets/xiaowu0162/longmemeval-cleaned)，数据集标注 MIT 许可证。此次 50 题已使用，仅可用于诊断或开发。
+
 按冻结标准通过。事实提示词＋逐字校验比旧提示词＋旧规则多对 7 题，答成旧值少 6 次。50 道保留题各答三次，按多数评分判定正确。Gemini 3.8 Flash，LOW，`max_tokens=4096`，temperature=0。实验源码提交 `0d36209e2958a81443b8b2392c84db06eb40850e`。
 
 | 配置 | 知识更新 | 时间推理 | 总正确 | 三次评分不一致 | 答成旧值 |
