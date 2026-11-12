@@ -190,11 +190,12 @@ class LinkLoomRequestHandler(BaseHTTPRequestHandler):
             content_type="application/json; charset=utf-8",
         )
 
-    def _send_error_payload(self, status: int, code: str, message: str) -> None:
-        self._send_json(
-            {"error": {"code": code, "message": message}},
-            status=status,
-        )
+    def _send_error_payload(self, status: int, code: str, message: str,
+                            reason_codes: tuple[str, ...] | None = None) -> None:
+        error: dict[str, object] = {"code": code, "message": message}
+        if reason_codes is not None:
+            error["reason_codes"] = list(reason_codes)
+        self._send_json({"error": error}, status=status)
 
     def _request_host_is_local(self) -> bool:
         raw_host = self.headers.get("Host", "").strip().lower()
@@ -421,7 +422,7 @@ class LinkLoomRequestHandler(BaseHTTPRequestHandler):
             try:
                 result, status = self.server.product_app.handle_post(path, payload)
             except ProductApplicationError as error:
-                self._send_error_payload(error.status, error.code, str(error))
+                self._send_error_payload(error.status, error.code, str(error), error.reason_codes)
                 return
             self.server.ensure_task_relation_sidecar(self.server.product_app._workspace_id())
             self._send_json(result, status=status)

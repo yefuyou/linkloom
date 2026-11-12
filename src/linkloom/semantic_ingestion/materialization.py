@@ -240,9 +240,10 @@ class MaterializationAssessment:
 
 
 class MaterializationBlockedError(RuntimeError):
-    def __init__(self, reason_code: str, message: str) -> None:
+    def __init__(self, reason_code: str, message: str, *, reason_codes: tuple[str, ...] = ()) -> None:
         super().__init__(message)
         self.reason_code = reason_code
+        self.reason_codes = tuple(reason_codes) or (reason_code,)
 
 
 class MaterializationPolicy:
@@ -784,6 +785,7 @@ class SemanticDecisionMaterializer:
             raise MaterializationBlockedError(
                 decision.reason_codes[0] if decision.reason_codes else "MATERIALIZATION_REJECTED",
                 "candidate is not eligible for approval-based materialization",
+                reason_codes=decision.reason_codes,
             )
         changed = self.store.transition_semantic_candidate(
             workspace_id=workspace_id,

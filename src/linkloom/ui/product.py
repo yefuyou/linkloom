@@ -29,9 +29,11 @@ from linkloom.semantic_ingestion.artifacts import (
 from linkloom.semantic_ingestion.candidate_models import (
     CandidateDecisionFact,
     CandidateReasonCode,
+    ClaimType,
     EntityResolution,
     SemanticExtractionResult,
 )
+from linkloom.fact_memory import fact_memory_enabled
 from linkloom.semantic_ingestion.extraction import (
     SemanticExtractionContext,
     SemanticExtractor,
@@ -63,11 +65,17 @@ _ASK_STOP_WORDS = frozenset(
 )
 
 
+_REVIEW_NOT_READY = "This candidate needs additional source-supported review before it can be approved."
+
+
 class ProductApplicationError(RuntimeError):
-    def __init__(self, code: str, message: str, *, status: int = 400) -> None:
+    def __init__(self, code: str, message: str, *, status: int = 400,
+                 reason_codes: tuple[str, ...] | None = None) -> None:
         super().__init__(message)
         self.code = code
         self.status = status
+        # Set only by the fact-memory switch; None keeps the error payload unchanged.
+        self.reason_codes = reason_codes
 
 
 class ProductRepository:
@@ -1523,9 +1531,11 @@ class ProductApplication:
             artifact_version_id=version_id,
             candidate_source_kind="SOURCE_INGESTION",
         )
+        recorded = self.fact_store.candidate_ids(workspace_id) if fact_memory_enabled() else frozenset()
         review = sum(
             str(row["workflow_state"])
             in {CandidateWorkflowState.PENDING_REVIEW.value, CandidateWorkflowState.CONFLICT.value}
+            and str(row["candidate_id"]) not in recorded
             for row in rows
         )
         return len(rows), review
@@ -1533,9 +1543,10 @@ class ProductApplication:
     def _review_candidates(self) -> list[dict[str, Any]]:
         workspace_id = self._workspace_id()
         candidates = self.materializer.list_pending(workspace_id)
+        recorded = self.fact_store.candidate_ids(workspace_id) if fact_memory_enabled() else frozenset()
         result: list[dict[str, Any]] = []
         for candidate in candidates:
-            if not isinstance(candidate, CandidateDecisionFact):
+            if not isinstance(candidate, CandidateDecisionFact) or candidate.candidate_id in recorded:
                 continue
             source = self.repository.get_source(workspace_id, candidate.artifact_id)
             if source is None or source["source_version"] != candidate.artifact_version_id:
@@ -1609,6 +1620,7 @@ class ProductApplication:
         fingerprint = self.materializer.candidate_fingerprint(workspace_id, candidate_id)
         if fingerprint is None:
             raise ProductApplicationError("CANDIDATE_NOT_FOUND", "The candidate is unavailable in this workspace.", status=404)
+        approved = False
         try:
             if not resume_approved:
                 self.materializer.approve(
@@ -1620,9 +1632,15 @@ class ProductApplication:
                     resolution=resolution,
                     revalidation_of_decision_id=revalidation_of,
                 )
+            approved = True
             materialized = self.materializer.materialize(workspace_id, candidate_id)
         except (MaterializationBlockedError, ValueError) as error:
             code = getattr(error, "reason_code", "REVIEW_NOT_READY")
+            if fact_memory_enabled() and isinstance(error, MaterializationBlockedError):
+                if not approved and not resume_approved and revalidation_of is None:
+                    return self._approve_fact(candidate, payload, error)
+                raise ProductApplicationError(code, _REVIEW_NOT_READY, status=409,
+                                              reason_codes=error.reason_codes) from error
             raise ProductApplicationError(code, "This candidate needs additional source-supported review before it can be approved.", status=409) from error
         if materialized.receipt is None:
             raise ProductApplicationError("MATERIALIZATION_PENDING", "Approval was recorded but no Decision Memory receipt was produced.", status=409)
@@ -1634,6 +1652,80 @@ class ProductApplication:
             "decision_id": materialized.receipt.decision_id,
             "memory_state": decision.memory_state.value if decision else None,
             "receipt_id": materialized.receipt.receipt_id,
+        }
+
+    @property
+    def fact_store(self) -> Any:
+        from linkloom.fact_memory.store import FactStore
+        if getattr(self, "_fact_store", None) is None:
+            self._fact_store = FactStore(self.store._connection)
+        return self._fact_store
+
+    def _fact_source(self, candidate: CandidateDecisionFact) -> Any:
+        from linkloom.fact_memory.channel import FactSource
+        source = self.repository.get_source(candidate.workspace_id, candidate.artifact_id)
+        active_current = bool(source is not None and source["active"]
+                              and source["source_version"] == candidate.artifact_version_id)
+        version = self.repository.get_version(candidate.workspace_id, candidate.artifact_id,
+                                              candidate.artifact_version_id)
+        verified, speaker = False, None
+        if version is not None:
+            artifact = self._artifact_from_version(version)
+            verified = candidate.provenance.verify(artifact)
+            try:
+                speaker = next((segment.speaker for segment in parse_timestamped_text(artifact).segments
+                                if segment.segment_id == candidate.segment_id), None)
+            except ValueError:
+                speaker = None
+        return FactSource(active_current=active_current, verified=verified, speaker=speaker)
+
+    def fact_records(self, workspace_id: str) -> tuple[Any, ...]:
+        """Fact records whose evidence is still in the active, current source version."""
+        current: dict[str, str | None] = {}
+        records = []
+        for record in self.fact_store.list(workspace_id):
+            if record.artifact_id not in current:
+                source = self.repository.get_source(workspace_id, record.artifact_id)
+                current[record.artifact_id] = (str(source["source_version"])
+                                               if source is not None and source["active"] else None)
+            if current[record.artifact_id] == record.artifact_version_id:
+                records.append(record)
+        return tuple(records)
+
+    def _approve_fact(self, candidate: CandidateDecisionFact, payload: dict[str, Any],
+                      blocked: MaterializationBlockedError) -> dict[str, Any]:
+        from linkloom.fact_memory.channel import admit
+        decision_reasons = tuple(blocked.reason_codes)
+        if (candidate.claim_type is not ClaimType.FACT
+                or blocked.reason_code in {"APPROVAL_STALE", "WORKSPACE_MISMATCH", "PROVENANCE_INVALID"}):
+            raise ProductApplicationError(blocked.reason_code, _REVIEW_NOT_READY, status=409,
+                                          reason_codes=decision_reasons) from blocked
+        admission = admit(
+            self.fact_store, candidate, self._fact_source(candidate),
+            reviewer_id=_required_payload_text(payload, "reviewer_id", 120),
+            reason=_required_payload_text(payload, "reason", 1000),
+            subject=_optional_text(payload.get("subject"), "subject", 512),
+            attribute=_optional_text(payload.get("relation"), "relation", 512),
+        )
+        if admission.record is None:
+            raise ProductApplicationError(
+                admission.reason_codes[0],
+                "This fact needs a source-grounded subject, attribute and value before it can be approved.",
+                status=409, reason_codes=tuple(dict.fromkeys(decision_reasons + admission.reason_codes)),
+            ) from blocked
+        self._sync_review_required_count(candidate)
+        record = admission.record
+        return {
+            "candidate_id": candidate.candidate_id,
+            "channel": "FACT",
+            "fact_id": record.fact_id,
+            "subject_id": record.subject_id,
+            "attribute_key": record.attribute_key,
+            "value": record.value_text,
+            "evidence_sentence": record.evidence_sentence,
+            "effective_at": record.effective_at.isoformat(),
+            "supersedes_fact_id": record.supersedes_fact_id,
+            "decision_reason_codes": list(decision_reasons),
         }
 
     def _reject_candidate(self, candidate_id: str, payload: dict[str, Any]) -> None:

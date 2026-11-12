@@ -42,7 +42,7 @@ def check_stage_one_safety(value, workspace):
             check_stage_one_safety(child, workspace)
 
 
-def parse_stage_one_claims(rows):
+def parse_stage_one_claims(rows, *, fact_profile=False):
     """Isolate local format errors after the caller has rejected unsafe envelopes."""
     from linkloom.semantic_ingestion.extraction import _parse_claim
     claims, indices, diagnostics = [], [], []
@@ -52,7 +52,11 @@ def parse_stage_one_claims(rows):
                 raise ValueError('claim is not an object')
             base = dict(raw)
             task = base.pop('task', None)
-            claim = _parse_claim(base)
+            if fact_profile:
+                from linkloom.fact_memory.extraction import parse_fact_claim
+                claim = parse_fact_claim(base)
+            else:
+                claim = _parse_claim(base)
         except (TypeError, ValueError, KeyError):
             diagnostics.append(dict(claim_index=index, issue='CLAIM_FORMAT_INVALID'))
             continue
@@ -343,8 +347,10 @@ def validate_stage_audit(result):
 
     from types import SimpleNamespace
     from linkloom.semantic_ingestion.extraction import _EXTRACTION_SCHEMA_SHA256
-    if first.receipt.schema_sha256 != _EXTRACTION_SCHEMA_SHA256:
-        raise ValueError('stage one must retain the original master schema')
+    from linkloom.fact_memory.extraction import fact_schema_hash
+    fact_profile = first.receipt.schema_sha256 == fact_schema_hash()
+    if first.receipt.schema_sha256 != _EXTRACTION_SCHEMA_SHA256 and not fact_profile:
+        raise ValueError('stage one must retain a declared schema')
     message = audit['canonical_message']
     if (not isinstance(message, dict) or set(message) != {'text', 'ordinal', 'speaker'}
             or not isinstance(message['text'], str) or type(message['ordinal']) is not int
@@ -355,7 +361,7 @@ def validate_stage_audit(result):
         if result.claims or audit['raw_claims'] or audit['stage_two'] or audit['diagnostics']:
             raise ValueError('failed stage one cannot carry partial task work')
         return
-    parsed, isolated = parse_stage_one_claims(audit['raw_claims'])
+    parsed, isolated = parse_stage_one_claims(audit['raw_claims'], fact_profile=fact_profile)
     if parsed != first.claims or isolated['claim_indices'] != audit['claim_indices']:
         raise ValueError('stage one raw proposal/index mapping changed')
     diagnostics = list(isolated['diagnostics'])
