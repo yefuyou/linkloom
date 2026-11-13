@@ -7,6 +7,7 @@ import hashlib
 import json
 
 from linkloom.semantic_ingestion.artifacts import EvidenceSpan
+from linkloom.fact_memory.extraction import FactDetails
 from linkloom.semantic_ingestion.task_observation import TaskObservation
 from linkloom.semantic_ingestion.candidate_models import (
     CandidateConfidence,
@@ -22,7 +23,7 @@ from linkloom.semantic_ingestion.candidate_models import (
 
 
 _PAYLOAD_VERSION = "candidate-decision-fact/v1"
-SOURCE_CANDIDATE_PAYLOAD_VERSIONS = frozenset({_PAYLOAD_VERSION, "candidate-decision-fact/v2", "candidate-decision-fact/v3"})
+SOURCE_CANDIDATE_PAYLOAD_VERSIONS = frozenset({_PAYLOAD_VERSION, "candidate-decision-fact/v2", "candidate-decision-fact/v3", "candidate-decision-fact/v4"})
 
 
 def candidate_payload_dict(candidate: CandidateDecisionFact) -> dict[str, object]:
@@ -97,6 +98,12 @@ def candidate_payload_dict(candidate: CandidateDecisionFact) -> dict[str, object
             "event_date": candidate.event_date.isoformat() if candidate.event_date else None,
             "task_observation": candidate.task_observation.to_dict(),
         })
+    if candidate.fact_details is not None:
+        payload["record_version"] = "candidate-decision-fact/v4"
+        payload["candidate"].update(source_format=candidate.source_format,
+            document_date=candidate.document_date.isoformat() if candidate.document_date else None,
+            event_date=candidate.event_date.isoformat() if candidate.event_date else None,
+            fact_details=candidate.fact_details.to_dict())
     return payload
 
 
@@ -155,17 +162,20 @@ def deserialize_candidate(payload_json: str) -> CandidateDecisionFact:
         "candidate_status",
         "authority",
     }
+    fact_version = payload["record_version"] == "candidate-decision-fact/v4"
     task_version = payload["record_version"] == "candidate-decision-fact/v3"
-    if payload["record_version"] == "candidate-decision-fact/v2" or task_version:
+    if payload["record_version"] == "candidate-decision-fact/v2" or task_version or fact_version:
         expected |= {"source_format", "document_date", "event_date"}
     if task_version:
         expected.add("task_observation")
+    if fact_version:
+        expected.add("fact_details")
     if not isinstance(data, dict) or set(data) != expected:
         raise ValueError("stored CandidateDecisionFact has missing or unsupported fields")
     document = data.get("source_format") == "document_text"
     if payload["record_version"] == "candidate-decision-fact/v2" and not document:
         raise ValueError("v2 payload requires document source format")
-    if task_version and data["source_format"] not in {"document_text", "timestamped_text"}:
+    if (task_version or fact_version) and data["source_format"] not in {"document_text", "timestamped_text"}:
         raise ValueError("unsupported task candidate source format")
     raw_span = data["provenance"]
     if not isinstance(raw_span, dict):
@@ -219,6 +229,7 @@ def deserialize_candidate(payload_json: str) -> CandidateDecisionFact:
         candidate_status=data["candidate_status"],
         authority=data["authority"],
         task_observation=TaskObservation.from_dict(data["task_observation"]) if task_version else None,
+        fact_details=FactDetails.from_dict(data["fact_details"]) if fact_version else None,
     )
 
 

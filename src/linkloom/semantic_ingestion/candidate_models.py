@@ -12,6 +12,7 @@ import re
 from typing import Literal
 
 from linkloom.agents.model_adapter import ModelUsage
+from linkloom.fact_memory.extraction import FactDetails
 from linkloom.decision_memory.models import decision_slot_key_for
 from linkloom.semantic_ingestion.artifacts import EvidenceSpan
 from linkloom.semantic_ingestion.task_observation import TaskObservation, TaskProposal
@@ -152,6 +153,7 @@ class ExtractedClaim:
     valid_to_raw: str | None
     confidence: CandidateConfidence
     task: TaskProposal | None = None
+    fact_details: FactDetails | None = None
 
     def __post_init__(self) -> None:
         if not isinstance(self.claim_type, ClaimType):
@@ -178,6 +180,8 @@ class ExtractedClaim:
                 raise ValueError(f"{name} must be a bounded date/time string or null")
         if not isinstance(self.confidence, CandidateConfidence):
             raise ValueError("confidence must be CandidateConfidence")
+        if self.fact_details is not None and (not isinstance(self.fact_details, FactDetails) or self.claim_type is not ClaimType.FACT):
+            raise ValueError("fact details require FACT")
         if self.task is not None and (
             not isinstance(self.task, TaskProposal) or self.claim_type not in {ClaimType.PLAN, ClaimType.ACTION}
         ):
@@ -208,6 +212,8 @@ class ExtractedClaim:
         # Preserve the canonical hash of historical extraction receipts.
         if self.task is not None:
             payload["task"] = self.task.to_dict()
+        if self.fact_details is not None:
+            payload["fact_details"] = self.fact_details.to_dict()
         return payload
 
 
@@ -586,7 +592,7 @@ def _claim_from_dict(data: object) -> ExtractedClaim:
         "valid_to_raw",
         "confidence",
     }
-    if not isinstance(data, dict) or set(data) not in (expected, expected | {"task"}):
+    if not isinstance(data, dict) or set(data) - {"fact_details"} not in (expected, expected | {"task"}):
         raise ValueError("ExtractedClaim has missing or unsupported fields")
     raw_confidence = data["confidence"]
     if not isinstance(raw_confidence, dict) or set(raw_confidence) != {
@@ -622,6 +628,7 @@ def _claim_from_dict(data: object) -> ExtractedClaim:
             overall=raw_confidence["overall"],
         ),
         task=TaskProposal.from_dict(data["task"]) if data.get("task") is not None else None,
+        fact_details=FactDetails.from_dict(data["fact_details"]) if data.get("fact_details") is not None else None,
     )
 
 
@@ -664,6 +671,7 @@ class CandidateDecisionFact:
     document_date: date | None = None
     event_date: date | None = None
     task_observation: TaskObservation | None = None
+    fact_details: FactDetails | None = None
 
     def __post_init__(self) -> None:
         for name in (
@@ -727,6 +735,8 @@ class CandidateDecisionFact:
             raise ValueError("review_reasons must be a tuple of CandidateReasonCode")
         if self.authority != "NON_AUTHORITATIVE":
             raise ValueError("Semantic Ingestion candidates must remain non-authoritative")
+        if self.fact_details is not None and (not isinstance(self.fact_details, FactDetails) or self.claim_type is not ClaimType.FACT):
+            raise ValueError("fact details require FACT")
         if self.candidate_status != "CANDIDATE":
             raise ValueError("Semantic Ingestion candidates must remain CANDIDATE")
         if self.task_observation is not None and (

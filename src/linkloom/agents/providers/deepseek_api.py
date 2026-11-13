@@ -815,6 +815,12 @@ class DeepSeekProviderAdapter:
             )
             metadata["system_fingerprint"] = fingerprint
         _validate_provider_metadata(metadata, "DeepSeekResponse.provider_metadata")
+        if finish_reason == "length":
+            return ModelResponse(
+                error=_make_error("MODEL_RESPONSE_MALFORMED",
+                                  details={"reason": "final_finish_reason_mismatch", "finish_reason": finish_reason}),
+                finish_reason=finish_reason, usage=usage, provider_metadata=metadata,
+            )
 
         if calls:
             if finish_reason != "tool_calls":
