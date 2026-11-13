@@ -385,7 +385,7 @@ def main():
                 report['groups']['E']['accounting']=backend.accounting();backend.close()
             assert report['groups']['E']['accounting']['upper_bound_cost_usd']<=1.
         report['analysis']=analysis_rows(staged,report)
-        frozen_path=ROOT/'docs/requirements/m1_team_decision_eval_seed/dataset.jsonl'
+        frozen_path=ROOT/'benchmarks/datasets/m1_team_decision_eval_seed/dataset.jsonl'
         frozen_manifest=next(ds['manifest'] for ds in staged if ds['dataset']=='retrieval30-dev')
         report['frozen_dev_unchanged']=hashlib.sha256(frozen_path.read_bytes()).hexdigest()==frozen_manifest['sha256']
         if not report['frozen_dev_unchanged']:raise RuntimeError('development data changed during run')

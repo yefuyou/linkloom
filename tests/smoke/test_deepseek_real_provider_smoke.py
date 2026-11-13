@@ -32,7 +32,7 @@ from linkloom.scanner import scan_vault
 
 
 REPO = Path(__file__).resolve().parents[2]
-SEED_ROOT = REPO / "docs" / "requirements" / "m1_team_decision_eval_seed"
+SEED_ROOT = REPO / "benchmarks" / "datasets" / "m1_team_decision_eval_seed"
 DATASET_PATH = SEED_ROOT / "dataset.jsonl"
 ARTIFACT_ROOT = REPO / ".artifacts" / "deepseek_real_provider_smoke"
 MODEL = "deepseek-flash"

@@ -6,7 +6,7 @@ from linkloom.evaluation.task_semantic_replay import load_recorded_semantic_adap
 from linkloom.tools.semantic_analysis import SemanticCallPolicy
 from tests.semantic_integration_support import setup, execute
 
-ARTIFACTS = Path(__file__).resolve().parents[2] / "docs/requirements/m3-llm-semantics/artifacts"
+ARTIFACTS = Path(__file__).resolve().parents[2] / "tests/fixtures/recorded/m3-llm-semantics/artifacts"
 
 
 @pytest.mark.parametrize("name", ["revision", "causality", "conflict"])

@@ -3,8 +3,9 @@
 This is the implementation gate map for the product roadmap. The detailed user
 contract lives in [docs/PRODUCT_ROADMAP.md](docs/PRODUCT_ROADMAP.md).
 
-No implementation task may start unless it has an approved feature SPEC and
-implementation plan under `docs/requirements/<feature>/`.
+Feature SPECs and implementation plans formerly under `docs/requirements/`
+were moved out of this repository on 2026-11-13; `b2c3821` is the last commit
+that contains them.
 
 ## Governance Baseline
 
@@ -20,12 +21,6 @@ Existing governance artifacts:
 - `DEV_SPEC.md`
 - `AGENTS.md`
 - `docs/PRODUCT_ROADMAP.md`
-- `docs/MULTI_AGENT_ROLES.md`
-- `docs/SPEC_DRIVEN_DEVELOPMENT.md`
-- `docs/ACCEPTANCE_CHECKLIST.md`
-- `docs/PROJECTS_REVERSE_ENGINEERING.md`
-- `docs/MARKET_LANDSCAPE.md`
-- `docs/GIT_WORKFLOW.md`
 
 Current V1 release gate:
 
@@ -37,8 +32,6 @@ Current V1 release gate:
 
 Current feature documents:
 
-- `docs/requirements/semantic-ingestion/SPEC.md`
-- `docs/requirements/semantic-ingestion/implementation_plan.md`
 - `docs/architecture/SEMANTIC_INGESTION_SQLITE_MIGRATION.md`
 
 The Planner, Worker, and Reviewer roles remain separate. The Step 3 Worker
@@ -62,12 +55,6 @@ Completed feature slice: Read-Only Vault Scanner.
 
 Vault Profile was an optional planning slice in the earlier roadmap. It is not
 the next active LinkLoom feature.
-
-Historical planning files for the completed Scanner:
-
-- `docs/requirements/read-only-vault-scanner/SPEC.md`
-- `docs/requirements/read-only-vault-scanner/implementation_plan.md`
-- `docs/requirements/read-only-vault-scanner/task.md`
 
 Implemented file boundary:
 

@@ -1,9 +1,0 @@
-{
-  "status": 403,
-  "body": {
-    "error": {
-      "code": "LOCAL_TASK_REVIEW_DISABLED",
-      "message": "Local task review is disabled; restart the localhost Host with --allow-local-task-review."
-    }
-  }
-}

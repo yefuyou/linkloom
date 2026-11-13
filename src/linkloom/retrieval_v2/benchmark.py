@@ -63,7 +63,7 @@ class FrozenRetrievalBenchmark:
         embedder: EmbeddingProvider | None = None,
     ) -> None:
         self.repo_root = Path(repo_root).resolve()
-        self.seed_root = self.repo_root / "docs" / "requirements" / "m1_team_decision_eval_seed"
+        self.seed_root = self.repo_root / "benchmarks" / "datasets" / "m1_team_decision_eval_seed"
         self.dataset_path = self.seed_root / "dataset.jsonl"
         self.embedder = embedder or SentenceTransformerEmbedder()
         self.cases = self._load_cases()
