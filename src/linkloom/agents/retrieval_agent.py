@@ -81,7 +81,7 @@ def _few_shot_examples(
         }, ensure_ascii=False, separators=(",", ":"))
         return (
             "prompt_profile=few-v1; synthetic examples only (not facts for this task):\n"
-            "Example A: search_notes(query='Who owns Lantern Plan?', source_context=<current Runtime source_context>, limit=5) "
+                "Example A: search_notes(query='Who owns Lantern Plan?', source_context={}, limit=5) "
             "returns evidence_id='ex_lantern_1'; read_verified_note(note_ref='ex_lantern_1') "
             "returns a verified passage 'Mira is the accountable owner of Lantern Plan'. "
             f"A valid Final JSON for that synthetic passage is {synthetic_final}.\n"
@@ -92,7 +92,7 @@ def _few_shot_examples(
         )
     return (
         "prompt_profile=few-v1; synthetic examples only (not facts for this task):\n"
-        "search_notes(query='Lantern Plan owner', source_context=<current Runtime source_context>, limit=5) "
+        "search_notes(query='Lantern Plan owner', source_context={}, limit=5) "
         "returns evidence_id='ex_lantern_1'; read_verified_note(note_ref='ex_lantern_1') "
         "reads that ID, not a note path. If no verified evidence exists, stop without a factual answer. "
         "A memory hint may adjust terminology but is never source evidence.\n"
@@ -307,13 +307,10 @@ class RetrievalAgent:
                 "action, alternative, or uncertainty statement.\n"
             )
             legacy_plan_instruction = (
-                "Every search must copy ALL original source_context fields exactly: "
-                "index_path, index_sha256, index_schema_version, vault_root_fingerprint, "
-                "document_count, and fixture_id when present. Missing document_count is an "
-                "identity violation, never an optional omission. Never issue an unscoped "
+                "The Host binds the source identity for every search. Never issue an unscoped "
                 "search without subgoal_id to recover from an error. "
-                "For each task_plan subgoal, call search_notes with the original source_context "
-                "plus subgoal_id, dependency_entities (one literal entity from each verified "
+                "For each task_plan subgoal, call search_notes with source_context containing "
+                "subgoal_id, dependency_entities (one literal entity from each verified "
                 "parent read), and query_variant primary or alternate. The runtime constructs "
                 "the bounded effective query. You may batch search_notes calls only for "
                 "independent subgoals whose dependencies are already verified. Do not batch "
@@ -336,8 +333,8 @@ class RetrievalAgent:
                 "Do not claim completion.\n"
             )
             typed_plan_instruction = (
-                "For each task_plan subgoal, call search_notes with the original source_context "
-                "plus subgoal_id, dependency_entities (one literal entity from each verified "
+                "For each task_plan subgoal, call search_notes with source_context containing "
+                "subgoal_id, dependency_entities (one literal entity from each verified "
                 "parent read), and query_variant primary or alternate. The Runtime constructs "
                 "the bounded effective query. You may batch searches only for independent "
                 "subgoals whose dependencies are already verified; read a parent's evidence "
