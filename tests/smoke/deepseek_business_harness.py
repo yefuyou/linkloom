@@ -23,7 +23,7 @@ from tests.smoke import test_deepseek_real_provider_smoke as baseline
 
 
 REPO = Path(__file__).resolve().parents[2]
-SEED_ROOT = REPO / "docs" / "requirements" / "m1_team_decision_eval_seed"
+SEED_ROOT = REPO / "benchmarks" / "datasets" / "m1_team_decision_eval_seed"
 DATASET_PATH = SEED_ROOT / "dataset.jsonl"
 ARTIFACT_ROOT = REPO / ".artifacts" / "deepseek_business_evaluation"
 MODEL = baseline.MODEL

@@ -31,7 +31,7 @@ def run_downstream_comparison(
         raise ValueError("downstream comparison metrics are fixed at top_k=5")
 
     root = Path(repo_root).resolve()
-    dataset_path = root / "docs" / "requirements" / "m1_team_decision_eval_seed" / "dataset.jsonl"
+    dataset_path = root / "benchmarks" / "datasets" / "m1_team_decision_eval_seed" / "dataset.jsonl"
     gold_before = _sha256_file(dataset_path)
     benchmark = FrozenRetrievalBenchmark(root, embedder=embedder)
     gold_after_load = _sha256_file(dataset_path)
