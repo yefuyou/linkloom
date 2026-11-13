@@ -135,6 +135,19 @@ class BranchBudgetPool:
                 self.stop(HARD_ABORT, 'TASK_SOURCE_AUTHORIZATION_CHANGED')
                 raise
 
+    def pending_task_ids(self):
+        with self._lock:
+            sessions = [b['session'] for b in self.branches.values() if b['session'] is not None]
+        return (*self._tasks.pending_ids(), *(task for session in sessions for task in session.pending_task_ids()))
+
+    def close(self, timeout=10.0, *, deadline=None):
+        deadline = shutdown_deadline(timeout) if deadline is None else deadline
+        self._tasks.stop_accepting()
+        self._tasks.wait(deadline)
+        for branch in self.branches.values():
+            if branch['session'] is not None:
+                branch['session'].close(deadline=deadline)
+
     def _slice(self):
         seconds = self.total.max_seconds - (monotonic() - self.started)
         cut = {key: min(self.share[key], self.available[key]) for key in _KEYS}
@@ -242,13 +255,14 @@ class BranchBudgetPool:
             held = {key: sum(b['held'][key] for b in self.branches.values() if b['held']) for key in _KEYS}
             return dict(reserved_usd=reserved, spent_usd=spent, available=dict(self.available), held=held)
 
-    def finish(self, timeout=10.0):
+    def finish(self, timeout=10.0, *, stop_at_timeout=False):
         deadline = shutdown_deadline(timeout)
         self._tasks.stop_accepting()
         try:
             self._tasks.wait(deadline)
         except BackgroundShutdownTimeout:
-            pass  # unfinished branches stay RUNNING and are never published
+            if stop_at_timeout:
+                self.stop(SOFT_STOP, 'DEADLINE')
         for branch in list(self.branches.values()):
             if branch['session'] is not None:
                 try:

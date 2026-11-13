@@ -290,6 +290,23 @@ class UnifiedAskService:
                             return self._failure(result, "INVESTIGATION_DOMAIN_CONFLICT",
                                 "Clear the advanced decision selection and choose the task domain for a task question.", status="NEEDS_SCOPE"), 200
                         return self._task_request(run, payload, context=context)
+                # A selected decision slot and two admitted plan components
+                # belong to temporal investigation, including mixed relation questions.
+                service = self.investigation()
+                parallel = (not context and values["subject"] and values["relation"]
+                            and service is not None and getattr(service, "parallel_limits", None)
+                            and service.parallel_subplans(run.query)
+                            and source_context(self.app, run.workspace_id)["source_count"] >= 2)
+                if parallel:
+                    as_of, date_error = resolve_query_date(run.query, payload.get("as_of"))
+                    if date_error:
+                        return self._failure(result, date_error["code"], date_error["message"],
+                                             status="NEEDS_SCOPE"), 200
+                    route = dict(intent="INVESTIGATION", route="INVESTIGATION", code="SOURCE_INVESTIGATION",
+                                 reason="The selected decision has two independent investigation plan components.")
+                    run = _AskRun(run.query, run.workspace_id, run.scope, route)
+                    result = self._base(run)
+                    return self._decision_request(run, result, payload, values, as_of)
                 if plan is not None or (not cascade and _RELATION_QUESTION.search(run.query)):
                     if cascade:
                         from linkloom.ui.router_context import router_query_date
@@ -842,6 +859,18 @@ class UnifiedAskService:
         result["reviewer"].update(performed=disposition.get("performed") is True,
                                    accepted=disposition.get("performed") is True and disposition.get("decision") == "evidence_sufficient")
         kind = snapshot["kind"]
+        if "parallel_investigation" in snapshot:
+            parallel = deepcopy(snapshot["parallel_investigation"])
+            evidence = [dict(evidence_ref=row["ref"], citation_id=row["id"],
+                source_name=row["source_name"], source_id=row["source_id"], source_version=row["source_version"],
+                line_start=row["line_start"], line_end=row["line_end"], quote=row["source"]["quote"],
+                content_sha256=row["content_sha256"], quote_sha256=row["quote_sha256"], verified=True)
+                for row in snapshot["evidence"]]
+            result.update(parallel_investigation=parallel, evidence=evidence,
+                status={"RUNNING": "INVESTIGATING", "COMPLETE": "COMPLETED", "PARTIAL": "PARTIAL",
+                        "CANCELLED": "CANCELLED"}.get(parallel["status"], "FAILED"),
+                error=deepcopy(snapshot["error"]))
+            return result
         if kind == "running":
             result["status"] = "INVESTIGATING"
             return result

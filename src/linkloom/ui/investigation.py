@@ -17,7 +17,7 @@ from linkloom.runtime.context_engineering import ContextRuntimeConfig
 from linkloom.runtime.errors import CheckpointError
 from linkloom.runtime.errors import ToolArgumentValidationError, ValidationError
 from linkloom.runtime.task_plan import TaskPlan, assess_task_plan, verified_plan_conflict_refs
-from linkloom.runtime.team_decision_planner import plan_relation_investigation
+from linkloom.runtime.team_decision_planner import plan_relation_investigation, plan_team_decision_query
 from linkloom.agents.claim_grounding import assess_claim_text, ClaimSupportStatus, TYPED_CLAIM_RELATIONS
 from linkloom.ui.projection import collect_observed_evidence
 from linkloom.scanner import scan_vault
@@ -55,11 +55,15 @@ class ProductInvestigationService:
         task_models: Any = None,
         task_relation_paths: dict[str, Path] | None = None,
         task_only: bool = False,
+        parallel_limits=None,
     ) -> None:
         self.product_app = product_app
         self.model_factory = model_factory
         self.task_models = task_models
         self.task_only = task_only
+        self.parallel_limits = parallel_limits
+        self._parallel_jobs = {}
+        self._parallel_workers = BackgroundTasks()
         # Local Host composition only. HTTP/model arguments cannot choose paths.
         self.task_relation_paths = dict(task_relation_paths or {})
         self.run_mode = run_mode
@@ -108,7 +112,8 @@ class ProductInvestigationService:
     def pending_task_ids(self):
         with self._lock:
             owners = (*self._backends, *self._provider_sessions)
-        return (*self._starts.pending_ids(), *(task_id for owner in owners for task_id in owner.pending_task_ids()))
+        return (*self._starts.pending_ids(), *self._parallel_workers.pending_ids(),
+                *(task_id for owner in owners for task_id in owner.pending_task_ids()))
 
     def stop_accepting(self) -> None:
         self._starts.stop_accepting()
@@ -118,6 +123,8 @@ class ProductInvestigationService:
         self.stop_accepting()
         # An admitted preparation may still create and register its Runtime.
         self._starts.wait(deadline)
+        self._parallel_workers.stop_accepting()
+        self._parallel_workers.wait(deadline)
         with self._lock:
             backends = tuple(self._backends)
             sessions = tuple(self._provider_sessions)
@@ -180,6 +187,8 @@ class ProductInvestigationService:
         graph_provider_session = current_graph_provider_session()
         max_steps = self.relation_max_steps if source_run else self.max_steps
         workspace, sources = self.product_app.snapshot_investigation_sources(workspace_id)
+        subplans = (self.parallel_subplans(query)
+                    if temporal_scope is not None and len(sources) >= 2 else ())
         task_models, outer_model = self.task_models, None
         temporal_view_holder: dict[str, Any] | None = None
         if temporal_scope is not None:
@@ -231,7 +240,7 @@ class ProductInvestigationService:
             raise ProductApplicationError(
                 "EMPTY_WORKSPACE", "Import a source into this workspace before investigating.", status=409
             )
-        temporary_root = None if task_investigation else TemporaryDirectory(prefix="linkloom-investigate-")
+        temporary_root = None if task_investigation or subplans else TemporaryDirectory(prefix="linkloom-investigate-")
         if temporary_root is not None:
             with self._lock:
                 self._temporary_roots.append(temporary_root)
@@ -287,6 +296,26 @@ class ProductInvestigationService:
                 source_names[relative_path] = str(source["name"])
                 source_versions[relative_path] = {"source_id": source_id, "source_version": str(source["source_version"])}
             index = scan_vault(vault, root / "scan").index_path
+            if subplans:
+                from linkloom.ui.parallel_investigation import ParallelInvestigation
+                from linkloom.ui.task_investigation import ProductTaskSources
+                identity = ProductTaskSources._identity(sources)
+
+                def validate():
+                    _, current = self.product_app.snapshot_investigation_sources(workspace_id)
+                    if ProductTaskSources._identity(current) != identity:
+                        raise ValueError('TASK_SOURCE_AUTHORIZATION_CHANGED')
+
+                run_id = 'ui-parallel-' + root.name
+                job = ParallelInvestigation(root, run_id, query.strip(), WorkspacePresentationContext(
+                    display_name=str(workspace["name"]), document_count=len(sources)), self.parallel_limits,
+                    validate, subplans, self.model_factory, vault, index, source_names, source_versions, workspace_id)
+                initial = job.snapshot()
+                with self._lock:
+                    self._provider_sessions.append(job.pool)
+                    self._parallel_workers.start(run_id, job.execute)
+                    self._parallel_jobs[run_id] = job
+                return initial
             from linkloom.ui.task_provider import _ROUTER_RESERVATION, TaskProviderSession
             if self.external_provider and not task_investigation and graph_provider_session is None and _ROUTER_RESERVATION.get() is not None:
                 if task_models is None or task_models.provider_limits is None:
@@ -447,10 +476,14 @@ class ProductInvestigationService:
 
     def inspect(self, run_id: str) -> dict[str, Any] | None:
         with self._lock:
+            parallel = self._parallel_jobs.get(run_id)
             job = self._jobs.get(run_id)
             if (job and job.task_preparation and job.task_preparation.provider_session
                     and job.task_preparation.provider_session.failure):
                 return self._task_blocked(run_id, job.task_preparation.provider_session.failure)
+        if parallel is not None:
+            with self.product_app._store_lock:
+                return parallel.snapshot()
         if job is None:
             return None
         if job.task_preparation is not None:
@@ -535,6 +568,22 @@ class ProductInvestigationService:
             subject, relation, as_of, _workspace_id=workspace_id,
         )
         return self._start(query, workspace_id, temporal_scope=(subject, relation, view["as_of"]))
+
+    def cancel_parallel(self, run_id: str) -> bool:
+        from linkloom.ui.branch_budget import CANCELLED
+        with self._lock:
+            job = self._parallel_jobs.get(run_id)
+        if job is None:
+            return False
+        job.pool.stop(CANCELLED, 'PARALLEL_CANCELLED')
+        return True
+
+    def parallel_subplans(self, query):
+        from linkloom.ui.graph_investigation import current_graph_provider_session
+        if not self.parallel_limits or self.task_only or current_graph_provider_session() is not None:
+            return ()
+        from linkloom.ui.parallel_investigation import independent_subplans
+        return independent_subplans(plan_team_decision_query(query), self.relation_max_steps)
 
     def _decorate(self, snapshot, state, *, source_names=None, source_versions=None, temporal_scope=None,
                   temporal_view_holder=None, task_plan=None, max_steps=None):
