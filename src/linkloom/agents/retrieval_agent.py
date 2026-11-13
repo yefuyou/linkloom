@@ -81,7 +81,7 @@ def _few_shot_examples(
         }, ensure_ascii=False, separators=(",", ":"))
         return (
             "prompt_profile=few-v1; synthetic examples only (not facts for this task):\n"
-                "Example A: search_notes(query='Who owns Lantern Plan?', source_context={}, limit=5) "
+            "Example A: search_notes(query='Who owns Lantern Plan?', source_context={}, limit=5) "
             "returns evidence_id='ex_lantern_1'; read_verified_note(note_ref='ex_lantern_1') "
             "returns a verified passage 'Mira is the accountable owner of Lantern Plan'. "
             f"A valid Final JSON for that synthetic passage is {synthetic_final}.\n"
