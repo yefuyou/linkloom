@@ -4,9 +4,13 @@ A single session is single-flight by design, so parallel branches each own a
 child session with a fixed slice of one shared budget. Nothing here is wired
 into a product path. Stop semantics:
 HARD_ABORT (authorization/workspace change, 401/402/403): publish nothing.
-SOFT_STOP (deadline): stop new requests, verified branches publish as PARTIAL.
+SOFT_STOP (the pool deadline, or an explicit stop): stop new requests, verified
+branches publish as PARTIAL. A branch exhausting its own slice does not trigger it:
+slices sum to at most the total, so that branch simply fails alone.
 CANCELLED (user): stop new requests, publish nothing.
 A branch that is UNCERTAIN or times out only stops itself and leaves a gap.
+If finish() times out with a branch still running, that branch is never published;
+a late writer may still touch pool.json and result.json, but nothing is released.
 """
 from __future__ import annotations
 
@@ -42,7 +46,8 @@ def _write_json(path, data):
 
 
 def classify_branch_for_resume(branch_dir):
-    """START, REUSE, RESUME or UNCERTAIN, derived only from the child's budget.json."""
+    """START, REUSE, RESUME, UNCERTAIN or WITHHELD, from the child's budget.json.
+    WITHHELD: a finished branch whose pool was HARD_ABORTed or CANCELLED; never republish it."""
     root = Path(branch_dir)
     try:
         budget = json.loads((root / 'budget.json').read_text(encoding='utf8'))
@@ -55,9 +60,13 @@ def classify_branch_for_resume(branch_dir):
         started = datetime.fromisoformat(budget['started_at'])
         completed = datetime.fromtimestamp(started.timestamp() + budget['elapsed_seconds'], UTC)
         validate_task_provider_receipt(root / 'budget.json', completed.isoformat())
+        pool = root.parent.parent / 'pool.json'
+        stop = json.loads(pool.read_text(encoding='utf8'))['stop'] if pool.is_file() else None
     except Exception:
         return 'UNCERTAIN'
-    return 'REUSE' if (root / 'result.json').is_file() else 'RESUME'
+    if not (root / 'result.json').is_file():
+        return 'RESUME'
+    return 'WITHHELD' if stop and stop[0] in (HARD_ABORT, CANCELLED) else 'REUSE'
 
 
 def validate_pool_receipt(root, completed_at=None):
@@ -77,7 +86,7 @@ class BranchBudgetPool:
     def __init__(self, root, limits, validate, run_id, branches):
         if type(branches) is not int or branches < 1:
             raise ValueError('positive branch count required')
-        self.root, self.run_id, self.parent_validate = Path(root), run_id, validate
+        self.root, self.run_id, self.parent_validate, self.declared = Path(root), run_id, validate, branches
         self.total = remaining_provider_limits(limits)  # router spend is deducted exactly once, here
         self.share = {key: getattr(self.total, key) // branches if key in _KEYS[:3]
                       else getattr(self.total, key) / branches for key in _KEYS}
@@ -136,10 +145,17 @@ class BranchBudgetPool:
             for key in _KEYS:
                 self.available[key] -= branch['slice'][key]
             branch['held'] = dict(branch['slice'])
-            self._save()  # the allocation is durable before the child session exists
-            with pass_router_reservation(None):  # a child's limits must equal its slice
-                branch['session'] = TaskProviderSession(self.root / 'branches' / name, limits, self._validated)
-            self._tasks.start(f'{self.run_id}-{name}', lambda: self._run(name, work))
+            try:
+                self._save()  # the allocation is durable before the child session exists
+                with pass_router_reservation(None):  # a child's limits must equal its slice
+                    branch['session'] = TaskProviderSession(self.root / 'branches' / name, limits, self._validated)
+                self._tasks.start(f'{self.run_id}-{name}', lambda: self._run(name, work))
+            except BaseException:  # roll back: nothing ran, so the slice is free again
+                for key in _KEYS:
+                    self.available[key] += branch['slice'][key]
+                del self.branches[name]
+                self._save()
+                raise
         return 'RUNNING'
 
     def _run(self, name, work):
@@ -161,7 +177,8 @@ class BranchBudgetPool:
                 branch['status'] = 'DISCARDED'  # late results never publish and never reach the provider
             else:
                 outcomes = [row['outcome'] for row in session.attempts]
-                clean = closed and not failed and session.failure is None and all(o == 'SUCCEEDED' for o in outcomes)
+                clean = (closed and not failed and session.failure is None and bool(outcomes)
+                         and all(o == 'SUCCEEDED' for o in outcomes))
                 if clean:
                     try:
                         _write_json(session.root / 'result.json', result)
@@ -176,7 +193,8 @@ class BranchBudgetPool:
                         branch['held'][key] = used[key]
                 else:
                     pending = any(o in ('PENDING', 'UNCERTAIN') for o in outcomes)
-                    branch['status'] = 'UNCERTAIN' if pending or not closed else 'FAILED'
+                    branch['status'] = ('UNCERTAIN' if pending or not closed else
+                                        'NO_REQUESTS' if closed and not failed and not outcomes else 'FAILED')
             self._save()
 
     def accounting(self):
@@ -217,10 +235,10 @@ class BranchBudgetPool:
                 published = {name: b['result'] for name, b in self.branches.items()
                              if b['status'] == 'VERIFIED' and receipts.get(name, 'missing') is None}
             status = {HARD_ABORT: 'ABORTED', CANCELLED: 'CANCELLED'}.get(kind) or (
-                'COMPLETE' if published and len(published) == len(self.branches) else 'PARTIAL' if published else 'FAILED')
+                'COMPLETE' if published and len(published) == self.declared else 'PARTIAL' if published else 'FAILED')
             gaps = {name: b['status'] for name, b in self.branches.items() if name not in published}
             return dict(status=status, reason=self.stop_state and self.stop_state[1], results=published,
-                        gaps=gaps, **self.accounting())
+                        gaps=gaps, unstarted=self.declared - len(self.branches), **self.accounting())
 
     def _save(self):
         _write_json(self.root / 'pool.json', dict(run_id=self.run_id, total=asdict(self.total),

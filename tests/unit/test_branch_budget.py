@@ -311,3 +311,116 @@ def test_pool_journal_survives_interrupted_write(tmp_path, monkeypatch):
     with pytest.raises(OSError):
         pool.stop(SOFT_STOP, 'x')
     assert json.loads(path.read_text()) == before
+
+
+def tamper(path, **changes):
+    budget = json.loads(path.read_text())
+    budget.update(changes)
+    path.write_text(json.dumps(budget))
+
+
+def test_receipt_gate_blocks_publication_and_resume_reuse(tmp_path):
+    pool = pool_for(tmp_path, branches=2)
+    pool.launch('a', ask(Adapter(), 'a'))
+    pool.launch('b', ask(Adapter(), 'b'))
+    settle(pool)
+    assert pool.branches['b']['status'] == 'VERIFIED'
+    branch = tmp_path / 'pool' / 'branches' / 'b'
+    assert classify_branch_for_resume(branch) == 'REUSE'
+    tamper(branch / 'budget.json', input_tokens_reserved=1)  # every attempt still reads SUCCEEDED
+    assert classify_branch_for_resume(branch) == 'UNCERTAIN'
+    outcome = pool.finish()
+    assert outcome['status'] == 'PARTIAL' and outcome['results'] == {'a': 'a'}
+    assert outcome['gaps'] == {'b': 'VERIFIED'}
+
+
+def test_branch_without_requests_is_not_verified_and_keeps_its_slice(tmp_path):
+    pool = pool_for(tmp_path, branches=2)
+    pool.launch('a', lambda session: 'never asked')
+    settle(pool)
+    assert pool.branches['a']['status'] == 'NO_REQUESTS'
+    assert pool.available['max_requests'] == 6 - pool.branches['a']['slice']['max_requests']
+    outcome = pool.finish()
+    assert outcome['status'] == 'FAILED' and outcome['gaps'] == {'a': 'NO_REQUESTS'}
+
+
+def test_complete_requires_every_declared_branch(tmp_path):
+    pool = pool_for(tmp_path)
+    pool.launch('a', ask(Adapter(), 'a'))
+    outcome = pool.finish()
+    assert outcome['status'] == 'PARTIAL' and outcome['results'] == {'a': 'a'} and outcome['unstarted'] == 2
+
+
+@pytest.mark.parametrize('kind,verdict', [(HARD_ABORT, 'WITHHELD'), (CANCELLED, 'WITHHELD'), (SOFT_STOP, 'REUSE')])
+def test_resume_does_not_reuse_results_the_pool_withheld(tmp_path, kind, verdict):
+    pool, release, _ = blocked_scenario(tmp_path)
+    pool.stop(kind, 'test')
+    release.set()
+    pool.finish()
+    assert classify_branch_for_resume(tmp_path / 'pool' / 'branches' / 'a') == verdict
+
+
+def test_deadline_triggers_soft_stop_through_validation(tmp_path):
+    pool, release, late = blocked_scenario(tmp_path, requests=2)
+    pool.started -= 1000  # the pool deadline passes while branch c is mid-request
+    release.set()
+    outcome = pool.finish()
+    assert pool.stop_state == (SOFT_STOP, 'DEADLINE') and late.calls == 1
+    assert outcome['status'] == 'PARTIAL' and outcome['results'] == {'a': 'a', 'b': 'b'}
+    assert outcome['gaps'] == {'c': 'DISCARDED'}
+
+
+def test_launch_after_finish_rolls_back(tmp_path):
+    pool = pool_for(tmp_path)
+    pool.finish()
+    before = dict(pool.available)
+    with pytest.raises(RuntimeError):
+        pool.launch('late', ask(Adapter()))
+    assert pool.available == before and 'late' not in pool.branches
+    assert 'late' not in json.loads((tmp_path / 'pool' / 'pool.json').read_text())['branches']
+
+
+def test_session_construction_failure_rolls_back(tmp_path, monkeypatch):
+    pool = pool_for(tmp_path)
+    before = dict(pool.available)
+
+    def broken(*args):
+        raise OSError('disk full')
+    monkeypatch.setattr(branch_budget, 'TaskProviderSession', broken)
+    with pytest.raises(OSError):
+        pool.launch('a', ask(Adapter()))
+    assert pool.available == before and pool.branches == {}
+
+
+def test_finish_timeout_never_publishes_a_running_branch(tmp_path):
+    pool, release, _ = blocked_scenario(tmp_path)
+    outcome = pool.finish(0.2)  # c is still blocked inside its request
+    assert outcome['results'] == {'a': 'a', 'b': 'b'} and outcome['gaps'] == {'c': 'RUNNING'}
+    release.set()
+    settle(pool)
+    assert outcome['results'] == {'a': 'a', 'b': 'b'}  # the returned outcome is a snapshot
+    assert 'c' not in outcome['results']
+
+
+def test_pool_built_on_a_background_thread_with_router_reservation(tmp_path):
+    router = TaskProviderSession(tmp_path / 'router', limits(), lambda: None)
+    assert router.bind(Adapter(), 'route').complete(request()).action
+    holder = {}
+
+    def build():  # a new thread starts with an empty context; the reservation is set inside it
+        with pass_router_reservation(router):
+            holder['pool'] = pool_for(tmp_path, branches=2)
+            holder['first'] = holder['pool'].launch('a', ask(Adapter()))
+    thread = Thread(target=build)
+    thread.start()
+    thread.join(10)
+    pool = holder['pool']
+    other = Thread(target=lambda: holder.update(second=pool.launch('b', ask(Adapter()))))  # no reservation here
+    other.start()
+    other.join(10)
+    assert holder['first'] == holder['second'] == 'RUNNING' and pool.total.max_requests == 5
+    for name in 'ab':
+        child = pool.branches[name]
+        assert {key: getattr(child['session'].limits, key) for key in branch_budget._KEYS} == child['slice']
+        assert child['slice']['max_requests'] == 2 and child['slice']['max_cost_usd'] == pytest.approx(.25)
+    assert pool.finish()['status'] == 'COMPLETE'
