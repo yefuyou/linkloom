@@ -46,8 +46,11 @@ jobs:
           cache: pip
       - name: Install development dependencies
         run: pip install -e ".[dev]"
-      - name: Run the full test suite
-        run: pytest -q
+      - name: Run MCP integration tests
+        run: pytest -v tests/integration/test_mcp_server.py
+      - name: Run the remaining tests
+        if: success() || failure()
+        run: pytest -q -rs --ignore=tests/integration/test_mcp_server.py
 
   frontend-dom:
     name: Frontend DOM and JavaScript syntax

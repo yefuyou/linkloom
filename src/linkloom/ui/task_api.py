@@ -12,7 +12,7 @@ from linkloom.tasks.models import TaskStatus
 from linkloom.tasks.query import TaskQueryError
 from linkloom.tasks.review import TaskReviewService
 from linkloom.tasks.review_models import CandidateUnavailableError, ReviewConflictError
-from linkloom.tasks.store import CandidateAlreadyReviewedError, TaskNotFoundError, TaskStore
+from linkloom.tasks.store import CandidateAlreadyReviewedError, TaskNotFoundError, TaskSchemaError, TaskStore
 
 
 _PREFIX = "/api/product"
@@ -132,7 +132,8 @@ def _receipt(value):
 class TaskProductAPI:
     """The Host selects the database; requests can only select a workspace."""
 
-    def __init__(self, database_path):
+    def __init__(self, database_path, *, read_only=False):
+        self.read_only = read_only
         self.database_path = str(database_path) if database_path is not None else None
         self._lock = Lock()
         self._store = None
@@ -140,7 +141,7 @@ class TaskProductAPI:
         from linkloom.tasks.same_task_hints import SameTaskHintConfig
         self.hint_config = SameTaskHintConfig.from_env()
         self._hints = None
-        if self.hint_config.enabled and self.database_path and self.database_path != ":memory:":
+        if not read_only and self.hint_config.enabled and self.database_path and self.database_path != ":memory:":
             from linkloom.tasks.same_task_hints import SameTaskHintService
             self._hints = SameTaskHintService(self.service, self.hint_config)
             self._hints.start_preload()
@@ -164,7 +165,12 @@ class TaskProductAPI:
             if self._service is None:
                 if not self.database_path or self.database_path == ":memory:":
                     raise TaskQueryError("TASK_API_UNAVAILABLE", "Formal tasks require the Product's durable database.")
-                self._store = TaskStore(self.database_path)
+                try:
+                    self._store = TaskStore(self.database_path, read_only=self.read_only)
+                except TaskSchemaError as error:
+                    if not self.read_only:
+                        raise
+                    raise TaskQueryError("TASK_API_UNAVAILABLE", str(error)) from error
                 self._service = TaskReviewService(self._store, ProductTaskCandidateSource())
             return self._service
 

@@ -318,6 +318,27 @@ python -m linkloom.ui --database work/task-demo.sqlite --port 8765 --offline-tas
 离线可创建工作区、保存来源、审核已有候选、查询已审核决定及其历史；新来源的 AI 抽取和外部调查需要配置与授权。
 预设演示不调用外部模型，和真实会议抽取效果无关；切换启动命令前先停止占用同一端口的服务。
 
+### 作为 MCP server 使用（只读）
+
+在仓库外创建虚拟环境 `python -m venv <venv>`，从仓库运行 `"<venv-python>" -m pip install -e ".[mcp]"`（固定 `mcp==2.3.0`）。
+将 `<venv-python>` 替换为该环境 Python 的绝对路径（Windows 为 `Scripts/python.exe`，macOS / Linux 为 `bin/python`）。
+工具：`ask`、`list_decisions`、`get_decision_history`、`list_tasks`，全部只读，结果带证据（会话、原句、时间）。
+每个工具都要传 `workspace`（工作区 ID），且只能是产品当前选中的工作区；拒绝或追问时返回 `reason_code`。
+
+Claude Code：
+
+```bash
+claude mcp add linkloom -- "<venv-python>" -m linkloom.mcp_server --database "<product-db>"
+```
+
+Claude Desktop 在 `claude_desktop_config.json` 的 `mcpServers` 下加入（路径用绝对路径）：
+
+```json
+{"linkloom": {"command": "<venv-python>", "args": ["-m", "linkloom.mcp_server", "--database", "/path/to/product.sqlite"]}}
+```
+
+默认不向外部模型发送问题；加 `--allow-external-provider` 才允许 `ask` 调用已配置的路由/安全模型。
+
 ## 8. 边界与后续
 
 - **不用 GraphRAG。** 当前围绕检索、时序记录与有界调查组织证据，不构建全库 GraphRAG。
