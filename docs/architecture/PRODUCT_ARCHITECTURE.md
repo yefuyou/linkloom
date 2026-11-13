@@ -160,5 +160,4 @@ UI/HTTP. Default startup discloses unavailable task stages; existing general
 Provider opt-ins do not enable them. Historical M2 0/4 remains FAIL. Saved task
 results can be reopened only after current Evidence Catalog membership, source
 version/hash, P4, Ledger and Reviewer checks. This is task-result reading, not
-auto-resume of F/G or recovery of other UI job types. See the
-[integration SPEC](../requirements/m3-p-task-investigation/SPEC.md).
+auto-resume of F/G or recovery of other UI job types.

@@ -217,5 +217,4 @@ Saved task-result reads reconstruct validation from existing Runtime artifacts
 without calling F/G or the model. Current Evidence Catalog membership is required
 even if retained text/version is unchanged. Invalid source or lifecycle state
 returns no old quotes, relations or trace. Temporal/source-relation jobs keep
-their prior process-local product lifecycle. See the
-[integration audit](../requirements/m3-p-task-investigation/DEPENDENCIES.md).
+their prior process-local product lifecycle.

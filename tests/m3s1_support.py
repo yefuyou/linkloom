@@ -13,7 +13,7 @@ SOURCE=('[2034-03-05T09:00:00Z] 纪要: 棠原项目的页面巡检已经列入�
 QUESTION='页面巡检现在由谁执行，交付日期定了吗？两次会议的安排有什么变化？'
 
 def saved_attempt():
-    path=Path(__file__).resolve().parents[1]/'docs/requirements/m3-s-task-field-grounding/evidence/product-attempts.json'
+    path=Path(__file__).resolve().parents[1]/'tests/fixtures/recorded/m3-s-task-field-grounding/product-attempts.json'
     return next(a for a in json.loads(path.read_text(encoding='utf8'))['attempts']
                 if a['campaign']=='m3s-live-phase3-20261022')
 

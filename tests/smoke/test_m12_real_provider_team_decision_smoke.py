@@ -53,7 +53,7 @@ from linkloom.scanner import scan_vault
 MODULE_NAME = "tests.smoke.test_m12_real_provider_team_decision_smoke"
 
 REPO = Path(__file__).resolve().parents[2]
-SEED_ROOT = REPO / "docs" / "requirements" / "m1_team_decision_eval_seed"
+SEED_ROOT = REPO / "benchmarks" / "datasets" / "m1_team_decision_eval_seed"
 DATASET_PATH = SEED_ROOT / "dataset.jsonl"
 ARTIFACT_ROOT = REPO / ".artifacts" / "m1_2_real_provider_smoke"
 

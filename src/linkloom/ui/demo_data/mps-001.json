@@ -3,7 +3,7 @@
   "workspace": {
     "display_name": "Atlas Lantern",
     "document_count": 6,
-    "workspace_relative_path": "docs/requirements/m1_team_decision_eval_seed/workspaces/model_provider_selection"
+    "workspace_relative_path": "benchmarks/datasets/m1_team_decision_eval_seed/workspaces/model_provider_selection"
   },
   "default_query": "Which model provider was finally approved for the Atlas Lantern pilot?",
   "documents": [

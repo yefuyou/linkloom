@@ -60,8 +60,8 @@ def _seed_inputs() -> dict[str, object]:
     """Load only the public frozen input fields used by production."""
     dataset = (
         Path(__file__).resolve().parents[2]
-        / "docs"
-        / "requirements"
+        / "benchmarks"
+        / "datasets"
         / "m1_team_decision_eval_seed"
         / "dataset.jsonl"
     )
@@ -88,8 +88,8 @@ def _environment(root: Path) -> dict[str, object]:
     case = _seed_inputs()
     source = (
         Path(__file__).resolve().parents[2]
-        / "docs"
-        / "requirements"
+        / "benchmarks"
+        / "datasets"
         / "m1_team_decision_eval_seed"
         / "workspaces"
         / str(case["workspace_id"])

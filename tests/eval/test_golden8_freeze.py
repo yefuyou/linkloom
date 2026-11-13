@@ -10,11 +10,11 @@ from pathlib import Path
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
 DATASET_RELATIVE_PATH = Path(
-    "docs/requirements/m1_team_decision_eval_seed/dataset.jsonl"
+    "benchmarks/datasets/m1_team_decision_eval_seed/dataset.jsonl"
 )
 MANIFEST_PATH = (
     REPOSITORY_ROOT
-    / "docs/requirements/m1_team_decision_eval_seed/golden8_manifest.json"
+    / "benchmarks/datasets/m1_team_decision_eval_seed/golden8_manifest.json"
 )
 PARENT_DATASET_SHA256 = (
     "49A955D98C18E9BDE8609C2747BA9BEF55516EFEF878FD52F37E2300A16D1C9F"

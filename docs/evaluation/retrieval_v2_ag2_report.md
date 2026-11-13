@@ -24,7 +24,7 @@ $env:PYTHONPATH='src'; $env:HF_HUB_OFFLINE='1'; $env:TRANSFORMERS_OFFLINE='1'; p
 
 ## 2. Dataset Integrity & Cryptographic Hashes
 
-Integrity verification of `docs/requirements/m1_team_decision_eval_seed/dataset.jsonl`:
+Integrity verification of `benchmarks/datasets/m1_team_decision_eval_seed/dataset.jsonl`:
 
 | Check Point | SHA-256 Checksum | State |
 | :--- | :--- | :--- |
@@ -97,7 +97,7 @@ Cases where both channels scored identical metrics:
 
 ### 5.1 Directory-Scope Impact
 * **Observed Difference**: Exactly **0** differences in ranked documents and metrics between `hybrid` and `directory_hybrid`.
-* **Root Cause Analysis**: In the frozen benchmark workspace fixtures (`docs/requirements/m1_team_decision_eval_seed/workspaces/`), all markdown documents within any workspace reside in a single flat directory (`/workspaces/<workspace_id>/`). No subdirectories exist. Consequently, directory-level token matching resolves to the single containing directory, producing an identical candidate pool as unconstrained hybrid retrieval.
+* **Root Cause Analysis**: In the frozen benchmark workspace fixtures (`benchmarks/datasets/m1_team_decision_eval_seed/workspaces/`), all markdown documents within any workspace reside in a single flat directory (`/workspaces/<workspace_id>/`). No subdirectories exist. Consequently, directory-level token matching resolves to the single containing directory, producing an identical candidate pool as unconstrained hybrid retrieval.
 
 ### 5.2 Failure & Imperfect Recall Cases
 * **Hard Failures (`retrieval_failure == 1.0`)**: **0 across all modes** (`retrieval_failure_rate = 0.0000`). At least one gold evidence note was ranked within top-5 for every single query (`evidence_availability_at_5 = 1.0000`).

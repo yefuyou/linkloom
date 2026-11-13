@@ -33,13 +33,13 @@ LinkLoom 将提案与已批准决定分开，保留生效时间、替代关系�
 
 ## 看看实际产品
 
-[80 秒演示视频](docs/launch/assets/linkloom-walkthrough.mp4) · [逐步体验](docs/V1_DEMO.md)
+[80 秒演示视频](docs/assets/launch/linkloom-walkthrough.mp4) · [逐步体验](docs/V1_DEMO.md)
 
-![合成资料与离线响应的浏览器截图剪辑，非连续操作录像](docs/launch/assets/linkloom-walkthrough.gif)
+![合成资料与离线响应的浏览器截图剪辑，非连续操作录像](docs/assets/launch/linkloom-walkthrough.gif)
 
-三张产品截图：[审核候选](docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-review-zh.png) ·
-[决策历史](docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-decisions-zh.png) ·
-[任务记录与证据](docs/requirements/product-copy-ux-cleanup/evidence/integrated/after-task-zh.png)。
+三张产品截图：[审核候选](docs/assets/screenshots/after-review-zh.png) ·
+[决策历史](docs/assets/screenshots/after-decisions-zh.png) ·
+[任务记录与证据](docs/assets/screenshots/after-task-zh.png)。
 视频前半复用 V1 画面；截图为 #25 更新后的界面。演示均使用合成资料与离线响应。
 
 ## 三个核心能力
@@ -99,8 +99,7 @@ python -m linkloom.ui --port 8765 --database work/task-demo.sqlite --offline-tas
 可选的本地任务核验需显式启用 `--allow-local-task-review`，仅限 localhost。
 它保存用户自声明的核验回执，不认证人员身份，也不代表正式业务批准；关系和日期结论仍须独立来源证据复核。
 
-真实 AI 任务调查的配置与逐次授权见
-[配置说明](docs/requirements/m3-q-real-task-investigation/SPEC.md)。
+真实 AI 任务调查需要在启动时显式配置，并在每次提问时单独授权。
 
 要体验完整的来源 → 审核 → 回答流程，安装 Provider 扩展，并在环境中配置
 `GEMINI_API_KEY`：
@@ -176,7 +175,6 @@ AI 提取与调查需明确启用，会将来源文本发送给已配置的外�
 来源冲突、访问不可用和 AI 服务响应不确定分别显示。原始 Markdown/Obsidian 文件保持不变。
 
 当前产品在本地运行。调查会话使用进程内状态，调查期间请保持服务运行。
-验证方法与已记录结果见[评测参考](docs/requirements/product_evidence_portfolio_v1/EVALUATION_MATRIX.md)。
 
 ## 开发者入口
 

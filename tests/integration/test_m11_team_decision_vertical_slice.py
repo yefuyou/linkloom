@@ -51,7 +51,7 @@ def m11_root() -> Path:
 
 def _seed_inputs() -> dict[str, object]:
     """Read only public case inputs; expected_* fields never leave the test oracle."""
-    dataset = Path(__file__).resolve().parents[2] / "docs" / "requirements" / "m1_team_decision_eval_seed" / "dataset.jsonl"
+    dataset = Path(__file__).resolve().parents[2] / "benchmarks" / "datasets" / "m1_team_decision_eval_seed" / "dataset.jsonl"
     for line in dataset.read_text(encoding="utf-8").splitlines():
         case = json.loads(line)
         if case.get("case_id") == "mps-001":
@@ -75,7 +75,7 @@ def _environment(root: Path) -> dict[str, object]:
     case = _seed_inputs()
     source = (
         Path(__file__).resolve().parents[2]
-        / "docs" / "requirements" / "m1_team_decision_eval_seed" / "workspaces"
+        / "benchmarks" / "datasets" / "m1_team_decision_eval_seed" / "workspaces"
         / str(case["workspace_id"])
     )
     vault = root / "vault"
