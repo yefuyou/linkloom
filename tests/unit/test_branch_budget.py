@@ -4,7 +4,7 @@ from dataclasses import replace
 import json
 import random
 from threading import Barrier, BrokenBarrierError, Event, Lock, Thread
-from time import monotonic
+from time import perf_counter
 
 import pytest
 
@@ -72,17 +72,20 @@ def test_branches_issue_overlapping_provider_requests(tmp_path):
     barrier, spans, lock = Barrier(3, timeout=2), [], Lock()
 
     def overlapping():
-        start = monotonic()
+        start = perf_counter()
         barrier.wait()  # BrokenBarrierError here means the requests were serialized
         with lock:
-            spans.append((start, monotonic()))
+            spans.append((start, perf_counter()))
         return ok()
     pool = pool_for(tmp_path)
     for name in NAMES:
         assert pool.launch(name, ask(Adapter(overlapping), name)) == 'RUNNING'
     outcome = pool.finish()
     assert outcome['status'] == 'COMPLETE' and outcome['results'] == {n: n for n in NAMES}
-    assert len(spans) == 3 and max(s for s, _ in spans) < min(e for _, e in spans)
+    # Overlap is proven by the Barrier above (serialized requests would time out).
+    # The timestamps are trace data only; coarse clocks (about 15.6 ms on Windows) can
+    # make a start and an end equal, so the comparison is non-strict.
+    assert len(spans) == 3 and max(s for s, _ in spans) <= min(e for _, e in spans)
 
 
 def test_single_session_is_single_flight(tmp_path):
