@@ -71,6 +71,7 @@ _FINISH_REASONS = frozenset(
 )
 _ERROR_MESSAGES = {
     "MODEL_AUTH_REQUIRED": "DeepSeek authentication was not available.",
+    "MODEL_BILLING_BLOCKED": "DeepSeek billing or balance is unavailable.",
     "MODEL_INVALID_REQUEST": "The DeepSeek request was invalid.",
     "MODEL_RATE_LIMITED": "The DeepSeek provider rate limit was reached.",
     "MODEL_TIMEOUT": "The DeepSeek provider request timed out.",
@@ -470,11 +471,13 @@ def _status_code(value: Any) -> int | None:
 
 
 def _code_for_status(status: int | None, default: str) -> tuple[str, str]:
-    if status == 401:
+    if status in {401, 403}:
         return "MODEL_AUTH_REQUIRED", "known_failure"
+    if status == 402:
+        return "MODEL_BILLING_BLOCKED", "known_failure"
     if status in {400, 422}:
         return "MODEL_INVALID_REQUEST", "known_failure"
-    if status in {402, 403, 404}:
+    if status == 404:
         return "MODEL_UNAVAILABLE", "known_failure"
     if status == 429:
         return "MODEL_RATE_LIMITED", "known_failure"

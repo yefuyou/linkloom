@@ -244,12 +244,18 @@ def resume(directory, adapter):
 
 def test_resume_classification(tmp_path):
     adapter = Adapter()
-    empty = tmp_path / 'empty'
+    root = tmp_path / 'pool'
+    empty = root / 'branches' / 'empty'
     TaskProviderSession(empty, limits(), lambda: None)
+    allocation = dict(status='RUNNING', slice={key: getattr(limits(), key) for key in branch_budget._KEYS})
+    journal = dict(stop=None, total=allocation['slice'], branches={'empty': allocation, 'done': dict(allocation)})
+    (root / 'pool.json').write_text(json.dumps(journal))
     assert resume(empty, adapter) == 'START' and adapter.calls == 1
-    done = tmp_path / 'done'
+    done = root / 'branches' / 'done'
     run_branch(done, Adapter())
     assert classify_branch_for_resume(done) == 'RESUME'
+    journal['branches']['done']['status'] = 'VERIFIED'
+    (root / 'pool.json').write_text(json.dumps(journal))
     (done / 'result.json').write_text('"ok"')
     assert classify_branch_for_resume(done) == 'REUSE'
     (done / 'result.json').unlink()
@@ -266,6 +272,41 @@ def test_resume_classification(tmp_path):
     assert resume(uncertain, adapter) == 'UNCERTAIN' and adapter.calls == 0
     (tmp_path / 'broken' / 'budget.json').write_text(json.dumps({'attempts': [{}]}))
     assert classify_branch_for_resume(tmp_path / 'broken') == 'UNCERTAIN'
+
+
+@pytest.mark.parametrize('kind', [HARD_ABORT, CANCELLED])
+@pytest.mark.parametrize('attempted', [False, True])
+def test_global_stop_precedes_start_and_resume(tmp_path, kind, attempted):
+    pool = pool_for(tmp_path, branches=2)
+    ready, release = Event(), Event()
+
+    def paused(session):
+        if attempted:
+            ask(Adapter())(session)
+        ready.set()
+        assert release.wait(5)
+
+    pool.launch('a', paused)
+    try:
+        assert ready.wait(5)
+        branch = pool.root / 'branches' / 'a'
+        assert classify_branch_for_resume(branch) == ('RESUME' if attempted else 'START')
+        pool.stop(kind, 'test stop')
+        assert classify_branch_for_resume(branch) == 'WITHHELD'
+    finally:
+        release.set()
+        pool.finish()
+
+
+def test_missing_parent_or_inconsistent_slice_is_uncertain(tmp_path):
+    root, branch = pooled_branch(tmp_path)
+    journal_path = root / 'pool.json'
+    journal = json.loads(journal_path.read_text())
+    journal['branches']['a']['slice']['max_requests'] += 1
+    journal_path.write_text(json.dumps(journal))
+    assert classify_branch_for_resume(branch) == 'UNCERTAIN'
+    journal_path.rename(root / 'pool.saved.json')
+    assert classify_branch_for_resume(branch) == 'UNCERTAIN'
 
 
 def test_each_branch_owns_its_ledger(tmp_path):

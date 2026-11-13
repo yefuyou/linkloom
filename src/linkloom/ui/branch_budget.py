@@ -46,35 +46,45 @@ def _write_json(path, data):
 
 
 def classify_branch_for_resume(branch_dir):
-    """START, REUSE, RESUME, UNCERTAIN or WITHHELD, from the child's budget.json.
-    Layout premise: branch_dir is <pool root>/branches/<name>, so the pool journal is
-    branch_dir/../../pool.json. Without that file only budget.json decides. With it, the
-    journal must be readable and list this branch, otherwise the answer is UNCERTAIN.
-    WITHHELD: a finished branch whose pool was HARD_ABORTed or CANCELLED; never republish it."""
+    """Classify a child using its allocation, stop state, and durable receipt."""
     root = Path(branch_dir)
     try:
+        if root.parent.name != 'branches':
+            return 'UNCERTAIN'
+        journal = json.loads((root.parent.parent / 'pool.json').read_text(encoding='utf8'))
+        allocation = journal['branches'][root.name]
+        stop = journal['stop']
+        if stop is not None:
+            if (not isinstance(stop, list) or len(stop) != 2 or stop[0] not in _RANK
+                    or not isinstance(stop[1], str)):
+                return 'UNCERTAIN'
+            if stop[0] in (HARD_ABORT, CANCELLED):
+                return 'WITHHELD'
         budget = json.loads((root / 'budget.json').read_text(encoding='utf8'))
         attempts = budget['attempts']
+        if (allocation['status'] not in ('RUNNING', 'VERIFIED')
+                or allocation['slice'] != {key: budget['limits'][key] for key in _KEYS}
+                or any(not 0 < allocation['slice'][key] <= journal['total'][key] for key in _KEYS)
+                or not isinstance(attempts, list) or budget['failure'] is not None
+                or budget['requests_reserved'] != len(attempts)):
+            return 'UNCERTAIN'
         outcomes = [row['outcome'] for row in attempts]
         if not attempts:
-            return 'START'
+            return ('START' if stop is None and allocation['status'] == 'RUNNING'
+                    and not (root / 'result.json').exists()
+                    and not any(budget[key] for key in ('input_tokens_reserved',
+                                                        'output_tokens_reserved', 'cost_reserved_usd'))
+                    else 'UNCERTAIN')
         if any(outcome != 'SUCCEEDED' for outcome in outcomes):
             return 'UNCERTAIN'  # PENDING may have crossed the transport; never auto-resend
         started = datetime.fromisoformat(budget['started_at'])
         completed = datetime.fromtimestamp(started.timestamp() + budget['elapsed_seconds'], UTC)
         validate_task_provider_receipt(root / 'budget.json', completed.isoformat())
-        pool = root.parent.parent / 'pool.json'
-        stop = None
-        if pool.is_file():
-            journal = json.loads(pool.read_text(encoding='utf8'))
-            if root.name not in journal['branches']:
-                return 'UNCERTAIN'
-            stop = journal['stop']
+        if (root / 'result.json').is_file():
+            return 'REUSE' if allocation['status'] == 'VERIFIED' else 'UNCERTAIN'
+        return 'RESUME' if stop is None and allocation['status'] == 'RUNNING' else 'UNCERTAIN'
     except Exception:
         return 'UNCERTAIN'
-    if not (root / 'result.json').is_file():
-        return 'RESUME'
-    return 'WITHHELD' if stop and stop[0] in (HARD_ABORT, CANCELLED) else 'REUSE'
 
 
 def validate_pool_receipt(root, completed_at=None):
