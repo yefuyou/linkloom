@@ -10,7 +10,7 @@ slices sum to at most the total, so that branch simply fails alone.
 CANCELLED (user): stop new requests, publish nothing.
 A branch that is UNCERTAIN or times out only stops itself and leaves a gap.
 If finish() times out with a branch still running, that branch is never published;
-a late writer may still touch pool.json and result.json, but nothing is released.
+a late writer is marked DISCARDED, and nothing is released.
 """
 from __future__ import annotations
 
@@ -47,6 +47,9 @@ def _write_json(path, data):
 
 def classify_branch_for_resume(branch_dir):
     """START, REUSE, RESUME, UNCERTAIN or WITHHELD, from the child's budget.json.
+    Layout premise: branch_dir is <pool root>/branches/<name>, so the pool journal is
+    branch_dir/../../pool.json. Without that file only budget.json decides. With it, the
+    journal must be readable and list this branch, otherwise the answer is UNCERTAIN.
     WITHHELD: a finished branch whose pool was HARD_ABORTed or CANCELLED; never republish it."""
     root = Path(branch_dir)
     try:
@@ -61,7 +64,12 @@ def classify_branch_for_resume(branch_dir):
         completed = datetime.fromtimestamp(started.timestamp() + budget['elapsed_seconds'], UTC)
         validate_task_provider_receipt(root / 'budget.json', completed.isoformat())
         pool = root.parent.parent / 'pool.json'
-        stop = json.loads(pool.read_text(encoding='utf8'))['stop'] if pool.is_file() else None
+        stop = None
+        if pool.is_file():
+            journal = json.loads(pool.read_text(encoding='utf8'))
+            if root.name not in journal['branches']:
+                return 'UNCERTAIN'
+            stop = journal['stop']
     except Exception:
         return 'UNCERTAIN'
     if not (root / 'result.json').is_file():
@@ -92,7 +100,7 @@ class BranchBudgetPool:
                       else getattr(self.total, key) / branches for key in _KEYS}
         self.available = {key: getattr(self.total, key) for key in _KEYS}
         self.started = monotonic()
-        self.branches, self.stop_state = {}, None
+        self.branches, self.stop_state, self.sealed = {}, None, False
         self._lock, self._validate_lock = RLock(), Lock()
         self._tasks = BackgroundTasks()
         self.root.mkdir(parents=True, exist_ok=True)
@@ -133,6 +141,8 @@ class BranchBudgetPool:
         with self._lock:
             if name in self.branches:
                 raise ValueError('duplicate branch: ' + name)
+            if len(self.branches) >= self.declared:
+                raise ValueError('more branches than declared')  # no slice, no journal entry
             if self.stop_state:
                 return 'NOT_STARTED'
             limits = self._slice()
@@ -150,11 +160,19 @@ class BranchBudgetPool:
                 with pass_router_reservation(None):  # a child's limits must equal its slice
                     branch['session'] = TaskProviderSession(self.root / 'branches' / name, limits, self._validated)
                 self._tasks.start(f'{self.run_id}-{name}', lambda: self._run(name, work))
-            except BaseException:  # roll back: nothing ran, so the slice is free again
+            except BaseException as error:  # roll back: nothing ran, so the slice is free again
                 for key in _KEYS:
                     self.available[key] += branch['slice'][key]
                 del self.branches[name]
-                self._save()
+                if branch['session'] is not None:
+                    try:
+                        branch['session'].close(1.0)
+                    except Exception as exc:
+                        error.add_note(f'session close failed during rollback: {exc!r}')
+                try:
+                    self._save()
+                except Exception as exc:  # never replace the original failure
+                    error.add_note(f'pool.json rewrite failed during rollback: {exc!r}')
                 raise
         return 'RUNNING'
 
@@ -173,7 +191,7 @@ class BranchBudgetPool:
         with self._lock:
             if session.failure in _HARD_FAILURES:
                 self.stop(HARD_ABORT, session.failure)
-            if self.stop_state:
+            if self.stop_state or self.sealed:
                 branch['status'] = 'DISCARDED'  # late results never publish and never reach the provider
             else:
                 outcomes = [row['outcome'] for row in session.attempts]
@@ -194,7 +212,7 @@ class BranchBudgetPool:
                 else:
                     pending = any(o in ('PENDING', 'UNCERTAIN') for o in outcomes)
                     branch['status'] = ('UNCERTAIN' if pending or not closed else
-                                        'NO_REQUESTS' if closed and not failed and not outcomes else 'FAILED')
+                                        'NO_REQUESTS' if not failed and session.failure is None and not outcomes else 'FAILED')
             self._save()
 
     def accounting(self):
@@ -228,17 +246,19 @@ class BranchBudgetPool:
                 except BackgroundShutdownTimeout:
                     pass
         with self._lock:
+            self.sealed = True  # a writer finishing after this point is discarded, never published
             kind = self.stop_state[0] if self.stop_state else None
             published = {}
             if kind in (None, SOFT_STOP):
                 receipts = validate_pool_receipt(self.root)
                 published = {name: b['result'] for name, b in self.branches.items()
                              if b['status'] == 'VERIFIED' and receipts.get(name, 'missing') is None}
-            status = {HARD_ABORT: 'ABORTED', CANCELLED: 'CANCELLED'}.get(kind) or (
-                'COMPLETE' if published and len(published) == self.declared else 'PARTIAL' if published else 'FAILED')
             gaps = {name: b['status'] for name, b in self.branches.items() if name not in published}
+            unstarted = self.declared - len(self.branches)
+            status = {HARD_ABORT: 'ABORTED', CANCELLED: 'CANCELLED'}.get(kind) or (
+                'COMPLETE' if published and not gaps and unstarted == 0 else 'PARTIAL' if published else 'FAILED')
             return dict(status=status, reason=self.stop_state and self.stop_state[1], results=published,
-                        gaps=gaps, unstarted=self.declared - len(self.branches), **self.accounting())
+                        gaps=gaps, unstarted=unstarted, **self.accounting())
 
     def _save(self):
         _write_json(self.root / 'pool.json', dict(run_id=self.run_id, total=asdict(self.total),

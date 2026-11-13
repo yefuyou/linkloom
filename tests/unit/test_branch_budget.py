@@ -118,8 +118,8 @@ def test_uncertain_branch_is_isolated_and_keeps_its_slice(tmp_path):
     assert validate_pool_receipt(tmp_path / 'pool')['b'] is not None
 
 
-def blocked_scenario(tmp_path, validate=lambda: None, requests=1):
-    pool = pool_for(tmp_path, validate)
+def blocked_scenario(tmp_path, validate=lambda: None, requests=1, branches=3):
+    pool = pool_for(tmp_path, validate, branches)
     pool.launch('a', ask(Adapter(), 'a'))
     pool.launch('b', ask(Adapter(), 'b'))
     settle(pool)
@@ -178,7 +178,7 @@ def test_auth_error_is_hard_abort(tmp_path):
 
 
 def test_late_result_is_dropped_and_sends_no_new_request(tmp_path):
-    pool, release, late = blocked_scenario(tmp_path, requests=2)
+    pool, release, late = blocked_scenario(tmp_path, requests=2, branches=4)
     pool.stop(SOFT_STOP, 'budget')
     assert pool.launch('d', ask(late)) == 'NOT_STARTED' and 'd' not in pool.branches
     release.set()
@@ -400,6 +400,8 @@ def test_finish_timeout_never_publishes_a_running_branch(tmp_path):
     settle(pool)
     assert outcome['results'] == {'a': 'a', 'b': 'b'}  # the returned outcome is a snapshot
     assert 'c' not in outcome['results']
+    again = pool.finish()  # the late writer finished after the seal: still never published
+    assert again['results'] == {'a': 'a', 'b': 'b'} and again['gaps'] == {'c': 'DISCARDED'}
 
 
 def test_pool_built_on_a_background_thread_with_router_reservation(tmp_path):
@@ -424,3 +426,106 @@ def test_pool_built_on_a_background_thread_with_router_reservation(tmp_path):
         assert {key: getattr(child['session'].limits, key) for key in branch_budget._KEYS} == child['slice']
         assert child['slice']['max_requests'] == 2 and child['slice']['max_cost_usd'] == pytest.approx(.25)
     assert pool.finish()['status'] == 'COMPLETE'
+
+
+def test_launch_beyond_the_declared_count_is_refused(tmp_path):
+    pool = pool_for(tmp_path, branches=2, max_requests=8)
+    pool.launch('a', ask(Adapter(), 'a'))
+    pool.launch('b', ask(Adapter(), 'b'))
+    settle(pool)
+    available = dict(pool.available)
+    with pytest.raises(ValueError, match='more branches'):
+        pool.launch('c', ask(Adapter(), 'c'))
+    assert pool.available == available and 'c' not in pool.branches
+    assert 'c' not in json.loads((tmp_path / 'pool' / 'pool.json').read_text())['branches']
+    outcome = pool.finish()
+    assert outcome['status'] == 'COMPLETE' and outcome['gaps'] == {} and outcome['unstarted'] == 0
+
+
+def test_one_failed_branch_of_two_is_partial_not_complete(tmp_path):
+    pool = pool_for(tmp_path, branches=2)
+    pool.launch('a', ask(Adapter(), 'a'))
+    pool.launch('b', ask(Adapter(timeout_response), 'b'))
+    outcome = pool.finish()
+    assert outcome['status'] == 'PARTIAL' and outcome['results'] == {'a': 'a'} and outcome['unstarted'] == 0
+    assert outcome['gaps'] == {'b': 'UNCERTAIN'}
+
+
+def test_complete_never_coexists_with_gaps(tmp_path):
+    pool = pool_for(tmp_path, branches=1)
+    pool.launch('a', ask(Adapter(), 'a'))
+    settle(pool)
+    pool.branches['c'] = dict(status='FAILED', slice=None, held=None, result=None, session=None)  # forced
+    outcome = pool.finish()  # published == declared, yet a gap exists: never COMPLETE
+    assert outcome['status'] == 'PARTIAL' and outcome['gaps'] == {'c': 'FAILED'}
+
+
+def pooled_branch(tmp_path):
+    pool = pool_for(tmp_path, branches=2)
+    pool.launch('a', ask(Adapter(), 'a'))
+    settle(pool)
+    return tmp_path / 'pool', tmp_path / 'pool' / 'branches' / 'a'
+
+
+@pytest.mark.parametrize('content', ['{', '{"branches": {"a": {}}}', '{"stop": null}'])
+def test_unreadable_or_incomplete_pool_journal_is_uncertain(tmp_path, content):
+    root, branch = pooled_branch(tmp_path)
+    assert classify_branch_for_resume(branch) == 'REUSE'
+    (root / 'pool.json').write_text(content)
+    assert classify_branch_for_resume(branch) == 'UNCERTAIN'
+
+
+def test_branch_missing_from_the_journal_is_uncertain_not_withheld(tmp_path):
+    root, branch = pooled_branch(tmp_path)
+    journal = json.loads((root / 'pool.json').read_text())
+    journal.update(stop=[HARD_ABORT, 'x'], branches={})
+    (root / 'pool.json').write_text(json.dumps(journal))
+    assert classify_branch_for_resume(branch) == 'UNCERTAIN'
+
+
+def test_rollback_save_failure_keeps_the_original_error(tmp_path, monkeypatch):
+    pool = pool_for(tmp_path)
+    before = dict(pool.available)
+    real, calls = pool._save, []
+
+    def flaky():
+        calls.append(1)
+        if len(calls) > 1:
+            raise OSError('journal gone')
+        real()
+
+    def broken(*args):
+        raise ValueError('original')
+    monkeypatch.setattr(pool, '_save', flaky)
+    monkeypatch.setattr(branch_budget, 'TaskProviderSession', broken)
+    with pytest.raises(ValueError, match='original') as caught:
+        pool.launch('a', ask(Adapter()))
+    assert any('journal gone' in note for note in caught.value.__notes__)
+    assert pool.available == before and pool.branches == {}
+
+
+def test_task_start_failure_closes_the_constructed_session(tmp_path, monkeypatch):
+    pool = pool_for(tmp_path)
+    before, closed = dict(pool.available), []
+    real = TaskProviderSession.close
+    monkeypatch.setattr(TaskProviderSession, 'close', lambda self, *a, **k: (closed.append(self), real(self, *a, **k)))
+
+    def refuse(*args):
+        raise RuntimeError('no start')
+    monkeypatch.setattr(pool._tasks, 'start', refuse)
+    with pytest.raises(RuntimeError, match='no start'):
+        pool.launch('a', ask(Adapter()))
+    assert len(closed) == 1 and pool.available == before and pool.branches == {}
+    assert json.loads((tmp_path / 'pool' / 'pool.json').read_text())['branches'] == {}
+
+
+def test_failed_session_without_attempts_is_failed_not_no_requests(tmp_path):
+    pool = pool_for(tmp_path, branches=1)
+
+    def work(session):
+        session.failure = 'MODEL_TIMEOUT'
+        return 'x'
+    pool.launch('a', work)
+    settle(pool)
+    assert pool.branches['a']['status'] == 'FAILED'
+    assert pool.finish()['gaps'] == {'a': 'FAILED'}
