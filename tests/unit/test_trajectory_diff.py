@@ -142,3 +142,5 @@ def test_html_escapes_hostile_strings_and_scrubs_secrets(demo):
     cleaned = _clean({"note": "key sk-ABCDEF1234567890 and Bearer abcdefghijkl", "p": "/home/user/secret.md"})
     assert "sk-ABCDEF" not in str(cleaned) and "Bearer abcdefghijkl" not in str(cleaned)
     assert cleaned["p"] == "<absolute-path-redacted>"
+    for p in ("/home/user/secret.md", "C:\\Users\\u\\secret.md", "C:/Users/u/secret.md", "\\\\host\\share\\secret.md"):
+        assert _clean(p) == "<absolute-path-redacted>"

@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import re
 from datetime import datetime
-from pathlib import Path, PureWindowsPath
+from pathlib import Path, PurePosixPath, PureWindowsPath
 from typing import Any, Mapping
 
 from linkloom.observability.events import TraceEvent
@@ -36,7 +36,7 @@ def val(value: Any) -> dict[str, Any]:
 
 
 def _text(value: str) -> str:
-    if " " not in value and (PureWindowsPath(value).is_absolute() or Path(value).is_absolute()):
+    if " " not in value and (PureWindowsPath(value).is_absolute() or PurePosixPath(value).is_absolute()):
         return "<absolute-path-redacted>"
     value = _SECRET_RE.sub("<secret-redacted>", value)
     value = re.sub(r"[\x00-\x08\x0b-\x1f\x7f]", " ", value)
@@ -114,7 +114,7 @@ def _evidence_id(entry: Any) -> str | None:
 
 def _identity(item: Mapping[str, Any]) -> dict[str, Any]:
     rel = item.get("relative_path")
-    if not isinstance(rel, str) or Path(rel).is_absolute() or PureWindowsPath(rel).is_absolute():
+    if not isinstance(rel, str) or PurePosixPath(rel).is_absolute() or PureWindowsPath(rel).is_absolute():
         rel = None
     return {
         "evidence_id": item.get("evidence_id"),
