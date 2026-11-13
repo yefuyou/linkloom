@@ -133,6 +133,27 @@ def test_raw_reply_is_recorded_redacted_and_bounded_even_when_invalid():
     assert record['raw_response']['truncated'] and len(record['raw_response']['text']) <= 1024
 
 
+def test_provider_thread_leaves_keyword_rules_to_the_ask_thread():
+    # _route_text runs in the provider worker thread, which cannot see the Ask
+    # safety scope; the Ask-thread check in route_with_adapter decides instead.
+    from types import SimpleNamespace
+    from linkloom.ui.ask_admission import accept_model_safety, model_safety_scope
+    from linkloom.ui.structured_router import request_for as route_request, route_payload, route_with_adapter
+    from tests.unit.test_structured_router import context
+    ctx = context('请修改联调报告的负责人')
+    fields = dict(decision='CLARIFY', operation='READ', intent='OTHER', candidate_id='',
+                  mentions=[], unresolved_names=[], time_text='', time_role='NONE', reason_code='NONE')
+    raw = _route_text(dict(content=None, tool_calls=[dict(type='function', function=dict(
+        name='submit_route', arguments=json.dumps(fields)))]), route_payload(ctx))
+    assert json.loads(raw)['operation'] == 'READ' and json.loads(raw)['reason_code'] == 'NONE'
+    adapter = SimpleNamespace(complete=lambda _: ModelResponse(action=ModelAction.final(raw)))
+    with model_safety_scope():
+        accept_model_safety(dict(status='COMPLETED', decision='ALLOW', reason_code='NONE'))
+        route = route_with_adapter(adapter, route_request(ctx), ctx)
+        assert route.reason_code != 'WRITE_NOT_ALLOWED'
+    assert route_with_adapter(adapter, route_request(ctx), ctx).reason_code == 'WRITE_NOT_ALLOWED'
+
+
 @pytest.mark.parametrize('finish,text,code', [
     ('STOP', '{"reason_code":"NONE"}', None),
     ('MAX_TOKENS', '{"reason', 'SECURITY_OUTPUT_TRUNCATED'),
