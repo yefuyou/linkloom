@@ -101,7 +101,8 @@ def _route_text(message, context, *, diagnostics=False):
         proposed_operation = args.pop("operation")
         candidate = args.pop("candidate_id")
         query = context["question"]
-        safety = router_safety_reason(query, operation=proposed_operation, reason=args["reason_code"])
+        safety = router_safety_reason(query, operation=proposed_operation, reason=args["reason_code"],
+                                      keyword_rules=False)
         if safety:
             args["reason_code"] = safety
         op = ("WRITE_REQUEST" if safety == "WRITE_NOT_ALLOWED" else

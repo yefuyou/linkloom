@@ -18,8 +18,8 @@ from linkloom.ui.feedback_memory import FeedbackMemory
 from linkloom.ui.structured_router import rule_date_blocker, rule_needs_router
 from linkloom.decision_memory.models import normalize_temporal_component
 from linkloom.runtime.team_decision_planner import plan_relation_investigation
-from linkloom.ui.ask_admission import (admission_restriction, parse_context,
-    source_context, validate_context)
+from linkloom.ui.ask_admission import (accept_model_safety, admission_restriction, model_safety_scope,
+    parse_context, source_context, validate_context)
 
 _RELATION_QUESTION = re.compile(r"\b(owner|owns|leader|supervisor|alias)\b|\breports?\s+(?:directly\s+)?to\b|负责人|领导|汇报|别名", re.I)
 
@@ -159,13 +159,16 @@ class UnifiedAskService:
 
     def ask(self, payload: dict[str, Any]) -> tuple[dict[str, Any], int]:
         security = {}
-        if self.graph_service is None and self.router_provider is None:
-            result, status = self._ask(payload, security=security)
-        else:
-            from linkloom.ui.graph_investigation import graph_request_budget
-            with graph_request_budget():
+        with model_safety_scope():
+            if self.graph_service is None and self.router_provider is None:
                 result, status = self._ask(payload, security=security)
+            else:
+                from linkloom.ui.graph_investigation import graph_request_budget
+                with graph_request_budget():
+                    result, status = self._ask(payload, security=security)
         if security:
+            if security.get("status") == "COMPLETED":
+                security["decided_by"] = "llm"
             result["security_gate"] = security
         return result, status
 
@@ -239,6 +242,7 @@ class UnifiedAskService:
                     if context:
                         validate_context(self.app, run.workspace_id, context)
                     security.update(self._classify_security(run, payload))
+                    accept_model_safety(security)
                     if security.get("decision") == "BLOCK":
                         blocked, status = self._router_stop(run, None, security["reason_code"])
                         blocked["router"]["source"] = blocked["decided_by"] = "llm"
