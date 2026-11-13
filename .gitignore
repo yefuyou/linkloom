@@ -61,3 +61,7 @@ Thumbs.db
 /work/ami_tasks_data_es2002/
 /work/ami_tasks_annotation/
 /work/ami_tasks_results/
+
+# Generated Trajectory Diff pages (keep the committed example)
+trajectory_diff.html
+!examples/trajectory-diff/demo.html
