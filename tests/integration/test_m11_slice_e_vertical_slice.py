@@ -37,8 +37,8 @@ def slice_e_root() -> Path:
 def _dataset_case(case_id: str, *, public_only: bool) -> dict[str, object]:
     dataset = (
         Path(__file__).resolve().parents[2]
-        / "docs"
-        / "requirements"
+        / "benchmarks"
+        / "datasets"
         / "m1_team_decision_eval_seed"
         / "dataset.jsonl"
     )
@@ -68,8 +68,8 @@ def _environment(root: Path, case_id: str) -> dict[str, object]:
     case = _dataset_case(case_id, public_only=True)
     source = (
         Path(__file__).resolve().parents[2]
-        / "docs"
-        / "requirements"
+        / "benchmarks"
+        / "datasets"
         / "m1_team_decision_eval_seed"
         / "workspaces"
         / str(case["workspace_id"])

@@ -90,13 +90,15 @@ class TaskStore:
     database. The existing SQLite user_version and unrelated tables are untouched.
     """
 
-    def __init__(self, database_path: str | Path):
+    def __init__(self, database_path: str | Path, *, read_only: bool = False):
         self.database_path = str(database_path)
-        if self.database_path != ':memory:':
+        self.read_only = read_only
+        if not read_only and self.database_path != ':memory:':
             Path(self.database_path).parent.mkdir(parents=True, exist_ok=True)
         self._lock = RLock()
         self._read_transaction_token = None
-        self._connection = sqlite3.connect(self.database_path, isolation_level=None, check_same_thread=False)
+        target = Path(self.database_path).resolve().as_uri() + "?mode=ro" if read_only else self.database_path
+        self._connection = sqlite3.connect(target, uri=read_only, isolation_level=None, check_same_thread=False)
         self._connection.row_factory = sqlite3.Row
         self._connection.execute('PRAGMA foreign_keys=ON')
         try:
@@ -113,6 +115,8 @@ class TaskStore:
             tables = {row[0] for row in self._connection.execute("SELECT name FROM sqlite_master WHERE type='table'")}
             owned = set(_TABLE_COLUMNS)
             if not tables.intersection(owned):
+                if self.read_only:
+                    raise TaskSchemaError("Task schema has not been initialized in LinkLoom.")
                 for statement in _SCHEMA:
                     self._connection.execute(statement)
             else:
@@ -142,7 +146,7 @@ class TaskStore:
     @contextmanager
     def _transaction(self):
         with self._lock:
-            self._connection.execute('BEGIN IMMEDIATE')
+            self._connection.execute('BEGIN' if self.read_only else 'BEGIN IMMEDIATE')
             self._read_transaction_token = object()
             try:
                 yield

@@ -84,21 +84,17 @@ python -m pytest tests/unit/test_graceful_partial_recovery.py tests/unit/test_pr
 These focused contracts use synthetic data/FakeTransport, without provider
 requests. Additional tests sit beside the source anchors in the two architecture
 maps. Do not interpret a focused pass as repository-wide or CI acceptance.
-For dated acceptance context see [integration status](INTEGRATION_STATUS.md).
 Some research tests depend on unshipped scripts or historical local packets.
 Verification artifacts belong
 under ignored `work/`.
 
 ## Contracts, history and research
 
-- Current contracts: [Unified Ask SPEC](requirements/unified-ask-experience/SPEC.md),
-  [Semantic Ingestion SPEC](requirements/semantic-ingestion/SPEC.md),
-  [temporal integration notes](TEMPORAL_AGENT_INTEGRATION.md),
+- Current contracts: [temporal integration notes](TEMPORAL_AGENT_INTEGRATION.md),
   [product SPEC](../SPEC.md) and [development SPEC](../DEV_SPEC.md).
 - Product demonstration: [walkthrough](V1_DEMO.md),
   [release notes draft](V1_RELEASE_NOTES_DRAFT.md),
-  [backlog](V1_1_BACKLOG.md),
-  [evidence matrix](requirements/product_evidence_portfolio_v1/EVALUATION_MATRIX.md).
+  [backlog](V1_1_BACKLOG.md).
 - Architecture history: [architecture directory](architecture/),
   [LangGraph mapping](architecture/LANGGRAPH_MAPPING.md),
   [implementation notes](https://github.com/yefuyou/linkloom/tree/87bd5dc1afa0ba1b17863cfec28846361249eca7/docs/implementation). Retired notes use a fixed historical commit;
@@ -108,15 +104,12 @@ under ignored `work/`.
   [evaluation code](../src/linkloom/evaluation/) and
   [experiment code](https://github.com/yefuyou/linkloom/tree/87bd5dc1afa0ba1b17863cfec28846361249eca7/src/linkloom/experiments). These are separate from
   the normal UI startup path; frozen Gold, seals, ledgers and traces are evidence.
-- Process references: [role boundaries](MULTI_AGENT_ROLES.md),
-  [SPEC method](SPEC_DRIVEN_DEVELOPMENT.md),
-  [acceptance checklist](ACCEPTANCE_CHECKLIST.md) and [Git policy](GIT_WORKFLOW.md).
+- Feature SPECs, delivery records and acceptance evidence were moved out of
+  this repository on 2026-11-13; `b2c3821` is the last commit that contains them.
 
 ## Cross-meeting task investigation integration
 
-[Integration SPEC](requirements/m3-p-task-investigation/SPEC.md) and
-[dependency audit](requirements/m3-p-task-investigation/DEPENDENCIES.md) define
-the task observation/proposal/P4 read boundary. The normal CLI exposes an explicit
+The integration defines the task observation/proposal/P4 read boundary. The normal CLI exposes an explicit
 `--offline-task-demo` using the same Ask HTTP routes and deterministic synthetic
 stages; real task Provider stages remain unavailable. Task results have saved
 read-only validation; temporal/source-relation jobs retain their existing lifecycle.

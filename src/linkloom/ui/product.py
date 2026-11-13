@@ -81,12 +81,13 @@ class ProductApplicationError(RuntimeError):
 class ProductRepository:
     """Durable app-owned workspace/source catalog beside the temporal store."""
 
-    def __init__(self, database_path: str | Path) -> None:
+    def __init__(self, database_path: str | Path, *, read_only: bool = False) -> None:
         self.database_path = str(database_path)
-        if self.database_path != ":memory:":
+        if not read_only and self.database_path != ":memory:":
             Path(self.database_path).expanduser().resolve().parent.mkdir(parents=True, exist_ok=True)
         self._connection = sqlite3.connect(
-            self.database_path,
+            Path(self.database_path).resolve().as_uri() + "?mode=ro" if read_only else self.database_path,
+            uri=read_only,
             check_same_thread=False,
             timeout=30,
         )
@@ -94,6 +95,8 @@ class ProductRepository:
         self._connection.execute("PRAGMA foreign_keys = ON")
         self._connection.execute("PRAGMA busy_timeout = 30000")
         self._lock = Lock()
+        if read_only:
+            return
         self._connection.executescript(
             """
             CREATE TABLE IF NOT EXISTS ll_workspace (
@@ -754,8 +757,9 @@ class ProductApplication:
         meeting_adapter=None,
         meeting_speakers=None,
         meeting_request_guard=None,
+        read_only: bool = False,
     ) -> None:
-        self.repository = ProductRepository(database_path)
+        self.repository = ProductRepository(database_path, read_only=read_only)
         self.extractor = extractor
         self.relation_resolver = relation_resolver or DEFAULT_PRODUCT_RELATION_RESOLVER
         self._ingest_lock = Lock()
@@ -784,16 +788,18 @@ class ProductApplication:
         self.store = TemporalDecisionStore(
             self.repository.database_path,
             source_registry=registry,
+            read_only=read_only,
             check_same_thread=False,
         )
         self.materializer = SemanticDecisionMaterializer(self.store)
         from linkloom.ui.revalidation import DecisionRevalidation
         self.revalidation = DecisionRevalidation(self)
-        self._reconcile()
+        if not read_only:
+            self._reconcile()
         from linkloom.semantic_ingestion.task_extraction import TaskExtractionConfig
         self.task_extraction_config = task_extraction_config or TaskExtractionConfig()
         self.meeting_tasks = None
-        if self.task_extraction_config.task_extraction_mode != 'legacy':
+        if not read_only and self.task_extraction_config.task_extraction_mode != 'legacy':
             from linkloom.ui.meeting_task_review import MeetingTaskReview
             self.meeting_tasks = MeetingTaskReview(self, meeting_adapter, self.task_extraction_config,
                                                    meeting_speakers, meeting_request_guard)

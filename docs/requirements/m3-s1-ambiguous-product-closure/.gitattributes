@@ -1,2 +1,0 @@
-LIVE_CASE.json -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
-LIVE_RECHECK.json -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

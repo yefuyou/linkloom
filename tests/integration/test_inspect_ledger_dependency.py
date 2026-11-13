@@ -82,8 +82,8 @@ class InspectThenRelationPlanner:
 def _evidence_root(phase: str) -> Path:
     return (
         Path(__file__).resolve().parents[2]
-        / "docs"
-        / "requirements"
+        / "tests"
+        / "fixtures" / "recorded"
         / "p2b-inspect-ledger-dependency"
         / "evidence"
         / phase

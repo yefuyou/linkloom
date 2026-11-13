@@ -198,8 +198,8 @@ def test_mps001_retrieved_evidence_ids_round_trip_to_same_source_and_version(
     project_root = Path(__file__).resolve().parents[2]
     frozen_workspace = (
         project_root
-        / "docs"
-        / "requirements"
+        / "benchmarks"
+        / "datasets"
         / "m1_team_decision_eval_seed"
         / "workspaces"
         / "model_provider_selection"
