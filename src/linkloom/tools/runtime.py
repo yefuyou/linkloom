@@ -749,8 +749,8 @@ def create_retrieval_tool_runtime(
             description=(
                 "Search the authorized notes for source evidence. Use this before "
                 "read_verified_note; results contain evidence_id values that can be "
-                "read and cited. The Host binds the source identity. Use source_context for "
-                "scope_path or task_plan subgoal fields. "
+                "read and cited. Copy every Runtime source_context identity field from "
+                "retrieval_request exactly; only scope_path or task_plan subgoal fields may be added. "
                 "For an independent subgoal use dependency_entities={} (never null). "
                 "After search_notes returns an evidence_id, call read_verified_note on "
                 "that ID before any search for a subgoal depending on it. "
@@ -768,7 +768,7 @@ def create_retrieval_tool_runtime(
                     },
                     "source_context": {
                         "type": "object",
-                        "description": "The Host selects the source. Supply only optional scope_path and task_plan subgoal fields.",
+                        "description": "Copy the full Runtime source_context identity from retrieval_request; do not omit or alter workspace/index fields. Only scope_path and task_plan subgoal fields may be added.",
                         "properties": {
                             "scope_path": {
                                 "type": ["string", "null"],
@@ -909,11 +909,12 @@ def create_retrieval_tool_runtime(
         source = arguments["source_context"]
         if expected_source_context is not None:
             for key, value in expected_source_context.items():
-                # The retrieval executor is already bound to the active source.
-                # Keep accepting matching legacy echoes and reject conflicts.
-                if key not in source:
+                # Null fixture metadata carries no identity. Every configured
+                # identity must be copied exactly, including its JSON type.
+                if key not in source and value is None:
                     continue
-                if type(source[key]) is not type(value) or source[key] != value:
+                if (key not in source or type(source[key]) is not type(value)
+                        or source[key] != value):
                     raise ValidationError(
                         "source_context does not match the active Runtime source.",
                         details={"path": f"$.source_context.{key}", "reason": "semantic_mismatch"},
