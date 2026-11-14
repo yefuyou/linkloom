@@ -10,7 +10,7 @@ from linkloom.runtime.graph import RuntimeEngine
 from linkloom.runtime.models import RunRequest, RunStatus
 from linkloom.runtime.task_plan import TaskPlan, validate_model_proposed_plan
 from linkloom.ui.backend import project_reviewer
-from linkloom.ui.branch_budget import _HARD_FAILURES, BranchBudgetPool, CANCELLED, HARD_ABORT
+from linkloom.ui.branch_budget import _HARD_FAILURES, BranchBudgetPool, CANCELLED, HARD_ABORT, SOFT_STOP
 from linkloom.ui.projection import collect_observed_evidence, project_run_snapshot
 
 
@@ -76,7 +76,7 @@ class ParallelInvestigation:
         from linkloom.ui.branch_planner import PlanRejected, PlannerScope, plan_branches
         found, done, bound = {}, Event(), {}
         try:  # read on the caller's thread: the store lock is held by the request, not by the pool thread
-            blocked = tuple(blocked_entities()) if blocked_entities else ()
+            blocked = tuple(blocked_entities())  # a missing provider fails closed
         except Exception:
             blocked = None
 
@@ -97,19 +97,25 @@ class ParallelInvestigation:
         # The request thread may hold the store lock that the parent validation needs. Validate on this
         # thread before and after the call; the pool thread skips it while this thread waits.
         parent, status = self.pool.parent_validate, 'CONTEXT_UNAVAILABLE'
+        timed_out = False
         try:
             if blocked is not None:
                 parent()
                 self.pool.parent_validate = lambda: None
                 status = self.pool.launch('planner', work)
                 if status == 'RUNNING':
-                    done.wait(self.pool.total.max_seconds)
+                    if not done.wait(self.pool.total.max_seconds):
+                        # Stop first so a late `_validated` raises before reaching the store-locked validator.
+                        self.pool.stop(SOFT_STOP, 'PLANNER_TIMEOUT')
+                        timed_out = True
                     parent()
         except Exception:
             self.pool.stop(HARD_ABORT, 'TASK_SOURCE_AUTHORIZATION_CHANGED')
             status = 'STOPPED'
         finally:
             self.pool.parent_validate = parent
+        if timed_out:  # the worker may still write `found`; ignore it from here on
+            found = dict(reason='PLANNER_TIMEOUT')
         session = bound.get('session')
         if session is not None and session.failure in _HARD_FAILURES:
             self.pool.stop(HARD_ABORT, session.failure)

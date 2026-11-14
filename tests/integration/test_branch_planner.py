@@ -7,6 +7,7 @@ import pytest
 from linkloom.agents.model_adapter import ModelAction, ModelProviderError, ModelResponse, ModelUsage
 from linkloom.tools.contracts import ToolCall
 from linkloom.ui.branch_planner import PlanRejected, PlannerScope, TOOL_ID, validate_branch_plan
+from linkloom.ui.branch_budget import HARD_ABORT, SOFT_STOP
 from linkloom.ui.investigation import ProductInvestigationService
 from linkloom.ui.task_provider import TaskProviderLimits
 from tests.integration.test_parallel_investigation import FACTS, QUESTION, MeetingProvider
@@ -164,6 +165,55 @@ def test_planner_is_called_at_most_once_per_job(tmp_path):
     job.plan("2025-02-20", 12, None)
     with pytest.raises(RuntimeError):
         job.plan("2025-02-20", 12, None)
+    job.pool.close()
+
+
+def _job(tmp_path, provider, *, seconds=20, validate=lambda: None):
+    from linkloom.ui.parallel_investigation import ParallelInvestigation
+    return ParallelInvestigation(tmp_path, "run-1", QUESTION, None, TaskProviderLimits(21, 2_000_000, 60_000, 3.0, seconds, min(10, seconds), .01),
+                                 validate, (), lambda q: provider, tmp_path, tmp_path, {}, {}, "ws", True)
+
+
+def test_missing_blocked_entity_provider_fails_closed(tmp_path):
+    provider = PlannerProvider("valid")
+    job = _job(tmp_path, provider)
+    job.plan("2025-02-20", 12, None)
+    assert provider.calls == 0 and job.planner["reason"] == "PLANNER_CONTEXT_UNAVAILABLE"
+    job.pool.close()
+
+
+def test_planner_timeout_stops_pool_and_ignores_late_plan(tmp_path):
+    entered, release = Event(), Event()
+
+    class Blocking(PlannerProvider):
+        def complete(self, request):
+            entered.set()
+            release.wait(10)
+            return super().complete(request)
+
+    job = _job(tmp_path, Blocking("valid"), seconds=0.3)
+    job.plan("2025-02-20", 12, lambda: ())
+    try:
+        assert entered.is_set() and job.pool.stop_state == (SOFT_STOP, "PLANNER_TIMEOUT")
+        assert job.planner["source"] != "LLM" and job.planner["reason"] == "PLANNER_TIMEOUT"
+    finally:
+        release.set()
+        job.pool.close()
+
+
+def test_authorization_change_during_planning_aborts(tmp_path):
+    calls = []
+
+    def validate():
+        calls.append(1)
+        if len(calls) > 1:
+            raise RuntimeError("SOURCE_CHANGED")
+
+    provider = PlannerProvider("valid")
+    job = _job(tmp_path, provider, validate=validate)
+    job.plan("2025-02-20", 12, lambda: ())
+    assert job.pool.stop_state == (HARD_ABORT, "TASK_SOURCE_AUTHORIZATION_CHANGED")
+    assert job.planner["source"] != "LLM"
     job.pool.close()
 
 
