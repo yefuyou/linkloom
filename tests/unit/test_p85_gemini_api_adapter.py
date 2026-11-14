@@ -343,6 +343,19 @@ def test_thinking_level_maps_to_gemini_thinking_config():
     assert payload["config"]["thinking_config"] == {"thinking_level": "LOW"}
 
 
+def test_response_json_schema_option_maps_to_gemini_json_mode_and_round_trips():
+    schema = {"type": "object", "properties": {"reason_code": {"type": "string"}}}
+    options = ModelGenerationOptions(max_output_tokens=64, response_json_schema=schema)
+    config = build_gemini_request(_request(generation_options=options))["config"]
+
+    assert config["response_mime_type"] == "application/json"
+    assert config["response_json_schema"] == schema
+    assert config["response_json_schema"] is not schema
+    assert ModelGenerationOptions.from_dict(options.to_dict()) == options
+    assert "response_json_schema" not in ModelGenerationOptions(max_output_tokens=64).to_dict()
+    assert "response_json_schema" not in build_gemini_request(_request())["config"]
+
+
 def test_default_gemini_tool_mode_remains_auto():
     payload = build_gemini_request(_request())
 
