@@ -783,3 +783,42 @@ def test_phase14_cn2_claim_proposal_rejects_bad_claims_quotes_and_provenance(
             evidence_by_ref=evidence, expected_workspace_id="ws-cn2",
             final_protocol="claim-proposal/v1",
         )
+
+
+def test_claim_instruction_separates_message_time_from_fact_validity() -> None:
+    from linkloom.agents.team_decision import team_decision_final_instruction
+
+    text = team_decision_final_instruction("claim-proposal/v1")
+    assert "not the date the fact takes effect" in text
+    assert "Otherwise set both to null" in text
+
+
+def test_message_timestamp_as_valid_on_is_still_rejected() -> None:
+    from linkloom.agents.team_decision import TeamDecisionResult
+
+    quote = "Ada Wynn is the accountable owner of Saffron Program."
+    evidence = {
+        "ev_msg": {
+            "evidence_id": "ev_msg", "status": "verified",
+            "workspace_id": "ws-saffron", "quote": f"[2025-04-01 09:30] {quote}",
+        },
+    }
+    proposal = {
+        "schema_version": "claim-proposal/v1",
+        "claims": [{
+            "subject": "Saffron Program", "predicate": "owner_of_project",
+            "object": "Ada Wynn", "evidence_ids": ["ev_msg"], "quote": quote,
+            "valid_on": "2025-04-01", "temporal_kind": "snapshot",
+        }],
+    }
+    with pytest.raises(ValidationError):
+        TeamDecisionResult.from_grounded_final(
+            json.dumps(proposal), ["ev_msg"], evidence_by_ref=evidence,
+            expected_workspace_id="ws-saffron", final_protocol="claim-proposal/v1",
+        )
+    proposal["claims"][0]["valid_on"] = None
+    proposal["claims"][0]["temporal_kind"] = None
+    TeamDecisionResult.from_grounded_final(
+        json.dumps(proposal), ["ev_msg"], evidence_by_ref=evidence,
+        expected_workspace_id="ws-saffron", final_protocol="claim-proposal/v1",
+    )
