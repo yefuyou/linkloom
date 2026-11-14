@@ -62,6 +62,18 @@ def branch_plan_request(query):
                                                   require_tool_call=True))
 
 
+def planner_reserve(query, limits):
+    """The most the Planner can use: one request. Input mirrors the session's size estimate for that request.
+
+    The output cap is the full PLANNER_OUTPUT_TOKENS so that the structured submit_branch_plan call is never
+    cut short (PR #88). Everything the Planner does not use stays available to the two branches."""
+    size = len(json.dumps(branch_plan_request(query).to_dict(), ensure_ascii=False).encode('utf8')) + 4096
+    size *= 2  # headroom: the reserve must never be the reason a valid Planner request is refused
+    cost = max(limits.request_cost_upper_bound_usd,
+               (size * limits.input_usd_per_million + PLANNER_OUTPUT_TOKENS * limits.output_usd_per_million) / 1_000_000)
+    return dict(max_requests=1, max_input_tokens=size, max_output_tokens=PLANNER_OUTPUT_TOKENS, max_cost_usd=cost)
+
+
 def _tool_arguments(response):
     if response is None or response.error is not None:
         raise PlanRejected('PLANNER_PROVIDER_ERROR')

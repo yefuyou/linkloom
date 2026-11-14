@@ -303,7 +303,13 @@ class UnifiedAskService:
                 template = bool(parallel and service.parallel_subplans(run.query))
                 # Without a template split the Planner may still find two branches. Only an accepted plan changes
                 # the route; otherwise everything below runs exactly as it does with the Planner off.
-                eligible = bool(parallel and getattr(service, "branch_planner_eligible", lambda: False)())
+                # A question the approved decision answers without a model never reaches the investigation path
+                # (a template split always does), so only the other questions may consult the Planner. The
+                # tests are the ones the ordinary path below applies itself: a relation plan or an investigation
+                # intent from the existing task classifier.
+                eligible = bool(parallel and (template or plan is not None or (not cascade and _RELATION_QUESTION.search(run.query))
+                                              or self._investigation_intent(run.query, payload))
+                                and getattr(service, "branch_planner_eligible", lambda: False)())
                 as_of, date_error = resolve_query_date(run.query, payload.get("as_of")) if parallel else (None, None)
                 planned = bool(eligible and not template and not date_error
                                and self._planner_admitted(service, values, run, payload, as_of))
@@ -445,6 +451,13 @@ class UnifiedAskService:
                                      "statement": "The reviewed facts do not answer this question."}
             return result, 200
         return self._failure(result, outcome["code"], "The fact answer could not be verified.", category="runtime"), 200
+
+    @staticmethod
+    def _investigation_intent(query, payload):
+        try:
+            return classify_task(query, payload.get("as_of"))["intent"] == "INVESTIGATION"
+        except Exception:
+            return False
 
     def _planner_admitted(self, service, values, run, payload, as_of):
         """True when the Planner may run: the same conditions that let the ordinary decision path start a model."""

@@ -1,5 +1,6 @@
 import json
 from copy import deepcopy
+import threading
 from threading import Barrier, Event
 
 import pytest
@@ -55,11 +56,14 @@ def variant(name):
 
 class PlannerProvider:
     def __init__(self, behavior):
-        self.behavior, self.calls, self.requests = behavior, 0, []
+        self.behavior, self.calls, self.requests, self.release = behavior, 0, [], Event()
 
     def complete(self, request):
         self.calls += 1
         self.requests.append(request)
+        if self.behavior == "hang":  # outlives the Planner's own time limit; released by the test
+            self.release.wait(2.5)  # returns after the Planner's own limit (1 s of a 4 s pool), as a late Provider would
+            raise RuntimeError("returned after the Planner time limit")
         if self.behavior == "raise":
             raise RuntimeError("synthetic transport failure")
         if self.behavior == "error":
@@ -70,7 +74,8 @@ class PlannerProvider:
                              finish_reason="MAX_TOKENS" if self.behavior == "truncate" else "STOP")
 
 
-def run_ask(tmp_path, monkeypatch, behavior, *, flag=True, query=QUESTION, expect_parallel=True, requests=21):
+def run_ask(tmp_path, monkeypatch, behavior, *, flag=True, query=QUESTION, expect_parallel=True, requests=21,
+            seconds=20, external=False, as_of="2025-02-20", subject="Launch", relation="uses supplier"):
     monkeypatch.setenv("LINKLOOM_RETRIEVAL_MODE", "bm25")
     base, server, worker, app = _start_product_server(tmp_path, [
         _claim("Cobalt B"), _claim("Cobalt B", claim_type="PROPOSAL"),
@@ -100,22 +105,30 @@ def run_ask(tmp_path, monkeypatch, behavior, *, flag=True, query=QUESTION, expec
             branches.append(question)
             return MeetingProvider(question, barrier, "complete", release)
 
-        limits = TaskProviderLimits(requests, 2_000_000, 60_000, 3.0, 20, 10, .01)
-        service = ProductInvestigationService(app, model_factory=factory, external_provider=False,
+        limits = TaskProviderLimits(requests, 2_000_000, 60_000, 3.0, seconds, min(10, seconds), .01)
+        service = ProductInvestigationService(app, model_factory=factory, external_provider=external,
                                               parallel_limits=limits, branch_planner=flag)
         server.investigation_service = service
+        before = set(threading.enumerate())
         status, payload = _client(base, "/api/product/ask", method="POST", data=dict(
-            query=query, workspace_id=workspace_id, subject="Launch", relation="uses supplier", as_of="2025-02-20"))
+            query=query, workspace_id=workspace_id, subject=subject, relation=relation, as_of=as_of))
         started = payload["result"]
-        out = dict(status=status, started=started, planner=planner, branches=branches, overlapped=overlapped)
+        out = dict(status=status, started=started, planner=planner, branches=branches, overlapped=overlapped,
+                   base=tmp_path / "work" / "investigations")
         if expect_parallel:
             assert status == 202, started
             run_id = started["agent_run_id"]
+            planner.release.set()
             service.close(timeout=25)
             out.update(final=service.inspect(run_id)["parallel_investigation"],
                        root=tmp_path / "work" / "investigations" / run_id.removeprefix("ui-parallel-"))
         else:
+            planner.release.set()
             service.close(timeout=25)
+        planner.release.set()
+        for thread in set(threading.enumerate()) - before:  # nothing the request started may outlive it
+            thread.join(5)
+        out["leftover_threads"] = [t.name for t in set(threading.enumerate()) - before if t.is_alive()]
         out["service"] = service
         return out
     finally:
@@ -358,3 +371,200 @@ def test_entity_text_of_another_branch_is_rejected():
     payload["branches"][0]["entity_text"] = "Cobalt B"  # in the question, but not in this branch's executed root
     with pytest.raises(PlanRejected, match="ENTITY_NOT_LITERAL"):
         validate_branch_plan(payload, scope)
+
+
+# --- budget shares: the Planner reserves one request, the branches split the rest -------------------------
+
+TOTAL = TaskProviderLimits(21, 2_000_000, 60_000, 3.0, 20, 10, .01)
+
+
+def _slices(pool):
+    assert pool.launch("branch-1", lambda session: None) == "RUNNING"
+    assert pool.launch("branch-2", lambda session: None) == "RUNNING"
+    return [pool.branches[name]["slice"] for name in ("branch-1", "branch-2")]
+
+
+def _baseline_slices(tmp_path, limits=TOTAL):
+    """The two branch slices with the Planner flag off: an equal split of the whole pool."""
+    from linkloom.ui.parallel_investigation import ParallelInvestigation
+    off = ParallelInvestigation(tmp_path / "off", "run-off", QUESTION, None, limits, lambda: None, (("a", None), ("b", None)),
+                                lambda q: None, tmp_path, tmp_path, {}, {}, "ws", False)
+    rows = _slices(off.pool)
+    off.pool.close()
+    return rows
+
+
+def test_planner_reserve_is_one_request_with_a_full_structured_output_budget(tmp_path):
+    from linkloom.ui.branch_planner import PLANNER_OUTPUT_TOKENS
+    job = _job(tmp_path, PlannerProvider("decline"))
+    reserve = job.pool.reserve["planner"]
+    assert reserve["max_requests"] == 1 and reserve["max_output_tokens"] == PLANNER_OUTPUT_TOKENS
+    assert reserve["max_input_tokens"] >= 4096 and reserve["max_cost_usd"] >= TOTAL.request_cost_upper_bound_usd
+    # expected branch share: everything but that reserve, split in two (not a third of the pool each)
+    assert job.pool.share["max_requests"] == (21 - 1) // 2 == 10
+    assert job.pool.share["max_output_tokens"] == (60_000 - PLANNER_OUTPUT_TOKENS) // 2
+    job.pool.close()
+
+
+def test_share_after_skip_aux_equals_the_flag_off_share(tmp_path):
+    job = _job(tmp_path, PlannerProvider("valid"))
+    job.plan("2025-02-20", 12, None)  # no blocked-entity provider: the Planner never starts and its slot is dropped
+    assert job.planner["reason"] == "PLANNER_CONTEXT_UNAVAILABLE" and "planner" not in job.pool.branches
+    rows = _slices(job.pool)
+    assert rows == _baseline_slices(tmp_path)  # expected: total // 2 for every limit, 10 requests each
+    assert [row["max_requests"] for row in rows] == [10, 10]
+    pool = job.pool
+    assert all(sum(row[key] for row in rows) <= getattr(pool.total, key) for key in rows[0])
+    pool.close()
+
+
+def test_uncertain_planner_keeps_its_reserve_and_branches_still_get_their_share(tmp_path):
+    entered, release = Event(), Event()
+
+    class Blocking(PlannerProvider):
+        def complete(self, request):
+            entered.set()
+            release.wait(10)
+            return super().complete(request)
+
+    job = _job(tmp_path, Blocking("valid"), seconds=4)
+    pool = job.pool
+    try:
+        job.plan("2025-02-20", 12, lambda: ())
+        assert entered.is_set() and pool.branches["planner"]["status"] == "UNCERTAIN"
+        held = pool.branches["planner"]["slice"]
+        # UNCERTAIN returns nothing (#90): the pool lost exactly the Planner's reserve, no more and no less.
+        assert held == pool.reserve["planner"]
+        assert pool.available == {key: getattr(pool.total, key) - held[key] for key in held}
+        assert held["max_requests"] == 1
+        rows = _slices(pool)
+        assert [row["max_requests"] for row in rows] == [(21 - 1) // 2] * 2  # 10, enough for a 3 step branch (7)
+    finally:
+        release.set()
+        pool.close()
+
+
+def test_planner_that_times_out_leaves_room_for_the_template_branches_at_twenty_requests(tmp_path, monkeypatch):
+    out = run_ask(tmp_path, monkeypatch, "hang", requests=20, seconds=4)
+    final = out["final"]
+    assert final["planner"] == dict(source="TEMPLATE", reason="PLANNER_TIMEOUT")
+    assert final["status"] == "COMPLETE" and not final["gaps"] and len(final["branches"]) == 2
+    pool = json.loads(out["root"].joinpath("pool.json").read_text())["branches"]
+    assert pool["planner"]["status"] == "UNCERTAIN" and pool["planner"]["held"]["max_requests"] == 1
+    # 19 left: the first branch gets 19 // 2 = 9, the last one the remaining 10. A 3 step branch needs 2 * 3 + 1 = 7.
+    assert [pool[name]["slice"]["max_requests"] for name in ("branch-1", "branch-2")] == [9, 10]
+    assert sum(row["slice"]["max_requests"] for row in pool.values()) <= 20
+    assert not out["leftover_threads"]
+
+
+def test_planner_that_succeeds_leaves_room_for_both_branches_at_twenty_requests(tmp_path, monkeypatch):
+    out = run_ask(tmp_path, monkeypatch, "valid", requests=20)
+    final = out["final"]
+    assert final["planner"]["source"] == "LLM" and final["status"] == "COMPLETE" and not final["gaps"]
+    pool = json.loads(out["root"].joinpath("pool.json").read_text())["branches"]
+    assert [pool[name]["slice"]["max_requests"] for name in ("branch-1", "branch-2")] == [9, 10]  # 19 // 2, then the rest
+    assert sum(row["slice"]["max_requests"] for row in pool.values()) <= 20
+
+
+def test_branch_slices_wait_for_the_planner_to_return_its_unused_reserve(tmp_path, monkeypatch):
+    """plan() must not return before the Planner thread has recorded its outcome and refunded the slice."""
+    from linkloom.ui.task_provider import TaskProviderSession
+    closing, release = Event(), Event()
+    original = TaskProviderSession.close
+
+    def slow_close(self, *args, **kwargs):
+        if self.root.name == "planner":
+            closing.set()
+            release.wait(10)
+        return original(self, *args, **kwargs)
+
+    monkeypatch.setattr(TaskProviderSession, "close", slow_close)
+    job = _job(tmp_path, PlannerProvider("valid"))
+    pool = job.pool
+    worker = threading.Thread(target=lambda: job.plan("2025-02-20", 12, lambda: ()))
+    worker.start()
+    try:
+        assert closing.wait(10)  # the Planner has answered; its thread is held just before it refunds
+        worker.join(1.0)
+        assert worker.is_alive()  # branches may not be sized while the refund is still outstanding
+    finally:
+        release.set()
+        worker.join(10)
+    assert not worker.is_alive() and pool.branches["planner"]["settled"].is_set()
+    refund = pool.branches["planner"]
+    assert refund["held"]["max_input_tokens"] < refund["slice"]["max_input_tokens"]  # the headroom came back
+    assert pool.available == {key: getattr(pool.total, key) - refund["held"][key] for key in refund["held"]}
+    pool.close()
+
+
+# --- routing, cleanup and admission with the flag on --------------------------------------------------------
+
+def _view(out):
+    started = deepcopy(out["started"])
+    started.pop("workspace_id")
+    return out["status"], started
+
+
+def test_deterministic_question_never_calls_the_planner(tmp_path, monkeypatch):
+    query = "Which supplier does Launch use?"
+    off = run_ask(tmp_path / "off", monkeypatch, "valid", flag=False, query=query, expect_parallel=False)
+    on = run_ask(tmp_path / "on", monkeypatch, "valid", flag=True, query=query, expect_parallel=False)
+    assert on["planner"].calls == 0 and off["planner"].calls == 0
+    def stable(out):  # ids and timestamps of the two separate workspaces differ; the answer does not
+        started = out["started"]
+        return (out["status"], started["path"], started["route"], started["status"], started["scope"],
+                started["error"], [item["value"] for item in started["conclusions"]])
+
+    assert stable(on) == stable(off) and on["started"]["path"] == "DETERMINISTIC"
+    assert on["started"]["conclusions"][0]["value"] == "Cobalt B"
+
+
+def test_unauthorized_external_provider_is_treated_exactly_as_with_the_flag_off(tmp_path, monkeypatch):
+    query = "Who owns Cobalt B?"
+    off = run_ask(tmp_path / "off", monkeypatch, "valid", flag=False, query=query, expect_parallel=False, external=True)
+    on = run_ask(tmp_path / "on", monkeypatch, "valid", flag=True, query=query, expect_parallel=False, external=True)
+    assert on["planner"].calls == 0 and off["planner"].calls == 0  # no source text reaches an unapproved Provider
+    assert _view(on) == _view(off)
+    assert on["status"] != 403 or off["status"] == 403
+    assert not list(on["base"].glob("*"))
+
+
+def test_question_without_an_approved_decision_never_calls_the_planner(tmp_path, monkeypatch):
+    query = "Who owns Cobalt B?"
+    kwargs = dict(query=query, expect_parallel=False, as_of="2025-01-01")  # before the approved decision
+    off = run_ask(tmp_path / "off", monkeypatch, "valid", flag=False, **kwargs)
+    on = run_ask(tmp_path / "on", monkeypatch, "valid", flag=True, **kwargs)
+    assert on["planner"].calls == 0 and _view(on) == _view(off)
+    assert not list(on["base"].glob("*"))
+
+
+def test_rejected_plan_leaves_no_request_directory_and_no_thread(tmp_path, monkeypatch):
+    out = run_ask(tmp_path, monkeypatch, "decline", query="Who owns Cobalt B?", expect_parallel=False)
+    assert out["planner"].calls == 1
+    assert not out["base"].exists() or not list(out["base"].iterdir())  # the source copies and pool.json are gone
+    assert not out["leftover_threads"]
+
+
+def test_uncertain_planner_keeps_only_its_receipt_when_the_request_is_rejected(tmp_path, monkeypatch):
+    out = run_ask(tmp_path, monkeypatch, "hang", query="Who owns Cobalt B?", expect_parallel=False, seconds=4)
+    assert out["planner"].calls == 1 and "parallel_investigation" not in json.dumps(out["started"])
+    kept = sorted(path.relative_to(out["base"]).as_posix() for path in out["base"].rglob("*") if path.is_file())
+    assert len(kept) == 2 and kept[0].endswith("/branches/planner/budget.json") and kept[1].endswith("/pool.json")
+    assert not out["leftover_threads"]
+
+
+def test_unjoinable_pool_keeps_its_files_but_the_request_still_falls_back(tmp_path, monkeypatch):
+    from linkloom.ui.branch_budget import BranchBudgetPool
+    from linkloom.ui.lifecycle import BackgroundShutdownTimeout
+    real = BranchBudgetPool.close
+
+    def close(self, *args, **kwargs):
+        real(self, *args, **kwargs)
+        raise BackgroundShutdownTimeout("synthetic: a Provider call is still running")
+
+    monkeypatch.setattr(BranchBudgetPool, "close", close)
+    query = "Who owns Cobalt B?"
+    off = run_ask(tmp_path / "off", monkeypatch, "decline", flag=False, query=query, expect_parallel=False)
+    on = run_ask(tmp_path / "on", monkeypatch, "decline", flag=True, query=query, expect_parallel=False)
+    assert on["planner"].calls == 1 and _view(on) == _view(off)
+    assert (on["base"].exists() and list(on["base"].glob("*/vault")))  # never delete under a possibly live writer

@@ -7,6 +7,7 @@ import json
 from copy import deepcopy
 from pathlib import Path
 import re
+import shutil
 from tempfile import TemporaryDirectory
 from threading import Lock
 from typing import Any, Callable
@@ -22,7 +23,8 @@ from linkloom.agents.claim_grounding import assess_claim_text, ClaimSupportStatu
 from linkloom.ui.projection import collect_observed_evidence
 from linkloom.scanner import scan_vault
 from linkloom.ui.backend import RuntimeRunBackend
-from linkloom.ui.lifecycle import (BackgroundTasks, BackgroundWorkStopped, DEFAULT_SHUTDOWN_TIMEOUT, shutdown_deadline)
+from linkloom.ui.lifecycle import (
+    BackgroundShutdownTimeout, BackgroundTasks, BackgroundWorkStopped, DEFAULT_SHUTDOWN_TIMEOUT, shutdown_deadline)
 from linkloom.ui.product import ProductApplication, ProductApplicationError
 from linkloom.ui.projection import WorkspacePresentationContext
 
@@ -324,7 +326,12 @@ class ProductInvestigationService:
                     # The single model call of this request; routing never reaches the Provider.
                     job.plan(temporal_scope[2], self.relation_max_steps, branch_context)
                     if not job.subplans and not job.pool.stop_state:
-                        job.pool.close()  # nothing usable: the caller continues on its ordinary path
+                        try:
+                            job.pool.close()  # joins every pool thread; nothing usable: the ordinary path continues
+                        except BackgroundShutdownTimeout:
+                            pass  # a Provider call that cannot be stopped may still write here: leave the files
+                        else:
+                            self._discard_planning_root(root, job.pool)
                         raise BranchPlanUnavailable()
             if job is not None:
                 initial = job.snapshot()
@@ -596,6 +603,24 @@ class ProductInvestigationService:
             return False
         job.pool.stop(CANCELLED, 'PARALLEL_CANCELLED')
         return True
+
+    @staticmethod
+    def _discard_planning_root(root, pool):
+        """Remove the directory prepared for a parallel run that never started.
+
+        It holds a copy of every source. Only when the Planner call is UNCERTAIN (it may have been billed with
+        no usable receipt) the two small audit files stay: pool.json and the Planner budget.json."""
+        keep = set()
+        planner = pool.branches.get('planner')
+        if planner is not None and planner['status'] == 'UNCERTAIN':
+            keep = {root / 'pool.json', root / 'branches', root / 'branches' / 'planner',
+                    root / 'branches' / 'planner' / 'budget.json'}
+        if not keep:
+            shutil.rmtree(root, ignore_errors=True)
+            return
+        for path in sorted(root.rglob('*'), key=lambda item: len(item.parts), reverse=True):
+            if path not in keep:
+                shutil.rmtree(path, ignore_errors=True) if path.is_dir() else path.unlink(missing_ok=True)
 
     def branch_planner_eligible(self):
         from linkloom.ui.graph_investigation import current_graph_provider_session

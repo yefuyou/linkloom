@@ -62,8 +62,13 @@ class ParallelInvestigation:
         self.subplans = subplans
         self.model_factory = model_factory
         # With a Planner, one extra declared slot is billed in the same pool and never published.
+        # It reserves only what one Planner request can use, not an equal third of the pool.
+        reserve = {}
+        if planner:
+            from linkloom.ui.branch_planner import planner_reserve
+            reserve = {'planner': planner_reserve(query, limits)}
         self.pool = BranchBudgetPool(root, limits, validate, run_id, 2 + 1 if planner else len(subplans),
-                                     aux=('planner',) if planner else ())
+                                     aux=reserve)
         self.outcome = None
         self.planner = None  # None: no Planner; else dict(source=LLM|TEMPLATE|NONE, reason=...)
         self._planner_enabled, self._planned = planner, False

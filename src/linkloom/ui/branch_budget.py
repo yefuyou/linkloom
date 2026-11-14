@@ -101,14 +101,19 @@ def validate_pool_receipt(root, completed_at=None):
 
 
 class BranchBudgetPool:
-    def __init__(self, root, limits, validate, run_id, branches, aux=()):
+    def __init__(self, root, limits, validate, run_id, branches, aux=None):
         if type(branches) is not int or branches < 1:
             raise ValueError('positive branch count required')
         self.root, self.run_id, self.parent_validate, self.declared = Path(root), run_id, validate, branches
-        self.aux = frozenset(aux)  # declared slots (the Planner) that bill the pool but never publish
         self.total = remaining_provider_limits(limits)  # router spend is deducted exactly once, here
-        self.share = {key: getattr(self.total, key) // branches if key in _KEYS[:3]
-                      else getattr(self.total, key) / branches for key in _KEYS}
+        # Declared slots (the Planner) bill the pool but never publish. Each holds a fixed, small reserve
+        # (name -> cap per key) instead of an equal share: the real branches split what is left.
+        self.reserve = {name: {key: min(cap[key], getattr(self.total, key)) for key in _KEYS}
+                        for name, cap in (aux or {}).items()}
+        self.aux = frozenset(self.reserve)
+        real = max(1, branches - len(self.aux))
+        left = {key: getattr(self.total, key) - sum(row[key] for row in self.reserve.values()) for key in _KEYS}
+        self.share = {key: left[key] // real if key in _KEYS[:3] else left[key] / real for key in _KEYS}
         self.available = {key: getattr(self.total, key) for key in _KEYS}
         self.started = monotonic()
         self.branches, self.stop_state, self.sealed = {}, None, False
@@ -155,6 +160,7 @@ class BranchBudgetPool:
             if name in self.aux and name not in self.branches:
                 self.aux = self.aux - {name}
                 self.declared -= 1
+                self.share = self._even()  # the fixed share was sized with the reserve held back
 
     def wait_settled(self, name, timeout=None):
         """Block until a launched branch thread has recorded its outcome and returned any unused slice."""
@@ -162,14 +168,22 @@ class BranchBudgetPool:
             branch = self.branches.get(name)
         return branch is None or branch['settled'].wait(timeout)
 
+    def _even(self):
+        """Split what the pool really has (minus reserves not yet launched) among the branches still to start.
+
+        Called with self._lock held, so the result and the later deduction in launch() are one atomic step."""
+        pending = [name for name in self.aux if name not in self.branches]
+        left = max(1, self.declared - len(self.branches) - len(pending))
+        free = {key: self.available[key] - sum(self.reserve[name][key] for name in pending) for key in _KEYS}
+        return {key: free[key] // left if key in _KEYS[:3] else free[key] / left for key in _KEYS}
+
     def _share(self, name):
-        if not self.aux or name in self.aux:
+        if name in self.aux:
+            return self.reserve[name]
+        if not self.aux:
             return self.share
-        # With a Planner the pool is shared again once it is done: split what is really available
-        # among the branches that are still to start, so an unused Planner reserve is not stranded.
-        left = max(1, self.declared - len(self.branches))
-        return {key: self.available[key] // left if key in _KEYS[:3] else self.available[key] / left
-                for key in _KEYS}
+        # With a Planner the pool is shared again once it is done: an unused Planner reserve is not stranded.
+        return self._even()
 
     def _slice(self, name, max_seconds=None):
         seconds = self.total.max_seconds - (monotonic() - self.started)
