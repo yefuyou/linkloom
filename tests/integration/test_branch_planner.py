@@ -568,3 +568,46 @@ def test_unjoinable_pool_keeps_its_files_but_the_request_still_falls_back(tmp_pa
     on = run_ask(tmp_path / "on", monkeypatch, "decline", flag=True, query=query, expect_parallel=False)
     assert on["planner"].calls == 1 and _view(on) == _view(off)
     assert (on["base"].exists() and list(on["base"].glob("*/vault")))  # never delete under a possibly live writer
+
+
+
+def _planner_requests(out):
+    """Requests that offered the Planner tool; the same first Provider may also serve the legacy selector."""
+    return sum(any(tool.tool_id == TOOL_ID for tool in request.available_tools) for request in out["planner"].requests)
+
+
+def _routing(out):
+    """The routing outcome without the ids and timestamps that differ between two separate workspaces."""
+    started = out["started"]
+    discovery = started["discovery"] or {}
+    return (out["status"], started["path"], started["route"], started["decided_by"], started["status"],
+            started["scope"], started["error"], discovery.get("status"), discovery.get("scope"),
+            discovery.get("reason"), [(item["subject"], item["relation"]) for item in discovery.get("candidates", [])])
+
+
+# Both stop at NEEDS_SCOPE with the flag off: the first at an ambiguous decision, the second at the entity veto.
+NEEDS_SCOPE_QUESTIONS = [
+    ("Compare Zephyr Corp with what plan replaced Meridian A and when did the replacement for Meridian A take effect",
+     "DECISION_SCOPE_AMBIGUOUS"),
+    ("What is the Launch supplier and who approved it, and what plan replaced Meridian A?", "DECISION_SCOPE_NO_MATCH"),
+]
+
+
+@pytest.mark.parametrize("query,code", NEEDS_SCOPE_QUESTIONS)
+def test_question_the_ordinary_routing_stops_never_reaches_the_planner(tmp_path, monkeypatch, query, code):
+    off = run_ask(tmp_path / "off", monkeypatch, "valid", flag=False, query=query, expect_parallel=False)
+    on = run_ask(tmp_path / "on", monkeypatch, "valid", flag=True, query=query, expect_parallel=False)
+    assert off["status"] == 200 and off["started"]["status"] == "NEEDS_SCOPE"
+    assert off["started"]["error"]["code"] == code
+    assert _planner_requests(on) == 0 and on["planner"].calls == off["planner"].calls  # only the legacy selector
+    assert _routing(on) == _routing(off)
+    assert not on["branches"] and not list(on["base"].glob("*"))
+
+
+def test_investigation_question_consults_the_planner_once(tmp_path, monkeypatch):
+    query = "Why did Launch switch suppliers?"
+    off = run_ask(tmp_path / "off", monkeypatch, "decline", flag=False, query=query, expect_parallel=False)
+    on = run_ask(tmp_path / "on", monkeypatch, "decline", flag=True, query=query, expect_parallel=False)
+    assert _planner_requests(off) == 0
+    assert on["planner"].calls == 1 and _planner_requests(on) == 1
+    assert _routing(on) == _routing(off) and on["started"]["path"] == "AGENT"
