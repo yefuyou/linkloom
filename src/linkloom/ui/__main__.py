@@ -12,6 +12,7 @@ from uuid import uuid4
 from linkloom.agents.providers import (
     GEMINI_38_FLASH_MODEL_ID,
     GeminiProviderAdapter,
+    GeminiSDKClientBridge,
     build_gemini_sdk_client,
 )
 from linkloom.semantic_ingestion.extraction import (
@@ -24,26 +25,6 @@ from linkloom.ui.demo import DemoCase, DemoRunBackend
 from linkloom.ui.product import ProductApplication
 from linkloom.ui.investigation import ProductInvestigationService
 from linkloom.ui.server import create_http_server
-
-
-class GeminiSDKClientBridge:
-    """Expose the official SDK's model API through the provider client contract."""
-
-    def __init__(self, sdk_client) -> None:
-        model_api = getattr(sdk_client, "models", None)
-        if not callable(getattr(model_api, "generate_content", None)):
-            raise TypeError("Gemini SDK client must expose models.generate_content().")
-        self._sdk_client = sdk_client
-
-    def generate_content(self, *, model, contents, config):
-        return self._sdk_client.models.generate_content(
-            model=model,
-            contents=contents,
-            config=config,
-        )
-
-    def __getattr__(self, name):
-        return getattr(self._sdk_client, name)
 
 
 def main() -> int:

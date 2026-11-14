@@ -6,10 +6,10 @@ import os
 from pathlib import Path
 from urllib.request import HTTPRedirectHandler, Request, build_opener
 
-from linkloom.agents.model_adapter import ModelAction, ModelResponse, ModelUsage
+from linkloom.agents.model_adapter import ModelTurnProposal
 from linkloom.agents.providers.deepseek_api import DeepSeekProviderAdapter
 from linkloom.agents.providers.gemini_api import (
-    GEMINI_38_FLASH_MODEL_ID, build_gemini_request, build_gemini_sdk_client,
+    GEMINI_38_FLASH_MODEL_ID, GeminiProviderAdapter, GeminiSDKClientBridge, build_gemini_sdk_client,
 )
 from linkloom.ui.structured_router import (
     CAPABILITY, CONFIG, INTENTS, PROMPT, SAFETY, TIME_ROLES, _reject_constant, _unique_object, routing_domain,
@@ -167,10 +167,11 @@ class _DeepSeekJSONClient:
 
 
 class GeminiRouterAdapter:
-    """Use Gemini's JSON schema for a single safety classification or routing proposal."""
+    """Router/Safety policy over the shared GeminiProviderAdapter.complete(); it never calls the SDK itself."""
 
     def __init__(self, client, *, purpose="route"):
         self.client, self.purpose = client, purpose
+        self.provider = GeminiProviderAdapter(GeminiSDKClientBridge(client), model_id=GEMINI_38_FLASH_MODEL_ID)
 
     def complete(self, request):
         if self.purpose == "security":
@@ -181,30 +182,19 @@ class GeminiRouterAdapter:
             raise ValueError("ROUTER_PROMPT_MISMATCH")
         context = json.loads(request.user_input[len(prompt):])
         tool = submission(context)["function"]
-        # Business differences travel as request options; the shared Gemini request mapping builds the call.
+        # Business differences travel as request options; the provider adapter owns mapping, call, errors and usage.
         options = replace(request.generation_options, temperature=None, thinking_level="low",
                           response_json_schema=tool["parameters"])
-        payload = build_gemini_request(replace(request, model_id=GEMINI_38_FLASH_MODEL_ID, generation_options=options),
-                                       configured_model_id=GEMINI_38_FLASH_MODEL_ID)
-        response = self.client.models.generate_content(**payload)
-        raw = response.model_dump(mode="json", exclude_none=True)
-        candidates = raw.get("candidates") or []
-        finish = candidates[0].get("finish_reason") if len(candidates) == 1 else None
-        usage = raw.get("usage_metadata") or {}
-        visible = usage.get("candidates_token_count")
-        thinking = usage.get("thoughts_token_count")
-        input_tokens, total = usage.get("prompt_token_count"), usage.get("total_token_count")
-        if thinking is None and None not in (visible, input_tokens, total):
-            thinking = max(0, total - input_tokens - visible)
-        text = (response.text or "") if len(candidates) == 1 and finish == "STOP" else ""
-        if self.purpose == "route" and text:
+        response = self.provider.complete(replace(request, model_id=GEMINI_38_FLASH_MODEL_ID, generation_options=options))
+        proposal = response.proposal
+        if response.error is not None or proposal is None or proposal.kind != "final":
+            return response
+        # Only a complete reply is readable; truncation ("length") is rejected upstream by record_reply.
+        text = proposal.final_answer if response.finish_reason == "stop" else "{}"
+        if self.purpose == "route" and text != "{}":
             message = {"tool_calls": [{"type": "function", "function": {"name": tool["name"], "arguments": text}}]}
             text = _route_text(message, context, diagnostics=True)
-        output = visible + thinking if None not in (visible, thinking) else (
-            max(0, total - input_tokens) if None not in (total, input_tokens) else None)
-        return ModelResponse(action=ModelAction.final(text or "{}"),
-                             usage=ModelUsage(input_tokens=input_tokens, output_tokens=output, total_tokens=total),
-                             finish_reason=finish, provider_metadata={"provider": "gemini", "reasoning_tokens": thinking})
+        return replace(response, action=None, proposal=ModelTurnProposal.final(proposal.proposal_id, text))
 
 
 @dataclass(frozen=True)

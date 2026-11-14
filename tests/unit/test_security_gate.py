@@ -167,9 +167,9 @@ def test_gemini_security_uses_json_schema_and_reports_truncation(finish, text, c
         assert config['automatic_function_calling'] == {'disable': True}
         assert args['model'] == 'gemini-3.8-flash'
         assert config['max_output_tokens'] == CONFIG['security_max_output_tokens'] == 2048
-        return SimpleNamespace(text=text, model_dump=lambda **_: dict(
-            candidates=[dict(finish_reason=finish)], usage_metadata=dict(
-                prompt_token_count=100, candidates_token_count=8, thoughts_token_count=120, total_token_count=228)))
+        return SimpleNamespace(text=text, candidates=[SimpleNamespace(finish_reason=finish)],
+            usage_metadata=SimpleNamespace(
+                prompt_token_count=100, candidates_token_count=8, thoughts_token_count=120, total_token_count=228))
     adapter = GeminiRouterAdapter(SimpleNamespace(models=SimpleNamespace(generate_content=generate_content)),
                                   purpose='security')
     request, record = request_for('normal lookup', 'w'), {}
@@ -180,7 +180,7 @@ def test_gemini_security_uses_json_schema_and_reports_truncation(finish, text, c
         assert record['invalid_response_counts']['schema_invalid'] == 0
     else:
         assert classify(adapter, request, record=record)['decision'] == 'ALLOW'
-    assert record['provider_reply'] == dict(finish_reason=finish, thinking_tokens=120,
+    assert record['provider_reply'] == dict(finish_reason='length' if code else 'stop', thinking_tokens=120,
                                            visible_output_tokens=8, output_tokens=128, input_tokens=100)
 
 
@@ -190,7 +190,8 @@ def test_gemini_router_client_uses_the_shared_sdk_entry(monkeypatch):
     monkeypatch.setenv('LINKLOOM_ROUTER_PROVIDER', 'gemini')
     monkeypatch.setenv('GEMINI_API_KEY', 'offline-placeholder')
     monkeypatch.setattr('linkloom.ui.router_provider.build_gemini_sdk_client',
-                        lambda key, **kwargs: seen.update(key=key, **kwargs) or object())
+                        lambda key, **kwargs: seen.update(key=key, **kwargs) or SimpleNamespace(
+                            models=SimpleNamespace(generate_content=lambda **_: None)))
     provider = configured_router()
     assert seen['key'] == 'offline-placeholder'
     assert seen['http_options_kwargs'] == dict(timeout=CONFIG['timeout_seconds'] * 1000, retry_options=dict(attempts=1))
@@ -213,3 +214,72 @@ def test_deepseek_security_length_keeps_provider_usage():
     assert record['provider_reply']['finish_reason'] == 'length'
     assert record['provider_reply']['visible_output_tokens'] == 32
     assert record['invalid_response_counts']['truncated'] == 1
+
+
+def _gemini_security(generate_content):
+    return GeminiRouterAdapter(SimpleNamespace(models=SimpleNamespace(generate_content=generate_content)), purpose='security')
+
+
+def test_gemini_security_empty_max_tokens_reply_is_still_truncation_with_usage():
+    # Thinking can consume the whole budget and leave no text; the shared adapter reports it as an error.
+    def generate_content(**_):
+        return SimpleNamespace(text=None, candidates=[SimpleNamespace(finish_reason='MAX_TOKENS')],
+            usage_metadata=SimpleNamespace(prompt_token_count=10, candidates_token_count=0,
+                                           thoughts_token_count=2048, total_token_count=2058))
+    record = {}
+    with pytest.raises(RouterInvalid, match='SECURITY_OUTPUT_TRUNCATED'):
+        classify(_gemini_security(generate_content), request_for('normal lookup', 'w'), record=record)
+    assert record['provider_reply']['output_tokens'] == 2048
+    assert record['provider_reply']['thinking_tokens'] == 2048
+
+
+def test_gemini_security_counts_thinking_in_output_tokens_once():
+    def generate_content(**_):
+        return SimpleNamespace(text='{"reason_code":"NONE"}', candidates=[SimpleNamespace(finish_reason='STOP')],
+            usage_metadata=SimpleNamespace(prompt_token_count=100, candidates_token_count=8,
+                                           thoughts_token_count=120, total_token_count=228))
+    response = _gemini_security(generate_content).complete(request_for('normal lookup', 'w'))
+    assert (response.usage.input_tokens, response.usage.output_tokens, response.usage.total_tokens) == (100, 128, 228)
+    assert response.provider_metadata['reasoning_tokens'] == 120
+
+
+def test_gemini_security_provider_exception_fails_closed_without_raising_from_adapter():
+    def generate_content(**_):
+        raise RuntimeError('boom')
+    adapter = _gemini_security(generate_content)
+    response = adapter.complete(request_for('normal lookup', 'w'))
+    assert response.error is not None
+    with pytest.raises(RouterInvalid, match='PROVIDER_UNAVAILABLE'):
+        classify(adapter, request_for('normal lookup', 'w'))
+
+
+def test_gemini_security_non_stop_finish_is_not_readable():
+    def generate_content(**_):
+        return SimpleNamespace(text='{"reason_code":"NONE"}', candidates=[SimpleNamespace(finish_reason='SAFETY')],
+                               usage_metadata=SimpleNamespace(prompt_token_count=1, candidates_token_count=1,
+                                                              total_token_count=2))
+    with pytest.raises(RouterInvalid, match='SECURITY_SCHEMA_INVALID'):
+        classify(_gemini_security(generate_content), request_for('normal lookup', 'w'))
+
+
+def test_gemini_route_truncation_is_rejected_and_stop_is_converted():
+    from linkloom.ui.structured_router import request_for as route_request, route_with_adapter
+    from tests.unit.test_structured_router import context
+    ctx = context('联调报告归谁？')
+    fields = dict(decision='CLARIFY', operation='READ', intent='OTHER', candidate_id='', mentions=[],
+                  unresolved_names=[], time_text='', time_role='NONE', reason_code='NONE')
+
+    def adapter(finish, text):
+        def generate_content(**args):
+            assert args['config']['response_json_schema']['required'] and 'temperature' not in args['config']
+            return SimpleNamespace(text=text, candidates=[SimpleNamespace(finish_reason=finish)],
+                usage_metadata=SimpleNamespace(prompt_token_count=5, candidates_token_count=3,
+                                               thoughts_token_count=4, total_token_count=12))
+        return GeminiRouterAdapter(SimpleNamespace(models=SimpleNamespace(generate_content=generate_content)))
+    record = {}
+    with pytest.raises(RouterInvalid, match='ROUTER_OUTPUT_TRUNCATED'):
+        route_with_adapter(adapter('MAX_TOKENS', '{"deci'), route_request(ctx), ctx, record)
+    assert record['invalid_response_counts']['truncated'] == 1
+    record = {}
+    route = route_with_adapter(adapter('STOP', json.dumps(fields)), route_request(ctx), ctx, record)
+    assert route.decision == 'CLARIFY' and record['provider_reply']['output_tokens'] == 7
