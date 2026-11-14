@@ -3,13 +3,14 @@
 from copy import deepcopy
 from dataclasses import replace
 import json
+from threading import Event
 from time import monotonic
 
 from linkloom.runtime.graph import RuntimeEngine
 from linkloom.runtime.models import RunRequest, RunStatus
 from linkloom.runtime.task_plan import TaskPlan, validate_model_proposed_plan
 from linkloom.ui.backend import project_reviewer
-from linkloom.ui.branch_budget import BranchBudgetPool, CANCELLED, HARD_ABORT
+from linkloom.ui.branch_budget import _HARD_FAILURES, BranchBudgetPool, CANCELLED, HARD_ABORT
 from linkloom.ui.projection import collect_observed_evidence, project_run_snapshot
 
 
@@ -49,7 +50,7 @@ class _OutputBoundedAdapter:
 
 class ParallelInvestigation:
     def __init__(self, root, run_id, query, workspace, limits, validate, subplans, model_factory,
-                 vault, index, source_names, source_versions, workspace_id):
+                 vault, index, source_names, source_versions, workspace_id, planner=False):
         self.query = query
         self.workspace = workspace
         self.run_id = run_id
@@ -60,8 +61,82 @@ class ParallelInvestigation:
         self.workspace_id = workspace_id
         self.subplans = subplans
         self.model_factory = model_factory
-        self.pool = BranchBudgetPool(root, limits, validate, run_id, len(subplans))
+        # With a Planner, one extra declared slot is billed in the same pool and never published.
+        # It reserves only what one Planner request can use, not an equal third of the pool.
+        reserve = {}
+        if planner:
+            from linkloom.ui.branch_planner import planner_reserve
+            reserve = {'planner': planner_reserve(query, limits)}
+        self.pool = BranchBudgetPool(root, limits, validate, run_id, 2 + 1 if planner else len(subplans),
+                                     aux=reserve)
         self.outcome = None
+        self.planner = None  # None: no Planner; else dict(source=LLM|TEMPLATE|NONE, reason=...)
+        self._planner_enabled, self._planned = planner, False
+
+    def plan(self, as_of, max_steps, blocked_entities):
+        """Call the Planner once; keep the template split unless the Host accepts the model plan."""
+        if not self._planner_enabled or self._planned:
+            raise RuntimeError('PLANNER_CALL_NOT_ALLOWED')
+        self._planned = True
+        from linkloom.ui.branch_planner import PLANNER_OUTPUT_TOKENS, PlanRejected, PlannerScope, plan_branches
+        found, done, bound = {}, Event(), {}
+        try:  # read on the caller's thread: the store lock is held by the request, not by the pool thread
+            blocked = tuple(blocked_entities())  # a missing provider fails closed
+        except Exception:
+            blocked = None
+        # A branch can only use what the pool still has after the Planner took its one request.
+        total = self.pool.total
+        branch_requests = (total.max_requests - 1) // 2
+        branch_output = (total.max_output_tokens - PLANNER_OUTPUT_TOKENS) // 2
+
+        def work(session):
+            try:
+                bound['session'] = session
+                scope = PlannerScope(self.query, as_of, max_steps, blocked, branch_requests, branch_output)
+                found['plan'] = plan_branches(session.bind(self.model_factory(self.query), 'plan'), scope)
+            except PlanRejected as error:
+                found['reason'] = str(error)
+            except Exception:
+                found['reason'] = 'PLANNER_FAILED'
+            finally:
+                done.set()
+            return dict(planned='plan' in found)
+
+        # The request thread may hold the store lock that the parent validation needs. Validate on this
+        # thread before and after the call; the pool thread skips it while this thread waits.
+        parent, status = self.pool.parent_validate, 'CONTEXT_UNAVAILABLE'
+        try:
+            if blocked is not None:
+                parent()
+                self.pool.parent_validate = lambda: None
+                # The Planner has its own shorter time limit (session and request). The session enforces it,
+                # so done is always set; a timeout is a Planner-local failure and never stops the pool.
+                status = self.pool.launch('planner', work, max_seconds=total.max_seconds / 4)
+                if status == 'RUNNING':
+                    done.wait()
+                    self.pool.wait_settled('planner')  # the unused reserve is back in the pool
+                    parent()
+        except Exception:
+            self.pool.stop(HARD_ABORT, 'TASK_SOURCE_AUTHORIZATION_CHANGED')
+            status = 'STOPPED'
+        finally:
+            self.pool.parent_validate = parent
+        session = bound.get('session')
+        if session is not None and session.failure in _HARD_FAILURES:
+            self.pool.stop(HARD_ABORT, session.failure)
+        if session is not None and session.failure == 'PROVIDER_TIMEOUT_UNCERTAIN':
+            found.pop('plan', None)
+            found['reason'] = 'PLANNER_TIMEOUT'
+        if status != 'RUNNING':
+            found['reason'] = 'PLANNER_' + status
+        if 'planner' not in self.pool.branches:
+            self.pool.skip_aux('planner')
+        if found.get('plan') and not self.pool.stop_state:
+            self.subplans, self.planner = found['plan'], dict(source='LLM', reason=None)
+        else:
+            self.planner = dict(source='TEMPLATE' if self.subplans else 'NONE',
+                                reason=found.get('reason') or 'PLANNER_STOPPED')
+        return self.subplans
 
     def snapshot(self):
         try:
@@ -102,6 +177,8 @@ class ParallelInvestigation:
                                         for i, item in enumerate(evidence.values(), 1)]
         else:
             snapshot['parallel_investigation'] = dict(status='RUNNING')
+        if self.planner is not None:
+            snapshot['parallel_investigation']['planner'] = dict(self.planner)
         snapshot['read_only'] = True
         return snapshot
 

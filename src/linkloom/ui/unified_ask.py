@@ -11,7 +11,7 @@ from typing import Any, Callable
 
 from linkloom.fact_memory import fact_memory_enabled
 from linkloom.ui.product import ProductApplication, ProductApplicationError
-from linkloom.ui.investigation import ProductInvestigationService
+from linkloom.ui.investigation import BranchPlanUnavailable, ProductInvestigationService
 from linkloom.ui.scope_discovery import AUTO_EMBEDDER, decision_slot_id, resolve_query_date
 from linkloom.ui.question_routing import classify_task, route_question
 from linkloom.ui.feedback_memory import FeedbackMemory
@@ -299,18 +299,31 @@ class UnifiedAskService:
                 service = self.investigation()
                 parallel = (not context and values["subject"] and values["relation"]
                             and service is not None and getattr(service, "parallel_limits", None)
-                            and service.parallel_subplans(run.query)
                             and source_context(self.app, run.workspace_id)["source_count"] >= 2)
-                if parallel:
-                    as_of, date_error = resolve_query_date(run.query, payload.get("as_of"))
+                template = bool(parallel and service.parallel_subplans(run.query))
+                # Without a template split the Planner may still find two branches. Only an accepted plan changes
+                # the route; otherwise everything below runs exactly as it does with the Planner off.
+                # A question the approved decision answers without a model never reaches the investigation path
+                # (a template split always does), so only the other questions may consult the Planner. The
+                # tests are the ones the ordinary path below applies itself: a relation plan or an investigation
+                # intent from the existing task classifier.
+                eligible = bool(parallel and (template or plan is not None or (not cascade and _RELATION_QUESTION.search(run.query))
+                                              or self._baseline_investigation(run, values, payload))
+                                and getattr(service, "branch_planner_eligible", lambda: False)())
+                as_of, date_error = resolve_query_date(run.query, payload.get("as_of")) if parallel else (None, None)
+                planned = bool(eligible and not template and not date_error
+                               and self._planner_admitted(service, values, run, payload, as_of))
+                if template or planned:
                     if date_error:
                         return self._failure(result, date_error["code"], date_error["message"],
                                              status="NEEDS_SCOPE"), 200
                     route = dict(intent="INVESTIGATION", route="INVESTIGATION", code="SOURCE_INVESTIGATION",
                                  reason="The selected decision has two independent investigation plan components.")
-                    run = _AskRun(run.query, run.workspace_id, run.scope, route)
-                    result = self._base(run)
-                    return self._decision_request(run, result, payload, values, as_of)
+                    parallel_run = _AskRun(run.query, run.workspace_id, run.scope, route)
+                    response = self._decision_request(parallel_run, self._base(parallel_run), payload, values,
+                                                      as_of, planner=eligible)
+                    if response is not None:
+                        return response
                 if plan is not None or (not cascade and _RELATION_QUESTION.search(run.query)):
                     if cascade:
                         from linkloom.ui.router_context import router_query_date
@@ -439,7 +452,34 @@ class UnifiedAskService:
             return result, 200
         return self._failure(result, outcome["code"], "The fact answer could not be verified.", category="runtime"), 200
 
-    def _decision_request(self, run, result, payload, values, as_of):
+    def _baseline_investigation(self, run, values, payload):
+        """True when the ordinary path (Planner off) would run this question as an investigation.
+
+        It is the routing the ordinary path applies itself, with the same slots and resolver and no model
+        (provider_factory=None), so the entity veto and the date check decide exactly as they do there.
+        """
+        try:
+            routed = route_question(run.query, self._trusted_slots(run.workspace_id), self.app.relation_resolver,
+                                    workspace_id=run.workspace_id, subject=values["subject"],
+                                    relation=values["relation"], as_of=payload.get("as_of"),
+                                    provider_factory=None, embedder=self.slot_embedder)
+        except ProductApplicationError:
+            return False
+        return routed["route"] == "INVESTIGATION" and routed["scope"] is not None and routed["supported"]
+
+    def _planner_admitted(self, service, values, run, payload, as_of):
+        """True when the Planner may run: the same conditions that let the ordinary decision path start a model."""
+        if not service.config()["available"]:
+            return False
+        if service.config()["external_provider"] and payload.get("allow_external_provider") is not True:
+            return False
+        try:
+            return self.app.recover_decision(values["subject"], values["relation"], as_of,
+                                             _workspace_id=run.workspace_id)["status"] == "FOUND"
+        except Exception:
+            return False
+
+    def _decision_request(self, run, result, payload, values, as_of, planner=False):
         view = self.app.recover_decision(values["subject"], values["relation"], as_of, _workspace_id=run.workspace_id)
         result["scope"]["as_of"] = view["as_of"]
         if result["path"] == "DETERMINISTIC":
@@ -452,9 +492,13 @@ class UnifiedAskService:
         if service.config()["external_provider"] and payload.get("allow_external_provider") is not True:
             return self._failure(result, "EXTERNAL_PROVIDER_PERMISSION_REQUIRED", "Allow this bounded external investigation before source text is sent or model costs are incurred.", category="permission"), 403
         try:
-            snapshot = service.start_temporal(run.query, run.workspace_id, subject=values["subject"], relation=values["relation"], as_of=view["as_of"])
+            extra = ({"branch_context": lambda: self._router_blocked_entities(run.workspace_id)}
+                     if planner else {})
+            snapshot = service.start_temporal(run.query, run.workspace_id, subject=values["subject"], relation=values["relation"], as_of=view["as_of"], **extra)
         except ProductApplicationError:
             raise
+        except BranchPlanUnavailable:
+            return None  # the caller continues exactly as it would with the Planner off
         except Exception:
             return self._failure(result, "INVESTIGATION_START_FAILED", "The configured investigation could not start.", category="runtime"), 500
         pinned = _AskRun(run.query, run.workspace_id, dict(result["scope"]), run.route, result.get("discovery"))

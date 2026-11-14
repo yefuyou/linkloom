@@ -7,6 +7,7 @@ import json
 from copy import deepcopy
 from pathlib import Path
 import re
+import shutil
 from tempfile import TemporaryDirectory
 from threading import Lock
 from typing import Any, Callable
@@ -22,9 +23,14 @@ from linkloom.agents.claim_grounding import assess_claim_text, ClaimSupportStatu
 from linkloom.ui.projection import collect_observed_evidence
 from linkloom.scanner import scan_vault
 from linkloom.ui.backend import RuntimeRunBackend
-from linkloom.ui.lifecycle import (BackgroundTasks, BackgroundWorkStopped, DEFAULT_SHUTDOWN_TIMEOUT, shutdown_deadline)
+from linkloom.ui.lifecycle import (
+    BackgroundShutdownTimeout, BackgroundTasks, BackgroundWorkStopped, DEFAULT_SHUTDOWN_TIMEOUT, shutdown_deadline)
 from linkloom.ui.product import ProductApplication, ProductApplicationError
 from linkloom.ui.projection import WorkspacePresentationContext
+
+
+class BranchPlanUnavailable(Exception):
+    """No two-branch plan was accepted; the caller keeps the routing it would use without the Planner."""
 
 
 @dataclass
@@ -56,12 +62,14 @@ class ProductInvestigationService:
         task_relation_paths: dict[str, Path] | None = None,
         task_only: bool = False,
         parallel_limits=None,
+        branch_planner=False,
     ) -> None:
         self.product_app = product_app
         self.model_factory = model_factory
         self.task_models = task_models
         self.task_only = task_only
         self.parallel_limits = parallel_limits
+        self.branch_planner = bool(branch_planner)
         self._parallel_jobs = {}
         self._parallel_workers = BackgroundTasks()
         # Local Host composition only. HTTP/model arguments cannot choose paths.
@@ -164,6 +172,7 @@ class ProductInvestigationService:
         task_plan: TaskPlan | None = None,
         task_investigation: bool = False,
         task_source_authorization: dict | None = None,
+        branch_context=None,
     ) -> dict[str, Any]:
         if self.model_factory is None:
             raise ProductApplicationError(
@@ -189,6 +198,8 @@ class ProductInvestigationService:
         workspace, sources = self.product_app.snapshot_investigation_sources(workspace_id)
         subplans = (self.parallel_subplans(query)
                     if temporal_scope is not None and len(sources) >= 2 else ())
+        planner = (temporal_scope is not None and branch_context is not None and len(sources) >= 2
+                   and self.branch_planner_eligible())
         task_models, outer_model = self.task_models, None
         temporal_view_holder: dict[str, Any] | None = None
         if temporal_scope is not None:
@@ -240,7 +251,7 @@ class ProductInvestigationService:
             raise ProductApplicationError(
                 "EMPTY_WORKSPACE", "Import a source into this workspace before investigating.", status=409
             )
-        temporary_root = None if task_investigation or subplans else TemporaryDirectory(prefix="linkloom-investigate-")
+        temporary_root = None if task_investigation or subplans or planner else TemporaryDirectory(prefix="linkloom-investigate-")
         if temporary_root is not None:
             with self._lock:
                 self._temporary_roots.append(temporary_root)
@@ -296,7 +307,8 @@ class ProductInvestigationService:
                 source_names[relative_path] = str(source["name"])
                 source_versions[relative_path] = {"source_id": source_id, "source_version": str(source["source_version"])}
             index = scan_vault(vault, root / "scan").index_path
-            if subplans:
+            job = None
+            if subplans or planner:
                 from linkloom.ui.parallel_investigation import ParallelInvestigation
                 from linkloom.ui.task_investigation import ProductTaskSources
                 identity = ProductTaskSources._identity(sources)
@@ -309,7 +321,19 @@ class ProductInvestigationService:
                 run_id = 'ui-parallel-' + root.name
                 job = ParallelInvestigation(root, run_id, query.strip(), WorkspacePresentationContext(
                     display_name=str(workspace["name"]), document_count=len(sources)), self.parallel_limits,
-                    validate, subplans, self.model_factory, vault, index, source_names, source_versions, workspace_id)
+                    validate, subplans, self.model_factory, vault, index, source_names, source_versions, workspace_id, planner)
+                if planner:
+                    # The single model call of this request; routing never reaches the Provider.
+                    job.plan(temporal_scope[2], self.relation_max_steps, branch_context)
+                    if not job.subplans and not job.pool.stop_state:
+                        try:
+                            job.pool.close()  # joins every pool thread; nothing usable: the ordinary path continues
+                        except BackgroundShutdownTimeout:
+                            pass  # a Provider call that cannot be stopped may still write here: leave the files
+                        else:
+                            self._discard_planning_root(root, job.pool)
+                        raise BranchPlanUnavailable()
+            if job is not None:
                 initial = job.snapshot()
                 with self._lock:
                     self._provider_sessions.append(job.pool)
@@ -542,17 +566,18 @@ class ProductInvestigationService:
 
     def start_temporal(
         self, query: str, workspace_id: str, *, subject: str, relation: str,
-        as_of: str | None = None,
+        as_of: str | None = None, branch_context=None,
     ) -> dict[str, Any]:
         try:
             with self._starts.operation("temporal-start-" + uuid4().hex[:12]):
-                return self._start_temporal(query, workspace_id, subject=subject, relation=relation, as_of=as_of)
+                return self._start_temporal(query, workspace_id, subject=subject, relation=relation, as_of=as_of,
+                                            branch_context=branch_context)
         except BackgroundWorkStopped as error:
             raise ProductApplicationError("APPLICATION_SHUTTING_DOWN", str(error), status=503) from error
 
     def _start_temporal(
         self, query: str, workspace_id: str, *, subject: str, relation: str,
-        as_of: str | None = None,
+        as_of: str | None = None, branch_context=None,
     ) -> dict[str, Any]:
         if self.task_only:
             raise ProductApplicationError('AGENT_STAGE_NOT_AUTHORIZED', 'Temporal stages are not enabled.', status=403)
@@ -567,7 +592,8 @@ class ProductInvestigationService:
         view = self.product_app.recover_decision(
             subject, relation, as_of, _workspace_id=workspace_id,
         )
-        return self._start(query, workspace_id, temporal_scope=(subject, relation, view["as_of"]))
+        return self._start(query, workspace_id, temporal_scope=(subject, relation, view["as_of"]),
+                           branch_context=branch_context)
 
     def cancel_parallel(self, run_id: str) -> bool:
         from linkloom.ui.branch_budget import CANCELLED
@@ -577,6 +603,29 @@ class ProductInvestigationService:
             return False
         job.pool.stop(CANCELLED, 'PARALLEL_CANCELLED')
         return True
+
+    @staticmethod
+    def _discard_planning_root(root, pool):
+        """Remove the directory prepared for a parallel run that never started.
+
+        It holds a copy of every source. Only when the Planner call is UNCERTAIN (it may have been billed with
+        no usable receipt) the two small audit files stay: pool.json and the Planner budget.json."""
+        keep = set()
+        planner = pool.branches.get('planner')
+        if planner is not None and planner['status'] == 'UNCERTAIN':
+            keep = {root / 'pool.json', root / 'branches', root / 'branches' / 'planner',
+                    root / 'branches' / 'planner' / 'budget.json'}
+        if not keep:
+            shutil.rmtree(root, ignore_errors=True)
+            return
+        for path in sorted(root.rglob('*'), key=lambda item: len(item.parts), reverse=True):
+            if path not in keep:
+                shutil.rmtree(path, ignore_errors=True) if path.is_dir() else path.unlink(missing_ok=True)
+
+    def branch_planner_eligible(self):
+        from linkloom.ui.graph_investigation import current_graph_provider_session
+        return bool(self.branch_planner and self.parallel_limits and not self.task_only
+                    and current_graph_provider_session() is None)
 
     def parallel_subplans(self, query):
         from linkloom.ui.graph_investigation import current_graph_provider_session

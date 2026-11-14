@@ -20,7 +20,7 @@ import json
 import os
 from pathlib import Path
 import re
-from threading import Lock, RLock
+from threading import Event, Lock, RLock
 from time import monotonic
 
 from linkloom.ui.lifecycle import BackgroundShutdownTimeout, BackgroundTasks, shutdown_deadline
@@ -101,13 +101,19 @@ def validate_pool_receipt(root, completed_at=None):
 
 
 class BranchBudgetPool:
-    def __init__(self, root, limits, validate, run_id, branches):
+    def __init__(self, root, limits, validate, run_id, branches, aux=None):
         if type(branches) is not int or branches < 1:
             raise ValueError('positive branch count required')
         self.root, self.run_id, self.parent_validate, self.declared = Path(root), run_id, validate, branches
         self.total = remaining_provider_limits(limits)  # router spend is deducted exactly once, here
-        self.share = {key: getattr(self.total, key) // branches if key in _KEYS[:3]
-                      else getattr(self.total, key) / branches for key in _KEYS}
+        # Declared slots (the Planner) bill the pool but never publish. Each holds a fixed, small reserve
+        # (name -> cap per key) instead of an equal share: the real branches split what is left.
+        self.reserve = {name: {key: min(cap[key], getattr(self.total, key)) for key in _KEYS}
+                        for name, cap in (aux or {}).items()}
+        self.aux = frozenset(self.reserve)
+        real = max(1, branches - len(self.aux))
+        left = {key: getattr(self.total, key) - sum(row[key] for row in self.reserve.values()) for key in _KEYS}
+        self.share = {key: left[key] // real if key in _KEYS[:3] else left[key] / real for key in _KEYS}
         self.available = {key: getattr(self.total, key) for key in _KEYS}
         self.started = monotonic()
         self.branches, self.stop_state, self.sealed = {}, None, False
@@ -148,17 +154,53 @@ class BranchBudgetPool:
             if branch['session'] is not None:
                 branch['session'].close(deadline=deadline)
 
-    def _slice(self):
+    def skip_aux(self, name):
+        """The declared auxiliary slot will not run: its share goes back to the real branches."""
+        with self._lock:
+            if name in self.aux and name not in self.branches:
+                self.aux = self.aux - {name}
+                self.declared -= 1
+                self.share = self._even()  # the fixed share was sized with the reserve held back
+
+    def wait_settled(self, name, timeout=None):
+        """Block until a launched branch thread has recorded its outcome and returned any unused slice."""
+        with self._lock:
+            branch = self.branches.get(name)
+        return branch is None or branch['settled'].wait(timeout)
+
+    def _even(self):
+        """Split what the pool really has (minus reserves not yet launched) among the branches still to start.
+
+        Called with self._lock held, so the result and the later deduction in launch() are one atomic step."""
+        pending = [name for name in self.aux if name not in self.branches]
+        left = max(1, self.declared - len(self.branches) - len(pending))
+        free = {key: self.available[key] - sum(self.reserve[name][key] for name in pending) for key in _KEYS}
+        return {key: free[key] // left if key in _KEYS[:3] else free[key] / left for key in _KEYS}
+
+    def _share(self, name):
+        if name in self.aux:
+            return self.reserve[name]
+        if not self.aux:
+            return self.share
+        # With a Planner the pool is shared again once it is done: an unused Planner reserve is not stranded.
+        return self._even()
+
+    def _slice(self, name, max_seconds=None):
         seconds = self.total.max_seconds - (monotonic() - self.started)
-        cut = {key: min(self.share[key], self.available[key]) for key in _KEYS}
+        if max_seconds is not None:
+            seconds = min(seconds, max_seconds)
+        share = self._share(name)
+        cut = {key: min(share[key], self.available[key]) for key in _KEYS}
         if (seconds <= 0 or min(cut[key] for key in _KEYS[:3]) < 1
                 or cut['max_cost_usd'] < self.total.request_cost_upper_bound_usd):
             return None  # would violate TaskProviderLimits; never build a zero-budget session
         return replace(self.total, **cut, max_seconds=seconds,
                        request_timeout_seconds=min(self.total.request_timeout_seconds, seconds))
 
-    def launch(self, name, work):
-        """Run work(session) on its own thread and session; returns the branch status."""
+    def launch(self, name, work, *, max_seconds=None):
+        """Run work(session) on its own thread and session; returns the branch status.
+
+        max_seconds optionally caps this child's lifetime below the remaining pool time."""
         if not _NAME.fullmatch(name):
             raise ValueError('invalid branch name')
         with self._lock:
@@ -168,10 +210,10 @@ class BranchBudgetPool:
                 raise ValueError('more branches than declared')  # no slice, no journal entry
             if self.stop_state:
                 return 'NOT_STARTED'
-            limits = self._slice()
+            limits = self._slice(name, max_seconds)
             branch = self.branches[name] = dict(status='INSUFFICIENT_BUDGET' if limits is None else 'RUNNING',
                 slice=None if limits is None else {key: getattr(limits, key) for key in _KEYS},
-                held=None, result=None, session=None)
+                held=None, result=None, session=None, settled=Event())
             if limits is None:
                 self._save()
                 return branch['status']
@@ -200,6 +242,12 @@ class BranchBudgetPool:
         return 'RUNNING'
 
     def _run(self, name, work):
+        try:
+            self._run_branch(name, work)
+        finally:
+            self.branches[name]['settled'].set()
+
+    def _run_branch(self, name, work):
         branch = self.branches[name]
         try:
             result, failed = work(branch['session']), False
@@ -276,9 +324,11 @@ class BranchBudgetPool:
             if kind in (None, SOFT_STOP):
                 receipts = validate_pool_receipt(self.root)
                 published = {name: b['result'] for name, b in self.branches.items()
-                             if b['status'] == 'VERIFIED' and receipts.get(name, 'missing') is None}
-            gaps = {name: b['status'] for name, b in self.branches.items() if name not in published}
-            unstarted = self.declared - len(self.branches)
+                             if name not in self.aux and b['status'] == 'VERIFIED'
+                             and receipts.get(name, 'missing') is None}
+            gaps = {name: b['status'] for name, b in self.branches.items()
+                    if name not in published and name not in self.aux}
+            unstarted = self.declared - len(self.aux) - len(gaps) - len(published)
             status = {HARD_ABORT: 'ABORTED', CANCELLED: 'CANCELLED'}.get(kind) or (
                 'COMPLETE' if published and not gaps and unstarted == 0 else 'PARTIAL' if published else 'FAILED')
             return dict(status=status, reason=self.stop_state and self.stop_state[1], results=published,
