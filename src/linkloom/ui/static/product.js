@@ -827,8 +827,21 @@
         synthesis = `<h3>${t("Combined answer withheld", "未发布合并回答")}</h3>
           <p>${escapeHtml(answer.fallback_reason || "")}</p>${unknowns ? `<ul>${unknowns}</ul>` : ""}`;
       }
+      const stateLabel = {
+        REUSED: t("Reused from the saved run", "沿用已保存的结果"),
+        UNCERTAIN: t("Uncertain, not sent again", "状态不确定，不会重发"),
+        CONTINUABLE: t("Not started, can continue", "尚未启动，可继续"),
+        WITHHELD: t("Withheld", "已保留不展示"),
+        RESUME_NOT_SAFE: t("Cannot be resumed safely", "无法安全恢复"),
+      };
+      const branchStates = Array.isArray(parallel.branch_states) ? parallel.branch_states : null;
+      const continuable = Array.isArray(parallel.continuable) ? parallel.continuable : [];
+      const resume = branchStates ? `<h3>${t("Branch resume state", "分支恢复状态")}</h3><ul class="ask-branch-states">${branchStates.map(row =>
+        `<li data-branch-state="${escapeHtml(row.state)}"><strong>${escapeHtml(row.branch)}</strong> · ${escapeHtml(stateLabel[row.state] || row.state)}${row.reason ? ` · ${escapeHtml(row.reason)}` : ""}${row.message ? ` · ${escapeHtml(row.message)}` : ""}</li>`).join("")}</ul>${continuable.length && result.agent_run_id ? `<p class="hint">${t("Continuing sends the unstarted branches to the model. Tick the external provider permission above first if it is required.", "继续会把尚未启动的分支发送给模型。如需外部模型,请先勾选上方的外部模型授权。")}</p>
+        <button class="button" type="button" data-action="continue-parallel" data-run-id="${escapeHtml(result.agent_run_id)}">${t("Continue unfinished branches", "继续未完成的分支")}</button><p id="ask-continue-note" role="alert"></p>` : ""}` : "";
       target.innerHTML = `<section class="panel ask-answer" role="status"><h2>${title}</h2>
         ${synthesis}
+        ${resume}
         ${gaps ? `<h3>${t("Incomplete branches", "未完成的分支")}</h3><ul>${gaps}</ul>` : ""}
         ${evidence}${askTechnical(result, locale, true)}</section>`;
       return;
@@ -1214,6 +1227,24 @@
       if (action === 'focus-import') { document.getElementById('meeting-import')?.scrollIntoView?.({block: 'start'}); document.getElementById('source-file')?.focus?.(); return; }
       if (action === 'ask-example') { const input = document.getElementById('ask-query'); input.value = button.dataset.query; invalidateAsk(); localizeAsk(input.value); input.focus?.(); return; }
       if (action === "inspect-source") await inspectSource(id);
+      else if (action === "continue-parallel") {
+        const workspaceId = state.workspace.workspace_id;
+        const runId = button.dataset.runId;
+        const permission = document.getElementById("ask-external");
+        const allowExternal = permission?.checked === true;
+        if (permission) permission.checked = false;
+        const viewToken = state.agentViewToken;
+        try {
+          const result = await askRequest(`/api/product/ask/runs/${encodeURIComponent(runId)}/continue`, { method: "POST",
+            body: JSON.stringify({ workspace_id: workspaceId, allow_external_provider: allowExternal }) });
+          if (viewToken !== state.agentViewToken) return;
+          renderAskResult(result, viewToken);
+          if (result.status === "INVESTIGATING") pollAsk(result.agent_run_id || runId, workspaceId, viewToken);
+        } catch (error) {
+          const note = document.getElementById("ask-continue-note");
+          if (note) note.textContent = `${error.message} ${error.code || ""}`.trim(); else showAskError(error, viewToken);
+        }
+      }
       else if (action === "reopen-task") {
         const workspaceId = state.workspace.workspace_id;
         const runId = savedTaskRun(workspaceId);

@@ -57,12 +57,18 @@ async function setup(storage = new Map()) {
   const pending = [];
   const submittedBodies = [];
   const polls = [];
+  const continues = [];
+  const continuePending = [];
   const feedbackPosts = [];
   let current = "a";
   const workspaces = [{workspace_id: "a", name: "Atlas"}, {workspace_id: "b", name: "Other"}];
   const response = payload => ({ok: true, status: 200, json: async () => payload});
   async function fetch(path, options = {}) {
     if (path.startsWith("/api/product/feedback/")) return await new Promise(resolve => feedbackPosts.push(payload => resolve(response(payload))));
+    if (path.endsWith("/continue")) {
+      continues.push({path, body: JSON.parse(options.body), method: options.method});
+      return await new Promise(resolve => continuePending.push(payload => resolve(response(payload))));
+    }
     if (path.startsWith("/api/product/ask/runs/")) return await new Promise(resolve => polls.push(payload => resolve(response(payload))));
     if (path === "/api/product/ask") {
       submittedBodies.push(JSON.parse(options.body));
@@ -92,7 +98,7 @@ async function setup(storage = new Map()) {
   element("ask-slot").value = "0";
   element("ask-form").fields = {query: "What is current?", as_of: ""};
   const submit = () => element("page").listeners.submit({preventDefault() {}, target: element("ask-form")});
-  return {element, pending, polls, submit, submittedBodies, feedbackPosts};
+  return {element, pending, polls, continues, continuePending, submit, submittedBodies, feedbackPosts};
 }
 
 (async () => {
@@ -380,5 +386,41 @@ async function setup(storage = new Map()) {
   assert.match(withheldUi.element("ask-result").innerHTML, /Combined answer withheld/);
   assert.match(withheldUi.element("ask-result").innerHTML, /AGGREGATE_QUOTE_HASH_MISMATCH/);
   assert.doesNotMatch(withheldUi.element("ask-result").innerHTML, /A1/);
+  const evilText = "<img src=x onerror=alert(1)>";
+  const resumeUi = await setup();
+  const resumeOperation = resumeUi.submit(); await tick();
+  const resumePayload = JSON.parse(JSON.stringify(parallelPayload));
+  Object.assign(resumePayload.result, {agent_run_id: "run-9", workspace_id: "a"});
+  Object.assign(resumePayload.result.parallel_investigation, {status: "PARTIAL", branch_states: [
+    {branch: "b1", state: "REUSED", reason: "VERIFIED"}, {branch: "b2", state: "UNCERTAIN", reason: "DISPATCHED_NO_RESULT"},
+    {branch: "b3", state: "CONTINUABLE", reason: "NEVER_STARTED"}, {branch: "b4", state: "WITHHELD", reason: evilText, message: evilText},
+    {branch: "b5", state: "RESUME_NOT_SAFE", reason: "SOURCE_CHANGED"}], continuable: ["b3"]});
+  resumeUi.pending[0](resumePayload); await resumeOperation;
+  const resumeHtml = resumeUi.element("ask-result").innerHTML;
+  for (const label of [/Reused from the saved run/, /Uncertain, not sent again/, /Not started, can continue/, /Withheld/, /Cannot be resumed safely/])
+    assert.match(resumeHtml, label);
+  assert.match(resumeHtml, /&lt;img src=x onerror=alert\(1\)&gt;/);
+  assert.doesNotMatch(resumeHtml, /<img/);
+  assert.equal((resumeHtml.match(/data-action="continue-parallel"/g) || []).length, 1);
+  assert.equal(resumeUi.continues.length, 0, "rendering must not send a continue request");
+  resumeUi.element("ask-external").checked = true;
+  const clickContinue = resumeUi.element("page").listeners.click({target: {closest: () => ({dataset: {action: "continue-parallel", runId: "run-9"}})}});
+  await tick();
+  assert.equal(resumeUi.continues.length, 1);
+  assert.equal(resumeUi.continues[0].method, "POST");
+  assert.equal(resumeUi.continues[0].path, "/api/product/ask/runs/run-9/continue");
+  assert.deepEqual(resumeUi.continues[0].body, {workspace_id: "a", allow_external_provider: true});
+  const continued = JSON.parse(JSON.stringify(resumePayload));
+  continued.result.status = "INVESTIGATING";
+  resumeUi.continuePending[0](continued); await clickContinue;
+  const onlyUncertainUi = await setup();
+  const onlyUncertainOperation = onlyUncertainUi.submit(); await tick();
+  const onlyUncertainPayload = JSON.parse(JSON.stringify(resumePayload));
+  Object.assign(onlyUncertainPayload.result.parallel_investigation, {branch_states: [{branch: "b2", state: "UNCERTAIN", reason: "DISPATCHED_NO_RESULT"}], continuable: []});
+  onlyUncertainUi.pending[0](onlyUncertainPayload); await onlyUncertainOperation;
+  assert.match(onlyUncertainUi.element("ask-result").innerHTML, /Uncertain, not sent again/);
+  assert.doesNotMatch(onlyUncertainUi.element("ask-result").innerHTML, /continue-parallel/);
+  assert.equal(onlyUncertainUi.continues.length, 0);
+  console.log("PASS: branch resume states escaped, continue only on explicit click and only for CONTINUABLE");
   console.log("PASS: source trust label, partial/conflict prefix, rejected Final hidden and stale source poll ignored");
 })().catch(error => {console.error(error); process.exitCode = 1;});

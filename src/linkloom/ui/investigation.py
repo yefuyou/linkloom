@@ -25,6 +25,7 @@ from linkloom.scanner import scan_vault
 from linkloom.ui.backend import RuntimeRunBackend
 from linkloom.ui.lifecycle import (
     BackgroundShutdownTimeout, BackgroundTasks, BackgroundWorkStopped, DEFAULT_SHUTDOWN_TIMEOUT, shutdown_deadline)
+from linkloom.ui.branch_budget import _write_json
 from linkloom.ui.product import ProductApplication, ProductApplicationError
 from linkloom.ui.projection import WorkspacePresentationContext
 
@@ -71,6 +72,7 @@ class ProductInvestigationService:
         self.parallel_limits = parallel_limits
         self.branch_planner = bool(branch_planner)
         self._parallel_jobs = {}
+        self._resume_jobs = {}
         self._parallel_workers = BackgroundTasks()
         # Local Host composition only. HTTP/model arguments cannot choose paths.
         self.task_relation_paths = dict(task_relation_paths or {})
@@ -334,6 +336,10 @@ class ProductInvestigationService:
                             self._discard_planning_root(root, job.pool)
                         raise BranchPlanUnavailable()
             if job is not None:
+                # Durable description and pointer before any branch starts, so a restart can read this run.
+                job.save_record(identity, index)
+                _write_json(root.parent / (run_id + '.json'), dict(run_id=run_id, thread_id=run_id,
+                    workspace_id=workspace_id, root=root.name, kind='parallel'))
                 initial = job.snapshot()
                 with self._lock:
                     self._provider_sessions.append(job.pool)
@@ -414,6 +420,186 @@ class ProductInvestigationService:
         pointer = json.loads(path.read_text(encoding='utf8'))
         pointer['ask'] = ask_run
         path.write_text(json.dumps(pointer, ensure_ascii=False), encoding='utf8')
+
+    def save_parallel_ask(self, run_id, ask_run):
+        """Keep the Ask identity next to the pointer so a restarted server can show this run."""
+        path = self._parallel_base() / (run_id + '.json')
+        if run_id in self._parallel_jobs and path.is_file():
+            pointer = json.loads(path.read_text(encoding='utf8'))
+            pointer['ask'] = ask_run
+            _write_json(path, pointer)
+
+    def _parallel_base(self):
+        return Path(self.product_app.repository.database_path).parent / 'work' / 'investigations'
+
+    def _parallel_pointer(self, run_id, workspace_id):
+        """Validated (root, pointer) of a saved parallel run, or None. The caller holds the store lock."""
+        if re.fullmatch(r'ui-parallel-[0-9a-f]{12}', run_id) is None:
+            return None
+        base = self._parallel_base()
+        pointer_path = base / (run_id + '.json')
+        if not pointer_path.is_file() or self.product_app._workspace_id() != workspace_id:
+            return None
+        try:
+            pointer = json.loads(pointer_path.read_text(encoding='utf8'))
+            if (pointer.get('workspace_id') != workspace_id or pointer.get('run_id') != run_id
+                    or pointer.get('kind') != 'parallel' or re.fullmatch(r'[0-9a-f]{12}', pointer['root']) is None
+                    or run_id != 'ui-parallel-' + pointer['root']):
+                return None
+            root = (base / pointer['root']).resolve()
+            if not root.is_relative_to(base.resolve()) or not (root / 'parallel.json').is_file():
+                return None
+        except Exception:
+            return None
+        return root, pointer
+
+    def _ask_of(self, pointer, root, workspace_id):
+        from linkloom.ui.parallel_resume import load_record
+        if isinstance(pointer.get('ask'), dict):
+            return pointer['ask']
+        route = dict(intent='INVESTIGATION', route='INVESTIGATION', code='SOURCE_INVESTIGATION',
+                     reason='The selected decision has two independent investigation plan components.')
+        return dict(query=load_record(root)['query'], workspace_id=workspace_id, scope={}, route=route)
+
+    def _parallel_validator(self, workspace_id, identity):
+        def validate():
+            from linkloom.ui.task_investigation import ProductTaskSources
+            _, current = self.product_app.snapshot_investigation_sources(workspace_id)
+            if ProductTaskSources._identity(current) != identity:
+                raise ValueError('TASK_SOURCE_AUTHORIZATION_CHANGED')
+        return validate
+
+    def read_saved_parallel(self, run_id, workspace_id):
+        """Read a parallel run from its run directory. Never calls a model and never writes there."""
+        with self.product_app._store_lock:
+            found = self._parallel_pointer(run_id, workspace_id)
+            if found is None:
+                return None
+            root, pointer = found
+            try:
+                ask = self._ask_of(pointer, root, workspace_id)
+            except Exception:
+                return None
+            with self._lock:
+                resumed = self._resume_jobs.get(run_id)
+            if resumed is not None and resumed.outcome is None:
+                return ask, resumed.snapshot()
+            return ask, self._cold_parallel(root, run_id, workspace_id, ask.get('query'))
+
+    def _cold_parallel(self, root, run_id, workspace_id, query=None):
+        from linkloom.runtime.models import RunStatus
+        from linkloom.ui import parallel_resume
+        from linkloom.ui.parallel_investigation import render_snapshot
+        root = Path(root)
+        try:
+            record = parallel_resume.load_record(root)
+            workspace = WorkspacePresentationContext(display_name=str(record['workspace']['display_name']),
+                                                     document_count=record['workspace']['document_count'])
+        except Exception:
+            return self._parallel_failure(run_id, 'PARALLEL_STATE_UNREADABLE', query)
+        names = [entry['name'] for entry in record['branches']]
+        validate = self._parallel_validator(workspace_id, record['identity'])
+        stop, outcome, states = None, None, []
+        try:
+            validate()
+        except Exception:
+            stop = ('HARD_ABORT', 'TASK_SOURCE_AUTHORIZATION_CHANGED')
+            states = [dict(branch=name, state=parallel_resume.WITHHELD, reason=stop[1]) for name in names]
+        if stop is None:
+            try:
+                classified = parallel_resume.classify_run(root, record, run_id, self.relation_max_steps)
+            except Exception:
+                return self._parallel_failure(run_id, 'PARALLEL_STATE_UNREADABLE', record['query'], workspace)
+            stop, states = classified['stop'], classified['states']
+            outcome = None if stop else parallel_resume.outcome_of(classified)
+        snapshot = render_snapshot(run_id, record['query'], workspace, stop=stop, outcome=outcome,
+            questions=[entry['question'] for entry in record['branches']], planner=record.get('planner'),
+            source_check=validate, cache={})
+        snapshot['parallel_investigation'].update(branch_states=states, continuable=[
+            item['branch'] for item in states if item['state'] == parallel_resume.CONTINUABLE])
+        return snapshot
+
+    @staticmethod
+    def _parallel_failure(run_id, code, query=None, workspace=None):
+        from linkloom.ui.parallel_investigation import render_snapshot
+        snapshot = render_snapshot(run_id, query or 'Saved parallel investigation',
+            workspace or WorkspacePresentationContext(display_name='Workspace'),
+            stop=None, outcome=dict(status='FAILED', reason=code, results={}, gaps={}, unstarted=0),
+            questions=[], planner=None, source_check=None, cache={})
+        snapshot['parallel_investigation'].update(reason=code, branch_states=[], continuable=[])
+        return snapshot
+
+    def continue_parallel(self, run_id, workspace_id, *, allow_external_provider=False):
+        """Start the branches that never sent a request, once, under their original names."""
+        if self.external_provider and allow_external_provider is not True:
+            raise ProductApplicationError('EXTERNAL_PROVIDER_PERMISSION_REQUIRED',
+                'Allow this bounded external investigation before source text is sent or model costs are incurred.',
+                status=403)
+        try:
+            with self._starts.operation('parallel-continue-' + uuid4().hex[:12]):
+                return self._continue_parallel(run_id, workspace_id)
+        except BackgroundWorkStopped as error:
+            raise ProductApplicationError('APPLICATION_SHUTTING_DOWN', str(error), status=503) from error
+
+    def _continue_parallel(self, run_id, workspace_id):
+        from linkloom.ui import parallel_resume
+        from linkloom.ui.parallel_investigation import ParallelInvestigation
+        if self.model_factory is None or self.task_only or not self.parallel_limits:
+            raise ProductApplicationError('PARALLEL_CONTINUE_UNAVAILABLE',
+                'Continuing a parallel run needs the configured parallel investigation.', status=409)
+        with self.product_app._store_lock:
+            if self.product_app._workspace_id() != workspace_id:
+                raise ProductApplicationError('WORKSPACE_MISMATCH',
+                    'Select the requested workspace before continuing.', status=409)
+            found = self._parallel_pointer(run_id, workspace_id)
+            if found is None:
+                raise ProductApplicationError('RUN_NOT_FOUND', 'The parallel run was not found.', status=404)
+            root, pointer = found
+            with self._lock:
+                active = self._parallel_jobs.get(run_id)
+                if (active is not None and active.outcome is None) or run_id in self._resume_jobs:
+                    raise ProductApplicationError('PARALLEL_RUN_ACTIVE',
+                        'This run is still running or was already continued.', status=409)
+                try:
+                    record = parallel_resume.load_record(root)
+                    validate = self._parallel_validator(workspace_id, record['identity'])
+                    validate()
+                except Exception as error:
+                    raise ProductApplicationError('TASK_SOURCE_AUTHORIZATION_CHANGED',
+                        'The authorized sources changed; ask again.', status=409) from error
+                if (root / 'resumed.json').exists():
+                    raise ProductApplicationError('PARALLEL_ALREADY_RESUMED',
+                        'Each branch is continued at most once.', status=409)
+                try:
+                    classified = parallel_resume.classify_run(root, record, run_id, self.relation_max_steps)
+                    index = (root / record['index']).resolve()
+                    if not index.is_relative_to(root) or not index.is_file():
+                        raise ValueError('INDEX_PATH_INVALID')
+                    names = [item['branch'] for item in classified['states']
+                             if item['state'] == parallel_resume.CONTINUABLE]
+                    entries = {entry['name']: entry for entry in record['branches']}
+                    subplans = [(entries[name]['question'], parallel_resume.plan_of(entries[name], self.relation_max_steps))
+                                for name in names]
+                except Exception as error:
+                    raise ProductApplicationError('PARALLEL_STATE_UNREADABLE',
+                        'The saved parallel run cannot be continued.', status=409) from error
+                if classified['stop']:
+                    raise ProductApplicationError('PARALLEL_RUN_STOPPED',
+                        'The run was stopped; nothing is continued.', status=409)
+                if not names:
+                    raise ProductApplicationError('NO_CONTINUABLE_BRANCH',
+                        'No branch is waiting to start.', status=409)
+                # Recorded before launching: a crash after this point can never start a branch twice.
+                _write_json(root / 'resumed.json', dict(branches=names))
+                workspace = WorkspacePresentationContext(display_name=str(record['workspace']['display_name']),
+                                                         document_count=record['workspace']['document_count'])
+                job = ParallelInvestigation(root / parallel_resume.RESUME_DIR, run_id, record['query'], workspace,
+                    self.parallel_limits, validate, subplans, self.model_factory, root / 'vault', index,
+                    record['source_names'], record['source_versions'], workspace_id, names=names)
+                self._provider_sessions.append(job.pool)
+                self._parallel_workers.start(run_id + '-resume', job.execute)
+                self._resume_jobs[run_id] = job
+            return self._ask_of(pointer, root, workspace_id), job.snapshot()
 
     @staticmethod
     def _task_blocked(run_id, code):
@@ -501,10 +687,18 @@ class ProductInvestigationService:
     def inspect(self, run_id: str) -> dict[str, Any] | None:
         with self._lock:
             parallel = self._parallel_jobs.get(run_id)
+            resumed = self._resume_jobs.get(run_id)
             job = self._jobs.get(run_id)
             if (job and job.task_preparation and job.task_preparation.provider_session
                     and job.task_preparation.provider_session.failure):
                 return self._task_blocked(run_id, job.task_preparation.provider_session.failure)
+        if resumed is not None:
+            with self.product_app._store_lock:
+                if self.product_app._workspace_id() != resumed.workspace_id:
+                    return None
+                if resumed.outcome is None:
+                    return resumed.snapshot()
+                return self._cold_parallel(resumed.root.parent, run_id, resumed.workspace_id)
         if parallel is not None:
             with self.product_app._store_lock:
                 return parallel.snapshot()

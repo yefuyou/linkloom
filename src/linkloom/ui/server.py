@@ -364,6 +364,17 @@ class LinkLoomRequestHandler(BaseHTTPRequestHandler):
             except ProductApplicationError as error:
                 self._send_error_payload(error.status, error.code, str(error))
             return
+        if (self.server.unified_ask is not None and path.startswith("/api/product/ask/runs/")
+                and path.endswith("/continue")):
+            payload = self._read_json_payload(MAX_REQUEST_BYTES)
+            if payload is None:
+                return
+            try:
+                result, status = self.server.unified_ask.continue_run(path.split("/")[-2], payload)
+                self._send_json({"result": result}, status=status)
+            except ProductApplicationError as error:
+                self._send_error_payload(error.status, error.code, str(error))
+            return
         if path.startswith("/api/product/feedback/") and self.server.unified_ask is not None:
             payload = self._read_json_payload(MAX_REQUEST_BYTES)
             if payload is None:

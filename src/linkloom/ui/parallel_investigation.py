@@ -3,6 +3,7 @@
 from copy import deepcopy
 from dataclasses import replace
 import json
+from pathlib import Path
 from threading import Event
 from time import monotonic
 
@@ -10,7 +11,7 @@ from linkloom.runtime.graph import RuntimeEngine
 from linkloom.runtime.models import RunRequest, RunStatus
 from linkloom.runtime.task_plan import TaskPlan, validate_model_proposed_plan
 from linkloom.ui.backend import project_reviewer
-from linkloom.ui.branch_budget import _HARD_FAILURES, BranchBudgetPool, CANCELLED, HARD_ABORT
+from linkloom.ui.branch_budget import _HARD_FAILURES, BranchBudgetPool, CANCELLED, HARD_ABORT, _write_json
 from linkloom.ui.projection import collect_observed_evidence, project_run_snapshot
 
 
@@ -36,6 +37,91 @@ def independent_subplans(plan, max_steps):
     )
 
 
+def render_snapshot(run_id, query, workspace, *, stop, outcome, questions, planner, source_check, cache):
+    """Render the UI snapshot of a parallel run; the live view and the cold (saved) view share this code."""
+    withheld = stop and stop[0] in (HARD_ABORT, CANCELLED)
+    status = 'running' if not withheld and outcome is None else 'failed'
+    reason = stop[1] if withheld else 'PARALLEL_NO_VERIFIED_RESULT'
+    snapshot = project_run_snapshot(query=query, workspace=workspace,
+        status=RunStatus(run_id=run_id, thread_id=run_id,
+            status=status,
+            error=dict(code=reason, category='runtime', message='Parallel investigation stopped.')))
+    if withheld:
+        snapshot['parallel_investigation'] = dict(
+            status='ABORTED' if stop[0] == HARD_ABORT else 'CANCELLED', reason=reason)
+        if stop[0] == CANCELLED:
+            snapshot.update(kind='cancelled', error=None)
+            snapshot['run']['status'] = 'cancelled'
+    elif outcome:
+        results = outcome['results']
+        snapshot['parallel_investigation'] = dict(status=outcome['status'],
+            branches=[row['run'] for row in results.values()], gaps=outcome['gaps'],
+            unstarted=outcome['unstarted'])
+        if results:
+            from linkloom.ui.branch_synthesis import merge_evidence, synthesize_reviewed
+            merged = merge_evidence(results.values())
+            snapshot.update(kind='success' if outcome['status'] == 'COMPLETE' else 'insufficient',
+                            error=None)
+            snapshot['run'].update(status='completed', stage='ready')
+            snapshot['evidence'] = [deepcopy(item) for item in merged.values()]
+            # The answer is composed once per outcome so repeated reads agree. Authorization was
+            # re-validated by the caller on every call, and a withheld snapshot never reaches this branch.
+            if cache.get('answer') is None:
+                cache['answer'] = synthesize_reviewed(
+                    list(results.values()), outcome['gaps'], outcome['unstarted'],
+                    merged, questions, source_check=source_check, review_id=f'{run_id}-aggregate')
+            snapshot['parallel_investigation']['answer'] = deepcopy(cache['answer'])
+    else:
+        snapshot['parallel_investigation'] = dict(status='RUNNING')
+    if planner is not None:
+        snapshot['parallel_investigation']['planner'] = dict(planner)
+    snapshot['read_only'] = True
+    return snapshot
+
+
+def build_branch_row(name, question, plan, status, checkpoint_dir, checkpointer, workspace,
+                     source_versions, source_names):
+    """Turn one completed branch Runtime result into the branch row (run, evidence, conclusion)."""
+    if status.status != 'completed' or not status.result_ref:
+        raise ValueError('PARALLEL_RUNTIME_FAILED')
+    checkpoint_dir = Path(checkpoint_dir)
+    result_path = (checkpoint_dir / status.result_ref).resolve()
+    if not result_path.is_relative_to(checkpoint_dir.resolve()):
+        raise ValueError('PARALLEL_RUNTIME_FAILED')
+    artifact = json.loads(result_path.read_text(encoding='utf-8'))
+    review = project_reviewer(artifact)
+    if review['decision'] != 'evidence_sufficient':
+        raise ValueError('PARALLEL_REVIEW_FAILED')
+    state = checkpointer.load(status.thread_id)
+    snapshot = project_run_snapshot(query=question, workspace=workspace, status=status,
+        result_artifact=artifact, tool_ledger=state.tool_ledger)
+    observed = collect_observed_evidence(state.tool_ledger)
+    evidence = [dict(item, **source_versions[item['relative_path']],
+                     source_name=source_names[item['relative_path']],
+                     content_sha256=observed[item['ref']]['content_sha256'],
+                     quote_sha256=observed[item['ref']]['quote_sha256'])
+                for item in snapshot['evidence']]
+    if not evidence:
+        raise ValueError('PARALLEL_EVIDENCE_MISSING')
+    team = artifact['result']['team_decision']
+    # The artifact carries no structured subject/relation. The key comes from the Host-validated plan:
+    # the exact question of the branch's last subgoal (or the branch question for a single step).
+    # Model text is never used to build it, so equal keys mean the same plan question was asked twice.
+    asked = plan.subgoals[-1].question if plan else question
+    conclusion = dict(question=question, decision=dict(value=team['decision']['value'],
+                          status=team['decision']['status']),
+                      unresolved_items=[item['description'] for item in team['unresolved_items']],
+                      uncertainty=dict(status=team['uncertainty']['status'],
+                                       statement=team['uncertainty']['statement']),
+                      evidence=[{key: item[key] for key in ('source_id', 'source_version', 'line_start',
+                                                            'line_end', 'quote_sha256')}
+                                for item in evidence],
+                      claim_key=dict(subject=asked, relation='subgoal_question'),
+                      claim_value=team['decision']['value'])
+    return dict(run=dict(branch=name, run_id=status.run_id, thread_id=status.thread_id,
+                         review_id=review['review_id']), evidence=evidence, conclusion=conclusion)
+
+
 class _OutputBoundedAdapter:
     def __init__(self, adapter, output_limit):
         self.adapter = adapter
@@ -50,7 +136,8 @@ class _OutputBoundedAdapter:
 
 class ParallelInvestigation:
     def __init__(self, root, run_id, query, workspace, limits, validate, subplans, model_factory,
-                 vault, index, source_names, source_versions, workspace_id, planner=False):
+                 vault, index, source_names, source_versions, workspace_id, planner=False, names=None):
+        self.root = Path(root)
         self.query = query
         self.workspace = workspace
         self.run_id = run_id
@@ -60,6 +147,7 @@ class ParallelInvestigation:
         self.source_names = source_names
         self.workspace_id = workspace_id
         self.subplans = subplans
+        self._names = list(names) if names else None  # a continuation keeps the original branch names
         self.model_factory = model_factory
         # With a Planner, one extra declared slot is billed in the same pool and never published.
         # It reserves only what one Planner request can use, not an equal third of the pool.
@@ -70,7 +158,7 @@ class ParallelInvestigation:
         self.pool = BranchBudgetPool(root, limits, validate, run_id, 2 + 1 if planner else len(subplans),
                                      aux=reserve)
         self.outcome = None
-        self._answer = None
+        self._cache = {}
         self.planner = None  # None: no Planner; else dict(source=LLM|TEMPLATE|NONE, reason=...)
         self._planner_enabled, self._planned = planner, False
 
@@ -144,52 +232,27 @@ class ParallelInvestigation:
             self.pool.parent_validate()
         except Exception:
             self.pool.stop(HARD_ABORT, 'TASK_SOURCE_AUTHORIZATION_CHANGED')
-        stop = self.pool.stop_state
-        outcome = self.outcome
-        withheld = stop and stop[0] in (HARD_ABORT, CANCELLED)
-        status = 'running' if not withheld and outcome is None else 'failed'
-        reason = stop[1] if withheld else 'PARALLEL_NO_VERIFIED_RESULT'
-        snapshot = project_run_snapshot(query=self.query, workspace=self.workspace,
-            status=RunStatus(run_id=self.run_id, thread_id=self.run_id,
-                status=status,
-                error=dict(code=reason, category='runtime', message='Parallel investigation stopped.')))
-        if withheld:
-            snapshot['parallel_investigation'] = dict(
-                status='ABORTED' if stop[0] == HARD_ABORT else 'CANCELLED', reason=reason)
-            if stop[0] == CANCELLED:
-                snapshot.update(kind='cancelled', error=None)
-                snapshot['run']['status'] = 'cancelled'
-        elif outcome:
-            results = outcome['results']
-            snapshot['parallel_investigation'] = dict(status=outcome['status'],
-                branches=[row['run'] for row in results.values()], gaps=outcome['gaps'],
-                unstarted=outcome['unstarted'])
-            if results:
-                from linkloom.ui.branch_synthesis import merge_evidence, synthesize_reviewed
-                merged = merge_evidence(results.values())
-                snapshot.update(kind='success' if outcome['status'] == 'COMPLETE' else 'insufficient',
-                                error=None)
-                snapshot['run'].update(status='completed', stage='ready')
-                snapshot['evidence'] = [deepcopy(item) for item in merged.values()]
-                # The answer is composed once per outcome so repeated reads agree. Authorization was
-                # re-validated above on every call, and a withheld snapshot never reaches this branch.
-                if self._answer is None:
-                    self._answer = synthesize_reviewed(
-                        list(results.values()), outcome['gaps'], outcome['unstarted'],
-                        merged, [q for q, _ in self.subplans],
-                        source_check=self.pool.parent_validate, review_id=f'{self.run_id}-aggregate')
-                snapshot['parallel_investigation']['answer'] = deepcopy(self._answer)
-        else:
-            snapshot['parallel_investigation'] = dict(status='RUNNING')
-        if self.planner is not None:
-            snapshot['parallel_investigation']['planner'] = dict(self.planner)
-        snapshot['read_only'] = True
-        return snapshot
+        return render_snapshot(self.run_id, self.query, self.workspace, stop=self.pool.stop_state,
+            outcome=self.outcome, questions=[q for q, _ in self.subplans], planner=self.planner,
+            source_check=self.pool.parent_validate, cache=self._cache)
+
+    def branch_names(self):
+        return self._names or [f'branch-{number}' for number in range(1, len(self.subplans) + 1)]
+
+    def save_record(self, identity, index):
+        """Durable description of this run (before any branch starts) so a restart can read it cold."""
+        _write_json(self.root / 'parallel.json', dict(schema='parallel-run/v1', query=self.query,
+            workspace_id=self.workspace_id, identity=identity,
+            workspace=dict(display_name=self.workspace.display_name, document_count=self.workspace.document_count),
+            branches=[dict(name=name, question=question, plan=plan.to_dict() if plan else None)
+                      for name, (question, plan) in zip(self.branch_names(), self.subplans)],
+            source_names=self.source_names, source_versions=self.source_versions,
+            index=Path(index).resolve().relative_to(self.root.resolve()).as_posix(),
+            planner=self.planner))
 
     def execute(self):
         try:
-            for number, (question, plan) in enumerate(self.subplans, 1):
-                name = f'branch-{number}'
+            for name, (question, plan) in zip(self.branch_names(), self.subplans):
                 self.pool.launch(name, lambda session, branch=name, q=question, p=plan:
                                  self._execute_branch(branch, q, p, session))
         except Exception:
@@ -216,37 +279,5 @@ class ParallelInvestigation:
             thread_id=f'{self.run_id}-{name}', query=question, workflow='team_decision',
             task_plan=plan.to_dict() if plan else None, planning_mode='template',
             max_steps=turns, max_provider_requests=turns, dry_run=True, caller='product_ui'))
-        if status.status != 'completed' or not status.result_ref:
-            raise ValueError('PARALLEL_RUNTIME_FAILED')
-        artifact = json.loads((engine.checkpoint_dir / status.result_ref).read_text(encoding='utf-8'))
-        review = project_reviewer(artifact)
-        if review['decision'] != 'evidence_sufficient':
-            raise ValueError('PARALLEL_REVIEW_FAILED')
-        state = engine.checkpointer.load(status.thread_id)
-        snapshot = project_run_snapshot(query=question, workspace=self.workspace, status=status,
-            result_artifact=artifact, tool_ledger=state.tool_ledger)
-        observed = collect_observed_evidence(state.tool_ledger)
-        evidence = [dict(item, **self.source_versions[item['relative_path']],
-                         source_name=self.source_names[item['relative_path']],
-                         content_sha256=observed[item['ref']]['content_sha256'],
-                         quote_sha256=observed[item['ref']]['quote_sha256'])
-                    for item in snapshot['evidence']]
-        if not evidence:
-            raise ValueError('PARALLEL_EVIDENCE_MISSING')
-        team = artifact['result']['team_decision']
-        # The artifact carries no structured subject/relation. The key comes from the Host-validated plan:
-        # the exact question of the branch's last subgoal (or the branch question for a single step).
-        # Model text is never used to build it, so equal keys mean the same plan question was asked twice.
-        asked = plan.subgoals[-1].question if plan else question
-        conclusion = dict(question=question, decision=dict(value=team['decision']['value'],
-                              status=team['decision']['status']),
-                          unresolved_items=[item['description'] for item in team['unresolved_items']],
-                          uncertainty=dict(status=team['uncertainty']['status'],
-                                           statement=team['uncertainty']['statement']),
-                          evidence=[{key: item[key] for key in ('source_id', 'source_version', 'line_start',
-                                                                'line_end', 'quote_sha256')}
-                                    for item in evidence],
-                          claim_key=dict(subject=asked, relation='subgoal_question'),
-                          claim_value=team['decision']['value'])
-        return dict(run=dict(branch=name, run_id=status.run_id, thread_id=status.thread_id,
-                             review_id=review['review_id']), evidence=evidence, conclusion=conclusion)
+        return build_branch_row(name, question, plan, status, engine.checkpoint_dir, engine.checkpointer,
+                                self.workspace, self.source_versions, self.source_names)

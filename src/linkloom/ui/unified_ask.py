@@ -504,6 +504,8 @@ class UnifiedAskService:
         pinned = _AskRun(run.query, run.workspace_id, dict(result["scope"]), run.route, result.get("discovery"))
         with self._lock:
             self._runs[snapshot["run"]["id"]] = (pinned, service)
+        service.save_parallel_ask(snapshot["run"]["id"], dict(query=pinned.query, workspace_id=pinned.workspace_id,
+            scope=pinned.scope, route=pinned.route, discovery=pinned.discovery))
         return self._from_snapshot(pinned, snapshot), 202
 
     def _run_graph_request(self, run, payload):
@@ -973,6 +975,21 @@ class UnifiedAskService:
                              category=error.get("classification", "runtime"),
                              status="PROVIDER_UNCERTAIN" if uncertain else "FAILED")
 
+    def continue_run(self, run_id: str, payload: dict[str, Any]) -> tuple[dict[str, Any], int]:
+        """Start the branches of a saved parallel run that never sent a request. Each branch starts at most once."""
+        workspace_id = payload.get("workspace_id")
+        if not isinstance(workspace_id, str):
+            raise ProductApplicationError("WORKSPACE_REQUIRED", "Select a workspace first.", status=409)
+        with self.app._store_lock:
+            self._check_workspace(workspace_id)
+        service = self.investigation()
+        if service is None:
+            raise ProductApplicationError("RUN_NOT_FOUND", "The unified Ask run was not found.", status=404)
+        ask, snapshot = service.continue_parallel(run_id, workspace_id,
+                                                   allow_external_provider=payload.get("allow_external_provider") is True)
+        with self.app._store_lock:
+            return self._from_snapshot(_AskRun(**ask), snapshot), 202
+
     def inspect(self, run_id: str, workspace_id: str) -> tuple[dict[str, Any], int]:
         with self._lock:
             graph_run = self._graph_runs.get(run_id)
@@ -995,6 +1012,8 @@ class UnifiedAskService:
                 self._check_workspace(workspace_id)
                 service = self.investigation()
                 saved = service.read_saved_task(run_id, workspace_id) if service else None
+                if saved is None and service is not None:
+                    saved = service.read_saved_parallel(run_id, workspace_id)
                 if saved is None:
                     raise ProductApplicationError("RUN_NOT_FOUND", "The unified Ask run was not found.", status=404)
                 data, snapshot = saved
