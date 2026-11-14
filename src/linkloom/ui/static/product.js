@@ -804,7 +804,31 @@
       const gaps = Object.entries(parallel.gaps || {}).map(([branch, reason]) =>
         `<li>${escapeHtml(branch)} · ${escapeHtml(reason)}</li>`).join("");
       const evidence = (result.evidence || []).map((item, index) => askEvidence(item, index, locale)).join("");
+      const answer = parallel.answer;
+      const cites = list => (list || []).map(id => `<span class="chip">${escapeHtml(id)}</span>`).join(" ");
+      let synthesis = "";
+      if (answer && answer.published) {
+        const lines = (answer.answers || []).map(row =>
+          `<li><strong>${escapeHtml(row.question)}</strong> ${escapeHtml(row.text)} ${cites(row.citations)}</li>`).join("");
+        const conflicts = (answer.conflicts || []).map(row =>
+          `<li>${escapeHtml(row.subject)} · ${escapeHtml(row.relation)}<ul>${(row.sides || []).map(side =>
+            `<li>${escapeHtml(side.branch)}: ${escapeHtml(side.value)} ${cites(side.citations)}</li>`).join("")}</ul></li>`).join("");
+        const checked = answer.conflict_check?.cross_branch_compared === true && !conflicts
+          ? `<p>${t("No conflicts among the branches that were compared.", "已比较的分支之间无冲突。")}</p>` : "";
+        const unknowns = (answer.unknowns || []).map(row =>
+          `<li>${escapeHtml(row.question || row.branch || "")} · ${escapeHtml(row.reason)}${row.detail ? ` · ${escapeHtml(row.detail)}` : ""}</li>`).join("");
+        synthesis = `<h3>${t("Answer from verified branches", "已核验分支的回答")}</h3>${lines ? `<ul>${lines}</ul>` : ""}
+          ${conflicts ? `<h3>${t("Conflicting results (no winner chosen)", "结论冲突(不选择胜者)")}</h3><ul>${conflicts}</ul>` : ""}
+          ${checked}
+          ${unknowns ? `<h3>${t("Still unknown", "仍未知")}</h3><ul>${unknowns}</ul>` : ""}`;
+      } else if (answer) {
+        const unknowns = (answer.unknowns || []).map(row =>
+          `<li>${escapeHtml(row.question || row.branch || "")} · ${escapeHtml(row.reason)}</li>`).join("");
+        synthesis = `<h3>${t("Combined answer withheld", "未发布合并回答")}</h3>
+          <p>${escapeHtml(answer.fallback_reason || "")}</p>${unknowns ? `<ul>${unknowns}</ul>` : ""}`;
+      }
       target.innerHTML = `<section class="panel ask-answer" role="status"><h2>${title}</h2>
+        ${synthesis}
         ${gaps ? `<h3>${t("Incomplete branches", "未完成的分支")}</h3><ul>${gaps}</ul>` : ""}
         ${evidence}${askTechnical(result, locale, true)}</section>`;
       return;

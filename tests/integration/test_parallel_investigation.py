@@ -171,6 +171,7 @@ def test_scoped_parallel_investigation_uses_two_durable_runtimes(tmp_path, monke
         if mode.startswith("late_"):
             published = service.inspect(run_id)
             assert published["parallel_investigation"]["status"] == "COMPLETE"
+            assert published["parallel_investigation"]["answer"]["published"] is True
             assert len(published["evidence"]) == 3
             if mode == "late_cancel":
                 assert service.cancel_parallel(run_id)
@@ -192,6 +193,7 @@ def test_scoped_parallel_investigation_uses_two_durable_runtimes(tmp_path, monke
             assert sum(receipt[field] for receipt in receipts) <= limit
         if expected in ("ABORTED", "CANCELLED"):
             assert not final["evidence"]
+            assert "answer" not in outcome
             assert all(classify_branch_for_resume(path.parent) == "WITHHELD"
                        for path in root.glob("branches/*/budget.json"))
         else:
@@ -213,6 +215,20 @@ def test_scoped_parallel_investigation_uses_two_durable_runtimes(tmp_path, monke
                 trace = TraceReader(path / "traces")
                 assert trace.read_manifest(state.run_id).complete
                 assert trace.read_events(state.run_id)
+            answer = outcome["answer"]
+            assert answer["published"] is True and answer["fallback_reason"] is None
+            assert answer["conflicts"] == []
+            known = {row["id"] for row in final["evidence"]}
+            assert answer["answers"] and all(row["citations"] and set(row["citations"]) <= known
+                                             for row in answer["answers"])
+            assert {row["question"] for row in answer["answers"]}.isdisjoint({None, ""})
+            assert answer["status"] == ("COMPLETE" if mode == "complete" else "PARTIAL")
+            if mode == "complete":
+                assert len(answer["answers"]) == 2 and answer["unknowns"] == []
+                keys = [row["claim_key"] for row in answer["answers"]]
+                assert all(key and key["subject"] for key in keys) and keys[0] != keys[1]
+            elif mode == "review_rejected":
+                assert [row["reason"] for row in answer["unknowns"]] == ["BRANCH_FAILED"]
             if mode in ("timeout", "uncertain"):
                 assert next(model for model in models.values() if not model.chain).calls == 1
                 assert classify_branch_for_resume(root / "branches" / "branch-2") == "UNCERTAIN"
