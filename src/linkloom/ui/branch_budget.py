@@ -101,10 +101,11 @@ def validate_pool_receipt(root, completed_at=None):
 
 
 class BranchBudgetPool:
-    def __init__(self, root, limits, validate, run_id, branches):
+    def __init__(self, root, limits, validate, run_id, branches, aux=()):
         if type(branches) is not int or branches < 1:
             raise ValueError('positive branch count required')
         self.root, self.run_id, self.parent_validate, self.declared = Path(root), run_id, validate, branches
+        self.aux = frozenset(aux)  # declared slots (the Planner) that bill the pool but never publish
         self.total = remaining_provider_limits(limits)  # router spend is deducted exactly once, here
         self.share = {key: getattr(self.total, key) // branches if key in _KEYS[:3]
                       else getattr(self.total, key) / branches for key in _KEYS}
@@ -276,9 +277,11 @@ class BranchBudgetPool:
             if kind in (None, SOFT_STOP):
                 receipts = validate_pool_receipt(self.root)
                 published = {name: b['result'] for name, b in self.branches.items()
-                             if b['status'] == 'VERIFIED' and receipts.get(name, 'missing') is None}
-            gaps = {name: b['status'] for name, b in self.branches.items() if name not in published}
-            unstarted = self.declared - len(self.branches)
+                             if name not in self.aux and b['status'] == 'VERIFIED'
+                             and receipts.get(name, 'missing') is None}
+            gaps = {name: b['status'] for name, b in self.branches.items()
+                    if name not in published and name not in self.aux}
+            unstarted = self.declared - len(self.aux) - len(gaps) - len(published)
             status = {HARD_ABORT: 'ABORTED', CANCELLED: 'CANCELLED'}.get(kind) or (
                 'COMPLETE' if published and not gaps and unstarted == 0 else 'PARTIAL' if published else 'FAILED')
             return dict(status=status, reason=self.stop_state and self.stop_state[1], results=published,

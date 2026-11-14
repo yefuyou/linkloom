@@ -299,7 +299,8 @@ class UnifiedAskService:
                 service = self.investigation()
                 parallel = (not context and values["subject"] and values["relation"]
                             and service is not None and getattr(service, "parallel_limits", None)
-                            and service.parallel_subplans(run.query)
+                            and (service.parallel_subplans(run.query)
+                                 or getattr(service, "branch_planner_eligible", lambda: False)())
                             and source_context(self.app, run.workspace_id)["source_count"] >= 2)
                 if parallel:
                     as_of, date_error = resolve_query_date(run.query, payload.get("as_of"))
@@ -452,7 +453,9 @@ class UnifiedAskService:
         if service.config()["external_provider"] and payload.get("allow_external_provider") is not True:
             return self._failure(result, "EXTERNAL_PROVIDER_PERMISSION_REQUIRED", "Allow this bounded external investigation before source text is sent or model costs are incurred.", category="permission"), 403
         try:
-            snapshot = service.start_temporal(run.query, run.workspace_id, subject=values["subject"], relation=values["relation"], as_of=view["as_of"])
+            extra = ({"branch_context": lambda: self._router_blocked_entities(run.workspace_id)}
+                     if getattr(service, "branch_planner", False) else {})
+            snapshot = service.start_temporal(run.query, run.workspace_id, subject=values["subject"], relation=values["relation"], as_of=view["as_of"], **extra)
         except ProductApplicationError:
             raise
         except Exception:
