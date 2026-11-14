@@ -77,11 +77,24 @@ def test_conflict_lists_all_sides_without_winner():
 
 def test_same_claim_value_is_not_a_conflict_and_missing_keys_are_reported_uncompared():
     rows, index = _setup()
-    assert _run(rows, index)['conflict_check'] == dict(compared=[], uncompared=['branch-1', 'branch-2'])
+    assert _run(rows, index)['conflict_check'] == dict(
+        cross_branch_compared=False, compared=[], uncompared=['branch-1', 'branch-2'])
     key = dict(subject='Plan', relation='owner')
     rows[0]['conclusion']['claim_key'] = rows[1]['conclusion']['claim_key'] = key
     rows[0]['conclusion']['claim_value'] = rows[1]['conclusion']['claim_value'] = 'Mira'
-    assert _run(rows, index)['conflicts'] == []
+    result = _run(rows, index)
+    assert result['conflicts'] == []
+    assert result['conflict_check'] == dict(cross_branch_compared=True, compared=['branch-1', 'branch-2'], uncompared=[])
+
+
+def test_distinct_keys_are_not_compared_and_text_claims_no_conflict_check():
+    rows, index = _setup()
+    rows[0]['conclusion'].update(claim_key=dict(subject='A', relation='r'), claim_value='x')
+    rows[1]['conclusion'].update(claim_key=dict(subject='B', relation='r'), claim_value='y')
+    result = _run(rows, index)
+    assert result['status'] == 'COMPLETE' and result['conflicts'] == []
+    assert result['conflict_check'] == dict(cross_branch_compared=False, compared=[], uncompared=['branch-1', 'branch-2'])
+    assert 'conflict' not in result['text'].lower()
 
 
 def test_deterministic():

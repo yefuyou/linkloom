@@ -9,11 +9,14 @@ Limits, stated plainly:
   quote text that does not match its hash, a changed source, a citation outside the merged set,
   an unverified operand branch, forbidden fields). They cannot judge whether a quote supports a
   conclusion. That judgement stays with the per-branch Reviewer.
-* Conflicts are decided from structured fields only (conclusion['claim_key'] plus
-  conclusion['claim_value']). Natural language is never compared and no winner is chosen.
-  The branch artifact currently carries no structured subject/relation, so branches without a
-  claim_key are not compared; they are listed under result['conflict_check']['uncompared']
-  instead of being claimed as conflict free.
+* Conflicts are grouped by the structured key conclusion['claim_key'] (subject, relation). Inside a
+  group, the model-written decision values (conclusion['claim_value']) are compared by exact string
+  equality. Two differently worded values with the same meaning are therefore reported as a conflict
+  (conservative). Semantic comparison is out of scope. No winner is chosen.
+* A branch counts as compared only when its key group holds two or more branches. Branches alone in
+  their group, or without a claim_key, are listed under result['conflict_check']['uncompared'], and
+  result['conflict_check']['cross_branch_compared'] is False when no group was compared. COMPLETE
+  means only that every sub question has a verified answer. It does not imply a conflict check.
 """
 
 from datetime import datetime, timezone
@@ -112,11 +115,15 @@ def _compose(rows, gaps, unstarted, evidence_index, questions):
         name = pending[i] if i < len(pending) else None
         unknowns.append(_unknown('BRANCH_UNSTARTED', questions[int(name[7:]) - 1] if name else None, name))
     conflicts = _sides(answers)
-    compared = {a['branch'] for a in answers if a.get('claim_key')}
+    groups = {}
+    for a in answers:
+        if a.get('claim_key'):
+            groups.setdefault((a['claim_key']['subject'], a['claim_key']['relation']), set()).add(a['branch'])
+    compared = {branch for group in groups.values() if len(group) > 1 for branch in group}
     return dict(
         status=_status(answers, unknowns, conflicts, len(rows) + len(gaps) + unstarted),
         answers=answers, conflicts=conflicts, unknowns=unknowns,
-        conflict_check=dict(compared=sorted(compared),
+        conflict_check=dict(cross_branch_compared=bool(compared), compared=sorted(compared),
                             uncompared=sorted(a['branch'] for a in answers if a['branch'] not in compared)))
 
 
