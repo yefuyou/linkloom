@@ -111,14 +111,15 @@ def _rows(payload):
     return rows
 
 
-def _check_grounding(row, scope):
+def _check_grounding(question, entity, time_text, steps, scope):
+    """Check the Host-derived root question of a branch. The model's own branch question is never executed."""
     from linkloom.ui.router_context import blocked_entity_reason
     from linkloom.ui.scope_discovery import resolve_query_date
     from linkloom.ui.structured_router import RouterInvalid, mention_spans, resolve_time_text
-    question, entity, time_text, _ = row
     if not question or not mention_spans(scope.query, entity) or not mention_spans(question, entity):
         raise PlanRejected('PLANNER_ENTITY_NOT_LITERAL')
-    if blocked_entity_reason(question, scope.blocked) or blocked_entity_reason(entity, scope.blocked):
+    if (blocked_entity_reason(entity, scope.blocked)
+            or any(blocked_entity_reason(text, scope.blocked) for text in (question, *(s['question'] for s in steps)))):
         raise PlanRejected('PLANNER_ENTITY_BLOCKED')
     context = SimpleNamespace(query=scope.query, time_options={}, required_as_of=None)
     try:
@@ -133,11 +134,13 @@ def _check_grounding(row, scope):
 
 
 def validate_branch_plan(payload, scope):
-    """Return two (question, TaskPlan | None) pairs, or raise PlanRejected."""
+    """Return two (question, TaskPlan | None) pairs derived by the Host, or raise PlanRejected.
+
+    The model's branch question is only shape-checked. The executed question and plan come from the combined
+    plan that passed validate_model_proposed_plan, exactly as the template path derives them.
+    """
     from linkloom.ui.parallel_investigation import independent_subplans
     rows = _rows(payload)
-    for row in rows:
-        _check_grounding(row, scope)
     goals = [goal for row in rows for goal in row[3]]
     try:
         combined = TaskPlan.from_dict(dict(goal=scope.query.strip(), subgoals=goals))
@@ -147,10 +150,10 @@ def validate_branch_plan(payload, scope):
                                    for (_, plan), row in zip(groups, rows)):
             raise PlanRejected('PLANNER_BRANCHES_DEPENDENT')
         subplans = []
-        for question, _, _, steps in rows:
-            # A single step has no TaskPlan shape (two to five); the combined check above already covered it.
-            plan = (validate_model_proposed_plan(dict(goal=question, subgoals=steps), user_query=question,
-                                                 max_steps=scope.max_steps) if len(steps) > 1 else None)
+        for (question, plan), (_, entity, time_text, steps) in zip(groups, rows):
+            _check_grounding(question, entity, time_text, steps, scope)
+            if plan is not None:  # a single step has no TaskPlan shape; the combined check covered it
+                validate_model_proposed_plan(plan.to_dict(), user_query=question, max_steps=scope.max_steps)
             turns = 2 * len(steps) + 1
             if turns > scope.max_requests or turns > scope.max_output_tokens or turns > scope.max_steps:
                 raise PlanRejected('PLANNER_BUDGET_INSUFFICIENT')

@@ -27,6 +27,10 @@ from linkloom.ui.product import ProductApplication, ProductApplicationError
 from linkloom.ui.projection import WorkspacePresentationContext
 
 
+class BranchPlanUnavailable(Exception):
+    """No two-branch plan was accepted; the caller keeps the routing it would use without the Planner."""
+
+
 @dataclass
 class _InvestigationJob:
     temporary_root: TemporaryDirectory[str] | None
@@ -192,7 +196,8 @@ class ProductInvestigationService:
         workspace, sources = self.product_app.snapshot_investigation_sources(workspace_id)
         subplans = (self.parallel_subplans(query)
                     if temporal_scope is not None and len(sources) >= 2 else ())
-        planner = temporal_scope is not None and len(sources) >= 2 and self.branch_planner_eligible()
+        planner = (temporal_scope is not None and branch_context is not None and len(sources) >= 2
+                   and self.branch_planner_eligible())
         task_models, outer_model = self.task_models, None
         temporal_view_holder: dict[str, Any] | None = None
         if temporal_scope is not None:
@@ -319,8 +324,8 @@ class ProductInvestigationService:
                     # The single model call of this request; routing never reaches the Provider.
                     job.plan(temporal_scope[2], self.relation_max_steps, branch_context)
                     if not job.subplans and not job.pool.stop_state:
-                        job.pool.close()  # nothing usable: continue on the ordinary single path
-                        job = None
+                        job.pool.close()  # nothing usable: the caller continues on its ordinary path
+                        raise BranchPlanUnavailable()
             if job is not None:
                 initial = job.snapshot()
                 with self._lock:

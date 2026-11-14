@@ -20,7 +20,7 @@ import json
 import os
 from pathlib import Path
 import re
-from threading import Lock, RLock
+from threading import Event, Lock, RLock
 from time import monotonic
 
 from linkloom.ui.lifecycle import BackgroundShutdownTimeout, BackgroundTasks, shutdown_deadline
@@ -149,17 +149,44 @@ class BranchBudgetPool:
             if branch['session'] is not None:
                 branch['session'].close(deadline=deadline)
 
-    def _slice(self):
+    def skip_aux(self, name):
+        """The declared auxiliary slot will not run: its share goes back to the real branches."""
+        with self._lock:
+            if name in self.aux and name not in self.branches:
+                self.aux = self.aux - {name}
+                self.declared -= 1
+
+    def wait_settled(self, name, timeout=None):
+        """Block until a launched branch thread has recorded its outcome and returned any unused slice."""
+        with self._lock:
+            branch = self.branches.get(name)
+        return branch is None or branch['settled'].wait(timeout)
+
+    def _share(self, name):
+        if not self.aux or name in self.aux:
+            return self.share
+        # With a Planner the pool is shared again once it is done: split what is really available
+        # among the branches that are still to start, so an unused Planner reserve is not stranded.
+        left = max(1, self.declared - len(self.branches))
+        return {key: self.available[key] // left if key in _KEYS[:3] else self.available[key] / left
+                for key in _KEYS}
+
+    def _slice(self, name, max_seconds=None):
         seconds = self.total.max_seconds - (monotonic() - self.started)
-        cut = {key: min(self.share[key], self.available[key]) for key in _KEYS}
+        if max_seconds is not None:
+            seconds = min(seconds, max_seconds)
+        share = self._share(name)
+        cut = {key: min(share[key], self.available[key]) for key in _KEYS}
         if (seconds <= 0 or min(cut[key] for key in _KEYS[:3]) < 1
                 or cut['max_cost_usd'] < self.total.request_cost_upper_bound_usd):
             return None  # would violate TaskProviderLimits; never build a zero-budget session
         return replace(self.total, **cut, max_seconds=seconds,
                        request_timeout_seconds=min(self.total.request_timeout_seconds, seconds))
 
-    def launch(self, name, work):
-        """Run work(session) on its own thread and session; returns the branch status."""
+    def launch(self, name, work, *, max_seconds=None):
+        """Run work(session) on its own thread and session; returns the branch status.
+
+        max_seconds optionally caps this child's lifetime below the remaining pool time."""
         if not _NAME.fullmatch(name):
             raise ValueError('invalid branch name')
         with self._lock:
@@ -169,10 +196,10 @@ class BranchBudgetPool:
                 raise ValueError('more branches than declared')  # no slice, no journal entry
             if self.stop_state:
                 return 'NOT_STARTED'
-            limits = self._slice()
+            limits = self._slice(name, max_seconds)
             branch = self.branches[name] = dict(status='INSUFFICIENT_BUDGET' if limits is None else 'RUNNING',
                 slice=None if limits is None else {key: getattr(limits, key) for key in _KEYS},
-                held=None, result=None, session=None)
+                held=None, result=None, session=None, settled=Event())
             if limits is None:
                 self._save()
                 return branch['status']
@@ -201,6 +228,12 @@ class BranchBudgetPool:
         return 'RUNNING'
 
     def _run(self, name, work):
+        try:
+            self._run_branch(name, work)
+        finally:
+            self.branches[name]['settled'].set()
+
+    def _run_branch(self, name, work):
         branch = self.branches[name]
         try:
             result, failed = work(branch['session']), False

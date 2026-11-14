@@ -10,7 +10,7 @@ from linkloom.runtime.graph import RuntimeEngine
 from linkloom.runtime.models import RunRequest, RunStatus
 from linkloom.runtime.task_plan import TaskPlan, validate_model_proposed_plan
 from linkloom.ui.backend import project_reviewer
-from linkloom.ui.branch_budget import _HARD_FAILURES, BranchBudgetPool, CANCELLED, HARD_ABORT, SOFT_STOP
+from linkloom.ui.branch_budget import _HARD_FAILURES, BranchBudgetPool, CANCELLED, HARD_ABORT
 from linkloom.ui.projection import collect_observed_evidence, project_run_snapshot
 
 
@@ -73,18 +73,21 @@ class ParallelInvestigation:
         if not self._planner_enabled or self._planned:
             raise RuntimeError('PLANNER_CALL_NOT_ALLOWED')
         self._planned = True
-        from linkloom.ui.branch_planner import PlanRejected, PlannerScope, plan_branches
+        from linkloom.ui.branch_planner import PLANNER_OUTPUT_TOKENS, PlanRejected, PlannerScope, plan_branches
         found, done, bound = {}, Event(), {}
         try:  # read on the caller's thread: the store lock is held by the request, not by the pool thread
             blocked = tuple(blocked_entities())  # a missing provider fails closed
         except Exception:
             blocked = None
+        # A branch can only use what the pool still has after the Planner took its one request.
+        total = self.pool.total
+        branch_requests = (total.max_requests - 1) // 2
+        branch_output = (total.max_output_tokens - PLANNER_OUTPUT_TOKENS) // 2
 
         def work(session):
             try:
                 bound['session'] = session
-                scope = PlannerScope(self.query, as_of, max_steps, blocked,
-                    int(self.pool.share['max_requests']), int(self.pool.share['max_output_tokens']))
+                scope = PlannerScope(self.query, as_of, max_steps, blocked, branch_requests, branch_output)
                 found['plan'] = plan_branches(session.bind(self.model_factory(self.query), 'plan'), scope)
             except PlanRejected as error:
                 found['reason'] = str(error)
@@ -97,30 +100,32 @@ class ParallelInvestigation:
         # The request thread may hold the store lock that the parent validation needs. Validate on this
         # thread before and after the call; the pool thread skips it while this thread waits.
         parent, status = self.pool.parent_validate, 'CONTEXT_UNAVAILABLE'
-        timed_out = False
         try:
             if blocked is not None:
                 parent()
                 self.pool.parent_validate = lambda: None
-                status = self.pool.launch('planner', work)
+                # The Planner has its own shorter time limit (session and request). The session enforces it,
+                # so done is always set; a timeout is a Planner-local failure and never stops the pool.
+                status = self.pool.launch('planner', work, max_seconds=total.max_seconds / 4)
                 if status == 'RUNNING':
-                    if not done.wait(self.pool.total.max_seconds):
-                        # Stop first so a late `_validated` raises before reaching the store-locked validator.
-                        self.pool.stop(SOFT_STOP, 'PLANNER_TIMEOUT')
-                        timed_out = True
+                    done.wait()
+                    self.pool.wait_settled('planner')  # the unused reserve is back in the pool
                     parent()
         except Exception:
             self.pool.stop(HARD_ABORT, 'TASK_SOURCE_AUTHORIZATION_CHANGED')
             status = 'STOPPED'
         finally:
             self.pool.parent_validate = parent
-        if timed_out:  # the worker may still write `found`; ignore it from here on
-            found = dict(reason='PLANNER_TIMEOUT')
         session = bound.get('session')
         if session is not None and session.failure in _HARD_FAILURES:
             self.pool.stop(HARD_ABORT, session.failure)
+        if session is not None and session.failure == 'PROVIDER_TIMEOUT_UNCERTAIN':
+            found.pop('plan', None)
+            found['reason'] = 'PLANNER_TIMEOUT'
         if status != 'RUNNING':
             found['reason'] = 'PLANNER_' + status
+        if 'planner' not in self.pool.branches:
+            self.pool.skip_aux('planner')
         if found.get('plan') and not self.pool.stop_state:
             self.subplans, self.planner = found['plan'], dict(source='LLM', reason=None)
         else:
