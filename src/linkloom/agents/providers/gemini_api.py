@@ -857,6 +857,9 @@ def build_gemini_request(
         config["thinking_config"] = {
             "thinking_level": options.thinking_level.upper()
         }
+    if options.response_json_schema is not None:
+        config["response_mime_type"] = "application/json"
+        config["response_json_schema"] = deepcopy(options.response_json_schema)
 
     payload = {
         "model": model_id,

@@ -142,6 +142,10 @@ def main() -> int:
 
     extractor = None
     sdk_client = None
+
+    def gemini_adapter(**options):
+        # Every product call shares the one SDK client and model selection.
+        return GeminiProviderAdapter(GeminiSDKClientBridge(sdk_client), model_id=args.model, **options)
     if args.offline_task_demo:
         from linkloom.ui.offline_task_demo import build_offline_task_demo
         default_database = str(Path.home() / ".linkloom" / "product.sqlite")
@@ -165,10 +169,7 @@ def main() -> int:
                     timeout=round(task_limits.request_timeout_seconds * 1000),
                     retry_options=dict(attempts=1)) if task_limits else
                     {"timeout": 180000, "retry_options": {"attempts": 1}} if meeting_mode else None))
-                provider = GeminiProviderAdapter(
-                    GeminiSDKClientBridge(sdk_client),
-                    model_id=args.model,
-                )
+                provider = gemini_adapter()
             except (ImportError, TypeError, ValueError, ValidationError):
                 parser.error(
                     'Gemini provider could not be initialized. Install the provider dependency with '
@@ -202,8 +203,7 @@ def main() -> int:
             from linkloom.semantic_ingestion.task_extraction import TaskExtractionConfig
             config = TaskExtractionConfig(task_extraction_mode=args.task_extraction_mode)
             meeting_options = dict(task_extraction_config=config, meeting_speakers=meeting_speakers,
-                meeting_adapter=GeminiProviderAdapter(GeminiSDKClientBridge(sdk_client), model_id=args.model,
-                                                     max_input_bytes=config.max_input_bytes),
+                meeting_adapter=gemini_adapter(max_input_bytes=config.max_input_bytes),
                 meeting_request_guard=lambda request: authorize_request(request) is not None)
         product_app = ProductApplication(database_path=args.database, extractor=extractor, **meeting_options)
         if task_limits:
@@ -214,9 +214,7 @@ def main() -> int:
         elif args.allow_temporal_agent:
             investigation_service = ProductInvestigationService(
                 product_app,
-                model_factory=lambda _query: GeminiProviderAdapter(
-                    GeminiSDKClientBridge(sdk_client), model_id=args.model,
-                ),
+                model_factory=lambda _query: gemini_adapter(),
                 run_mode="GEMINI_38_FLASH_EXPLICIT",
                 max_steps=8,
             )

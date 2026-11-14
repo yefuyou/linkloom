@@ -8,6 +8,9 @@ from urllib.request import HTTPRedirectHandler, Request, build_opener
 
 from linkloom.agents.model_adapter import ModelAction, ModelResponse, ModelUsage
 from linkloom.agents.providers.deepseek_api import DeepSeekProviderAdapter
+from linkloom.agents.providers.gemini_api import (
+    GEMINI_38_FLASH_MODEL_ID, build_gemini_request, build_gemini_sdk_client,
+)
 from linkloom.ui.structured_router import (
     CAPABILITY, CONFIG, INTENTS, PROMPT, SAFETY, TIME_ROLES, _reject_constant, _unique_object, routing_domain,
 )
@@ -178,13 +181,12 @@ class GeminiRouterAdapter:
             raise ValueError("ROUTER_PROMPT_MISMATCH")
         context = json.loads(request.user_input[len(prompt):])
         tool = submission(context)["function"]
-        response = self.client.models.generate_content(
-            model="gemini-3.8-flash", contents=request.user_input,
-            config=dict(response_mime_type="application/json", response_json_schema=tool["parameters"],
-                        thinking_config={"thinking_level": "LOW"},
-                        max_output_tokens=request.generation_options.max_output_tokens,
-                        automatic_function_calling={"disable": True}),
-        )
+        # Business differences travel as request options; the shared Gemini request mapping builds the call.
+        options = replace(request.generation_options, temperature=None, thinking_level="low",
+                          response_json_schema=tool["parameters"])
+        payload = build_gemini_request(replace(request, model_id=GEMINI_38_FLASH_MODEL_ID, generation_options=options),
+                                       configured_model_id=GEMINI_38_FLASH_MODEL_ID)
+        response = self.client.models.generate_content(**payload)
         raw = response.model_dump(mode="json", exclude_none=True)
         candidates = raw.get("candidates") or []
         finish = candidates[0].get("finish_reason") if len(candidates) == 1 else None
@@ -236,10 +238,8 @@ def configured_router():
         key = os.environ.get("GEMINI_API_KEY", "").strip()
         if not key:
             return RouterProvider(None, external_provider=True, mode=mode)
-        from google import genai
-        from google.genai import types
-        client = genai.Client(api_key=key, http_options=types.HttpOptions(
-            timeout=CONFIG["timeout_seconds"] * 1000, retry_options=types.HttpRetryOptions(attempts=1)))
+        client = build_gemini_sdk_client(key, http_options_kwargs=dict(
+            timeout=CONFIG["timeout_seconds"] * 1000, retry_options=dict(attempts=1)))
         return RouterProvider(GeminiRouterAdapter(client), external_provider=True, mode=mode,
                               security_adapter=GeminiRouterAdapter(client, purpose="security"))
     key = os.environ.get("DEEPSEEK_API_KEY", "").strip()

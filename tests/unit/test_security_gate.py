@@ -164,6 +164,8 @@ def test_gemini_security_uses_json_schema_and_reports_truncation(finish, text, c
         assert config['response_mime_type'] == 'application/json'
         assert config['response_json_schema']['required'] == ['reason_code']
         assert config['thinking_config'] == {'thinking_level': 'LOW'}
+        assert config['automatic_function_calling'] == {'disable': True}
+        assert args['model'] == 'gemini-3.8-flash'
         assert config['max_output_tokens'] == CONFIG['security_max_output_tokens'] == 2048
         return SimpleNamespace(text=text, model_dump=lambda **_: dict(
             candidates=[dict(finish_reason=finish)], usage_metadata=dict(
@@ -180,6 +182,19 @@ def test_gemini_security_uses_json_schema_and_reports_truncation(finish, text, c
         assert classify(adapter, request, record=record)['decision'] == 'ALLOW'
     assert record['provider_reply'] == dict(finish_reason=finish, thinking_tokens=120,
                                            visible_output_tokens=8, output_tokens=128, input_tokens=100)
+
+
+def test_gemini_router_client_uses_the_shared_sdk_entry(monkeypatch):
+    seen = {}
+    monkeypatch.setenv('LINKLOOM_LLM_ROUTER', 'llm_first')
+    monkeypatch.setenv('LINKLOOM_ROUTER_PROVIDER', 'gemini')
+    monkeypatch.setenv('GEMINI_API_KEY', 'offline-placeholder')
+    monkeypatch.setattr('linkloom.ui.router_provider.build_gemini_sdk_client',
+                        lambda key, **kwargs: seen.update(key=key, **kwargs) or object())
+    provider = configured_router()
+    assert seen['key'] == 'offline-placeholder'
+    assert seen['http_options_kwargs'] == dict(timeout=CONFIG['timeout_seconds'] * 1000, retry_options=dict(attempts=1))
+    assert provider.adapter.client is provider.security_adapter.client
 
 
 def test_deepseek_security_length_keeps_provider_usage():
