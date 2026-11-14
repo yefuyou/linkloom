@@ -80,7 +80,8 @@ class MeetingProvider:
 @pytest.mark.parametrize("mode,expected", [
     ("complete", "COMPLETE"), ("partial", "PARTIAL"), ("uncertain", "PARTIAL"),
     ("timeout", "PARTIAL"), ("hard", "ABORTED"), ("cancel", "CANCELLED"),
-    ("source_change", "ABORTED"),
+    ("source_change", "ABORTED"), ("review_rejected", "PARTIAL"),
+    ("late_source_change", "ABORTED"), ("late_cancel", "CANCELLED"),
 ])
 def test_scoped_parallel_investigation_uses_two_durable_runtimes(tmp_path, monkeypatch, mode, expected):
     monkeypatch.setenv("LINKLOOM_RETRIEVAL_MODE", "bm25")
@@ -112,6 +113,20 @@ def test_scoped_parallel_investigation_uses_two_durable_runtimes(tmp_path, monke
             model = MeetingProvider(question, barrier, mode, release)
             models[question] = model
             return model
+
+        if mode == "review_rejected":
+            # The Runtime already fails a Team Decision run whose Reviewer decision is not
+            # evidence_sufficient, so no Provider output reaches this gate with a real rejection.
+            # Reject branch-2's artifact (the single-fact branch) at the Reviewer projection instead.
+            from linkloom.ui import parallel_investigation
+            project_reviewer = parallel_investigation.project_reviewer
+
+            def reject_single_fact(artifact):
+                review = project_reviewer(artifact)
+                value = artifact["result"]["team_decision"]["decision"]["value"]
+                return dict(review, decision="evidence_insufficient") if value == FACTS[0] else review
+
+            monkeypatch.setattr(parallel_investigation, "project_reviewer", reject_single_fact)
 
         limits = TaskProviderLimits(14, 2_000_000, 60_000, 3.0, 20, 1 if mode == "timeout" else 10, .01)
         service = ProductInvestigationService(app, model_factory=factory, external_provider=False,
@@ -153,6 +168,15 @@ def test_scoped_parallel_investigation_uses_two_durable_runtimes(tmp_path, monke
                 pytest.fail("Timed-out Provider request was not durably recorded")
         release.set()
         service.close(timeout=25)
+        if mode.startswith("late_"):
+            published = service.inspect(run_id)
+            assert published["parallel_investigation"]["status"] == "COMPLETE"
+            assert len(published["evidence"]) == 3
+            if mode == "late_cancel":
+                assert service.cancel_parallel(run_id)
+            else:
+                with app._store_lock:
+                    app.repository.create_workspace("Different workspace")
         final = service.inspect(run_id)
         outcome = final["parallel_investigation"]
         assert outcome["status"] == expected, json.dumps(dict(outcome=outcome,
@@ -179,6 +203,8 @@ def test_scoped_parallel_investigation_uses_two_durable_runtimes(tmp_path, monke
             assert len({row["source_id"] for row in final["evidence"]}) == 3
             assert outcome["gaps"] == ({} if mode == "complete" else {
                 "branch-2": "UNCERTAIN" if mode in ("timeout", "uncertain") else "FAILED"})
+            assert [row["branch"] for row in outcome["branches"]] == (
+                ["branch-1", "branch-2"] if mode == "complete" else ["branch-1"])
             for branch in outcome["branches"]:
                 path = root / "branches" / branch["branch"]
                 state = SQLiteCheckpointer(path / "runtime").load(branch["thread_id"])
