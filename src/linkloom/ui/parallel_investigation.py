@@ -268,6 +268,7 @@ class ParallelInvestigation:
     def _execute_branch(self, name, question, plan, session):
         turns = 2 * len(plan.subgoals) + 1 if plan else 3
         if session.limits.max_requests < turns or session.limits.max_output_tokens < turns:
+            session._error('TASK_PROVIDER_BUDGET_EXHAUSTED')
             raise ValueError('PARALLEL_BRANCH_BUDGET_INSUFFICIENT')
         adapter = _OutputBoundedAdapter(session.bind(self.model_factory(question), 'runtime'),
                                         min(4096, session.limits.max_output_tokens // turns))

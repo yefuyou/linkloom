@@ -543,6 +543,7 @@ class ProductInvestigationService:
 
     def _continue_parallel(self, run_id, workspace_id):
         from linkloom.ui import parallel_resume
+        from linkloom.ui.branch_budget import continuation_limits
         from linkloom.ui.parallel_investigation import ParallelInvestigation
         if self.model_factory is None or self.task_only or not self.parallel_limits:
             raise ProductApplicationError('PARALLEL_CONTINUE_UNAVAILABLE',
@@ -589,12 +590,26 @@ class ProductInvestigationService:
                 if not names:
                     raise ProductApplicationError('NO_CONTINUABLE_BRANCH',
                         'No branch is waiting to start.', status=409)
-                # Recorded before launching: a crash after this point can never start a branch twice.
-                _write_json(root / 'resumed.json', dict(branches=names))
+                try:
+                    limits = continuation_limits(root, run_id, self.parallel_limits)
+                except (OSError, ValueError, KeyError, TypeError) as error:
+                    raise ProductApplicationError('PARALLEL_STATE_UNREADABLE',
+                        'The saved parallel budget cannot be verified.', status=409) from error
+                if limits is None or not any(
+                        min(limits.max_requests, limits.max_output_tokens) // len(names)
+                        >= (2 * len(plan.subgoals) + 1 if plan else 3)
+                        for _, plan in subplans):
+                    raise ProductApplicationError('TASK_PROVIDER_BUDGET_EXHAUSTED',
+                        'The original investigation has insufficient remaining Provider budget.', status=409)
+                try:
+                    parallel_resume.claim_continuation(root, names)
+                except FileExistsError as error:
+                    raise ProductApplicationError('PARALLEL_ALREADY_RESUMED',
+                        'Each branch is continued at most once.', status=409) from error
                 workspace = WorkspacePresentationContext(display_name=str(record['workspace']['display_name']),
                                                          document_count=record['workspace']['document_count'])
                 job = ParallelInvestigation(root / parallel_resume.RESUME_DIR, run_id, record['query'], workspace,
-                    self.parallel_limits, validate, subplans, self.model_factory, root / 'vault', index,
+                    limits, validate, subplans, self.model_factory, root / 'vault', index,
                     record['source_names'], record['source_versions'], workspace_id, names=names)
                 self._provider_sessions.append(job.pool)
                 self._parallel_workers.start(run_id + '-resume', job.execute)

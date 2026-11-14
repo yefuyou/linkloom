@@ -7,6 +7,7 @@ gap and is never resent, and only a branch that never sent a request can be cont
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 
 from linkloom.runtime.models import RunStatus
@@ -45,6 +46,14 @@ def resumed_names(root, names):
         return frozenset(listed)
     except Exception:
         return frozenset(names)
+
+
+def claim_continuation(root, names):
+    """Keep the exclusive marker even if its writer is interrupted."""
+    with (Path(root) / 'resumed.json').open('x', encoding='utf8') as stream:
+        json.dump(dict(branches=names), stream)
+        stream.flush()
+        os.fsync(stream.fileno())
 
 
 def plan_of(entry, max_steps):

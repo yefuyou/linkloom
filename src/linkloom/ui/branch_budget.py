@@ -23,9 +23,11 @@ import re
 from threading import Event, Lock, RLock
 from time import monotonic
 
+from linkloom.runtime.errors import ValidationError
 from linkloom.ui.lifecycle import BackgroundShutdownTimeout, BackgroundTasks, shutdown_deadline
 from linkloom.ui.task_provider import (
-    TaskProviderSession, pass_router_reservation, remaining_provider_limits, validate_task_provider_receipt)
+    TaskProviderLimits, TaskProviderSession, _validate_provider_budget, pass_router_reservation,
+    remaining_provider_limits, validate_task_provider_receipt)
 
 HARD_ABORT, SOFT_STOP, CANCELLED = 'HARD_ABORT', 'SOFT_STOP', 'CANCELLED'
 _RANK = {SOFT_STOP: 1, CANCELLED: 2, HARD_ABORT: 3}
@@ -98,6 +100,64 @@ def validate_pool_receipt(root, completed_at=None):
         except Exception as exc:
             verdicts[name] = str(exc) or type(exc).__name__
     return verdicts
+
+
+def continuation_limits(root, run_id, configured):
+    """Subtract historical usage and outstanding reservations from the original pool."""
+    root = Path(root)
+    journal = json.loads((root / 'pool.json').read_text(encoding='utf8'))
+    total = TaskProviderLimits(**journal['total'])
+    if journal['run_id'] != run_id:
+        raise ValueError('PARALLEL_POOL_ID_MISMATCH')
+    allocated = dict.fromkeys(_KEYS, 0)
+    used = dict.fromkeys(_KEYS, 0)
+    for name, allocation in journal['branches'].items():
+        if not _NAME.fullmatch(name):
+            raise ValueError('PARALLEL_POOL_ALLOCATION_INVALID')
+        cut = allocation['slice']
+        if cut is None and allocation['status'] == 'INSUFFICIENT_BUDGET':
+            continue
+        child = replace(total, **{key: cut[key] for key in _KEYS})
+        # A successful Planner can release most of its slice before the real branches
+        # are allocated. The journal's slices therefore need not sum to the total.
+        held = replace(total, **(allocation['held'] or cut))
+        for key in _KEYS:
+            if not getattr(held, key) <= getattr(child, key) <= getattr(total, key):
+                raise ValueError('PARALLEL_POOL_ALLOCATION_INVALID')
+            allocated[key] += getattr(held, key)
+        try:
+            budget = json.loads((root / 'branches' / name / 'budget.json').read_text(encoding='utf8'))
+            limits = TaskProviderLimits(**budget['limits'])
+            if replace(limits, max_seconds=total.max_seconds,
+                       request_timeout_seconds=total.request_timeout_seconds) != child:
+                raise ValueError('PARALLEL_POOL_RECEIPT_MISMATCH')
+            started = datetime.fromisoformat(budget['started_at'])
+            completed = datetime.fromtimestamp(started.timestamp() + budget['elapsed_seconds'], UTC)
+            _validate_provider_budget(budget, completed.isoformat())
+        except (OSError, ValueError, KeyError, TypeError, OverflowError, ValidationError):
+            for key in _KEYS:
+                used[key] += getattr(held, key)
+            continue
+        for row in budget['attempts']:
+            usage = row.get('usage', {})
+            actual = (row['outcome'] == 'SUCCEEDED' and usage.get('input_tokens') is not None
+                      and usage.get('output_tokens') is not None)
+            inputs = usage['input_tokens'] if actual else row['input_reserved']
+            outputs = usage['output_tokens'] if actual else row['output_reserved']
+            used['max_requests'] += 1
+            used['max_input_tokens'] += inputs
+            used['max_output_tokens'] += outputs
+            used['max_cost_usd'] += ((inputs * limits.input_usd_per_million
+                                     + outputs * limits.output_usd_per_million) / 1e6
+                                    if actual else row['cost_reserved_usd'])
+    if any(allocated[key] > getattr(total, key) for key in _KEYS[:3]) or (
+            allocated['max_cost_usd'] > total.max_cost_usd + 1e-10):
+        raise ValueError('PARALLEL_POOL_ALLOCATION_INVALID')
+    remaining = {key: min(getattr(configured, key), getattr(total, key) - used[key]) for key in _KEYS}
+    if (min(remaining[key] for key in _KEYS[:3]) < 1
+            or remaining['max_cost_usd'] < configured.request_cost_upper_bound_usd):
+        return None
+    return replace(configured, **remaining)
 
 
 class BranchBudgetPool:
@@ -283,6 +343,7 @@ class BranchBudgetPool:
                 else:
                     pending = any(o in ('PENDING', 'UNCERTAIN') for o in outcomes)
                     branch['status'] = ('UNCERTAIN' if pending or not closed else
+                                        'INSUFFICIENT_BUDGET' if session.failure == 'TASK_PROVIDER_BUDGET_EXHAUSTED' else
                                         'NO_REQUESTS' if not failed and session.failure is None and not outcomes else 'FAILED')
             self._save()
 
