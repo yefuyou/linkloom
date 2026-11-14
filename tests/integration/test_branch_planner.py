@@ -55,14 +55,15 @@ def variant(name):
 
 
 class PlannerProvider:
-    def __init__(self, behavior):
+    def __init__(self, behavior, hold=30):
+        self.hold = hold
         self.behavior, self.calls, self.requests, self.release = behavior, 0, [], Event()
 
     def complete(self, request):
         self.calls += 1
         self.requests.append(request)
         if self.behavior == "hang":  # outlives the Planner's own time limit; released by the test
-            self.release.wait(2.5)  # returns after the Planner's own limit (1 s of a 4 s pool), as a late Provider would
+            self.release.wait(self.hold)  # outlives the Planner's own limit (5 s of a 20 s pool) until the test releases it; hold only guards against a hang
             raise RuntimeError("returned after the Planner time limit")
         if self.behavior == "raise":
             raise RuntimeError("synthetic transport failure")
@@ -75,8 +76,9 @@ class PlannerProvider:
 
 
 def run_ask(tmp_path, monkeypatch, behavior, *, flag=True, query=QUESTION, expect_parallel=True, requests=21,
-            seconds=20, external=False, as_of="2025-02-20", subject="Launch", relation="uses supplier"):
+            seconds=20, external=False, as_of="2025-02-20", subject="Launch", relation="uses supplier", hold=30):
     monkeypatch.setenv("LINKLOOM_RETRIEVAL_MODE", "bm25")
+    planner = PlannerProvider(behavior, hold)
     base, server, worker, app = _start_product_server(tmp_path, [
         _claim("Cobalt B"), _claim("Cobalt B", claim_type="PROPOSAL"),
         _claim("Cobalt B", claim_type="PROPOSAL"), _claim("Cobalt B", claim_type="PROPOSAL")])
@@ -96,7 +98,7 @@ def run_ask(tmp_path, monkeypatch, behavior, *, flag=True, query=QUESTION, expec
             _wait_source(base, imported["source"]["source_id"])
         overlapped, release = Event(), Event()
         barrier = Barrier(2, action=overlapped.set)
-        planner, branches, asked = PlannerProvider(behavior), [], []
+        branches, asked = [], []
 
         def factory(question):
             if question == query and not planner.calls and not branches and not asked:
@@ -132,6 +134,7 @@ def run_ask(tmp_path, monkeypatch, behavior, *, flag=True, query=QUESTION, expec
         out["service"] = service
         return out
     finally:
+        planner.release.set()  # a Provider still waiting must never outlive a failed request
         _stop_product_server(server, worker, app)
 
 
@@ -445,7 +448,7 @@ def test_uncertain_planner_keeps_its_reserve_and_branches_still_get_their_share(
 
 
 def test_planner_that_times_out_leaves_room_for_the_template_branches_at_twenty_requests(tmp_path, monkeypatch):
-    out = run_ask(tmp_path, monkeypatch, "hang", requests=20, seconds=4)
+    out = run_ask(tmp_path, monkeypatch, "hang", requests=20, seconds=20)
     final = out["final"]
     assert final["planner"] == dict(source="TEMPLATE", reason="PLANNER_TIMEOUT")
     assert final["status"] == "COMPLETE" and not final["gaps"] and len(final["branches"]) == 2
@@ -546,7 +549,8 @@ def test_rejected_plan_leaves_no_request_directory_and_no_thread(tmp_path, monke
 
 
 def test_uncertain_planner_keeps_only_its_receipt_when_the_request_is_rejected(tmp_path, monkeypatch):
-    out = run_ask(tmp_path, monkeypatch, "hang", query="Who owns Cobalt B?", expect_parallel=False, seconds=4)
+    out = run_ask(tmp_path, monkeypatch, "hang", query="Who owns Cobalt B?", expect_parallel=False, seconds=20,
+                  hold=8)  # the rejected path joins the pool for 10 s: the late Provider returns 3 s after the 5 s limit
     assert out["planner"].calls == 1 and "parallel_investigation" not in json.dumps(out["started"])
     kept = sorted(path.relative_to(out["base"]).as_posix() for path in out["base"].rglob("*") if path.is_file())
     assert len(kept) == 2 and kept[0].endswith("/branches/planner/budget.json") and kept[1].endswith("/pool.json")
