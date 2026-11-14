@@ -1905,7 +1905,9 @@ class GeminiProviderAdapter:
             usage=usage,
             provider_request_id=request_id,
             provider_response_id=response_id,
-            finish_reason=finish_reason or "stop",
+            # Structured JSON replies must report a finish_reason; only unstructured text defaults to stop.
+            finish_reason=finish_reason
+            or (None if request.generation_options.response_json_schema is not None else "stop"),
             provider_metadata=metadata,
         )
 __all__ = [

@@ -283,3 +283,33 @@ def test_gemini_route_truncation_is_rejected_and_stop_is_converted():
     record = {}
     route = route_with_adapter(adapter('STOP', json.dumps(fields)), route_request(ctx), ctx, record)
     assert route.decision == 'CLARIFY' and record['provider_reply']['output_tokens'] == 7
+
+
+def _no_finish_reason(**_):
+    return SimpleNamespace(text='{"reason_code":"NONE"}', candidates=[SimpleNamespace(finish_reason=None)],
+                           usage_metadata=SimpleNamespace(prompt_token_count=1, candidates_token_count=1,
+                                                          total_token_count=2))
+
+
+def test_gemini_security_missing_finish_reason_is_rejected():
+    with pytest.raises(RouterInvalid, match='SECURITY_SCHEMA_INVALID'):
+        classify(_gemini_security(_no_finish_reason), request_for('normal lookup', 'w'))
+
+
+def test_gemini_route_missing_finish_reason_is_rejected():
+    from linkloom.ui.structured_router import request_for as route_request, route_with_adapter
+    from tests.unit.test_structured_router import context
+    ctx = context('联调报告归谁？')
+    adapter = GeminiRouterAdapter(SimpleNamespace(models=SimpleNamespace(generate_content=_no_finish_reason)))
+    with pytest.raises(RouterInvalid):
+        route_with_adapter(adapter, route_request(ctx), ctx, {})
+
+
+def test_unstructured_complete_still_defaults_missing_finish_reason_to_stop():
+    from dataclasses import replace
+    from linkloom.agents.providers.gemini_api import GeminiProviderAdapter, GeminiSDKClientBridge
+    client = SimpleNamespace(models=SimpleNamespace(generate_content=_no_finish_reason))
+    provider = GeminiProviderAdapter(GeminiSDKClientBridge(client), model_id='gemini-3.8-flash')
+    request = request_for('normal lookup', 'w')
+    options = replace(request.generation_options, response_json_schema=None)
+    assert provider.complete(replace(request, generation_options=options)).finish_reason == 'stop'
