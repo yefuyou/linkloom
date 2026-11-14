@@ -229,5 +229,16 @@ class ParallelInvestigation:
                     for item in snapshot['evidence']]
         if not evidence:
             raise ValueError('PARALLEL_EVIDENCE_MISSING')
+        team = artifact['result']['team_decision']
+        # The artifact carries no structured subject/relation, so claim_key stays None (no conflict compare).
+        conclusion = dict(question=question, decision=dict(value=team['decision']['value'],
+                              status=team['decision']['status']),
+                          unresolved_items=[item['description'] for item in team['unresolved_items']],
+                          uncertainty=dict(status=team['uncertainty']['status'],
+                                           statement=team['uncertainty']['statement']),
+                          evidence=[{key: item[key] for key in ('source_id', 'source_version', 'line_start',
+                                                                'line_end', 'quote_sha256')}
+                                    for item in evidence],
+                          claim_key=None, claim_value=None)
         return dict(run=dict(branch=name, run_id=status.run_id, thread_id=status.thread_id,
-                             review_id=review['review_id']), evidence=evidence)
+                             review_id=review['review_id']), evidence=evidence, conclusion=conclusion)
