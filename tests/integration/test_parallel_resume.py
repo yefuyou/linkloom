@@ -1,6 +1,7 @@
 """Restart, cold read and selective resume of a durable parallel run. Mock providers and synthetic data only."""
 import hashlib
 import json
+import os
 import shutil
 from threading import Event
 
@@ -8,6 +9,7 @@ import pytest
 
 from linkloom.ui.branch_budget import HARD_ABORT, BranchBudgetPool, classify_branch_for_resume, pass_router_reservation
 from linkloom.ui.investigation import ProductInvestigationService
+from linkloom.ui.product import ProductApplicationError
 from linkloom.ui.task_provider import TaskProviderLimits, TaskProviderSession
 from tests.integration.test_parallel_investigation import FACTS, QUESTION, MeetingProvider
 from tests.integration.test_product_application_flow import (
@@ -384,6 +386,43 @@ def test_http_routes_reject_another_workspace(env):
     status, payload = _client(env.base, f"/api/product/ask/runs/{run_id}/continue", method="POST", data={})
     assert status == 409 and payload["error"]["code"] == "WORKSPACE_REQUIRED"
     assert factory.calls == 0 and not (root / "resumed.json").exists()
+
+
+def test_every_layer_checks_the_workspace_on_its_own(env):
+    run_id, root = env.finished_run()
+    env.make_never_started(root)
+    factory = Counter()
+    service = env.service(factory, external_provider=True)
+    # The workspace check in front of the service answers before the provider permission is looked at.
+    status, payload = env.cont(run_id, "ws_other")
+    assert status == 409 and payload["error"]["code"] == "WORKSPACE_MISMATCH", payload
+    # The pointer is retargeted so its own workspace field cannot reject the request; only the
+    # comparison with the selected workspace is left inside the service.
+    env.edit_json(env.work / (run_id + ".json"), lambda data: data.update(workspace_id="ws_other"))
+    assert service.read_saved_parallel(run_id, "ws_other") is None
+    with pytest.raises(ProductApplicationError) as error:
+        service.continue_parallel(run_id, "ws_other", allow_external_provider=True)
+    assert error.value.code == "WORKSPACE_MISMATCH"
+    assert factory.calls == 0 and not (root / "resumed.json").exists()
+
+
+def test_pointer_root_that_resolves_outside_the_work_directory_is_rejected(env):
+    run_id, root = env.finished_run()
+    env.make_never_started(root)
+    outside = env.tmp_path / "outside"
+    shutil.copytree(root, outside)
+    shutil.rmtree(root)
+    try:
+        os.symlink(outside, root, target_is_directory=True)
+    except OSError:
+        pytest.skip("this platform does not allow creating a symlink here")
+    factory = Counter()
+    env.service(factory)
+    status, payload = env.get(run_id)
+    assert status == 404 and payload["error"]["code"] == "RUN_NOT_FOUND", payload
+    status, payload = env.cont(run_id)
+    assert status == 404 and factory.calls == 0
+    assert not (outside / "resumed.json").exists()
 
 
 def test_flag_off_writes_no_parallel_files_and_cannot_continue(env):
