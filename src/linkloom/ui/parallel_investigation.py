@@ -70,6 +70,7 @@ class ParallelInvestigation:
         self.pool = BranchBudgetPool(root, limits, validate, run_id, 2 + 1 if planner else len(subplans),
                                      aux=reserve)
         self.outcome = None
+        self._answer = None
         self.planner = None  # None: no Planner; else dict(source=LLM|TEMPLATE|NONE, reason=...)
         self._planner_enabled, self._planned = planner, False
 
@@ -175,6 +176,15 @@ class ParallelInvestigation:
                 snapshot['run'].update(status='completed', stage='ready')
                 snapshot['evidence'] = [dict(item, id=f'citation-{i}', ordinal=i)
                                         for i, item in enumerate(evidence.values(), 1)]
+                # The answer is composed once per outcome so repeated reads agree. Authorization was
+                # re-validated above on every call, and a withheld snapshot never reaches this branch.
+                if self._answer is None:
+                    from linkloom.ui.branch_synthesis import merge_evidence, synthesize_reviewed
+                    self._answer = synthesize_reviewed(
+                        list(results.values()), outcome['gaps'], outcome['unstarted'],
+                        merge_evidence(results.values()), [q for q, _ in self.subplans],
+                        source_check=self.pool.parent_validate, review_id=f'{self.run_id}-aggregate')
+                snapshot['parallel_investigation']['answer'] = deepcopy(self._answer)
         else:
             snapshot['parallel_investigation'] = dict(status='RUNNING')
         if self.planner is not None:
@@ -230,7 +240,10 @@ class ParallelInvestigation:
         if not evidence:
             raise ValueError('PARALLEL_EVIDENCE_MISSING')
         team = artifact['result']['team_decision']
-        # The artifact carries no structured subject/relation, so claim_key stays None (no conflict compare).
+        # The artifact carries no structured subject/relation. The key comes from the Host-validated plan:
+        # the exact question of the branch's last subgoal (or the branch question for a single step).
+        # Model text is never used to build it, so equal keys mean the same plan question was asked twice.
+        asked = plan.subgoals[-1].question if plan else question
         conclusion = dict(question=question, decision=dict(value=team['decision']['value'],
                               status=team['decision']['status']),
                           unresolved_items=[item['description'] for item in team['unresolved_items']],
@@ -239,6 +252,7 @@ class ParallelInvestigation:
                           evidence=[{key: item[key] for key in ('source_id', 'source_version', 'line_start',
                                                                 'line_end', 'quote_sha256')}
                                     for item in evidence],
-                          claim_key=None, claim_value=None)
+                          claim_key=dict(subject=asked, relation='subgoal_question'),
+                          claim_value=team['decision']['value'])
         return dict(run=dict(branch=name, run_id=status.run_id, thread_id=status.thread_id,
                              review_id=review['review_id']), evidence=evidence, conclusion=conclusion)

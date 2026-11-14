@@ -342,5 +342,30 @@ async function setup(storage = new Map()) {
   const rejected = sourceResult(); rejected.result.reviewer.accepted = false;
   rejectedUi.pending[0](rejected); await operation;
   assert.doesNotMatch(rejectedUi.element("ask-result").innerHTML, /Verified Leader|Known Owner/);
+  const parallelUi = await setup();
+  const parallelOperation = parallelUi.submit(); await tick();
+  const parallelPayload = result("");
+  const evil = "<script>alert(1)</script>";
+  Object.assign(parallelPayload.result, {path: "PARALLEL", status: "COMPLETED", conclusions: [], timeline: null,
+    evidence: [{evidence_ref: "e1", citation_id: "citation-1", source_name: "a.md", source_id: "s1", source_version: "v1",
+      quote: "alpha", line_start: 1, line_end: 1}],
+    parallel_investigation: {status: "COMPLETE", gaps: {}, branches: [], unstarted: 0, answer: {status: "COMPLETE", published: true,
+      answers: [{question: "Q1" + evil, text: "A1" + evil, citations: ["citation-1"]}],
+      conflicts: [{subject: "S" + evil, relation: "R", sides: [{branch: "branch-1", value: "V" + evil, citations: ["citation-1"]}]}],
+      unknowns: [{question: "Q2" + evil, branch: "branch-2", reason: "BRANCH_FAILED"}]}}});
+  parallelUi.pending[0](parallelPayload); await parallelOperation;
+  const parallelHtml = parallelUi.element("ask-result").innerHTML;
+  assert.match(parallelHtml, /Answer from verified branches/);
+  assert.match(parallelHtml, /A1&lt;script&gt;alert\(1\)&lt;\/script&gt;/);
+  assert.match(parallelHtml, /BRANCH_FAILED/);
+  assert.doesNotMatch(parallelHtml, /<script>/);
+  const withheldUi = await setup();
+  const withheldOperation = withheldUi.submit(); await tick();
+  const withheld = JSON.parse(JSON.stringify(parallelPayload));
+  Object.assign(withheld.result.parallel_investigation.answer, {published: false, fallback_reason: "AGGREGATE_QUOTE_HASH_MISMATCH", answers: []});
+  withheldUi.pending[0](withheld); await withheldOperation;
+  assert.match(withheldUi.element("ask-result").innerHTML, /Combined answer withheld/);
+  assert.match(withheldUi.element("ask-result").innerHTML, /AGGREGATE_QUOTE_HASH_MISMATCH/);
+  assert.doesNotMatch(withheldUi.element("ask-result").innerHTML, /A1/);
   console.log("PASS: source trust label, partial/conflict prefix, rejected Final hidden and stale source poll ignored");
 })().catch(error => {console.error(error); process.exitCode = 1;});
