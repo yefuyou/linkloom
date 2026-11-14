@@ -68,6 +68,25 @@ def settle(pool):
     pool._tasks.wait(shutdown_deadline(10))
 
 
+def test_continuation_subtracts_actual_usage_and_uncertain_reservations(tmp_path):
+    pool = BranchBudgetPool(tmp_path, limits(max_requests=12, max_cost_usd=1.2),
+        lambda: None, 'run1', 3, aux={'planner': dict(max_requests=1, max_input_tokens=5000,
+                                                   max_output_tokens=500, max_cost_usd=.1)})
+    pool.launch('planner', ask(Adapter()))
+    assert pool.wait_settled('planner', 5)
+    pool.launch('uncertain', ask(Adapter(timeout_response)))
+    pool.launch('never_sent', lambda _session: None)
+    pool.finish()
+    budget = json.loads((tmp_path / 'branches' / 'uncertain' / 'budget.json').read_text())
+    assert budget['attempts'][0]['outcome'] == 'UNCERTAIN'
+    resumed = branch_budget.continuation_limits(tmp_path, 'run1', limits(
+        max_requests=20, max_cost_usd=2, max_input_tokens=100000, max_output_tokens=10000))
+    assert resumed.max_requests == 10
+    assert resumed.max_input_tokens == 60000 - 10 - budget['input_tokens_reserved']
+    assert resumed.max_output_tokens == 6000 - 4 - budget['output_tokens_reserved']
+    assert resumed.max_cost_usd == pytest.approx(1.2 - .1 - .00003)
+
+
 def test_branches_issue_overlapping_provider_requests(tmp_path):
     barrier, spans, lock = Barrier(3, timeout=2), [], Lock()
 

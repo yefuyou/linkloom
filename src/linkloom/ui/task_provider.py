@@ -226,23 +226,32 @@ class _BudgetedTaskAdapter:
 def validate_task_provider_receipt(path, completed_at):
     """Require durable successful reservations before releasing a LIVE result."""
     budget = json.loads(Path(path).read_text(encoding='utf8'))
+    if budget['failure'] is not None or not budget['attempts']:
+        raise ValueError('TASK_PROVIDER_RECEIPT_INCOMPLETE')
+    _validate_provider_budget(budget, completed_at, require_success=True)
+
+
+def _validate_provider_budget(budget, completed_at, *, require_success=False):
     limits = TaskProviderLimits(**budget['limits'])
     attempts = budget['attempts']
-    if (budget['failure'] is not None or not isinstance(attempts, list) or not attempts
+    if (not isinstance(attempts, list)
             or type(budget['requests_reserved']) is not int
             or budget['requests_reserved'] != len(attempts) or len(attempts) > limits.max_requests):
         raise ValueError('TASK_PROVIDER_RECEIPT_INCOMPLETE')
     input_reserved = output_reserved = 0
     cost_reserved = 0.0
     for sequence, row in enumerate(attempts, 1):
-        if (row['outcome'] != 'SUCCEEDED' or type(row['sequence']) is not int
+        outcome = row['outcome']
+        if (outcome not in ('SUCCEEDED', 'FAILED', 'PENDING', 'UNCERTAIN', 'WITHHELD')
+                or (require_success and outcome != 'SUCCEEDED') or type(row['sequence']) is not int
                 or row['sequence'] != sequence
                 or any(type(row[key]) is not int or row[key] < 1
                        for key in ('input_reserved', 'output_reserved'))
                 or not isinstance(row['stage'], str) or not row['stage']
                 or any(not isinstance(row[key], str) or len(row[key]) != 64
                        or any(c not in '0123456789abcdef' for c in row[key])
-                       for key in ('request_sha256', 'response_sha256'))):
+                       for key in (('request_sha256', 'response_sha256') if outcome == 'SUCCEEDED'
+                                   else ('request_sha256',)))):
             raise ValueError('TASK_PROVIDER_RECEIPT_INCOMPLETE')
         cost = row['cost_reserved_usd']
         minimum_cost = max(limits.request_cost_upper_bound_usd,
@@ -251,11 +260,12 @@ def validate_task_provider_receipt(path, completed_at):
         if (isinstance(cost, bool) or not isinstance(cost, (int, float))
                 or not math.isfinite(cost) or cost + 1e-10 < minimum_cost):
             raise ValueError('TASK_PROVIDER_RECEIPT_BUDGET_INVALID')
-        usage = ModelUsage.from_dict(row['usage'])
-        if ((usage.input_tokens or 0) > row['input_reserved']
-                or (usage.output_tokens or 0) > row['output_reserved']
-                or (usage.total_tokens or 0) > row['input_reserved'] + row['output_reserved']):
-            raise ValueError('TASK_PROVIDER_RECEIPT_USAGE_INVALID')
+        if outcome == 'SUCCEEDED':
+            usage = ModelUsage.from_dict(row['usage'])
+            if ((usage.input_tokens or 0) > row['input_reserved']
+                    or (usage.output_tokens or 0) > row['output_reserved']
+                    or (usage.total_tokens or 0) > row['input_reserved'] + row['output_reserved']):
+                raise ValueError('TASK_PROVIDER_RECEIPT_USAGE_INVALID')
         input_reserved += row['input_reserved']
         output_reserved += row['output_reserved']
         cost_reserved += cost

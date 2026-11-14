@@ -3,6 +3,8 @@ import hashlib
 import json
 import os
 import shutil
+import subprocess
+import sys
 from threading import Event
 
 import pytest
@@ -214,6 +216,75 @@ def test_second_continue_in_the_same_process_is_refused(env):
     status, refused = env.cont(run_id)
     assert status == 409 and refused["error"]["code"] in ("PARALLEL_RUN_ACTIVE", "PARALLEL_ALREADY_RESUMED")
     service.close(timeout=25)
+
+
+def test_exhausted_original_budget_blocks_continue_before_claim(env):
+    run_id, root = env.finished_run()
+    env.make_never_started(root)
+    # The remaining request count must be smaller than the pending branch needs.
+    env.edit_json(root / "pool.json", lambda data: data["total"].update(max_requests=8))
+    env.edit_json(root / "pool.json", lambda data: data["branches"]["branch-2"].update(
+        slice=dict(data["branches"]["branch-2"]["slice"], max_requests=1),
+        held=dict(data["branches"]["branch-2"]["held"], max_requests=1)))
+    env.edit_json(root / "branches" / "branch-2" / "budget.json",
+                  lambda data: data["limits"].update(max_requests=1))
+    factory = Counter()
+    env.service(factory)
+    status, refused = env.cont(run_id)
+    assert status == 409 and refused["error"]["code"] == "TASK_PROVIDER_BUDGET_EXHAUSTED", refused
+    assert not factory.models and not (root / "resumed.json").exists()
+
+
+def test_two_service_processes_competing_to_continue_start_one_branch(env):
+    run_id, root = env.finished_run()
+    env.make_never_started(root)
+    script = """
+import sys
+from pathlib import Path
+from time import monotonic, sleep
+from linkloom.ui import parallel_resume
+from linkloom.ui.investigation import ProductInvestigationService
+from linkloom.ui.product import ProductApplication, ProductApplicationError
+from tests.integration.test_parallel_resume import Counter, LIMITS
+
+database, run_id, workspace_id, own, other = sys.argv[1:]
+claim = parallel_resume.claim_continuation
+
+def competing_claim(root, names):
+    Path(own).touch()
+    deadline = monotonic() + 20
+    while not Path(other).exists():
+        if monotonic() >= deadline:
+            raise AssertionError('The other service did not reach the claim')
+        sleep(.01)
+    claim(root, names)
+
+parallel_resume.claim_continuation = competing_claim
+app = ProductApplication(database_path=Path(database), extractor=None)
+factory = Counter()
+service = ProductInvestigationService(app, model_factory=factory, external_provider=True,
+                                      parallel_limits=LIMITS)
+try:
+    service.continue_parallel(run_id, workspace_id, allow_external_provider=True)
+    status = 'STARTED'
+except ProductApplicationError as error:
+    status = error.code
+finally:
+    service.close(timeout=25)
+    app.close()
+print(status, factory.calls)
+"""
+    project = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    child_env = dict(os.environ, PYTHONPATH=os.pathsep.join((project, os.path.join(project, "src"))))
+    args = [sys.executable, "-c", script, str(env.app.repository.database_path), run_id, env.workspace_id]
+    markers = [str(env.tmp_path / name) for name in ("process-a-ready", "process-b-ready")]
+    with subprocess.Popen(args + markers, env=child_env, stdout=subprocess.PIPE,
+                          stderr=subprocess.PIPE, text=True) as first, subprocess.Popen(
+            args + markers[::-1], env=child_env, stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE, text=True) as second:
+        outputs = [process.communicate(timeout=45) for process in (first, second)]
+        assert first.returncode == second.returncode == 0, outputs
+    assert sorted(out.strip() for out, _ in outputs) == ["PARALLEL_ALREADY_RESUMED 0", "STARTED 3"]
 
 
 def test_resume_pool_branch_without_an_outcome_is_uncertain(env):
