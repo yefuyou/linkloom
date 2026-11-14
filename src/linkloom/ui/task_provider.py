@@ -280,7 +280,7 @@ def validate_task_provider_receipt(path, completed_at):
         raise ValueError('TASK_PROVIDER_DURATION_EXCEEDED')
 
 
-def compose_task_provider(app, provider, limits, *, enable_temporal=False):
+def compose_task_provider(app, provider, limits, *, enable_temporal=False, parallel_investigation=False):
     """Host configuration enables task stages; Ask still needs a source grant."""
     from linkloom.agents.providers import GeminiProviderAdapter
     from linkloom.ui.investigation import ProductInvestigationService
@@ -290,4 +290,5 @@ def compose_task_provider(app, provider, limits, *, enable_temporal=False):
     models = TaskInvestigationModels(provider, provider, provider,
         execution_kind='LIVE', provider_id='gemini', model_id=provider.model_id, provider_limits=limits)
     return ProductInvestigationService(app, model_factory=lambda _question: provider,
-        task_models=models, external_provider=True, run_mode='GEMINI_TASK_EXPLICIT', task_only=not enable_temporal)
+        task_models=models, external_provider=True, run_mode='GEMINI_TASK_EXPLICIT',
+        task_only=not enable_temporal, parallel_limits=limits if parallel_investigation else None)

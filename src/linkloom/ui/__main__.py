@@ -83,6 +83,8 @@ def main() -> int:
     )
     parser.add_argument('--allow-task-investigation', action='store_true',
         help='Configure task Provider stages. Each Ask still needs source-snapshot permission.')
+    parser.add_argument('--experimental-parallel-investigation', action='store_true',
+        help='Allow independent plan branches in a scoped temporal investigation.')
     for name in ('requests', 'input-tokens', 'output-tokens'):
         parser.add_argument('--task-max-' + name, type=int)
     for name in ('cost-usd', 'seconds'):
@@ -125,6 +127,8 @@ def main() -> int:
             parser.error('Task Provider requires all explicit --task-* budgets: ' + str(exc))
     if not math.isfinite(args.estimated_cost_per_request) or args.estimated_cost_per_request < 0:
         parser.error("--estimated-cost-per-request must be a finite non-negative number")
+    if args.experimental_parallel_investigation and not (task_limits and args.allow_temporal_agent):
+        parser.error('Parallel investigation requires task Provider budgets and --allow-temporal-agent.')
     if args.offline_task_demo:
         if args.allow_external_provider or args.allow_temporal_agent or args.allow_task_investigation:
             parser.error("--offline-task-demo cannot be combined with external or temporal Agent flags")
@@ -205,7 +209,8 @@ def main() -> int:
         if task_limits:
             from linkloom.ui.task_provider import compose_task_provider
             investigation_service = compose_task_provider(product_app, provider, task_limits,
-                                                         enable_temporal=args.allow_temporal_agent)
+                enable_temporal=args.allow_temporal_agent,
+                parallel_investigation=args.experimental_parallel_investigation)
         elif args.allow_temporal_agent:
             investigation_service = ProductInvestigationService(
                 product_app,

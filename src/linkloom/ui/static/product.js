@@ -794,6 +794,21 @@
     const locale = askLocale(result.query);
     const t = (en, zh) => askCopy(en, zh, locale);
     const source = result.path === "SOURCE_RELATION_INVESTIGATION";
+    const parallel = result.parallel_investigation;
+    if (parallel && parallel.status !== "RUNNING") {
+      const title = {
+        COMPLETE: t("Verified investigation evidence", "已核验的调查证据"),
+        PARTIAL: t("Partial investigation evidence", "部分调查证据已核验"),
+        CANCELLED: t("Investigation cancelled", "调查已取消"),
+      }[parallel.status] || t("Investigation stopped", "调查已停止");
+      const gaps = Object.entries(parallel.gaps || {}).map(([branch, reason]) =>
+        `<li>${escapeHtml(branch)} · ${escapeHtml(reason)}</li>`).join("");
+      const evidence = (result.evidence || []).map((item, index) => askEvidence(item, index, locale)).join("");
+      target.innerHTML = `<section class="panel ask-answer" role="status"><h2>${title}</h2>
+        ${gaps ? `<h3>${t("Incomplete branches", "未完成的分支")}</h3><ul>${gaps}</ul>` : ""}
+        ${evidence}${askTechnical(result, locale, true)}</section>`;
+      return;
+    }
     if (result.path === "TASK_INVESTIGATION" && ["PARTIAL", "UNKNOWN"].includes(result.status) && result.reviewer?.accepted === true && result.task_review) {
       if (result.agent_run_id && result.workspace_id === state.workspace?.workspace_id) {
         // Keep only a pointer in this tab. Every reopen goes through current
