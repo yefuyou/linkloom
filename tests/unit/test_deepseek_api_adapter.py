@@ -485,7 +485,9 @@ def test_official_terminal_failure_reasons_map_to_provider_errors(
     [
         (FakeDeepSeekError(status_code=400), "MODEL_INVALID_REQUEST", "known_failure"),
         (FakeDeepSeekError(status_code=401), "MODEL_AUTH_REQUIRED", "known_failure"),
-        (FakeDeepSeekError(status_code=402), "MODEL_UNAVAILABLE", "known_failure"),
+        (FakeDeepSeekError(status_code=402), "MODEL_BILLING_BLOCKED", "known_failure"),
+        (FakeDeepSeekError(status_code=403), "MODEL_AUTH_REQUIRED", "known_failure"),
+        (FakeDeepSeekError(status_code=404), "MODEL_UNAVAILABLE", "known_failure"),
         (FakeDeepSeekError(status_code=422), "MODEL_INVALID_REQUEST", "known_failure"),
         (FakeDeepSeekError(status_code=429), "MODEL_RATE_LIMITED", "known_failure"),
         (TimeoutError("secret timeout detail"), "MODEL_TRANSIENT_FAILURE", "unknown_provider_outcome"),

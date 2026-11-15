@@ -57,12 +57,18 @@ async function setup(storage = new Map()) {
   const pending = [];
   const submittedBodies = [];
   const polls = [];
+  const continues = [];
+  const continuePending = [];
   const feedbackPosts = [];
   let current = "a";
   const workspaces = [{workspace_id: "a", name: "Atlas"}, {workspace_id: "b", name: "Other"}];
   const response = payload => ({ok: true, status: 200, json: async () => payload});
   async function fetch(path, options = {}) {
     if (path.startsWith("/api/product/feedback/")) return await new Promise(resolve => feedbackPosts.push(payload => resolve(response(payload))));
+    if (path.endsWith("/continue")) {
+      continues.push({path, body: JSON.parse(options.body), method: options.method});
+      return await new Promise(resolve => continuePending.push(payload => resolve(response(payload))));
+    }
     if (path.startsWith("/api/product/ask/runs/")) return await new Promise(resolve => polls.push(payload => resolve(response(payload))));
     if (path === "/api/product/ask") {
       submittedBodies.push(JSON.parse(options.body));
@@ -92,7 +98,7 @@ async function setup(storage = new Map()) {
   element("ask-slot").value = "0";
   element("ask-form").fields = {query: "What is current?", as_of: ""};
   const submit = () => element("page").listeners.submit({preventDefault() {}, target: element("ask-form")});
-  return {element, pending, polls, submit, submittedBodies, feedbackPosts};
+  return {element, pending, polls, continues, continuePending, submit, submittedBodies, feedbackPosts};
 }
 
 (async () => {
@@ -342,5 +348,79 @@ async function setup(storage = new Map()) {
   const rejected = sourceResult(); rejected.result.reviewer.accepted = false;
   rejectedUi.pending[0](rejected); await operation;
   assert.doesNotMatch(rejectedUi.element("ask-result").innerHTML, /Verified Leader|Known Owner/);
+  const parallelUi = await setup();
+  const parallelOperation = parallelUi.submit(); await tick();
+  const parallelPayload = result("");
+  const evil = "<script>alert(1)</script>";
+  Object.assign(parallelPayload.result, {path: "PARALLEL", status: "COMPLETED", conclusions: [], timeline: null,
+    evidence: [{evidence_ref: "e1", citation_id: "citation-1", source_name: "a.md", source_id: "s1", source_version: "v1",
+      quote: "alpha", line_start: 1, line_end: 1}],
+    parallel_investigation: {status: "COMPLETE", gaps: {}, branches: [], unstarted: 0, answer: {status: "COMPLETE", published: true,
+      answers: [{question: "Q1" + evil, text: "A1" + evil, citations: ["citation-1"]}],
+      conflicts: [{subject: "S" + evil, relation: "R", sides: [{branch: "branch-1", value: "V" + evil, citations: ["citation-1"]}]}],
+      unknowns: [{question: "Q2" + evil, branch: "branch-2", reason: "BRANCH_FAILED"}]}}});
+  parallelUi.pending[0](parallelPayload); await parallelOperation;
+  const parallelHtml = parallelUi.element("ask-result").innerHTML;
+  assert.match(parallelHtml, /Answer from verified branches/);
+  assert.match(parallelHtml, /A1&lt;script&gt;alert\(1\)&lt;\/script&gt;/);
+  assert.match(parallelHtml, /BRANCH_FAILED/);
+  assert.doesNotMatch(parallelHtml, /<script>/);
+  assert.doesNotMatch(parallelHtml, /No conflicts among/);
+  const checkedUi = await setup();
+  const checkedOperation = checkedUi.submit(); await tick();
+  const checkedPayload = JSON.parse(JSON.stringify(parallelPayload));
+  Object.assign(checkedPayload.result.parallel_investigation.answer, {conflicts: [], conflict_check: {cross_branch_compared: true}});
+  checkedUi.pending[0](checkedPayload); await checkedOperation;
+  assert.match(checkedUi.element("ask-result").innerHTML, /No conflicts among the branches that were compared/);
+  const uncheckedUi = await setup();
+  const uncheckedOperation = uncheckedUi.submit(); await tick();
+  const uncheckedPayload = JSON.parse(JSON.stringify(checkedPayload));
+  uncheckedPayload.result.parallel_investigation.answer.conflict_check.cross_branch_compared = false;
+  uncheckedUi.pending[0](uncheckedPayload); await uncheckedOperation;
+  assert.doesNotMatch(uncheckedUi.element("ask-result").innerHTML, /No conflicts|无冲突/);
+  const withheldUi = await setup();
+  const withheldOperation = withheldUi.submit(); await tick();
+  const withheld = JSON.parse(JSON.stringify(parallelPayload));
+  Object.assign(withheld.result.parallel_investigation.answer, {published: false, fallback_reason: "AGGREGATE_QUOTE_HASH_MISMATCH", answers: []});
+  withheldUi.pending[0](withheld); await withheldOperation;
+  assert.match(withheldUi.element("ask-result").innerHTML, /Combined answer withheld/);
+  assert.match(withheldUi.element("ask-result").innerHTML, /AGGREGATE_QUOTE_HASH_MISMATCH/);
+  assert.doesNotMatch(withheldUi.element("ask-result").innerHTML, /A1/);
+  const evilText = "<img src=x onerror=alert(1)>";
+  const resumeUi = await setup();
+  const resumeOperation = resumeUi.submit(); await tick();
+  const resumePayload = JSON.parse(JSON.stringify(parallelPayload));
+  Object.assign(resumePayload.result, {agent_run_id: "run-9", workspace_id: "a"});
+  Object.assign(resumePayload.result.parallel_investigation, {status: "PARTIAL", branch_states: [
+    {branch: "b1", state: "REUSED", reason: "VERIFIED"}, {branch: "b2", state: "UNCERTAIN", reason: "DISPATCHED_NO_RESULT"},
+    {branch: "b3", state: "CONTINUABLE", reason: "NEVER_STARTED"}, {branch: "b4", state: "WITHHELD", reason: evilText, message: evilText},
+    {branch: "b5", state: "RESUME_NOT_SAFE", reason: "SOURCE_CHANGED"}], continuable: ["b3"]});
+  resumeUi.pending[0](resumePayload); await resumeOperation;
+  const resumeHtml = resumeUi.element("ask-result").innerHTML;
+  for (const label of [/Reused from the saved run/, /Uncertain, not sent again/, /Not started, can continue/, /Withheld/, /Cannot be resumed safely/])
+    assert.match(resumeHtml, label);
+  assert.match(resumeHtml, /&lt;img src=x onerror=alert\(1\)&gt;/);
+  assert.doesNotMatch(resumeHtml, /<img/);
+  assert.equal((resumeHtml.match(/data-action="continue-parallel"/g) || []).length, 1);
+  assert.equal(resumeUi.continues.length, 0, "rendering must not send a continue request");
+  resumeUi.element("ask-external").checked = true;
+  const clickContinue = resumeUi.element("page").listeners.click({target: {closest: () => ({dataset: {action: "continue-parallel", runId: "run-9"}})}});
+  await tick();
+  assert.equal(resumeUi.continues.length, 1);
+  assert.equal(resumeUi.continues[0].method, "POST");
+  assert.equal(resumeUi.continues[0].path, "/api/product/ask/runs/run-9/continue");
+  assert.deepEqual(resumeUi.continues[0].body, {workspace_id: "a", allow_external_provider: true});
+  const continued = JSON.parse(JSON.stringify(resumePayload));
+  continued.result.status = "INVESTIGATING";
+  resumeUi.continuePending[0](continued); await clickContinue;
+  const onlyUncertainUi = await setup();
+  const onlyUncertainOperation = onlyUncertainUi.submit(); await tick();
+  const onlyUncertainPayload = JSON.parse(JSON.stringify(resumePayload));
+  Object.assign(onlyUncertainPayload.result.parallel_investigation, {branch_states: [{branch: "b2", state: "UNCERTAIN", reason: "DISPATCHED_NO_RESULT"}], continuable: []});
+  onlyUncertainUi.pending[0](onlyUncertainPayload); await onlyUncertainOperation;
+  assert.match(onlyUncertainUi.element("ask-result").innerHTML, /Uncertain, not sent again/);
+  assert.doesNotMatch(onlyUncertainUi.element("ask-result").innerHTML, /continue-parallel/);
+  assert.equal(onlyUncertainUi.continues.length, 0);
+  console.log("PASS: branch resume states escaped, continue only on explicit click and only for CONTINUABLE");
   console.log("PASS: source trust label, partial/conflict prefix, rejected Final hidden and stale source poll ignored");
 })().catch(error => {console.error(error); process.exitCode = 1;});

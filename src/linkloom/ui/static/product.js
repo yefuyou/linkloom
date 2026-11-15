@@ -794,6 +794,58 @@
     const locale = askLocale(result.query);
     const t = (en, zh) => askCopy(en, zh, locale);
     const source = result.path === "SOURCE_RELATION_INVESTIGATION";
+    const parallel = result.parallel_investigation;
+    if (parallel && parallel.status !== "RUNNING") {
+      const title = {
+        COMPLETE: t("Verified investigation evidence", "已核验的调查证据"),
+        PARTIAL: t("Partial investigation evidence", "部分调查证据已核验"),
+        CANCELLED: t("Investigation cancelled", "调查已取消"),
+      }[parallel.status] || t("Investigation stopped", "调查已停止");
+      const gaps = Object.entries(parallel.gaps || {}).map(([branch, reason]) =>
+        `<li>${escapeHtml(branch)} · ${escapeHtml(reason)}</li>`).join("");
+      const evidence = (result.evidence || []).map((item, index) => askEvidence(item, index, locale)).join("");
+      const answer = parallel.answer;
+      const cites = list => (list || []).map(id => `<span class="chip">${escapeHtml(id)}</span>`).join(" ");
+      let synthesis = "";
+      if (answer && answer.published) {
+        const lines = (answer.answers || []).map(row =>
+          `<li><strong>${escapeHtml(row.question)}</strong> ${escapeHtml(row.text)} ${cites(row.citations)}</li>`).join("");
+        const conflicts = (answer.conflicts || []).map(row =>
+          `<li>${escapeHtml(row.subject)} · ${escapeHtml(row.relation)}<ul>${(row.sides || []).map(side =>
+            `<li>${escapeHtml(side.branch)}: ${escapeHtml(side.value)} ${cites(side.citations)}</li>`).join("")}</ul></li>`).join("");
+        const checked = answer.conflict_check?.cross_branch_compared === true && !conflicts
+          ? `<p>${t("No conflicts among the branches that were compared.", "已比较的分支之间无冲突。")}</p>` : "";
+        const unknowns = (answer.unknowns || []).map(row =>
+          `<li>${escapeHtml(row.question || row.branch || "")} · ${escapeHtml(row.reason)}${row.detail ? ` · ${escapeHtml(row.detail)}` : ""}</li>`).join("");
+        synthesis = `<h3>${t("Answer from verified branches", "已核验分支的回答")}</h3>${lines ? `<ul>${lines}</ul>` : ""}
+          ${conflicts ? `<h3>${t("Conflicting results (no winner chosen)", "结论冲突(不选择胜者)")}</h3><ul>${conflicts}</ul>` : ""}
+          ${checked}
+          ${unknowns ? `<h3>${t("Still unknown", "仍未知")}</h3><ul>${unknowns}</ul>` : ""}`;
+      } else if (answer) {
+        const unknowns = (answer.unknowns || []).map(row =>
+          `<li>${escapeHtml(row.question || row.branch || "")} · ${escapeHtml(row.reason)}</li>`).join("");
+        synthesis = `<h3>${t("Combined answer withheld", "未发布合并回答")}</h3>
+          <p>${escapeHtml(answer.fallback_reason || "")}</p>${unknowns ? `<ul>${unknowns}</ul>` : ""}`;
+      }
+      const stateLabel = {
+        REUSED: t("Reused from the saved run", "沿用已保存的结果"),
+        UNCERTAIN: t("Uncertain, not sent again", "状态不确定，不会重发"),
+        CONTINUABLE: t("Not started, can continue", "尚未启动，可继续"),
+        WITHHELD: t("Withheld", "已保留不展示"),
+        RESUME_NOT_SAFE: t("Cannot be resumed safely", "无法安全恢复"),
+      };
+      const branchStates = Array.isArray(parallel.branch_states) ? parallel.branch_states : null;
+      const continuable = Array.isArray(parallel.continuable) ? parallel.continuable : [];
+      const resume = branchStates ? `<h3>${t("Branch resume state", "分支恢复状态")}</h3><ul class="ask-branch-states">${branchStates.map(row =>
+        `<li data-branch-state="${escapeHtml(row.state)}"><strong>${escapeHtml(row.branch)}</strong> · ${escapeHtml(stateLabel[row.state] || row.state)}${row.reason ? ` · ${escapeHtml(row.reason)}` : ""}${row.message ? ` · ${escapeHtml(row.message)}` : ""}</li>`).join("")}</ul>${continuable.length && result.agent_run_id ? `<p class="hint">${t("Continuing sends the unstarted branches to the model. Tick the external provider permission above first if it is required.", "继续会把尚未启动的分支发送给模型。如需外部模型,请先勾选上方的外部模型授权。")}</p>
+        <button class="button" type="button" data-action="continue-parallel" data-run-id="${escapeHtml(result.agent_run_id)}">${t("Continue unfinished branches", "继续未完成的分支")}</button><p id="ask-continue-note" role="alert"></p>` : ""}` : "";
+      target.innerHTML = `<section class="panel ask-answer" role="status"><h2>${title}</h2>
+        ${synthesis}
+        ${resume}
+        ${gaps ? `<h3>${t("Incomplete branches", "未完成的分支")}</h3><ul>${gaps}</ul>` : ""}
+        ${evidence}${askTechnical(result, locale, true)}</section>`;
+      return;
+    }
     if (result.path === "TASK_INVESTIGATION" && ["PARTIAL", "UNKNOWN"].includes(result.status) && result.reviewer?.accepted === true && result.task_review) {
       if (result.agent_run_id && result.workspace_id === state.workspace?.workspace_id) {
         // Keep only a pointer in this tab. Every reopen goes through current
@@ -1175,6 +1227,24 @@
       if (action === 'focus-import') { document.getElementById('meeting-import')?.scrollIntoView?.({block: 'start'}); document.getElementById('source-file')?.focus?.(); return; }
       if (action === 'ask-example') { const input = document.getElementById('ask-query'); input.value = button.dataset.query; invalidateAsk(); localizeAsk(input.value); input.focus?.(); return; }
       if (action === "inspect-source") await inspectSource(id);
+      else if (action === "continue-parallel") {
+        const workspaceId = state.workspace.workspace_id;
+        const runId = button.dataset.runId;
+        const permission = document.getElementById("ask-external");
+        const allowExternal = permission?.checked === true;
+        if (permission) permission.checked = false;
+        const viewToken = state.agentViewToken;
+        try {
+          const result = await askRequest(`/api/product/ask/runs/${encodeURIComponent(runId)}/continue`, { method: "POST",
+            body: JSON.stringify({ workspace_id: workspaceId, allow_external_provider: allowExternal }) });
+          if (viewToken !== state.agentViewToken) return;
+          renderAskResult(result, viewToken);
+          if (result.status === "INVESTIGATING") pollAsk(result.agent_run_id || runId, workspaceId, viewToken);
+        } catch (error) {
+          const note = document.getElementById("ask-continue-note");
+          if (note) note.textContent = `${error.message} ${error.code || ""}`.trim(); else showAskError(error, viewToken);
+        }
+      }
       else if (action === "reopen-task") {
         const workspaceId = state.workspace.workspace_id;
         const runId = savedTaskRun(workspaceId);

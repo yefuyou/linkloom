@@ -270,9 +270,13 @@ class ModelGenerationOptions:
     temperature: float | None = None
     require_tool_call: bool = False
     thinking_level: str | None = None
+    # JSON Schema for a structured final answer; the provider adapter maps it to its own wire field.
+    response_json_schema: dict[str, Any] | None = None
 
     def __post_init__(self) -> None:
         _assert_json_safe_primitive(asdict(self), "ModelGenerationOptions")
+        if self.response_json_schema is not None and not isinstance(self.response_json_schema, dict):
+            raise ValidationError("ModelGenerationOptions.response_json_schema must be an object or null.")
         if self.max_output_tokens is not None and (
             isinstance(self.max_output_tokens, bool)
             or not isinstance(self.max_output_tokens, int)
@@ -307,6 +311,8 @@ class ModelGenerationOptions:
             payload.pop("require_tool_call")
         if self.thinking_level is None:
             payload.pop("thinking_level")
+        if self.response_json_schema is None:
+            payload.pop("response_json_schema")
         return payload
 
     @classmethod
@@ -320,6 +326,7 @@ class ModelGenerationOptions:
                 "temperature",
                 "require_tool_call",
                 "thinking_level",
+                "response_json_schema",
             }
         )
         if unsupported:
@@ -332,6 +339,7 @@ class ModelGenerationOptions:
             temperature=data.get("temperature"),
             require_tool_call=data.get("require_tool_call", False),
             thinking_level=data.get("thinking_level"),
+            response_json_schema=data.get("response_json_schema"),
         )
 
 
