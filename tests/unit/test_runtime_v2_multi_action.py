@@ -467,19 +467,38 @@ def test_empty_search_history_stops_before_later_proposal_members(artifact_store
 
 
 def test_tool_result_artifact_helper_has_explicit_kind_and_stable_path(artifact_store):
+    payload = {"model_tool_result": {"result_id": "tr_test_result"}}
     stored = artifact_store.write_tool_result(
         RUN_ID,
         f"{RUN_ID}:turn:1",
         0,
         "rtc_test_result",
-        {"model_tool_result": {"result_id": "tr_test_result"}},
+        payload,
     )
 
     assert stored.kind == "tool_result"
-    assert stored.ref.endswith("/tool-results/00-rtc_test_result.json")
-    assert artifact_store.read(stored.ref) == {
-        "model_tool_result": {"result_id": "tr_test_result"}
-    }
+    assert stored.ref.endswith("/t00-rtc_test_result.json")
+    assert artifact_store.read(stored.ref) == payload
+    legacy_ref = stored.ref.replace("/t00-", "/tool-results/00-")
+    legacy = artifact_store.write(legacy_ref, payload, kind="tool_result")
+    assert ModelArtifactStore(artifact_store.root).read(legacy.ref, expected_sha256=legacy.sha256) == payload
+
+
+def test_model_tool_artifact_reopens_when_legacy_path_would_exceed_windows_limit(tmp_path):
+    run_id = "run_p4_a461235bc2da"
+    turn_id = f"{run_id}_turn_1"
+    call_id = "rtc_" + "a" * 32
+    legacy_ref = f"model/{run_id}/{turn_id}/tool-results/00-{call_id}.json"
+    padding = 261 - len(str(tmp_path / legacy_ref)) - 1
+    assert padding > 0
+    root = tmp_path / ("a" * padding)
+    assert len(str(root / legacy_ref)) == 261
+    payload = {"model_tool_result": {"result_id": "tr_test_result"}}
+
+    stored = ModelArtifactStore(root).write_tool_result(run_id, turn_id, 0, call_id, payload)
+
+    assert len(str(root / stored.ref)) < 260
+    assert ModelArtifactStore(root).read(stored.ref, expected_sha256=stored.sha256) == payload
 
 
 def test_policy_denial_is_durable_and_stops_later_call_without_final(
