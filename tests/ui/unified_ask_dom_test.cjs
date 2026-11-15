@@ -58,6 +58,8 @@ async function setup(storage = new Map()) {
   const submittedBodies = [];
   const polls = [];
   const continues = [];
+  const traceRequests = [];
+  let tracePayload = {error: {code: "TRACE_NOT_FOUND"}};
   const continuePending = [];
   const feedbackPosts = [];
   let current = "a";
@@ -69,6 +71,7 @@ async function setup(storage = new Map()) {
       continues.push({path, body: JSON.parse(options.body), method: options.method});
       return await new Promise(resolve => continuePending.push(payload => resolve(response(payload))));
     }
+    if (path.endsWith("/trace") || path.includes("/trace?")) { traceRequests.push(path); return response(tracePayload); }
     if (path.startsWith("/api/product/ask/runs/")) return await new Promise(resolve => polls.push(payload => resolve(response(payload))));
     if (path === "/api/product/ask") {
       submittedBodies.push(JSON.parse(options.body));
@@ -98,7 +101,7 @@ async function setup(storage = new Map()) {
   element("ask-slot").value = "0";
   element("ask-form").fields = {query: "What is current?", as_of: ""};
   const submit = () => element("page").listeners.submit({preventDefault() {}, target: element("ask-form")});
-  return {element, pending, polls, continues, continuePending, submit, submittedBodies, feedbackPosts};
+  return {element, traceRequests, setTrace: payload => { tracePayload = payload; }, pending, polls, continues, continuePending, submit, submittedBodies, feedbackPosts};
 }
 
 (async () => {
@@ -413,6 +416,47 @@ async function setup(storage = new Map()) {
   const continued = JSON.parse(JSON.stringify(resumePayload));
   continued.result.status = "INVESTIGATING";
   resumeUi.continuePending[0](continued); await clickContinue;
+  const traceUi = await setup();
+  const traceOperation = traceUi.submit(); await tick();
+  const tracePage = JSON.parse(JSON.stringify(parallelPayload));
+  Object.assign(tracePage.result, {agent_run_id: "ui-parallel-000000000001", workspace_id: "a"});
+  traceUi.pending[0](tracePage); await traceOperation;
+  assert.match(traceUi.element("ask-result").innerHTML, /data-action="load-trace"/);
+  assert.equal(traceUi.traceRequests.length, 0, "rendering must not request the call chain");
+  const evilTag = "<script>alert(1)</script>", evilTagImg = "<img src=x onerror=alert(1)>";
+  const slot = (name, offset, seconds, extra = {}) => Object.assign({name, pool_status: "VERIFIED", verified: true, question: evilTag,
+    interval: {start: "s", end: "e", duration_seconds: seconds, offset_seconds: offset}, requests: 1, estimated_cost_usd: 0.001,
+    reserved_cost_usd: 0.5, na: {event_timing: "TRACE_EVENTS_HAVE_NO_TIMESTAMPS"}, reviewer: {decision: "evidence_sufficient"},
+    attempts: [{sequence: 1, stage: evilTagImg, outcome: "SUCCEEDED", verified: true, input_tokens: 10, output_tokens: 5,
+      estimated_cost_usd: 0.001, reserved_cost_usd: 0.5, na: {interval: "REQUEST_HAS_NO_TIMESTAMP"}},
+      {sequence: 2, stage: "runtime", outcome: "UNCERTAIN", note: "OUTCOME_UNCERTAIN_MAY_BE_BILLED", verified: false,
+       input_tokens: null, output_tokens: null, estimated_cost_usd: null, reserved_cost_usd: 0.5,
+       na: {tokens: "OUTCOME_NOT_SUCCEEDED", estimated_cost_usd: "OUTCOME_NOT_SUCCEEDED"}}],
+    events: [{seq: 1, event_type: evilTagImg, status: "ok", tool: evilTag}]}, extra);
+  const traceBody = {status: "COMPLETE", axis: {duration_seconds: 10},
+    planner: {source: evilTag, interval: null, na: {interval: "PLANNER_SLOT_NOT_RECORDED"}, attempts: []},
+    branches: [slot("b1", 0, 6), slot("b2", 4, 6), slot(evilTagImg, 0, 0, { interval: null, na: {interval: "BRANCH_NOT_SETTLED", events: "TRACE_NOT_RECORDED"}, events: null})],
+    synthesizer: {status: "COMPLETE", published: true, reason_code: evilTag, cross_branch_compared: null, na: {cross_branch_compared: "CONFLICT_CHECK_NOT_RECORDED"}},
+    totals: {requests: 2, estimated_cost_usd: null, reserved_cost_usd: 1, wall_seconds: 10, na: {estimated_cost_usd: "NO_REQUEST_WITH_USAGE"},
+      overlap: {overlap_seconds: 2, na: {}}}};
+  traceUi.setTrace({result: traceBody});
+  await traceUi.element("page").listeners.click({target: {closest: () => ({dataset: {action: "load-trace", runId: "ui-parallel-000000000001"}})}});
+  assert.deepEqual(traceUi.traceRequests, ["/api/product/ask/runs/ui-parallel-000000000001/trace?workspace_id=a"]);
+  const traceHtml = traceUi.element("ask-trace-body").innerHTML;
+  assert.doesNotMatch(traceHtml, /<script>|<img/);
+  assert.match(traceHtml, /&lt;script&gt;alert\(1\)&lt;\/script&gt;/);
+  assert.match(traceHtml, /&lt;img src=x onerror=alert\(1\)&gt;/);
+  assert.match(traceHtml, /left:0%;width:60%/);
+  assert.match(traceHtml, /left:40%;width:60%/);
+  assert.match(traceHtml, /N\/A \(BRANCH_NOT_SETTLED\)/);
+  assert.match(traceHtml, /N\/A \(NO_REQUEST_WITH_USAGE\)/);
+  assert.match(traceHtml, /N\/A \(OUTCOME_NOT_SUCCEEDED\)/);
+  assert.match(traceHtml, /Result uncertain, may have been billed/);
+  assert.match(traceHtml, /not a bill/);
+  assert.doesNotMatch(traceHtml, /Overlap between sibling branches: N\/A/);
+  traceUi.setTrace({error: {code: "TRACE_NOT_FOUND", message: "No call chain <b>x</b>"}});
+  await traceUi.element("page").listeners.click({target: {closest: () => ({dataset: {action: "load-trace", runId: "ui-parallel-000000000001"}})}});
+  assert.equal(traceUi.element("ask-trace-body").textContent, "No call chain <b>x</b> TRACE_NOT_FOUND");
   const onlyUncertainUi = await setup();
   const onlyUncertainOperation = onlyUncertainUi.submit(); await tick();
   const onlyUncertainPayload = JSON.parse(JSON.stringify(resumePayload));
