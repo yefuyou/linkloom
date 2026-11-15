@@ -1223,9 +1223,11 @@ class ProductApplication:
                 "effective_from": effective_from.isoformat(),
                 "event_time": candidate.event_time.isoformat(),
                 "authority": "NON_AUTHORITATIVE",
+                "review_status": str(row["workflow_state"]),
                 "evidence": {**detail["evidence"], "verified": True,
                              "source_name": detail["source"]["name"]},
                 "source_id": candidate.artifact_id,
+                "source_version": candidate.artifact_version_id,
             })
         conflict_times = {
             item["effective_from"] for item in source_claims
@@ -1263,6 +1265,20 @@ class ProductApplication:
             status = "SOURCE_CONFLICT_UNREVIEWED"
         else:
             status = lookup.status.value
+        # Read-only visibility of unreviewed source claims that still differ
+        # from the formal state. They never change status or effective.
+        pending_conflicts: list[dict[str, Any]] = []
+        if status == "FOUND" and effective:
+            current = effective[0]
+            current_value = str(current["value"]).strip().casefold()
+            current_from = _parse_as_of(current["valid_from"])
+            pending_conflicts = [
+                item for item in source_claims
+                if str(item["value"]).strip().casefold() != current_value
+                and (current_from is None or datetime.fromisoformat(item["effective_from"]) >= current_from)
+            ]
+        elif status == "SOURCE_CONFLICT_UNREVIEWED":
+            pending_conflicts = list(source_conflicts)
         return {
             "status": status,
             "workspace_id": workspace_id,
@@ -1276,6 +1292,7 @@ class ProductApplication:
             "transitions": transitions,
             "proposals": proposals,
             "source_conflicts": source_conflicts,
+            "pending_conflicts": pending_conflicts,
         }
 
     def verify_temporal_claim(

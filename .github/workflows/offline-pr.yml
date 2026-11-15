@@ -79,3 +79,4 @@ jobs:
           node tests/ui/tasks_dom_test.cjs
           node tests/ui/meeting_v3_dom_test.cjs
           node tests/ui/ux_product_dom_test.cjs
+          node tests/ui/pending_source_conflict_dom_test.cjs

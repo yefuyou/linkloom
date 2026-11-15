@@ -526,6 +526,26 @@
       <p class="metadata">${decisions.length} ${copy("records", "条记录")}</p><div class="grid">${cards}</div>`;
   }
 
+  // Unreviewed source claims that differ from the formal state. Read-only: the
+  // only action is opening the candidate in Review of the current workspace.
+  function pendingConflictsHtml(items, hasFormal, t, locale) {
+    const pending = Array.isArray(items) ? items : [];
+    if (!pending.length) return "";
+    const reviewable = new Set(["PENDING_REVIEW", "CONFLICT"]);
+    const cards = pending.map((item) => {
+      const evidence = item.evidence || {};
+      const link = item.candidate_id && reviewable.has(item.review_status)
+        ? `<button class="button quiet" type="button" data-action="inspect-candidate" data-id="${escapeHtml(item.candidate_id)}">${t("Go to Review to verify", "前往 Review 核实")}</button>` : "";
+      return `<article class="timeline-item pending-source-claim"><strong>${escapeHtml(item.value)}</strong> ${badge(item.review_status)}
+        <p class="metadata">${t("Source:", "来源：")} ${escapeHtml(evidence.source_name || t("Unavailable", "不可用"))} · ${t("lines", "行号")} ${escapeHtml(evidence.line_start ?? "?")}–${escapeHtml(evidence.line_end ?? "?")} · ${t("Effective from", "生效日期")} ${askDate(item.effective_from, locale)}</p>
+        <blockquote class="quote">${escapeHtml(evidence.quote || t("Verified quote unavailable", "核验原文不可用"))}</blockquote>${link}</article>`;
+    }).join("");
+    const heading = hasFormal ? t("Pending source claims that differ from the current approved decision", "另有待审核来源提出不同说法")
+      : t("Pending sources disagree; there is no formal decision yet", "待审核来源存在不同说法，当前无正式决定");
+    return `<section class="pending-source-conflicts" role="note"><h3>${heading}</h3>
+      <p class="hint">${t("These claims are not approved decisions. Go to Review to verify the sources before relying on them.", "这些说法尚未批准，不是正式决定。请前往 Review 核实来源后再采信。")}</p>${cards}</section>`;
+  }
+
   async function inspectDecision(decisionId, asOf = "") {
     const viewToken = ++state.agentViewToken;
     const detail = await request(`/api/decisions/${encodeURIComponent(decisionId)}`);
@@ -555,6 +575,7 @@
         <p class="hint">${copy("Historical dates use the approvals currently recorded.", "历史日期查询依据目前保存的审核记录。")}</p>
         <p>${copy("Selected date:", "查询日期：")} ${escapeHtml(recovery.as_of.slice(0, 10))} · ${escapeHtml(statusLabel(recovery.status))}</p>
         <h2>${recovery.effective ? escapeHtml(recovery.effective.value) : copy("No verified effective decision for this date", "暂未核实该日期的有效决策")}</h2></section>
+      ${recovery.pending_conflicts?.length ? `<section class="panel">${pendingConflictsHtml(recovery.pending_conflicts, Boolean(recovery.effective), copy, state.language.startsWith("zh") ? "zh" : "en")}</section>` : ""}
       <section class="panel"><h2>${copy("Decision timeline", "决策时间线")}</h2><div class="timeline">${timeline || copy("No reviewed decision was effective by this date.", "暂未找到该日期前生效的审核记录。")}</div>
         <h3>${copy("Formal replacements", "已批准的替代记录")}</h3>${transitions || copy("No verified replacement by this date.", "暂未核实该日期前的替代记录。")}
         <h3>${copy("Unapproved proposals", "未批准的提案")}</h3>${proposals || copy("No unapproved proposal recorded by this date.", "暂无该日期前记录的未批准提案。")}</section>
@@ -947,7 +968,8 @@
     const subject = result.scope?.subject || "";
     const supplier = ["uses supplier", "uses vendor"].includes(String(result.scope?.relation).toLowerCase());
     const unknownText = unknown.map(field => field === "replacement_reason" ? t("The replacement reason needs source evidence.", "缺少更换原因的来源证据。") : field === "effective_decision" ? t("No effective formal decision could be verified.", "未能核实该日期有效的正式决策。") : field === "investigation_conclusion" ? t("The investigation conclusion has not been verified.", "本次调查结论尚未核验。") : t("Some requested information is not supported by evidence.", "请求中的部分信息尚无可信证据。")).join(" ");
-    const title = !claims.length ? t("No verifiable formal decision for this date", "该日期没有可核实的正式决策") : reasonUnknown ? (transition ? t("Change verified; the reason remains unknown", "更换事实已核实，原因尚无可信证据") : t("The reason is not established", "原因尚无可信证据")) : escapeHtml(claims[0].value);
+    const pendingConflicts = result.timeline?.pending_conflicts || [];
+    const title = !claims.length && pendingConflicts.length ? t("Pending sources disagree; there is no formal decision yet", "待审核来源存在不同说法，当前无正式决定") : !claims.length ? t("No verifiable formal decision for this date", "该日期没有可核实的正式决策") : reasonUnknown ? (transition ? t("Change verified; the reason remains unknown", "更换事实已核实，原因尚无可信证据") : t("The reason is not established", "原因尚无可信证据")) : escapeHtml(claims[0].value);
     const sentence = reasonUnknown && transition ? `${escapeHtml(transition.from_value)} → ${escapeHtml(transition.to_value)}. ${t("Reason: unconfirmed.", "更换原因：待确认。")}`
       : claims.length ? (supplier ? t(`${escapeHtml(subject)} uses ${escapeHtml(claims[0].value)} as its reviewed supplier${historical ? " at the selected date" : ""}.`, `${escapeHtml(subject)} 项目${historical ? "在所选日期采用" : "当前采用"} ${escapeHtml(claims[0].value)} 作为供应商。`) : `${escapeHtml(subject)} · ${escapeHtml(decisionCategory(result.scope?.relation, locale))}: ${escapeHtml(claims[0].value)}.`) : t("There is no unique reviewed, source-verified effective decision for the selected date.", "所选日期没有唯一、已审核且来源可核验的有效决策。");
     const replacedIds = new Set(transitions.map(item => item.from_decision_id).filter(Boolean));
@@ -978,7 +1000,7 @@
       ${historical ? `<p class="hint">${t("Historical dates use the approvals currently recorded.", "历史日期查询依据目前保存的审核记录。")}</p>` : ""}
       ${(result.rationale || []).map(item => `<p>${escapeHtml(item.statement || item.value || item.text || "")}</p>`).join("")}
       ${evidence.length ? `<section class="ask-core-evidence"><h2>${t("Original evidence", "原始证据")}</h2>${evidence[0]}${evidence.length > 1 ? `<details class="ask-more-evidence"><summary>${t("View remaining sources", "查看其余来源")} (${evidence.length - 1})</summary>${evidence.slice(1).join("")}</details>` : ""}</section>` : ""}
-      ${reasonUnknown && transition ? `<p class="hint">${t("Replacement effective", "更换生效日期")}: ${askDate(transition.effective_at, locale)}</p>` : ""}${history}${technical}</section>`;
+      ${reasonUnknown && transition ? `<p class="hint">${t("Replacement effective", "更换生效日期")}: ${askDate(transition.effective_at, locale)}</p>` : ""}${pendingConflictsHtml(pendingConflicts, claims.length > 0, t, locale)}${history}${technical}</section>`;
   }
 
   function revealAskResult(result) {
