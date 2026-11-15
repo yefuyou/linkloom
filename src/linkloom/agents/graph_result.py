@@ -80,7 +80,10 @@ def project_meeting_result(payload):
                 deadline=fields.get('deadline') or {}
                 if isinstance(deadline,dict):deadline=deadline.get('deadline') or deadline.get('deadline_text')
                 labels.append('候选：'+' · '.join(str(v) for v in [fields.get('title') or candidate.get('value'),fields.get('owner'),deadline] if v)+('（含人工修改；原文仅作上下文）' if is_human_context(candidate) else ''))
-        return '已确认记录存在冲突：'+('；'.join(dict.fromkeys(labels)) if labels else '有效时间或字段无法唯一确定')+'。请明确对象或更细的时间。'
+        guidance={'CONFIRMED_COUNTER_EVIDENCE':'请核实正式依据，确认以哪一项为准。','MULTIPLE_CONFIRMED_VALUES':'请核实正式依据，确认以哪一项为准。','TIME_PRECISION_REQUIRES_SCOPE':'请补充更精确的时间。'}
+        codes=[r.get('reason_code') for r in payload['steps'] if r['status']=='CONFLICT']
+        advice=''.join(dict.fromkeys(guidance.get(c,'请明确对象或更细的时间。') for c in codes)) or '请明确对象或更细的时间。'
+        return '已确认记录存在冲突：'+('；'.join(dict.fromkeys(labels)) if labels else '有效时间或字段无法唯一确定')+'。'+advice
     def missing_text():
         names={'task':'任务','decision_record':'决定','meeting':'会议','person':'人员'}
         rows=[r for r in payload['steps'] if r.get('requested_entity')]
@@ -90,7 +93,7 @@ def project_meeting_result(payload):
     def clarification_text():
         rows=[r for r in payload['steps'] if r['status']=='AMBIGUOUS']
         if not any(r.get('reason_code')=='CONFIRMED_CANDIDATES_NEED_CLARIFICATION' for r in rows):
-            return '存在多个已确认候选，请明确所指任务：'+'；'.join(n['label'] for r in rows for n in r['output_nodes'])
+            return ('存在多个已确认候选，请明确所指的具体对象：' if any(r.get('reason_code')=='ROOT_NEEDS_CLARIFICATION' for r in rows) else '存在多个已确认候选，请明确所指任务：')+'；'.join(n['label'] for r in rows for n in r['output_nodes'])
         labels=[]
         for row in rows:
             confirmed={r['node_id']:r for r in row.get('records',[])}
