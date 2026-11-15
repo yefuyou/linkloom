@@ -223,6 +223,7 @@ class SingleAgentModelLoop:
         task_plan: TaskPlan | None = None,
         workspace_id: str | None = None,
         context_runtime: Any | None = None,
+        reserve_final_turn: bool = False,
     ) -> None:
         has_decide = callable(getattr(model, "decide", None))
         has_complete = callable(getattr(model, "complete", None))
@@ -253,6 +254,7 @@ class SingleAgentModelLoop:
         self.tool_runtime = tool_runtime
         self.policy_enforcer = policy_enforcer
         self.max_steps = max_steps
+        self.reserve_final_turn = reserve_final_turn
         self.verified_evidence_context_limit = verified_evidence_context_limit
         self.task_plan = task_plan
         self.context_runtime = context_runtime
@@ -1191,6 +1193,18 @@ class SingleAgentModelLoop:
                 "Durable model response origin is missing or cannot be proven legacy.",
                 details={"reason": "response_origin_missing"},
             )
+
+        def final_only_tool_error(record: ModelExecutionRecord, response: ModelResponse,
+                                  request: ModelTurnRequest | None = None) -> ToolError | None:
+            if not self.reserve_final_turn:
+                return None
+            action = response.proposal or response.action
+            if action is None or action.kind == "final":
+                return None
+            if (request or load_request(record)).available_tools:
+                return None
+            return self._error("MODEL_FINAL_REQUIRED", "runtime",
+                               "The final-only request cannot execute tools.", {})
 
         def load_response(record: ModelExecutionRecord) -> ModelResponse:
             payload: dict[str, Any] | None = None
@@ -2243,6 +2257,8 @@ class SingleAgentModelLoop:
                     if response_envelope.error is not None:
                         upsert_record(replace(record, status="failed"))
                         return failed_result(provider_tool_error(response_envelope.error))
+                    if error := final_only_tool_error(record, response_envelope):
+                        return failed_result(error)
                     proposal = response_envelope.proposal
                     if proposal is not None:
                         if proposal.kind == "final":
@@ -2314,13 +2330,22 @@ class SingleAgentModelLoop:
                     grouped_history = bool(completed_tool_turns)
                     progress = current_progress_assessment()
                     recovery_decision = decide_recovery(progress)
+                    final_only = recovery_decision.action in {"FINAL_CONFLICT", "FINAL_PARTIAL"}
+                    guidance = recovery_decision.hint
+                    if self.reserve_final_turn and model_steps == self.max_steps and not final_only:
+                        final_only = True
+                        guidance = (
+                            "Submit Final now. Use only verified evidence already read. If it does not "
+                            "cover the question or TaskPlan, report insufficient evidence using the "
+                            "existing Final schema and identify what remains unknown."
+                        )
                     guide_final = recovery_decision.action == "CONTINUE" and bool(progress.completed_plan_evidence)
                     context_audit: dict[str, Any] = {}
                     evidence_budget = min(
                         MAX_VERIFIED_EVIDENCE_CONTEXT_BYTES,
                         MAX_PROVIDER_USER_INPUT_BYTES
                         - len(user_input.encode("utf-8"))
-                        - (512 if guide_final else len((recovery_decision.hint or "").encode("utf-8")))
+                        - (512 if guide_final else len((guidance or "").encode("utf-8")))
                         - 2048,
                     )
                     request = ModelTurnRequest(
@@ -2330,12 +2355,9 @@ class SingleAgentModelLoop:
                         agent_id=agent_id,
                         sequence=turn.sequence,
                         user_input=user_input,
-                        recovery_guidance=recovery_decision.hint,
+                        recovery_guidance=guidance,
                         observation=None if grouped_history else observation,
-                        available_tools=(
-                            [] if recovery_decision.action in {"FINAL_CONFLICT", "FINAL_PARTIAL"}
-                            else list(tool_definitions)
-                        ),
+                        available_tools=[] if final_only else list(tool_definitions),
                         previous_tool_call=None if grouped_history else previous_tool_call,
                         provider_continuation=(
                             None if grouped_history else provider_continuation
@@ -2519,6 +2541,8 @@ class SingleAgentModelLoop:
                 if response_envelope.error is not None:
                     upsert_record(replace(record, status="failed"))
                     return failed_result(provider_tool_error(response_envelope.error))
+                if error := final_only_tool_error(record, response_envelope, request):
+                    return failed_result(error)
 
                 bound_proposal = response_envelope.proposal
                 if bound_proposal is not None:
