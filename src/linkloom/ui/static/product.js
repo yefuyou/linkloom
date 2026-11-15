@@ -802,7 +802,7 @@
     const attempts = slot => (slot.attempts || []).map(row => `<tr data-outcome="${escapeHtml(row.outcome)}"><td>${escapeHtml(row.sequence)}</td><td>${escapeHtml(row.stage)}</td>
       <td>${escapeHtml(row.outcome)}${row.note ? ` · ${escapeHtml(noteLabel[row.note] || row.note)}` : ""}</td>
       <td>${na(row.input_tokens, reasons(row).tokens)} / ${na(row.output_tokens, reasons(row).tokens)}</td>
-      <td>${na(usd(row.estimated_cost_usd), reasons(row).estimated_cost_usd)}</td><td>${escapeHtml(usd(row.reserved_cost_usd))}</td></tr>`).join("");
+      <td>${na(usd(row.estimated_cost_usd), reasons(row).estimated_cost_usd)}</td><td>${na(usd(row.reserved_cost_usd), reasons(row).reserved_cost_usd || "RESERVATION_NOT_RECORDED")}</td></tr>`).join("");
     const table = slot => slot.attempts && slot.attempts.length ? `<table class="trace-attempts"><thead><tr><th>#</th><th>${t("Stage", "阶段")}</th><th>${t("Outcome", "结果")}</th>
       <th>${t("Tokens in / out", "输入 / 输出 Token")}</th><th>${t("Estimated cost", "估算费用")}</th><th>${t("Reserved ceiling", "预留上限")}</th></tr></thead><tbody>${attempts(slot)}</tbody></table>` : "";
     const events = branch => branch.events ? `<ol class="trace-events">${branch.events.map(event =>
@@ -815,13 +815,19 @@
       ${branch.reviewer ? `<p>${t("Reviewer", "Reviewer")}: ${escapeHtml(branch.reviewer.decision)}</p>` : branch.question ? `<p>${t("Reviewer", "Reviewer")}: ${na(null, reasons(branch).reviewer)}</p>` : ""}
       ${table(branch)}${branch.question ? events(branch) : ""}</details>`).join("");
     const overlap = trace.totals.overlap;
+    const totals = trace.totals;
+    const gaps = [];
+    if (totals.slots_without_record > 0) gaps.push(t(`Includes ${totals.slots_without_record} slot(s) with no record; totals are incomplete`, `含 ${totals.slots_without_record} 个无记录的槽位，合计不完整`));
+    if (totals.unestimated_requests > 0) gaps.push(t(`${totals.unestimated_requests} request(s) cannot be estimated`, `${totals.unestimated_requests} 次请求无法估算费用`));
+    if (totals.reservation_unrecorded_requests > 0) gaps.push(t(`${totals.reservation_unrecorded_requests} request(s) have no recorded reservation, left out of the reserved total`, `${totals.reservation_unrecorded_requests} 次请求没有预留记录，未计入预留合计`));
     const synth = trace.synthesizer;
     return `<section class="ask-trace-view" data-trace-status="${escapeHtml(trace.status)}">
       <p class="hint">${t("Intervals run from session creation to the last receipt write and cover the whole session, not only model requests. Costs are estimates from usage, not a bill; the reserved ceiling is separate.", "区间从会话创建到最后一次记录写入，覆盖整个会话而非仅模型请求。费用为按用量的估算，不是账单；预留上限单独列出。")}</p>
       <ul class="trace-bars">${bar(`${t("Planner", "规划器")} (${planner.source})`, planner)}${(trace.branches || []).map(branch => bar(branch.name, branch)).join("")}</ul>
-      <p>${t("Overlap between sibling branches", "兄弟分支重叠时长")}: ${na(overlap.overlap_seconds === null ? null : `${overlap.overlap_seconds}s`, (overlap.na || {}).overlap_seconds)}
+      <p>${t("Session overlap between sibling branches (does not mean requests ran in parallel)", "兄弟分支会话重叠（不代表请求并行）")}: ${na(overlap.session_overlap_seconds === null ? null : `${overlap.session_overlap_seconds}s`, (overlap.na || {}).session_overlap_seconds)}
         · ${t("Total", "总时长")}: ${na(trace.totals.wall_seconds === null ? null : `${trace.totals.wall_seconds}s`, (trace.totals.na || {}).wall_seconds)}</p>
-      <p>${t("Requests", "请求数")}: ${escapeHtml(trace.totals.requests)} · ${t("Estimated cost", "估算费用")}: ${na(usd(trace.totals.estimated_cost_usd), (trace.totals.na || {}).estimated_cost_usd)} · ${t("Reserved ceiling", "预留上限")}: ${escapeHtml(usd(trace.totals.reserved_cost_usd))}</p>
+      <p>${t("Requests", "请求数")}: ${escapeHtml(trace.totals.requests)} · ${t("Estimated cost", "估算费用")}: ${na(usd(trace.totals.estimated_cost_usd), (trace.totals.na || {}).estimated_cost_usd)} · ${t("Reserved ceiling", "预留上限")}: ${na(usd(trace.totals.reserved_cost_usd), (trace.totals.na || {}).reserved_cost_usd)}</p>
+      ${gaps.length ? `<p class="hint trace-incomplete">${gaps.join(" · ")}</p>` : ""}
       <p>${t("Synthesizer", "汇总")}: ${escapeHtml(synth.status)} · ${synth.published ? t("published", "已发布") : t("not published", "未发布")}${synth.reason_code ? ` · ${escapeHtml(synth.reason_code)}` : ""} · ${t("branches compared", "跨分支比较")}: ${na(synth.cross_branch_compared === null ? null : String(synth.cross_branch_compared), (synth.na || {}).cross_branch_compared)}</p>
       ${table(planner)}${branches}</section>`;
   }

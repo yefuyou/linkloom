@@ -438,7 +438,7 @@ async function setup(storage = new Map()) {
     branches: [slot("b1", 0, 6), slot("b2", 4, 6), slot(evilTagImg, 0, 0, { interval: null, na: {interval: "BRANCH_NOT_SETTLED", events: "TRACE_NOT_RECORDED"}, events: null})],
     synthesizer: {status: "COMPLETE", published: true, reason_code: evilTag, cross_branch_compared: null, na: {cross_branch_compared: "CONFLICT_CHECK_NOT_RECORDED"}},
     totals: {requests: 2, estimated_cost_usd: null, reserved_cost_usd: 1, wall_seconds: 10, na: {estimated_cost_usd: "NO_REQUEST_WITH_USAGE"},
-      overlap: {overlap_seconds: 2, na: {}}}};
+      overlap: {session_overlap_seconds: 2, na: {}}}};
   traceUi.setTrace({result: traceBody});
   await traceUi.element("page").listeners.click({target: {closest: () => ({dataset: {action: "load-trace", runId: "ui-parallel-000000000001"}})}});
   assert.deepEqual(traceUi.traceRequests, ["/api/product/ask/runs/ui-parallel-000000000001/trace?workspace_id=a"]);
@@ -454,6 +454,21 @@ async function setup(storage = new Map()) {
   assert.match(traceHtml, /Result uncertain, may have been billed/);
   assert.match(traceHtml, /not a bill/);
   assert.doesNotMatch(traceHtml, /Overlap between sibling branches: N\/A/);
+  assert.match(traceHtml, /Session overlap between sibling branches \(does not mean requests ran in parallel\)/);
+  assert.doesNotMatch(traceHtml, /trace-incomplete/, "a complete total carries no incompleteness note");
+  const incomplete = JSON.parse(JSON.stringify(traceBody));
+  Object.assign(incomplete.totals, {slots_without_record: 2, unestimated_requests: 3, reservation_unrecorded_requests: 1,
+    reserved_cost_usd: null, na: {estimated_cost_usd: "NO_REQUEST_WITH_USAGE", reserved_cost_usd: "RESERVATION_NOT_RECORDED"}});
+  incomplete.branches[0].attempts[0].reserved_cost_usd = null;
+  incomplete.branches[0].attempts[0].na.reserved_cost_usd = "RESERVATION_NOT_RECORDED";
+  traceUi.setTrace({result: incomplete});
+  await traceUi.element("page").listeners.click({target: {closest: () => ({dataset: {action: "load-trace", runId: "ui-parallel-000000000001"}})}});
+  const incompleteHtml = traceUi.element("ask-trace-body").innerHTML;
+  assert.match(incompleteHtml, /Includes 2 slot\(s\) with no record; totals are incomplete/);
+  assert.match(incompleteHtml, /3 request\(s\) cannot be estimated/);
+  assert.match(incompleteHtml, /1 request\(s\) have no recorded reservation/);
+  assert.match(incompleteHtml, /Reserved ceiling: <span class="trace-na">N\/A \(RESERVATION_NOT_RECORDED\)/);
+  assert.match(incompleteHtml, /<td><span class="trace-na">N\/A \(RESERVATION_NOT_RECORDED\)<\/span><\/td>/);
   traceUi.setTrace({error: {code: "TRACE_NOT_FOUND", message: "No call chain <b>x</b>"}});
   await traceUi.element("page").listeners.click({target: {closest: () => ({dataset: {action: "load-trace", runId: "ui-parallel-000000000001"}})}});
   assert.equal(traceUi.element("ask-trace-body").textContent, "No call chain <b>x</b> TRACE_NOT_FOUND");

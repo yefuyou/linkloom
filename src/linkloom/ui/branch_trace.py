@@ -8,7 +8,7 @@ elapsed_seconds of the last receipt write. It covers the whole session, not only
 request has no timestamp, so a request-level timeline is N/A. Runtime trace events carry no timestamps
 either; they are listed in recorded order only.
 
-Overlap is computed between sibling branches of the same pool, and only when both have a complete interval.
+Session overlap is computed between sibling branches of the same pool, and only when both have a complete interval.
 Trace events nested inside a branch never take part. Every value that cannot be established is None and its
 reason is recorded in the owning object's "na" mapping.
 """
@@ -61,6 +61,16 @@ def _number(value):
                             and math.isfinite(value) and value >= 0) else None
 
 
+def _total(values, digits=None):
+    """Sum of the recorded values. An unrecorded value (None) is left out, never counted as 0; if every value
+    is unrecorded the total is None. No value at all sums to 0."""
+    values = list(values)
+    known = [value for value in values if value is not None]
+    if values and not known:
+        return None
+    return round(sum(known), digits) if digits is not None else sum(known)
+
+
 def _interval(budget, pool_status, pool_reason):
     """(interval dict, reason, (start, end)); an unsettled or unreadable slot has no complete interval."""
     if budget is None:
@@ -89,18 +99,24 @@ def _attempts(budget, withheld):
         outcome = str(row['outcome'])
         usage = row.get('usage') if isinstance(row.get('usage'), dict) else {}
         tokens_in, tokens_out = _count(usage.get('input_tokens')), _count(usage.get('output_tokens'))
-        known = (outcome == 'SUCCEEDED' and tokens_in is not None and tokens_out is not None
-                 and rate_in is not None and rate_out is not None)
-        reason = None if known else 'OUTCOME_NOT_SUCCEEDED' if outcome != 'SUCCEEDED' else 'USAGE_NOT_REPORTED'
+        usable = outcome == 'SUCCEEDED' and tokens_in is not None and tokens_out is not None
+        known = usable and rate_in is not None and rate_out is not None
+        usage_reason = None if usable else 'OUTCOME_NOT_SUCCEEDED' if outcome != 'SUCCEEDED' else 'USAGE_NOT_REPORTED'
+        reason = usage_reason or (None if known else 'RATE_NOT_RECORDED')
         item = dict(sequence=_count(row.get('sequence')), stage=str(row.get('stage')), outcome=outcome,
             verified=outcome == 'SUCCEEDED', note=_NOTES.get(outcome),
             input_tokens_reserved=_count(row.get('input_reserved')), output_tokens_reserved=_count(row.get('output_reserved')),
             reserved_cost_usd=_number(row.get('cost_reserved_usd')),
-            input_tokens=tokens_in if known else None, output_tokens=tokens_out if known else None,
+            input_tokens=tokens_in if usable else None, output_tokens=tokens_out if usable else None,
             estimated_cost_usd=round((tokens_in * rate_in + tokens_out * rate_out) / 1e6, 8) if known else None,
             interval=None, na=dict(interval='REQUEST_HAS_NO_TIMESTAMP'))
+        for key in ('input_tokens_reserved', 'output_tokens_reserved', 'reserved_cost_usd'):
+            if item[key] is None:
+                item['na'][key] = 'RESERVATION_NOT_RECORDED'
+        if not usable:
+            item['na']['tokens'] = usage_reason
         if not known:
-            item['na'].update(tokens=reason, estimated_cost_usd=reason)
+            item['na']['estimated_cost_usd'] = reason
         if not withheld:
             item.update(request_sha256=row.get('request_sha256'), response_sha256=row.get('response_sha256'),
                         provider_request_id=row.get('provider_request_id'),
@@ -147,20 +163,26 @@ def _slot(root, base, name, entry, pool_reason, withheld):
         slot['na']['interval'] = reason
     if budget is None:
         slot.update(requests=None, attempts=[], input_tokens_reserved=None, output_tokens_reserved=None,
-                    reserved_cost_usd=None, estimated_cost_usd=None, unestimated_requests=None, failure=None)
+                    reserved_cost_usd=None, estimated_cost_usd=None, unestimated_requests=None,
+                    reservation_unrecorded_requests=None, failure=None)
         slot['na'].update({key: 'BUDGET_RECORD_UNAVAILABLE' for key in
                            ('requests', 'tokens', 'reserved_cost_usd', 'estimated_cost_usd')})
         return slot, span
     estimates = [row['estimated_cost_usd'] for row in attempts if row['estimated_cost_usd'] is not None]
     slot.update(requests=len(attempts), attempts=attempts,
-        input_tokens_reserved=sum(row['input_tokens_reserved'] or 0 for row in attempts),
-        output_tokens_reserved=sum(row['output_tokens_reserved'] or 0 for row in attempts),
-        reserved_cost_usd=round(sum(row['reserved_cost_usd'] or 0 for row in attempts), 8),
+        input_tokens_reserved=_total(row['input_tokens_reserved'] for row in attempts),
+        output_tokens_reserved=_total(row['output_tokens_reserved'] for row in attempts),
+        reserved_cost_usd=_total((row['reserved_cost_usd'] for row in attempts), 8),
+        reservation_unrecorded_requests=sum(1 for row in attempts if None in (
+            row['input_tokens_reserved'], row['output_tokens_reserved'], row['reserved_cost_usd'])),
         estimated_cost_usd=round(sum(estimates), 8) if estimates else None,
         unestimated_requests=len(attempts) - len(estimates),
         failure=budget['failure'] if isinstance(budget.get('failure'), str) else None)
     if not estimates:
         slot['na']['estimated_cost_usd'] = 'NO_REQUEST_WITH_USAGE'
+    for key in ('input_tokens_reserved', 'output_tokens_reserved', 'reserved_cost_usd'):
+        if slot[key] is None:
+            slot['na'][key] = 'RESERVATION_NOT_RECORDED'
     return slot, span
 
 
@@ -169,7 +191,7 @@ def compute_overlap(items):
     groups = {}
     for item in items:
         groups.setdefault(item['pool'], []).append(item)
-    pairs, seconds, peak, compared = [], 0.0, 0, 0
+    session_pairs, seconds, peak, compared = [], 0.0, 0, 0
     for group in groups.values():
         if len(group) < 2:
             continue
@@ -178,7 +200,7 @@ def compute_overlap(items):
             for second in group[index + 1:]:
                 shared = (min(first['end'], second['end']) - max(first['start'], second['start'])).total_seconds()
                 if shared > 0:
-                    pairs.append(dict(branches=sorted((first['name'], second['name'])), seconds=round(shared, 3)))
+                    session_pairs.append(dict(branches=sorted((first['name'], second['name'])), seconds=round(shared, 3)))
         marks = sorted([(item['start'], 1) for item in group] + [(item['end'], -1) for item in group],
                        key=lambda mark: (mark[0], mark[1]))  # an interval ending where another starts is not overlap
         active, previous = 0, None
@@ -189,10 +211,10 @@ def compute_overlap(items):
             peak = max(peak, active)
             previous = moment
     if not compared:
-        return dict(overlap_seconds=None, max_concurrency=None, pairs=[],
-                    na=dict(overlap_seconds='FEWER_THAN_TWO_COMPLETE_SIBLING_INTERVALS',
-                            max_concurrency='FEWER_THAN_TWO_COMPLETE_SIBLING_INTERVALS'))
-    return dict(overlap_seconds=round(seconds, 3), max_concurrency=peak, pairs=sorted(pairs, key=lambda p: p['branches']),
+        return dict(session_overlap_seconds=None, max_concurrent_sessions=None, session_pairs=[],
+                    na=dict(session_overlap_seconds='FEWER_THAN_TWO_COMPLETE_SIBLING_INTERVALS',
+                            max_concurrent_sessions='FEWER_THAN_TWO_COMPLETE_SIBLING_INTERVALS'))
+    return dict(session_overlap_seconds=round(seconds, 3), max_concurrent_sessions=peak, session_pairs=sorted(session_pairs, key=lambda p: p['branches']),
                 na={})
 
 
@@ -284,7 +306,9 @@ def build_branch_trace(root, run_id, snapshot, max_steps):
 
     overlap = compute_overlap(spans)
     overlap['excluded'] = excluded
-    overlap['basis'] = 'SIBLING_BRANCH_INTERVALS'
+    overlap['basis'] = 'SESSION_INTERVALS_NOT_REQUEST_CONCURRENCY'
+    overlap['meaning'] = ('Overlap of whole child sessions (creation to last receipt write). It does not show '
+                          'that model requests were sent in parallel; a request has no timestamp.')
     complete = [planner_span] * bool(planner_span) + [(item['start'], item['end']) for item in spans]
     axis = None
     if complete:
@@ -300,15 +324,19 @@ def build_branch_trace(root, run_id, snapshot, max_steps):
     known = [slot for slot in slots if slot['requests'] is not None]
     estimates = [slot['estimated_cost_usd'] for slot in known if slot['estimated_cost_usd'] is not None]
     totals = dict(requests=sum(slot['requests'] for slot in known),
-        input_tokens_reserved=sum(slot['input_tokens_reserved'] for slot in known),
-        output_tokens_reserved=sum(slot['output_tokens_reserved'] for slot in known),
-        reserved_cost_usd=round(sum(slot['reserved_cost_usd'] for slot in known), 8),
+        input_tokens_reserved=_total(slot['input_tokens_reserved'] for slot in known),
+        output_tokens_reserved=_total(slot['output_tokens_reserved'] for slot in known),
+        reserved_cost_usd=_total((slot['reserved_cost_usd'] for slot in known), 8),
+        reservation_unrecorded_requests=sum(slot['reservation_unrecorded_requests'] for slot in known),
         estimated_cost_usd=round(sum(estimates), 8) if estimates else None,
         unestimated_requests=sum(slot['unestimated_requests'] for slot in known),
         slots_without_record=len(slots) - len(known),
         wall_seconds=axis['duration_seconds'] if axis else None, overlap=overlap, na={})
     if not estimates:
         totals['na']['estimated_cost_usd'] = 'NO_REQUEST_WITH_USAGE'
+    for key in ('input_tokens_reserved', 'output_tokens_reserved', 'reserved_cost_usd'):
+        if totals[key] is None:
+            totals['na'][key] = 'RESERVATION_NOT_RECORDED'
     if axis is None:
         totals['na']['wall_seconds'] = 'NO_COMPLETE_INTERVAL'
 
