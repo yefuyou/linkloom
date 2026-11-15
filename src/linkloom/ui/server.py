@@ -286,6 +286,15 @@ class LinkLoomRequestHandler(BaseHTTPRequestHandler):
             except ProductApplicationError as error:
                 self._send_error_payload(error.status, error.code, str(error))
             return
+        if (self.server.unified_ask is not None and path.startswith("/api/product/ask/runs/")
+                and path.endswith("/trace") and path.count("/") == 6):
+            try:
+                workspace_id = parse_qs(urlsplit(self.path).query).get("workspace_id", [""])[0]
+                result, status = self.server.unified_ask.trace(path.split("/")[-2], workspace_id)
+                self._send_json({"result": result}, status=status)
+            except ProductApplicationError as error:
+                self._send_error_payload(error.status, error.code, str(error))
+            return
         if self.server.unified_ask is not None and path.startswith("/api/product/ask/runs/"):
             try:
                 workspace_id = parse_qs(urlsplit(self.path).query).get("workspace_id", [""])[0]

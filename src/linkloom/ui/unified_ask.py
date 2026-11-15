@@ -990,6 +990,17 @@ class UnifiedAskService:
         with self.app._store_lock:
             return self._from_snapshot(_AskRun(**ask), snapshot), 202
 
+    def trace(self, run_id: str, workspace_id: str) -> tuple[dict[str, Any], int]:
+        """Read-only call chain of a parallel run. Only the saved record and the run files are read."""
+        with self.app._store_lock:
+            self._check_workspace(workspace_id)
+        service = self.investigation()
+        found = service.parallel_trace(run_id, workspace_id) if service is not None else None
+        if found is None:
+            raise ProductApplicationError("TRACE_NOT_FOUND", "No call chain is available for this run.", status=404)
+        source, trace = found
+        return dict(trace, source=source), 200
+
     def inspect(self, run_id: str, workspace_id: str) -> tuple[dict[str, Any], int]:
         with self._lock:
             graph_run = self._graph_runs.get(run_id)

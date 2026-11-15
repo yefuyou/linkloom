@@ -211,3 +211,12 @@ pre,code,.metadata{overflow-wrap:anywhere;max-width:100%;}pre{white-space:pre-wr
 .evidence-jump::backdrop {background:rgba(20,30,50,.45);}
 .evidence-jump-text {white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.8;}
 .evidence-jump mark {background:#ffec99;color:#222;outline:2px solid #8a6500;outline-offset:2px;scroll-margin:80px;}
+
+.trace-bars { list-style: none; padding: 0; }
+.trace-row { display: flex; align-items: center; gap: .5rem; margin: .25rem 0; }
+.trace-label { flex: 0 0 9rem; overflow-wrap: anywhere; }
+.trace-track { position: relative; flex: 1; height: .8rem; background: #e6e9ee; border-radius: 3px; }
+.trace-bar { position: absolute; top: 0; bottom: 0; background: var(--green); opacity: .6; border-radius: 3px; }
+.trace-na { color: var(--amber); }
+.trace-attempts { width: 100%; border-collapse: collapse; font-size: .85rem; }
+.trace-attempts th, .trace-attempts td { text-align: left; padding: .2rem .4rem; border-bottom: 1px solid #e6e9ee; }
