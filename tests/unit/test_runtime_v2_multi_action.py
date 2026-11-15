@@ -16,7 +16,7 @@ from linkloom.agents.model_adapter import (
     runtime_call_id_for,
 )
 from linkloom.runtime.artifacts import ModelArtifactStore
-from linkloom.runtime.model_loop import SingleAgentModelLoop
+from linkloom.runtime.model_loop import SingleAgentModelLoop, _final_citation_guidance
 from linkloom.runtime.models import RuntimeState, SourceContext
 from linkloom.tools.contracts import ToolCall, ToolDefinition, ToolResult
 from linkloom.tools.registry import ToolRegistry
@@ -27,6 +27,17 @@ from linkloom.tools.tool_policy import ToolCallPolicy, ToolPolicyEnforcer
 RUN_ID = "run_runtime_v2_multi"
 TASK_ID = "task_runtime_v2_multi"
 AGENT_ID = "retrieval_agent"
+
+
+def test_final_citation_guidance_only_maps_available_verified_reads():
+    def read(ref):
+        return ToolResult(ref, "read_verified_note", "ok", value={"evidence_id": ref})
+
+    groups = (("ev_first",), ("ev_unavailable", "ev_second"))
+    assert _final_citation_guidance(groups, [read("ev_second"), read("ev_first")]).endswith(
+        "Citation candidates in TaskPlan order: 1=ev_first, 2=ev_second."
+    )
+    assert _final_citation_guidance(groups, [read("ev_first")]) is None
 
 
 class ScriptedProvider:
