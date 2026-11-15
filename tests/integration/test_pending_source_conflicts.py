@@ -61,7 +61,7 @@ def server(tmp_path):
         _stop_product_server(srv, worker, app)
 
 
-def _approved_b_and_pending_c(server, claims=None, c_day="05"):
+def _approved_b_and_pending_c(server, claims=None, c_day="01"):
     base, *_ = server(claims or [_claim("Birchline"), _claim("Cedar")])
     _import(base, "b.md", "01", "Alice", "Birchline")
     _review(base, _candidate_id(base, "Birchline"), "approve")
@@ -82,7 +82,7 @@ def test_scenario_a_approved_b_with_different_pending_c(server):
     assert pending["authority"] == "NON_AUTHORITATIVE"
     assert pending["evidence"]["source_name"] == "c.md"
     assert pending["evidence"]["quote"] and pending["evidence"]["line_start"] >= 1
-    assert pending["effective_from"].startswith("2026-10-05")
+    assert pending["effective_from"].startswith("2026-10-01")
     assert _decisions(base) == before
     assert [d["value"] for d in _decisions(base)] == ["Birchline"]
     assert _client(base, f"/api/review/candidates/{pending['candidate_id']}")[1]["candidate"]["status"] == pending["review_status"]
@@ -177,10 +177,16 @@ def test_different_slot_is_not_reported(server):
     assert [i["value"] for i in _recover(base, subject="Billing")["pending_conflicts"]] == []
 
 
+def test_pending_claim_with_later_effective_time_is_not_reported(server):
+    base = _approved_b_and_pending_c(server, c_day="05")
+    recovery = _recover(base)
+    assert recovery["status"] == "FOUND" and recovery["pending_conflicts"] == []
+
+
 def test_pending_claim_after_requested_time_is_not_reported(server):
     base = _approved_b_and_pending_c(server, c_day="20")
     assert _recover(base)["pending_conflicts"] == []
-    assert [i["value"] for i in _recover(base, "2026-10-25")["pending_conflicts"]] == ["Cedar"]
+    assert _recover(base, "2026-10-25")["pending_conflicts"] == []
 
 
 def test_pending_claim_older_than_current_decision_is_not_reported(server):
@@ -207,3 +213,41 @@ def test_pending_conflict_does_not_open_the_agent_gate_or_write_memory(server):
     assert status == 409
     assert payload["error"]["code"] == "TEMPORAL_SCOPE_UNVERIFIED"
     assert _decisions(base) == []
+
+
+def test_scenario_b_is_not_reachable_from_ask_and_is_covered_by_recovery(server):
+    # Known limit (routing is out of scope for #104): Ask only indexes slots with an
+    # approved decision, so a pending-only slot yields no timeline in Ask. The
+    # recovery/timeline path (/api/decisions/recover) still exposes both sides.
+    base, *_ = server([_claim("Birchline"), _claim("Cedar")])
+    _import(base, "a.md", "01", "Alice", "Birchline")
+    _import(base, "c.md", "01", "Bob", "Cedar")
+    recovery = _recover(base)
+    status, payload = _client(base, "/api/product/ask", method="POST", data={
+        "query": "Which supplier is used for Launch?", "workspace_id": recovery["workspace_id"]})
+    assert status == 200
+    assert payload["result"]["timeline"] is None and payload["result"]["conclusions"] == []
+    assert len(recovery["pending_conflicts"]) == 2
+
+
+def test_real_recovery_payloads_render_in_the_dom(server, tmp_path):
+    # Feed real recover_decision output (scenarios A and B) to the DOM test.
+    import json, os, shutil, subprocess
+    from pathlib import Path
+    node = shutil.which("node")
+    if node is None:
+        pytest.skip("node is not available")
+    base = _approved_b_and_pending_c(server)
+    a = _recover(base)
+    b_base, *_ = server([_claim("Birchline"), _claim("Cedar")])
+    _import(b_base, "a.md", "01", "Alice", "Birchline")
+    _import(b_base, "c.md", "01", "Bob", "Cedar")
+    b = _recover(b_base)
+    assert a["pending_conflicts"] and b["status"] == "SOURCE_CONFLICT_UNREVIEWED"
+    fixture = tmp_path / "recovery.json"
+    fixture.write_text(json.dumps({"A": a, "B": b}), encoding="utf-8")
+    root = Path(__file__).resolve().parents[2]
+    done = subprocess.run([node, "tests/ui/pending_source_conflict_dom_test.cjs"], cwd=root, capture_output=True,
+                          text=True, encoding="utf-8", env={**os.environ, "PENDING_CONFLICT_RECOVERY_FIXTURE": str(fixture)})
+    assert done.returncode == 0, done.stdout + done.stderr
+    assert "real recover_decision payloads" in done.stdout

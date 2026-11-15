@@ -1266,7 +1266,8 @@ class ProductApplication:
         else:
             status = lookup.status.value
         # Read-only visibility of unreviewed source claims that still differ
-        # from the formal state. They never change status or effective.
+        # from the formal state at the same effective time. A different
+        # effective time is not a conflict. They never change status or effective.
         pending_conflicts: list[dict[str, Any]] = []
         if status == "FOUND" and effective:
             current = effective[0]
@@ -1275,7 +1276,7 @@ class ProductApplication:
             pending_conflicts = [
                 item for item in source_claims
                 if str(item["value"]).strip().casefold() != current_value
-                and (current_from is None or datetime.fromisoformat(item["effective_from"]) >= current_from)
+                and (current_from is None or datetime.fromisoformat(item["effective_from"]) == current_from)
             ]
         elif status == "SOURCE_CONFLICT_UNREVIEWED":
             pending_conflicts = list(source_conflicts)
