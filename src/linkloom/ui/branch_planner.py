@@ -11,7 +11,9 @@ import json
 from types import SimpleNamespace
 
 from linkloom.agents.model_adapter import ModelGenerationOptions, ModelTurnRequest
-from linkloom.runtime.task_plan import TaskPlan, validate_model_proposed_plan
+from linkloom.runtime.task_plan import (
+    MAX_TASK_PLAN_SUBGOALS, TaskPlan, _canonicalize_model_plan_ids, validate_model_proposed_plan,
+)
 from linkloom.semantic_ingestion.task_relation_models import canonical_hash
 from linkloom.tools.contracts import ToolDefinition
 
@@ -27,7 +29,8 @@ _BRANCH = dict(type='object', properties=dict(question=dict(type='string'), enti
 _SCHEMA = dict(type='object', properties=dict(decline=dict(type='boolean'), reason=dict(type='string'),
     branches=dict(type='array', items=_BRANCH)))
 _PROMPT = (
-    "Split the user question into exactly two independent read-only investigation branches. Each branch has a "
+    "Split the user question into exactly two independent read-only investigation branches. "
+    f"Use at most {MAX_TASK_PLAN_SUBGOALS} steps total across both branches. Each branch has a "
     "self-contained question, entity_text and time_text copied verbatim from the user question (time_text may be "
     "empty), and ordered steps. Steps depend only on earlier steps of the same branch; the first step has no "
     "dependency and a later step refers to the earlier answer with the placeholder {verified_entity}. The two "
@@ -155,7 +158,9 @@ def validate_branch_plan(payload, scope):
     rows = _rows(payload)
     goals = [goal for row in rows for goal in row[3]]
     try:
-        combined = TaskPlan.from_dict(dict(goal=scope.query.strip(), subgoals=goals))
+        combined = TaskPlan.from_dict(_canonicalize_model_plan_ids(
+            dict(goal=scope.query.strip(), subgoals=goals),
+        ))
         # One shared grouping rule: a dependency across branches merges them and leaves fewer than two.
         groups = independent_subplans(combined, 2 * len(goals) + 1)
         if len(groups) != 2 or any((len(plan.subgoals) if plan else 1) != len(row[3])
