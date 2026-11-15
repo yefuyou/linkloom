@@ -486,6 +486,62 @@ class ProductInvestigationService:
                 return ask, resumed.snapshot()
             return ask, self._cold_parallel(root, run_id, workspace_id, ask.get('query'))
 
+    def parallel_trace(self, run_id, workspace_id):
+        """Read-only call chain of a parallel run as (source, trace), or None. Never calls a model or writes."""
+        from linkloom.ui.branch_trace import build_branch_trace
+        if not self.parallel_limits or re.fullmatch(r'ui-parallel-[0-9a-f]{12}', str(run_id)) is None:
+            return None
+        with self.product_app._store_lock:
+            if self.product_app._workspace_id() != workspace_id:
+                return None
+            with self._lock:
+                resumed, parallel = self._resume_jobs.get(run_id), self._parallel_jobs.get(run_id)
+            live = resumed or parallel
+            if live is not None:
+                if live.workspace_id != workspace_id:
+                    return None
+                root, source = (resumed.root.parent if resumed else parallel.root), 'LIVE'
+                # Never inspect() or snapshot() here: they validate the pool parent and may write the stop state.
+                if live.outcome is None:
+                    snapshot = self._running_parallel(live, root, run_id, workspace_id)
+                else:
+                    snapshot = self._cold_parallel(root, run_id, workspace_id)
+            else:
+                found = self._parallel_pointer(run_id, workspace_id)
+                if found is None:
+                    return None
+                root, source = found[0], 'SAVED'
+                snapshot = self._cold_parallel(root, run_id, workspace_id)
+            if snapshot is None:
+                return None
+            try:
+                return source, build_branch_trace(root, run_id, snapshot, self.relation_max_steps)
+            except Exception:
+                raise ProductApplicationError('TRACE_UNREADABLE', 'The saved call chain cannot be read.', status=409)
+
+    def _running_parallel(self, job, root, run_id, workspace_id):
+        """Minimal read-only snapshot of a run that is still running: status and run level facts only.
+
+        The source identity is compared without touching the pool. A change is reported as a withheld
+        (aborted) snapshot in this response only; the pool, pool.json and the running branches stay as they are.
+        """
+        from linkloom.ui import parallel_resume
+        from linkloom.ui.parallel_investigation import render_snapshot
+        try:
+            record = parallel_resume.load_record(Path(root))
+            workspace = WorkspacePresentationContext(display_name=str(record['workspace']['display_name']),
+                                                     document_count=record['workspace']['document_count'])
+        except Exception:
+            return self._parallel_failure(run_id, 'PARALLEL_STATE_UNREADABLE')
+        stop = job.pool.stop_state
+        try:
+            self._parallel_validator(workspace_id, record['identity'])()
+        except Exception:
+            stop = ('HARD_ABORT', 'TASK_SOURCE_AUTHORIZATION_CHANGED')
+        return render_snapshot(run_id, record['query'], workspace, stop=stop, outcome=None,
+            questions=[entry['question'] for entry in record['branches']], planner=record.get('planner'),
+            source_check=None, cache={})
+
     def _cold_parallel(self, root, run_id, workspace_id, query=None):
         from linkloom.runtime.models import RunStatus
         from linkloom.ui import parallel_resume

@@ -27,6 +27,9 @@ from linkloom.runtime.models import ToolExecutionRecord
 from linkloom.tools.contracts import ToolResult
 
 
+MAX_TASK_PLAN_SUBGOALS = 5
+
+
 @dataclass(frozen=True, slots=True)
 class Subgoal:
     subgoal_id: str
@@ -62,7 +65,7 @@ class TaskPlan:
         goal, rows = value["goal"], value["subgoals"]
         if not isinstance(goal, str) or not goal.strip() or len(goal) > 2048:
             raise ValidationError("TaskPlan.goal must be bounded non-empty text.")
-        if not isinstance(rows, list) or not 2 <= len(rows) <= 5:
+        if not isinstance(rows, list) or not 2 <= len(rows) <= MAX_TASK_PLAN_SUBGOALS:
             raise ValidationError("TaskPlan needs two to five subgoals.")
         parsed: list[Subgoal] = []
         prior: set[str] = set()

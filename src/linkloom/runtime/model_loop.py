@@ -95,6 +95,24 @@ def _bounded_model_request(request: ModelTurnRequest) -> tuple[ModelTurnRequest,
             raise ValidationError("Model request exceeds the bounded context budget.")
 
 
+def _final_citation_guidance(
+    evidence_by_subgoal: tuple[tuple[str, ...], ...], evidence_context: list[ToolResult],
+) -> str | None:
+    """Provide a visible verified citation candidate for each completed subgoal."""
+    visible_reads = {
+        item.value["evidence_id"] for item in evidence_context
+        if item.tool_id == "read_verified_note" and isinstance(item.value, dict)
+    }
+    candidates = [next((ref for ref in refs if ref in visible_reads), None)
+                  for refs in evidence_by_subgoal]
+    if not candidates or any(ref is None for ref in candidates):
+        return None
+    mapping = ", ".join(f"{index}={ref}" for index, ref in enumerate(candidates, 1))
+    hint = ("In Final, state the finding for each TaskPlan subgoal and cite its verified evidence. "
+            f"Citation candidates in TaskPlan order: {mapping}.")
+    return hint if len(hint.encode("utf-8")) <= 512 else None
+
+
 def project_model_request_for_audit(request: ModelTurnRequest, context_audit: dict[str, Any]) -> dict[str, Any]:
     """Redacted, provider-neutral projection of exactly one durable model request."""
     def size(value: Any) -> dict[str, int | str]:
@@ -2294,13 +2312,15 @@ class SingleAgentModelLoop:
                     # singleton proposal.  Legacy observation fields are used
                     # only by the pre-V2 ModelAction path.
                     grouped_history = bool(completed_tool_turns)
-                    recovery_decision = current_recovery_decision()
+                    progress = current_progress_assessment()
+                    recovery_decision = decide_recovery(progress)
+                    guide_final = recovery_decision.action == "CONTINUE" and bool(progress.completed_plan_evidence)
                     context_audit: dict[str, Any] = {}
                     evidence_budget = min(
                         MAX_VERIFIED_EVIDENCE_CONTEXT_BYTES,
                         MAX_PROVIDER_USER_INPUT_BYTES
                         - len(user_input.encode("utf-8"))
-                        - len((recovery_decision.hint or "").encode("utf-8"))
+                        - (512 if guide_final else len((recovery_decision.hint or "").encode("utf-8")))
                         - 2048,
                     )
                     request = ModelTurnRequest(
@@ -2361,6 +2381,10 @@ class SingleAgentModelLoop:
                             return failed_result(self._error("CONTEXT_INCOMPLETE", "budget",
                                 "Required original context cannot fit or be recovered; no model request sent.", error.details))
                         context_audit["engineering"] = engineering_audit
+                    if guide_final:
+                        guidance = _final_citation_guidance(progress.completed_plan_evidence, request.evidence_context)
+                        if guidance is not None:
+                            request = replace(request, recovery_guidance=guidance)
                     request, request_budget_audit = _bounded_model_request(request)
                     context_audit.update(request_budget_audit)
                     tools_artifact = tool_definitions_artifact(turn.turn_id)
