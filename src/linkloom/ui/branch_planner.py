@@ -11,7 +11,9 @@ import json
 from types import SimpleNamespace
 
 from linkloom.agents.model_adapter import ModelGenerationOptions, ModelTurnRequest
-from linkloom.runtime.task_plan import TaskPlan, validate_model_proposed_plan
+from linkloom.runtime.task_plan import (
+    MAX_TASK_PLAN_SUBGOALS, TaskPlan, _canonicalize_model_plan_ids, validate_model_proposed_plan,
+)
 from linkloom.semantic_ingestion.task_relation_models import canonical_hash
 from linkloom.tools.contracts import ToolDefinition
 
@@ -27,7 +29,8 @@ _BRANCH = dict(type='object', properties=dict(question=dict(type='string'), enti
 _SCHEMA = dict(type='object', properties=dict(decline=dict(type='boolean'), reason=dict(type='string'),
     branches=dict(type='array', items=_BRANCH)))
 _PROMPT = (
-    "Split the user question into exactly two independent read-only investigation branches. Each branch has a "
+    "Split the user question into exactly two independent read-only investigation branches. "
+    f"Use at most {MAX_TASK_PLAN_SUBGOALS} steps total across both branches. Each branch has a "
     "self-contained question, entity_text and time_text copied verbatim from the user question (time_text may be "
     "empty), and ordered steps. Steps depend only on earlier steps of the same branch; the first step has no "
     "dependency and a later step refers to the earlier answer with the placeholder {verified_entity}. The two "
@@ -145,6 +148,42 @@ def _check_grounding(question, entity, time_text, steps, scope):
             raise PlanRejected('PLANNER_TIME_CONFLICT')
 
 
+def _combined_goals(rows):
+    first, second = (row[3] for row in rows)
+    first_ids, second_ids = ({step['subgoal_id'] for step in branch} for branch in (first, second))
+    # Check explicit foreign references before numeric aliases can normalize to local IDs.
+    if any(parent in foreign_only for branch, foreign_only in (
+            (first, second_ids - first_ids), (second, first_ids - second_ids))
+            for step in branch for parent in step['depends_on']):
+        raise PlanRejected('PLANNER_BRANCHES_DEPENDENT')
+
+    first, second = (_canonicalize_model_plan_ids({'subgoals': branch})['subgoals']
+                     for branch in (first, second))
+    first_ids, second_ids = ({step['subgoal_id'] for step in branch} for branch in (first, second))
+    for branch, local_ids, foreign_ids in ((first, first_ids, second_ids), (second, second_ids, first_ids)):
+        missing = {parent for step in branch for parent in step['depends_on']} - local_ids
+        if missing & foreign_ids:
+            raise PlanRejected('PLANNER_BRANCHES_DEPENDENT')
+        if missing:
+            raise PlanRejected('PLANNER_PLAN_INVALID')
+
+    used = first_ids | second_ids
+    renamed = {}
+    for index, step in enumerate(second, 1):
+        identifier = step['subgoal_id']
+        if identifier in first_ids and identifier not in renamed:
+            replacement = f'branch_2_step_{index}'
+            while replacement in used:
+                replacement += '_'
+            renamed[identifier] = replacement
+            used.add(replacement)
+    return first + [
+        dict(step, subgoal_id=renamed.get(step['subgoal_id'], step['subgoal_id']),
+             depends_on=[renamed.get(parent, parent) for parent in step['depends_on']])
+        for step in second
+    ]
+
+
 def validate_branch_plan(payload, scope):
     """Return two (question, TaskPlan | None) pairs derived by the Host, or raise PlanRejected.
 
@@ -153,8 +192,8 @@ def validate_branch_plan(payload, scope):
     """
     from linkloom.ui.parallel_investigation import independent_subplans
     rows = _rows(payload)
-    goals = [goal for row in rows for goal in row[3]]
     try:
+        goals = _combined_goals(rows)
         combined = TaskPlan.from_dict(dict(goal=scope.query.strip(), subgoals=goals))
         # One shared grouping rule: a dependency across branches merges them and leaves fewer than two.
         groups = independent_subplans(combined, 2 * len(goals) + 1)
