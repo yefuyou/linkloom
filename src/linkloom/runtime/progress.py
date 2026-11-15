@@ -38,6 +38,7 @@ class ProgressAssessment:
     exhausted_subgoals: tuple[str, ...] = ()
     latest_error_path: str | None = None
     subgoal_statuses: tuple[tuple[str, str], ...] = ()
+    completed_plan_evidence: tuple[tuple[str, ...], ...] = ()
 
 
 def assess_progress(
@@ -187,6 +188,7 @@ def assess_progress(
     pending_alternates: tuple[str, ...] = ()
     exhausted: tuple[str, ...] = ()
     subgoal_statuses: tuple[tuple[str, str], ...] = ()
+    completed_plan_evidence: tuple[tuple[str, ...], ...] = ()
     if task_plan is not None and task_id is not None and agent_id is not None and latest_error_code is None:
         plan_records = [record for record in state.tool_ledger
                         if before_sequence is None or record.sequence < before_sequence]
@@ -196,6 +198,11 @@ def assess_progress(
             expected_workspace_id=expected_workspace_id or state.source.vault_root_fingerprint,
         )
         subgoal_statuses = tuple(plan_assessment.status_by_subgoal.items())
+        if plan_assessment.complete:
+            completed_plan_evidence = tuple(
+                tuple(value["evidence_id"] for value in plan_assessment.evidence_by_subgoal[goal.subgoal_id])
+                for goal in task_plan.subgoals
+            )
         pending_alternates = pending_alternate_subgoals(
             task_plan, plan_assessment, plan_records,
             run_id=state.run_id, task_id=task_id, agent_id=agent_id,
@@ -262,6 +269,7 @@ def assess_progress(
         exhausted_subgoals=exhausted,
         latest_error_path=latest_error_path,
         subgoal_statuses=subgoal_statuses,
+        completed_plan_evidence=completed_plan_evidence,
     )
 
 
