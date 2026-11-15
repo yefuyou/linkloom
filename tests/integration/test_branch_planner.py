@@ -272,6 +272,30 @@ def test_branch_plan_normalizes_numeric_string_ids_and_dependencies():
     assert plans[1][1] is None
 
 
+def test_branch_plan_isolates_numbering_for_independent_branches():
+    payload = deepcopy(VALID)
+    first, second = payload["branches"]
+    first["steps"] = first["steps"][:2]
+    second["steps"].append(dict(question="Which source dates {verified_entity}?"))
+    for branch in payload["branches"]:
+        root, child = branch["steps"]
+        root.update(id="1", depends_on=[])
+        child.update(id="2", depends_on=["1"])
+
+    plans = validate_branch_plan(payload, SCOPE)
+    assert [question for question, _ in plans] == HOST_QUESTIONS
+    root_ids = [plan.subgoals[0].subgoal_id for _, plan in plans]
+    assert len(set(root_ids)) == 2
+    assert [plan.subgoals[1].depends_on for _, plan in plans] == [(ref,) for ref in root_ids]
+
+    # The second branch cannot reference an ID found only in the first.
+    first["steps"][0]["id"] = "3"
+    first["steps"][1]["depends_on"] = ["3"]
+    second["steps"][1]["depends_on"] = ["3"]
+    with pytest.raises(PlanRejected, match="^PLANNER_BRANCHES_DEPENDENT$"):
+        validate_branch_plan(payload, SCOPE)
+
+
 def test_branch_planner_advertises_and_preserves_combined_five_step_limit():
     request = branch_plan_request(QUESTION)
     assert "at most 5 steps total across both branches" in request.user_input
