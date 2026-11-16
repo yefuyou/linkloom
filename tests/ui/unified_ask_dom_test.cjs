@@ -364,7 +364,7 @@ async function setup(storage = new Map()) {
       unknowns: [{question: "Q2" + evil, branch: "branch-2", reason: "BRANCH_FAILED"}]}}});
   parallelUi.pending[0](parallelPayload); await parallelOperation;
   const parallelHtml = parallelUi.element("ask-result").innerHTML;
-  assert.match(parallelHtml, /Answer from verified branches/);
+  assert.match(parallelHtml, /Answer with sources/);
   assert.match(parallelHtml, /A1&lt;script&gt;alert\(1\)&lt;\/script&gt;/);
   assert.match(parallelHtml, /BRANCH_FAILED/);
   assert.doesNotMatch(parallelHtml, /<script>/);

@@ -120,6 +120,7 @@ class RetrievalAgent:
         temporal_claim_validator: Any | None = None,
         context_runtime: Any | None = None,
         reserve_final_turn: bool = False,
+        cited_answer: bool = False,
     ) -> None:
         self.agent_id = agent_id
         self.model = model
@@ -137,6 +138,7 @@ class RetrievalAgent:
         self.temporal_claim_validator = temporal_claim_validator
         self.context_runtime = context_runtime
         self.reserve_final_turn = reserve_final_turn
+        self.cited_answer = cited_answer
         if prompt_profile not in PROMPT_PROFILES:
             raise ValidationError("Unsupported retrieval prompt profile.")
         self.prompt_profile = prompt_profile
@@ -194,6 +196,7 @@ class RetrievalAgent:
         prompt_profile: str = "zero-v1",
         memory_hints: tuple[dict[str, Any], ...] = (),
         final_protocol: str = SCHEMA_VERSION,
+        cited_answer: bool = False,
     ) -> str:
         if not isinstance(query, str) or not query.strip():
             raise ValidationError("Retrieval query must be non-empty text.")
@@ -282,6 +285,12 @@ class RetrievalAgent:
                 "call tools only to populate optional sections.\n"
             )
             grounding_instruction = (
+                "Answer the question directly in natural language in decision.value, citing for "
+                "each conclusion the evidence_refs you actually read in this run. If the material "
+                "you read cannot answer the question, return a null decision with "
+                "insufficient_evidence. Leave actions, unresolved_items, and "
+                "rejected_alternatives empty.\n"
+                if cited_answer and final_protocol == SCHEMA_VERSION else
                 "Represent material facts only with the selected typed claim fields. For every "
                 "claim, provide the source subject, predicate, object, exact supporting quote, "
                 "observed evidence_ids, and source-backed temporal fields. The Runtime checks "
@@ -941,7 +950,7 @@ class RetrievalAgent:
                         "The model reported missing evidence without a completed search.",
                     ), warnings,
                 )
-            if self.task_plan is None and null_result and read_refs:
+            if self.task_plan is None and null_result and read_refs and not self.cited_answer:
                 return self._failed_result(
                     task, usage,
                     self._safe_error(
@@ -1157,11 +1166,22 @@ class RetrievalAgent:
                         warnings,
                         )
             try:
-                decision.validate_claim_support(
-                    visible_evidence,
-                    question=query,
-                    observed_evidence_by_ref=read_evidence,
-                )
+                if self.cited_answer:
+                    # Cited answers rely on evidence binding only (observed, read,
+                    # verified, same workspace; quotes are re-checked by the Reviewer
+                    # and synthesizer). Binding is not semantic correctness: a
+                    # direction-reversed sentence passes with correct refs. The
+                    # deterministic claim proof is skipped for ordinary answers; the
+                    # Decision Memory review constraints are unchanged. Other
+                    # capabilities stay closed.
+                    if decision.actions or decision.unresolved_items or decision.rejected_alternatives:
+                        raise ValidationError("A cited answer cannot carry actions or alternatives.")
+                else:
+                    decision.validate_claim_support(
+                        visible_evidence,
+                        question=query,
+                        observed_evidence_by_ref=read_evidence,
+                    )
             except ValidationError:
                 return self._failed_result(
                     task,
@@ -1301,6 +1321,7 @@ class RetrievalAgent:
             instruction = self._retrieval_instruction(
                 query, source_context, task.workflow, self.task_plan,
                 self.prompt_profile, self.memory_hints, self.final_protocol,
+                self.cited_answer,
             )
             consumed_provider_requests = max(
                 self.initial_state.usage.provider_requests,
