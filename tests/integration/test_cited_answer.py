@@ -11,8 +11,8 @@ from linkloom.runtime.graph import RuntimeEngine
 from linkloom.runtime.models import RunRequest
 from linkloom.scanner import scan_vault
 from linkloom.tools.contracts import ToolCall
-from linkloom.ui import parallel_investigation
-from linkloom.ui.parallel_investigation import ParallelInvestigation
+from linkloom.orchestration import worker
+from linkloom.ui.task_provider import TaskProviderLimits
 
 SOURCE = ("Launch replaced Meridian A with Cobalt B because Meridian A could not meet "
           "the agreed delivery schedule.")
@@ -116,7 +116,7 @@ def test_cited_answer_keeps_structured_sections_closed(tmp_path, monkeypatch, fi
     assert result.status == "failed" and result.error["code"] == "TEAM_DECISION_CONTRACT_ERROR"
 
 
-def test_cited_answer_is_requested_only_for_single_step_branches(tmp_path, monkeypatch):
+def test_every_orchestration_worker_requests_a_cited_answer(tmp_path, monkeypatch):
     sent = []
 
     class Engine:
@@ -127,19 +127,18 @@ def test_cited_answer_is_requested_only_for_single_step_branches(tmp_path, monke
 
         def start_multi_agent(self, request):
             sent.append(request)
-            return None
+            return SimpleNamespace(to_dict=lambda: {})
 
-    monkeypatch.setattr(parallel_investigation, "RuntimeEngine", Engine)
-    monkeypatch.setattr(parallel_investigation, "RunRequest", lambda **kwargs: kwargs)
-    monkeypatch.setattr(parallel_investigation, "build_branch_row", lambda *args: None)
-    session = SimpleNamespace(limits=SimpleNamespace(max_requests=99, max_output_tokens=99999),
-                              bind=lambda model, role: model, root=tmp_path)
-    run = SimpleNamespace(model_factory=lambda question: None, vault=tmp_path, index=tmp_path,
-        workspace_id="w", run_id="run", workspace=None, source_versions={}, source_names={})
-    plan = SimpleNamespace(subgoals=[1, 2], to_dict=lambda: {"goal": "q"})
-    ParallelInvestigation._execute_branch(run, "branch-1", "q", plan, session)
-    ParallelInvestigation._execute_branch(run, "branch-2", "q", None, session)
-    assert [request["cited_answer"] for request in sent] == [False, True]
+    monkeypatch.setattr(worker, "RuntimeEngine", Engine)
+    monkeypatch.setattr(worker, "RunRequest", lambda **kwargs: kwargs)
+    limits = TaskProviderLimits(20, 1_000_000, 50_000, 1.0, 60, 10, .01)
+    deps = SimpleNamespace(root=tmp_path, run_id="run", vault=tmp_path, index=tmp_path, workspace_id="w",
+        model_factory=lambda question: None, validate=lambda: None,
+        limits=SimpleNamespace(per_task=limits))
+    for number in (1, 2):
+        task = dict(id=f"task-{number}", description="q", epoch=0, attempt=1)
+        worker._run(deps, task, "q")
+    assert [request["cited_answer"] for request in sent] == [True, True]
 
 
 def test_cited_answer_request_round_trips_and_needs_default_protocol():

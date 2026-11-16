@@ -358,7 +358,9 @@ async function setup(storage = new Map()) {
   Object.assign(parallelPayload.result, {path: "PARALLEL", status: "COMPLETED", conclusions: [], timeline: null,
     evidence: [{evidence_ref: "e1", citation_id: "citation-1", source_name: "a.md", source_id: "s1", source_version: "v1",
       quote: "alpha", line_start: 1, line_end: 1}],
-    parallel_investigation: {status: "COMPLETE", gaps: {}, branches: [], unstarted: 0, answer: {status: "COMPLETE", published: true,
+    parallel_investigation: {status: "COMPLETE", gaps: {}, branches: [], unstarted: 0, entity_leads: ["Meridian A"],
+      tasks: [{id: "t1", status: "accepted", depends_on: [], description: "D1" + evil, spawn_reason: "initial"},
+              {id: "t2", status: "accepted", depends_on: ["t1"], description: "D2", spawn_reason: "needs t1"}], answer: {status: "COMPLETE", published: true,
       answers: [{question: "Q1" + evil, text: "A1" + evil, citations: ["citation-1"]}],
       conflicts: [{subject: "S" + evil, relation: "R", sides: [{branch: "branch-1", value: "V" + evil, citations: ["citation-1"]}]}],
       unknowns: [{question: "Q2" + evil, branch: "branch-2", reason: "BRANCH_FAILED"}]}}});
@@ -367,6 +369,9 @@ async function setup(storage = new Map()) {
   assert.match(parallelHtml, /Answer with sources/);
   assert.match(parallelHtml, /A1&lt;script&gt;alert\(1\)&lt;\/script&gt;/);
   assert.match(parallelHtml, /BRANCH_FAILED/);
+  assert.match(parallelHtml, /data-task="t2" data-status="accepted"><strong>t2<\/strong> · accepted · after t1 · needs t1/);
+  assert.match(parallelHtml, /D1&lt;script&gt;/);
+  assert.match(parallelHtml, /Names checked against sources, not assumed to exist: Meridian A/);
   assert.doesNotMatch(parallelHtml, /<script>/);
   assert.doesNotMatch(parallelHtml, /No conflicts among/);
   const checkedUi = await setup();
@@ -424,21 +429,15 @@ async function setup(storage = new Map()) {
   assert.match(traceUi.element("ask-result").innerHTML, /data-action="load-trace"/);
   assert.equal(traceUi.traceRequests.length, 0, "rendering must not request the call chain");
   const evilTag = "<script>alert(1)</script>", evilTagImg = "<img src=x onerror=alert(1)>";
-  const slot = (name, offset, seconds, extra = {}) => Object.assign({name, pool_status: "VERIFIED", verified: true, question: evilTag,
-    interval: {start: "s", end: "e", duration_seconds: seconds, offset_seconds: offset}, requests: 1, estimated_cost_usd: 0.001,
-    reserved_cost_usd: 0.5, na: {event_timing: "TRACE_EVENTS_HAVE_NO_TIMESTAMPS"}, reviewer: {decision: "evidence_sufficient"},
-    attempts: [{sequence: 1, stage: evilTagImg, outcome: "SUCCEEDED", verified: true, input_tokens: 10, output_tokens: 5,
-      estimated_cost_usd: 0.001, reserved_cost_usd: 0.5, na: {interval: "REQUEST_HAS_NO_TIMESTAMP"}},
-      {sequence: 2, stage: "runtime", outcome: "UNCERTAIN", note: "OUTCOME_UNCERTAIN_MAY_BE_BILLED", verified: false,
-       input_tokens: null, output_tokens: null, estimated_cost_usd: null, reserved_cost_usd: 0.5,
-       na: {tokens: "OUTCOME_NOT_SUCCEEDED", estimated_cost_usd: "OUTCOME_NOT_SUCCEEDED"}}],
-    events: [{seq: 1, event_type: evilTagImg, status: "ok", tool: evilTag}]}, extra);
-  const traceBody = {status: "COMPLETE", axis: {duration_seconds: 10},
-    planner: {source: evilTag, interval: null, na: {interval: "PLANNER_SLOT_NOT_RECORDED"}, attempts: []},
-    branches: [slot("b1", 0, 6), slot("b2", 4, 6), slot(evilTagImg, 0, 0, { interval: null, na: {interval: "BRANCH_NOT_SETTLED", events: "TRACE_NOT_RECORDED"}, events: null})],
-    synthesizer: {status: "COMPLETE", published: true, reason_code: evilTag, cross_branch_compared: null, na: {cross_branch_compared: "CONFLICT_CHECK_NOT_RECORDED"}},
-    totals: {requests: 2, estimated_cost_usd: null, reserved_cost_usd: 1, wall_seconds: 10, na: {estimated_cost_usd: "NO_REQUEST_WITH_USAGE"},
-      overlap: {session_overlap_seconds: 2, na: {}}}};
+  const task = (id, status, depends, extra = {}) => Object.assign({id, status, depends_on: depends, description: evilTag,
+    spawn_reason: evilTagImg, failure: null, attempts: [{attempt: "attempt-0-1", requests_reserved: 4, input_tokens_reserved: 900,
+      output_tokens_reserved: 400, cost_reserved_usd: 0.5, failure: null, attempts: [{sequence: 1, stage: "runtime", outcome: "SUCCEEDED"}]}]}, extra);
+  const traceBody = {status: "COMPLETE", entity_leads: [evilTag], tasks: [task("t1", "accepted", []), task("t2", "accepted", ["t1"]),
+    task(evilTagImg, "failed", ["t1"], {failure: "WORKER_RUNTIME_FAILED", attempts: []})],
+    events: [{event: "supervisor_decision", round: 0, action: "delegate", tasks: ["t1", "t2"], reason: evilTag},
+      {event: "wave_dispatched", tasks: ["t1"]}, {event: "wave_dispatched", tasks: ["t2", evilTagImg]}],
+    blackboard: {raw_retrievals: 3, verified_evidence: [{key: "k"}], inferences: 2, approved_decisions: []},
+    totals: {requests_reserved: 8, cost_reserved_usd: 1}, synthesizer: {status: "COMPLETE", published: true, fallback_reason: evilTag}};
   traceUi.setTrace({result: traceBody});
   await traceUi.element("page").listeners.click({target: {closest: () => ({dataset: {action: "load-trace", runId: "ui-parallel-000000000001"}})}});
   assert.deepEqual(traceUi.traceRequests, ["/api/product/ask/runs/ui-parallel-000000000001/trace?workspace_id=a"]);
@@ -446,29 +445,12 @@ async function setup(storage = new Map()) {
   assert.doesNotMatch(traceHtml, /<script>|<img/);
   assert.match(traceHtml, /&lt;script&gt;alert\(1\)&lt;\/script&gt;/);
   assert.match(traceHtml, /&lt;img src=x onerror=alert\(1\)&gt;/);
-  assert.match(traceHtml, /left:0%;width:60%/);
-  assert.match(traceHtml, /left:40%;width:60%/);
-  assert.match(traceHtml, /N\/A \(BRANCH_NOT_SETTLED\)/);
-  assert.match(traceHtml, /N\/A \(NO_REQUEST_WITH_USAGE\)/);
-  assert.match(traceHtml, /N\/A \(OUTCOME_NOT_SUCCEEDED\)/);
-  assert.match(traceHtml, /Result uncertain, may have been billed/);
+  assert.match(traceHtml, /data-task="t2"[^>]*><summary><strong>t2<\/strong> · accepted · after t1/);
+  assert.match(traceHtml, /t2 ∥ &lt;img/, "tasks of one wave are shown together");
+  assert.match(traceHtml, /WORKER_RUNTIME_FAILED/);
   assert.match(traceHtml, /not a bill/);
-  assert.doesNotMatch(traceHtml, /Overlap between sibling branches: N\/A/);
-  assert.match(traceHtml, /Session overlap between sibling branches \(does not mean requests ran in parallel\)/);
-  assert.doesNotMatch(traceHtml, /trace-incomplete/, "a complete total carries no incompleteness note");
-  const incomplete = JSON.parse(JSON.stringify(traceBody));
-  Object.assign(incomplete.totals, {slots_without_record: 2, unestimated_requests: 3, reservation_unrecorded_requests: 1,
-    reserved_cost_usd: null, na: {estimated_cost_usd: "NO_REQUEST_WITH_USAGE", reserved_cost_usd: "RESERVATION_NOT_RECORDED"}});
-  incomplete.branches[0].attempts[0].reserved_cost_usd = null;
-  incomplete.branches[0].attempts[0].na.reserved_cost_usd = "RESERVATION_NOT_RECORDED";
-  traceUi.setTrace({result: incomplete});
-  await traceUi.element("page").listeners.click({target: {closest: () => ({dataset: {action: "load-trace", runId: "ui-parallel-000000000001"}})}});
-  const incompleteHtml = traceUi.element("ask-trace-body").innerHTML;
-  assert.match(incompleteHtml, /Includes 2 slot\(s\) with no record; totals are incomplete/);
-  assert.match(incompleteHtml, /3 request\(s\) cannot be estimated/);
-  assert.match(incompleteHtml, /1 request\(s\) have no recorded reservation/);
-  assert.match(incompleteHtml, /Reserved ceiling: <span class="trace-na">N\/A \(RESERVATION_NOT_RECORDED\)/);
-  assert.match(incompleteHtml, /<td><span class="trace-na">N\/A \(RESERVATION_NOT_RECORDED\)<\/span><\/td>/);
+  assert.match(traceHtml, /Names to verify in sources \(not confirmed\)/);
+  assert.match(traceHtml, /Shared evidence: 1/);
   traceUi.setTrace({error: {code: "TRACE_NOT_FOUND", message: "No call chain <b>x</b>"}});
   await traceUi.element("page").listeners.click({target: {closest: () => ({dataset: {action: "load-trace", runId: "ui-parallel-000000000001"}})}});
   assert.equal(traceUi.element("ask-trace-body").textContent, "No call chain <b>x</b> TRACE_NOT_FOUND");

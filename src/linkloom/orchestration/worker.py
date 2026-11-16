@@ -10,7 +10,7 @@ so a task whose paid call finished is never paid for twice.
 """
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 import json
 from pathlib import Path
 from typing import Any, Callable
@@ -18,14 +18,14 @@ from typing import Any, Callable
 from langgraph.graph import END, START, StateGraph
 
 from linkloom.orchestration import blackboard
+from linkloom.orchestration.files import write_json
 from linkloom.orchestration.limits import OrchestrationLimits
 from linkloom.orchestration.state import ABSTAINED, ACCEPTED, FAILED, WorkerState
 from linkloom.runtime.checkpoint import SQLiteCheckpointer
 from linkloom.runtime.graph import RuntimeEngine
 from linkloom.runtime.models import RunRequest, RunStatus
-from linkloom.ui.branch_budget import _write_json
-from linkloom.ui.parallel_investigation import _OutputBoundedAdapter, build_branch_row
-from linkloom.ui.projection import collect_observed_evidence
+from linkloom.ui.backend import project_reviewer
+from linkloom.ui.projection import collect_observed_evidence, project_run_snapshot
 from linkloom.ui.task_provider import TaskProviderSession
 
 HARD_FAILURES = frozenset({'MODEL_AUTH_REQUIRED', 'MODEL_BILLING_BLOCKED', 'TASK_SOURCE_AUTHORIZATION_CHANGED'})
@@ -47,6 +47,64 @@ class WorkerDeps:
     model_factory: Callable[[str], Any]
     validate: Callable[[], None]
     limits: OrchestrationLimits
+
+
+class OutputBoundedAdapter:
+    """Caps one request's output tokens at the Worker's slice, never raises the model's own limit."""
+
+    def __init__(self, adapter, output_limit):
+        self.adapter = adapter
+        self.output_limit = output_limit
+        self.capability = getattr(adapter, 'capability', None)
+
+    def complete(self, request):
+        options = request.generation_options
+        output = min(options.max_output_tokens or self.output_limit, self.output_limit)
+        return self.adapter.complete(replace(request, generation_options=replace(options, max_output_tokens=output)))
+
+
+def build_branch_row(name, question, status, checkpoint_dir, checkpointer, workspace, source_versions, source_names):
+    """Turn one completed Worker Runtime result into a task row (run, evidence, conclusion).
+
+    The Reviewer projection must accept the artifact, and every evidence item must carry the source identity,
+    version and hashes the Runtime observed. A row that cannot be built is a failed task, never a result.
+    """
+    if status.status != 'completed' or not status.result_ref:
+        raise ValueError('WORKER_RUNTIME_FAILED')
+    checkpoint_dir = Path(checkpoint_dir)
+    result_path = (checkpoint_dir / status.result_ref).resolve()
+    if not result_path.is_relative_to(checkpoint_dir.resolve()):
+        raise ValueError('WORKER_RUNTIME_FAILED')
+    artifact = json.loads(result_path.read_text(encoding='utf-8'))
+    review = project_reviewer(artifact)
+    if review['decision'] != 'evidence_sufficient':
+        raise ValueError('WORKER_REVIEW_FAILED')
+    state = checkpointer.load(status.thread_id)
+    snapshot = project_run_snapshot(query=question, workspace=workspace, status=status,
+        result_artifact=artifact, tool_ledger=state.tool_ledger)
+    observed = collect_observed_evidence(state.tool_ledger)
+    evidence = [dict(item, **source_versions[item['relative_path']],
+                     source_name=source_names[item['relative_path']],
+                     content_sha256=observed[item['ref']]['content_sha256'],
+                     quote_sha256=observed[item['ref']]['quote_sha256'])
+                for item in snapshot['evidence']]
+    if not evidence and snapshot['kind'] != 'insufficient':
+        raise ValueError('WORKER_EVIDENCE_MISSING')
+    team = artifact['result']['team_decision']
+    conclusion = dict(question=question, decision=dict(value=team['decision']['value'],
+                          status=team['decision']['status']),
+                      unresolved_items=[item['description'] for item in team['unresolved_items']],
+                      uncertainty=dict(status=team['uncertainty']['status'],
+                                       statement=team['uncertainty']['statement']),
+                      evidence=[{key: item[key] for key in ('source_id', 'source_version', 'line_start',
+                                                            'line_end', 'quote_sha256')}
+                                for item in evidence],
+                      # The key is the Host-held task text, never model output: equal keys mean the same
+                      # question was assigned twice, and then differing answers are reported as a conflict.
+                      claim_key=dict(subject=question, relation='subgoal_question'),
+                      claim_value=team['decision']['value'])
+    return dict(run=dict(branch=name, run_id=status.run_id, thread_id=status.thread_id,
+                         review_id=review['review_id']), evidence=evidence, conclusion=conclusion)
 
 
 def render_query(task, upstream, context):
@@ -85,7 +143,7 @@ def _run(deps, task, query):
             session._error('TASK_PROVIDER_BUDGET_EXHAUSTED')
             raise ValueError('WORKER_BUDGET_INSUFFICIENT')
         turns = min(turns + 1, limits.max_requests, limits.max_output_tokens)
-        adapter = _OutputBoundedAdapter(session.bind(deps.model_factory(task['description']), 'runtime'),
+        adapter = OutputBoundedAdapter(session.bind(deps.model_factory(task['description']), 'runtime'),
                                         min(4096, limits.max_output_tokens // turns))
         engine = RuntimeEngine(vault_root=deps.vault, index_path=deps.index,
             checkpoint_dir=root / 'runtime', trace_dir=root / 'traces', model=adapter,
@@ -99,7 +157,7 @@ def _run(deps, task, query):
     except Exception as exc:
         error = str(exc) if isinstance(exc, ValueError) and str(exc).isupper() else 'WORKER_RUNTIME_FAILED'
     receipt = dict(run_status=status.to_dict() if status else None, failure=session.failure, error=error)
-    _write_json(root / 'status.json', receipt)
+    write_json(root / 'status.json', receipt)
     return receipt
 
 
@@ -119,10 +177,10 @@ def _gate(deps, task, receipt):
         code = (status.error or {}).get('code') or 'WORKER_RUNTIME_FAILED'
     if code is None and status is not None:
         try:
-            row = build_branch_row(task['id'], task['description'], None, status, root / 'runtime',
+            row = build_branch_row(task['id'], task['description'], status, root / 'runtime',
                                    SQLiteCheckpointer(root / 'runtime'), deps.workspace,
                                    deps.source_versions, deps.source_names)
-            _write_json(root / 'row.json', row)
+            write_json(root / 'row.json', row)
             return row, observed, None
         except ValueError as exc:
             code = str(exc) if str(exc).isupper() else 'WORKER_GATE_FAILED'

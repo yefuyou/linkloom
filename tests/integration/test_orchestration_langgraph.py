@@ -47,6 +47,12 @@ class WorkerModel:
             self.world.started.append(self.description)
             if self.world.barrier and self.description in self.world.barrier_for:
                 self.world.barrier.wait(timeout=10)
+            if self.mode == "uncertain":
+                return ModelResponse(error=ModelProviderError("MODEL_UNKNOWN_FAILURE", "unknown_provider_error",
+                    "Synthetic Provider failure.", outcome="unknown_provider_outcome"))
+            if self.mode == "auth":
+                return ModelResponse(error=ModelProviderError("MODEL_AUTH_REQUIRED", "authentication",
+                    "Synthetic credential failure.", outcome="known_failure"))
             if self.mode == "error":
                 return ModelResponse(error=ModelProviderError("MODEL_UNAVAILABLE", "unavailable_model",
                     "Synthetic Provider failure.", outcome="known_failure"))

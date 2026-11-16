@@ -24,11 +24,13 @@ import sqlite3
 from time import time
 from typing import Literal
 
+from langchain_core.runnables import RunnableConfig
 from langgraph.checkpoint.sqlite import SqliteSaver
 from langgraph.graph import END, START, StateGraph
 from langgraph.types import Command, Send, interrupt
 
 from linkloom.orchestration import blackboard
+from linkloom.orchestration.files import write_json
 from linkloom.orchestration.state import (
     ABSTAINED, ACCEPTED, FAILED, PENDING, RUNNING, SKIPPED, TERMINAL, OrchestratorState,
 )
@@ -37,7 +39,6 @@ from linkloom.orchestration.supervisor import (
     tool_arguments,
 )
 from linkloom.orchestration.worker import HARD_FAILURES, WorkerDeps, build_worker_graph
-from linkloom.ui.branch_budget import _write_json
 from linkloom.ui.branch_synthesis import merge_evidence, synthesize_reviewed
 from linkloom.ui.task_provider import TaskProviderSession
 
@@ -57,7 +58,9 @@ def _read(path):
 
 
 def _context(state):
-    return dict(confirmed_scope=state.get('confirmed_scope') or {}, entity_leads=list(state.get('entity_leads') or []))
+    """What a model may see of the Host input. The Host's own deny list names other workspaces; it stays out."""
+    scope = {key: value for key, value in (state.get('confirmed_scope') or {}).items() if key != 'blocked_entities'}
+    return dict(confirmed_scope=scope, entity_leads=list(state.get('entity_leads') or []))
 
 
 def _summary(state):
@@ -102,7 +105,7 @@ def build_graph(deps: WorkerDeps, checkpointer):
         except Exception:
             saved = dict(payload=None, error='SUPERVISOR_FAILED')
         saved['failure'] = session.failure
-        _write_json(root / 'proposal.json', saved)
+        write_json(root / 'proposal.json', saved)
         return saved
 
     def supervisor(state) -> Command[Literal['confirm', 'scheduler', 'synthesize']]:
@@ -155,11 +158,12 @@ def build_graph(deps: WorkerDeps, checkpointer):
                                    trace=[dict(event='plan_rejected', tasks=pending['task_ids'])]),
                        goto='scheduler')
 
-    def scheduler(state) -> Command[Literal['worker', 'supervisor', 'synthesize']]:
+    def scheduler(state, config: RunnableConfig) -> Command[Literal['worker', 'supervisor', 'synthesize']]:
         tasks = {task_id: dict(task) for task_id, task in state['tasks'].items()}
         dispatches = state.get('dispatches', 0)
         abort = state.get('abort_reason')
-        expired = time() >= state['deadline_at']
+        # Each invocation (start or a resume after a restart) gets its own deadline window.
+        expired = time() >= config['configurable'].get('deadline_at', state['deadline_at'])
         stop_reason = 'ABORTED' if abort else 'DEADLINE' if expired else None
         left = limits.dispatch_cap() - dispatches
         changed = {}
@@ -242,7 +246,8 @@ class Orchestrator:
 
     def _config(self):
         limits = self.deps.limits
-        return {'configurable': {'thread_id': self.deps.run_id}, 'max_concurrency': limits.max_concurrency,
+        return {'configurable': {'thread_id': self.deps.run_id, 'deadline_at': time() + limits.deadline_seconds},
+                'max_concurrency': limits.max_concurrency,
                 'recursion_limit': 30 + 4 * limits.dispatch_cap() + 4 * limits.max_rounds}
 
     def start(self, query, *, confirmed_scope=None, entity_leads=()):

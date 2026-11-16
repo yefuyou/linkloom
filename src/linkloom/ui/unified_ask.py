@@ -11,7 +11,7 @@ from typing import Any, Callable
 
 from linkloom.fact_memory import fact_memory_enabled
 from linkloom.ui.product import ProductApplication, ProductApplicationError
-from linkloom.ui.investigation import BranchPlanUnavailable, ProductInvestigationService
+from linkloom.ui.investigation import ProductInvestigationService
 from linkloom.ui.scope_discovery import AUTO_EMBEDDER, decision_slot_id, resolve_query_date
 from linkloom.ui.question_routing import classify_task, route_question
 from linkloom.ui.feedback_memory import FeedbackMemory
@@ -274,7 +274,8 @@ class UnifiedAskService:
                     return self._failure(result, *restriction, status="NEEDS_SCOPE"), 200
                 if cascade:
                     from linkloom.ui.router_context import blocked_entity_reason
-                    blocker = blocked_entity_reason(run.query, self._router_blocked_entities(run.workspace_id))
+                    blocker = blocked_entity_reason(
+                        run.query, self._blocking_facts(self._router_blocked_entities(run.workspace_id)))
                     if blocker:
                         return self._router_stop(run, None, blocker)
                 if use_graph and not cascade and self.graph_service is not None and not context and not (values['subject'] or values['relation']):
@@ -294,34 +295,25 @@ class UnifiedAskService:
                             return self._failure(result, "INVESTIGATION_DOMAIN_CONFLICT",
                                 "Clear the advanced decision selection and choose the task domain for a task question.", status="NEEDS_SCOPE"), 200
                         return self._task_request(run, payload, context=context)
-                # A selected decision slot and two admitted plan components
-                # belong to temporal investigation, including mixed relation questions.
+                # With orchestration configured, a selected decision slot and a question that needs an
+                # investigation go to the Supervisor; it decides whether to delegate. Everything else
+                # below runs exactly as before.
                 service = self.investigation()
-                parallel = (not context and values["subject"] and values["relation"]
-                            and service is not None and getattr(service, "parallel_limits", None)
-                            and source_context(self.app, run.workspace_id)["source_count"] >= 2)
-                template = bool(parallel and service.parallel_subplans(run.query))
-                # Without a template split the Planner may still find two branches. Only an accepted plan changes
-                # the route; otherwise everything below runs exactly as it does with the Planner off.
-                # A question the approved decision answers without a model never reaches the investigation path
-                # (a template split always does), so only the other questions may consult the Planner. The
-                # tests are the ones the ordinary path below applies itself: a relation plan or an investigation
-                # intent from the existing task classifier.
-                eligible = bool(parallel and (template or plan is not None or (not cascade and _RELATION_QUESTION.search(run.query))
-                                              or self._baseline_investigation(run, values, payload))
-                                and getattr(service, "branch_planner_eligible", lambda: False)())
-                as_of, date_error = resolve_query_date(run.query, payload.get("as_of")) if parallel else (None, None)
-                planned = bool(eligible and not template and not date_error
-                               and self._planner_admitted(service, values, run, payload, as_of))
-                if template or planned:
+                orchestrated = bool(not context and values["subject"] and values["relation"]
+                                    and service is not None and service.orchestration_enabled())
+                eligible = bool(orchestrated and (plan is not None
+                                                  or (not cascade and _RELATION_QUESTION.search(run.query))
+                                                  or self._baseline_investigation(run, values, payload)))
+                if eligible:
+                    as_of, date_error = resolve_query_date(run.query, payload.get("as_of"))
                     if date_error:
                         return self._failure(result, date_error["code"], date_error["message"],
                                              status="NEEDS_SCOPE"), 200
                     route = dict(intent="INVESTIGATION", route="INVESTIGATION", code="SOURCE_INVESTIGATION",
-                                 reason="The selected decision has two independent investigation plan components.")
-                    parallel_run = _AskRun(run.query, run.workspace_id, run.scope, route)
-                    response = self._decision_request(parallel_run, self._base(parallel_run), payload, values,
-                                                      as_of, planner=eligible)
+                                 reason="The selected decision scope needs a source investigation.")
+                    orchestrated_run = _AskRun(run.query, run.workspace_id, run.scope, route)
+                    response = self._decision_request(orchestrated_run, self._base(orchestrated_run), payload,
+                                                      values, as_of)
                     if response is not None:
                         return response
                 if plan is not None or (not cascade and _RELATION_QUESTION.search(run.query)):
@@ -467,19 +459,7 @@ class UnifiedAskService:
             return False
         return routed["route"] == "INVESTIGATION" and routed["scope"] is not None and routed["supported"]
 
-    def _planner_admitted(self, service, values, run, payload, as_of):
-        """True when the Planner may run: the same conditions that let the ordinary decision path start a model."""
-        if not service.config()["available"]:
-            return False
-        if service.config()["external_provider"] and payload.get("allow_external_provider") is not True:
-            return False
-        try:
-            return self.app.recover_decision(values["subject"], values["relation"], as_of,
-                                             _workspace_id=run.workspace_id)["status"] == "FOUND"
-        except Exception:
-            return False
-
-    def _decision_request(self, run, result, payload, values, as_of, planner=False):
+    def _decision_request(self, run, result, payload, values, as_of, leads=()):
         view = self.app.recover_decision(values["subject"], values["relation"], as_of, _workspace_id=run.workspace_id)
         result["scope"]["as_of"] = view["as_of"]
         if result["path"] == "DETERMINISTIC":
@@ -492,13 +472,11 @@ class UnifiedAskService:
         if service.config()["external_provider"] and payload.get("allow_external_provider") is not True:
             return self._failure(result, "EXTERNAL_PROVIDER_PERMISSION_REQUIRED", "Allow this bounded external investigation before source text is sent or model costs are incurred.", category="permission"), 403
         try:
-            extra = ({"branch_context": lambda: self._router_blocked_entities(run.workspace_id)}
-                     if planner else {})
-            snapshot = service.start_temporal(run.query, run.workspace_id, subject=values["subject"], relation=values["relation"], as_of=view["as_of"], **extra)
+            snapshot = service.start_temporal(run.query, run.workspace_id, subject=values["subject"],
+                relation=values["relation"], as_of=view["as_of"], entity_leads=leads,
+                blocked_entities=self._authorization_blocks(run.workspace_id) if service.orchestration_enabled() else ())
         except ProductApplicationError:
             raise
-        except BranchPlanUnavailable:
-            return None  # the caller continues exactly as it would with the Planner off
         except Exception:
             return self._failure(result, "INVESTIGATION_START_FAILED", "The configured investigation could not start.", category="runtime"), 500
         pinned = _AskRun(run.query, run.workspace_id, dict(result["scope"]), run.route, result.get("discovery"))
@@ -532,6 +510,20 @@ class UnifiedAskService:
         if graph['status'] == 'INSUFFICIENT' and graph.get('graph_status') in {'UNKNOWN', 'AMBIGUOUS', 'NOT_FOUND'}:
             return self._try_graph_fallback(run, payload, graph)
         return self._graph_result(run, graph), 200
+
+    def _blocking_facts(self, facts):
+        """Facts that stop a question before routing. With orchestrated investigation configured, only another
+        workspace's name does; an unconfirmed name becomes a lead for source verification (admit_route)."""
+        service = self.investigation()
+        if service is not None and service.orchestration_enabled():
+            from linkloom.ui.router_context import authorization_facts
+            return authorization_facts(facts)
+        return facts
+
+    def _authorization_blocks(self, workspace_id):
+        """Names the Host never lets a run touch: other workspaces. They are not investigation leads."""
+        from linkloom.ui.router_context import authorization_facts
+        return authorization_facts(self._router_blocked_entities(workspace_id))
 
     def _router_blocked_entities(self, workspace_id, slots=None):
         from linkloom.ui.structured_router import normalize_mention
@@ -627,7 +619,7 @@ class UnifiedAskService:
         reply_record = {}
         try:
             context = self._router_context(run, payload, snapshot_hash)
-            blocker = blocked_entity_reason(run.query, context.blocked_entities)
+            blocker = blocked_entity_reason(run.query, self._blocking_facts(context.blocked_entities))
             if blocker:
                 return self._router_stop(run, None, blocker)
             if provider.mode == "cascade":
@@ -700,7 +692,9 @@ class UnifiedAskService:
 
     def _execute_router(self, run, payload, context, route):
         from linkloom.ui.router_context import admit_route
-        admission = admit_route(context, route, model_entities=self.router_provider.mode == "cascade")
+        service = self.investigation()
+        admission = admit_route(context, route, model_entities=self.router_provider.mode == "cascade",
+                                leads_allowed=service is not None and service.orchestration_enabled())
         candidate, as_of = admission.candidate, admission.as_of
         if admission.executor is None:
             result, status = self._router_stop(run, route, admission.reason)
@@ -709,7 +703,11 @@ class UnifiedAskService:
                 result['router']['entities'] = [dict(kind=candidate.kind, label=candidate.label)]
             return result, status
         metadata = dict(route.public(), source='llm', attempted=True,
-                        entities=[dict(kind=candidate.kind, label=candidate.label)])
+                        entities=[dict(kind=candidate.kind, label=candidate.label)] if candidate else [])
+        if admission.leads:
+            # Confirmed scope and unconfirmed leads are reported apart; a lead never appears under entities.
+            metadata.update(decision='ROUTE', reason_code='NONE', reason_class='NONE',
+                            entity_leads=list(admission.leads))
         # Old response contracts are preserved; the entry routing decision is
         # reported independently from the downstream graph/legacy execution.
         run = replace(run, route=dict(intent=route.intent, code='STRUCTURED_ROUTER',
@@ -719,10 +717,40 @@ class UnifiedAskService:
             if response is not None:
                 return response
             return self._legacy_router_fallback(run, payload, 'GRAPH_NOT_AVAILABLE', metadata)
+        if admission.executor == "investigation":
+            if candidate is None:
+                return self._lead_request(run, payload, admission.leads)
+            subject, relation = candidate.identity
+            scoped = dict(subject=subject, relation=relation, as_of=as_of)
+            run = replace(run, scope=scoped)
+            return self._decision_request(run, self._base(run), payload, scoped, as_of, leads=admission.leads)
         subject, relation = candidate.identity
         scoped = dict(subject=subject, relation=relation, as_of=as_of)
         run = replace(run, scope=scoped)
         return self._decision_request(run, self._base(run), payload, scoped, as_of)
+
+    def _lead_request(self, run, payload, leads):
+        """Investigate a question whose subject is not a confirmed decision slot: the confirmed scope is the
+        current workspace, and the unconfirmed names are leads the Workers must resolve from source text."""
+        result = self._base(run)
+        service = self.investigation()
+        if service is None or not service.config()["available"]:
+            return self._failure(result, "AGENT_NOT_CONFIGURED", "This question requires investigation, but no model is configured.", category="configuration"), 503
+        if service.config()["external_provider"] and payload.get("allow_external_provider") is not True:
+            return self._failure(result, "EXTERNAL_PROVIDER_PERMISSION_REQUIRED", "Allow this bounded external investigation before source text is sent or model costs are incurred.", category="permission"), 403
+        try:
+            snapshot = service.start_orchestrated(run.query, run.workspace_id, entity_leads=leads,
+                                                  blocked_entities=self._authorization_blocks(run.workspace_id))
+        except ProductApplicationError:
+            raise
+        except Exception:
+            return self._failure(result, "INVESTIGATION_START_FAILED", "The configured investigation could not start.", category="runtime"), 500
+        pinned = _AskRun(run.query, run.workspace_id, dict(result["scope"]), run.route, result.get("discovery"))
+        with self._lock:
+            self._runs[snapshot["run"]["id"]] = (pinned, service)
+        service.save_parallel_ask(snapshot["run"]["id"], dict(query=pinned.query, workspace_id=pinned.workspace_id,
+            scope=pinned.scope, route=pinned.route, discovery=pinned.discovery))
+        return self._from_snapshot(pinned, snapshot), 202
 
     def _graph_result(self, run, graph):
         result = self._base(run)
@@ -918,8 +946,13 @@ class UnifiedAskService:
                 for row in snapshot["evidence"]]
             result.update(parallel_investigation=parallel, evidence=evidence,
                 status={"RUNNING": "INVESTIGATING", "COMPLETE": "COMPLETED", "PARTIAL": "PARTIAL",
-                        "CANCELLED": "CANCELLED"}.get(parallel["status"], "FAILED"),
+                        "UNKNOWN": "UNKNOWN", "CANCELLED": "CANCELLED"}.get(parallel["status"], "FAILED"),
                 error=deepcopy(snapshot["error"]))
+            if parallel["status"] in ("PARTIAL", "UNKNOWN"):
+                unknowns = (parallel.get("answer") or {}).get("unknowns") or []
+                result["uncertainty"] = {"unknown_fields": [row.get("question") or row.get("branch") for row in unknowns],
+                    "statement": "Some tasks did not produce a verified answer; only verified results are shown."
+                                 if parallel["status"] == "PARTIAL" else "No task produced a verified answer."}
             return result
         if kind == "running":
             result["status"] = "INVESTIGATING"
@@ -976,7 +1009,7 @@ class UnifiedAskService:
                              status="PROVIDER_UNCERTAIN" if uncertain else "FAILED")
 
     def continue_run(self, run_id: str, payload: dict[str, Any]) -> tuple[dict[str, Any], int]:
-        """Start the branches of a saved parallel run that never sent a request. Each branch starts at most once."""
+        """Resume a saved orchestrated run from its LangGraph checkpoint. Accepted tasks are never paid again."""
         workspace_id = payload.get("workspace_id")
         if not isinstance(workspace_id, str):
             raise ProductApplicationError("WORKSPACE_REQUIRED", "Select a workspace first.", status=409)
@@ -986,7 +1019,7 @@ class UnifiedAskService:
         if service is None:
             raise ProductApplicationError("RUN_NOT_FOUND", "The unified Ask run was not found.", status=404)
         ask, snapshot = service.continue_parallel(run_id, workspace_id,
-                                                   allow_external_provider=payload.get("allow_external_provider") is True)
+            allow_external_provider=payload.get("allow_external_provider") is True, approval=payload.get("approval"))
         with self.app._store_lock:
             return self._from_snapshot(_AskRun(**ask), snapshot), 202
 

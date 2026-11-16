@@ -6,7 +6,7 @@ this module only decides how many sessions the total budget can pay for.
 """
 from __future__ import annotations
 
-from dataclasses import dataclass, replace
+from dataclasses import asdict, dataclass, fields, replace
 import math
 
 from linkloom.ui.task_provider import TaskProviderLimits
@@ -41,6 +41,16 @@ class OrchestrationLimits:
                 type(self.confirm_over_tasks) is not int or self.confirm_over_tasks < 0):
             raise ValueError('non-negative integer orchestration limit required: confirm_over_tasks')
 
+    def to_dict(self):
+        return asdict(self)
+
+    @classmethod
+    def from_dict(cls, data):
+        data = dict(data)
+        for key in ('provider', 'per_task', 'supervisor'):
+            data[key] = TaskProviderLimits(**data[key])
+        return cls(**{field.name: data[field.name] for field in fields(cls)})
+
     def supervisor_reserve(self):
         """Every Supervisor decision the run may take: the first plan plus max_rounds reviews."""
         return {key: getattr(self.supervisor, key) * (self.max_rounds + 1) for key in _BUDGET_KEYS}
@@ -72,3 +82,23 @@ class OrchestrationLimits:
                            max_cost_usd=data['max_cost_usd'])
         return cls(provider=provider, per_task=share(1), supervisor=share(1),
                    max_tasks=max_tasks, max_rounds=max_rounds, **options)
+
+    WORKER_MIN_REQUESTS = 4  # search, read, one more evidence turn and the reserved Final turn
+
+    @classmethod
+    def for_budget(cls, provider, *, max_tasks=6, max_rounds=2, **options):
+        """The largest plan the total budget can pay for, each Worker slice holding a full Runtime turn set.
+
+        Raises ValueError when not even one Worker and one Supervisor decision fit.
+        """
+        for tasks in range(max_tasks, 0, -1):
+            for rounds in range(min(max_rounds, tasks), -1, -1):
+                if rounds == 0 and tasks > 1:
+                    continue  # a delegation without a review round is only offered for a single Worker
+                slots = tasks + rounds + 1
+                if (provider.max_requests // slots >= cls.WORKER_MIN_REQUESTS
+                        and provider.max_output_tokens // slots >= cls.WORKER_MIN_REQUESTS):
+                    return cls.split(provider, max_tasks=tasks, max_rounds=rounds,
+                                     deadline_seconds=float(provider.max_seconds),
+                                     **dict(dict(max_concurrency=min(3, tasks)), **options))
+        raise ValueError('TASK_PROVIDER_BUDGET_EXHAUSTED')

@@ -65,7 +65,8 @@ def main() -> int:
     parser.add_argument('--allow-task-investigation', action='store_true',
         help='Configure task Provider stages. Each Ask still needs source-snapshot permission.')
     parser.add_argument('--experimental-parallel-investigation', action='store_true',
-        help='Allow independent plan branches in a scoped temporal investigation.')
+        help='Run scoped investigations on the LangGraph Supervisor/Worker orchestration (dynamic task DAG, '
+             'shared evidence, checkpointed resume) within the explicit task budgets.')
     for name in ('requests', 'input-tokens', 'output-tokens'):
         parser.add_argument('--task-max-' + name, type=int)
     for name in ('cost-usd', 'seconds'):
@@ -109,7 +110,7 @@ def main() -> int:
     if not math.isfinite(args.estimated_cost_per_request) or args.estimated_cost_per_request < 0:
         parser.error("--estimated-cost-per-request must be a finite non-negative number")
     if args.experimental_parallel_investigation and not (task_limits and args.allow_temporal_agent):
-        parser.error('Parallel investigation requires task Provider budgets and --allow-temporal-agent.')
+        parser.error('Orchestrated investigation requires task Provider budgets and --allow-temporal-agent.')
     if args.offline_task_demo:
         if args.allow_external_provider or args.allow_temporal_agent or args.allow_task_investigation:
             parser.error("--offline-task-demo cannot be combined with external or temporal Agent flags")
