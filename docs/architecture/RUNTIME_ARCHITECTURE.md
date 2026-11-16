@@ -199,6 +199,16 @@ Recovery-specific evidence includes [graceful partials](../../tests/unit/test_gr
 and the [Ask DOM contracts](../../tests/ui/unified_ask_dom_test.cjs).
 For historical build-versus-buy context see [LangGraph mapping](LANGGRAPH_MAPPING.md).
 
+Multi-agent investigations run on a LangGraph `StateGraph` in `src/linkloom/orchestration/`.
+A Supervisor tool call may answer directly or delegate N tasks with dependencies, and the Host
+validates every plan (task, concurrency, depth, round and budget limits). A scheduler dispatches
+ready tasks in parallel with `Send`. Each Worker runs the RuntimeEngine, and the Reviewer gates its
+result before it enters the shared evidence blackboard. The Synthesizer writes one cited answer, or
+PARTIAL/UNKNOWN with the gaps kept. The LangGraph SQLite checkpoint owns orchestration state, and
+the Runtime checkpoint owns only execution inside one Worker. Resume replays receipts, so accepted
+tasks are never paid for twice. Offline evidence:
+[trace and resume run](../../tests/integration/test_langgraph_trace.py).
+
 ## Task investigation workflow
 
 The task Host binds bounded F observation extraction and typed G planning to
