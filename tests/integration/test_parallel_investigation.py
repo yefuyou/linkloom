@@ -26,6 +26,9 @@ FACTS = (
     "Mira Chen is the accountable owner of Cobalt B",
     "Mira Chen reports directly to Kai Wu",
 )
+SOURCE = ("Launch replaced Meridian A with Cobalt B because Meridian A could not meet "
+          "the agreed delivery schedule.")
+REASON = "Launch switched suppliers because Meridian A could not meet the agreed delivery schedule."
 
 
 @pytest.mark.parametrize("mode,max_steps", [("extra_read", 4), ("insufficient", 3),
@@ -122,6 +125,8 @@ class MeetingProvider:
             self.refs.append(request.observation.value["evidence_id"])
         if self.calls == (7 if self.chain else 3):
             statements = "; ".join(FACTS) if self.chain else FACTS[0]
+            if self.mode == "natural" and not self.chain:
+                statements = REASON
             if self.mode == "abstain" and not self.chain:
                 # A reasonable abstention: the branch read its source and reports that it cannot answer.
                 action = ModelAction.final(json.dumps(dict(schema_version="team-decision-result/v1",
@@ -150,6 +155,8 @@ class MeetingProvider:
                 arguments=dict(query=query, limit=5, source_context=context)))
         else:
             quote = FACTS[(self.calls - 2) // 2] if self.chain else FACTS[0]
+            if self.mode == "natural" and not self.chain:
+                quote = SOURCE
             hit = next(hit for hit in request.observation.value if quote in hit["quote"])
             action = ModelAction.tool(ToolCall(call_id=f"read-{self.calls}", tool_id="read_verified_note",
                 arguments=dict(note_ref=hit["evidence_id"])))
@@ -161,6 +168,7 @@ class MeetingProvider:
     ("timeout", "PARTIAL"), ("hard", "ABORTED"), ("cancel", "CANCELLED"),
     ("source_change", "ABORTED"), ("review_rejected", "PARTIAL"),
     ("late_source_change", "ABORTED"), ("late_cancel", "CANCELLED"), ("abstain", "PARTIAL"),
+    ("natural", "COMPLETE"),
 ])
 def test_scoped_parallel_investigation_uses_two_durable_runtimes(tmp_path, monkeypatch, mode, expected):
     monkeypatch.setenv("LINKLOOM_RETRIEVAL_MODE", "bm25")
@@ -183,6 +191,13 @@ def test_scoped_parallel_investigation_uses_two_durable_runtimes(tmp_path, monke
             _, imported = _client(base, "/api/sources/import", method="POST", data=dict(
                 name=f"meeting-{index}.md", content=f"[2025-02-1{index}T10:00:00Z] Alice: {fact}."))
             _wait_source(base, imported["source"]["source_id"])
+        if mode == "natural":
+            _, imported = _client(base, "/api/sources/import", method="POST", data=dict(
+                name="meeting-4.md", content=f"[2025-02-14T10:00:00Z] Alice: {SOURCE}"))
+            natural_source = imported["source"]["source_id"]
+            _wait_source(base, natural_source)
+        complete = mode in ("complete", "natural")
+        evidence_count = 4 if mode == "natural" else 3
 
         overlapped = Event()
         barrier = Barrier(2, action=overlapped.set)
@@ -279,13 +294,13 @@ def test_scoped_parallel_investigation_uses_two_durable_runtimes(tmp_path, monke
             status, projected = _client(base, f"/api/product/ask/runs/{run_id}?workspace_id={workspace_id}")
             assert status == 200, projected
             assert projected["result"]["parallel_investigation"] == outcome
-            assert len(projected["result"]["evidence"]) == 3
-            assert len(final["evidence"]) == 3, final
-            assert len({row["source_id"] for row in final["evidence"]}) == 3
-            assert outcome["gaps"] == ({} if mode in ("complete", "abstain") else {
+            assert len(projected["result"]["evidence"]) == evidence_count
+            assert len(final["evidence"]) == evidence_count, final
+            assert len({row["source_id"] for row in final["evidence"]}) == evidence_count
+            assert outcome["gaps"] == ({} if complete or mode == "abstain" else {
                 "branch-2": "UNCERTAIN" if mode in ("timeout", "uncertain") else "FAILED"})
             assert [row["branch"] for row in outcome["branches"]] == (
-                ["branch-1", "branch-2"] if mode in ("complete", "abstain") else ["branch-1"])
+                ["branch-1", "branch-2"] if complete or mode == "abstain" else ["branch-1"])
             for branch in outcome["branches"]:
                 path = root / "branches" / branch["branch"]
                 state = SQLiteCheckpointer(path / "runtime").load(branch["thread_id"])
@@ -301,15 +316,30 @@ def test_scoped_parallel_investigation_uses_two_durable_runtimes(tmp_path, monke
             assert answer["answers"] and all(row["citations"] and set(row["citations"]) <= known
                                              for row in answer["answers"])
             assert {row["question"] for row in answer["answers"]}.isdisjoint({None, ""})
-            assert answer["status"] == ("COMPLETE" if mode == "complete" else "PARTIAL")
+            assert answer["status"] == ("COMPLETE" if complete else "PARTIAL")
             # Every shown status reports how complete the published answer is, not only the branch reviews.
             assert outcome["status"] == answer["status"]
-            assert projected["result"]["status"] == ("COMPLETED" if mode == "complete" else "PARTIAL")
-            assert final["kind"] == ("success" if mode == "complete" else "insufficient")
-            if mode == "complete":
+            assert projected["result"]["status"] == ("COMPLETED" if complete else "PARTIAL")
+            assert final["kind"] == ("success" if complete else "insufficient")
+            if complete:
                 assert len(answer["answers"]) == 2 and answer["unknowns"] == []
+            if mode == "complete":
                 keys = [row["claim_key"] for row in answer["answers"]]
                 assert all(key and key["subject"] for key in keys) and keys[0] != keys[1]
+            elif mode == "natural":
+                # The single-step branch published a natural-language reason citing the line it read.
+                [reason] = [row for row in answer["answers"] if REASON in json.dumps(row)]
+                assert reason["citations"] and set(reason["citations"]) <= known
+                cited = [row for row in final["evidence"] if row["id"] in reason["citations"]]
+                assert {row["source_id"] for row in cited} == {natural_source}
+                read = SQLiteCheckpointer(root / "branches" / "branch-2" / "runtime").load(
+                    next(row["thread_id"] for row in outcome["branches"] if row["branch"] == "branch-2"))
+                observed = [row.result["value"] for row in read.tool_ledger if row.tool_id == "read_verified_note"]
+                assert len(observed) == 1 and observed[0]["quote"].find(SOURCE) >= 0
+                for key in ("line_start", "line_end", "quote_sha256"):
+                    assert {row[key] for row in cited} == {observed[0][key]}, key
+                _, source = _client(base, f"/api/sources/{natural_source}")
+                assert {row["source_version"] for row in cited} == {str(source["source"]["source_version"])}
             elif mode == "abstain":
                 # The abstaining branch passed review and read its source; it is an unknown, not a failure.
                 assert [(row["branch"], row["reason"]) for row in answer["unknowns"]] == [

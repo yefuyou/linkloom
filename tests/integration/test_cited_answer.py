@@ -1,4 +1,5 @@
 import json
+from dataclasses import replace
 from types import SimpleNamespace
 
 import pytest
@@ -148,3 +149,15 @@ def test_cited_answer_request_round_trips_and_needs_default_protocol():
     for kwargs in (dict(workflow="ask"), dict(workflow="team_decision", final_protocol="claim-proposal/v1")):
         with pytest.raises(ValidationError):
             RunRequest(request_id="r", query="q", cited_answer=True, **kwargs)
+
+
+def test_cited_answer_is_rejected_with_a_task_plan_or_model_planning():
+    plan = {"goal": "q"}
+    with pytest.raises(ValidationError, match="without a TaskPlan"):
+        RunRequest(request_id="r", workflow="team_decision", query="q", cited_answer=True, task_plan=plan)
+    with pytest.raises(ValidationError, match="without a TaskPlan"):
+        RunRequest(request_id="r", workflow="team_decision", query="q", cited_answer=True, planning_mode="model")
+    # graph.py adds the model-proposed TaskPlan with dataclasses.replace, which re-runs this validation.
+    request = RunRequest(request_id="r", workflow="team_decision", query="q", cited_answer=True)
+    with pytest.raises(ValidationError, match="without a TaskPlan"):
+        replace(request, task_plan=plan)

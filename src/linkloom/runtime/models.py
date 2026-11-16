@@ -449,6 +449,8 @@ class RunRequest:
         if type(self.cited_answer) is not bool or (self.cited_answer and (
                 self.workflow != "team_decision" or self.final_protocol != "team-decision-result/v1")):
             raise ValidationError("A cited answer requires team_decision with the default Final protocol.")
+        if self.cited_answer and (self.task_plan is not None or self.planning_mode == "model"):
+            raise ValidationError("A cited answer is only for the template branch without a TaskPlan.")
         if self.task_plan is not None:
             if self.workflow != "team_decision":
                 raise ValidationError("TaskPlan is only available for team_decision.")
