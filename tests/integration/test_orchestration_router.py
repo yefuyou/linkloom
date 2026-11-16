@@ -149,3 +149,17 @@ def test_cascade_without_router_candidates_keeps_the_legacy_fallback_and_masks_n
     assert status == 200 and not router.requests and not world.supervisor_requests
     assert result["router"]["fallback_reason"] == "NO_ROUTER_CANDIDATES" and result["error"]["code"] != "ENTITY_NOT_FOUND"
     assert not list((env.tmp_path / "work" / "investigations").glob("*/langgraph.sqlite"))
+
+
+@pytest.mark.parametrize("mode", ["cascade", "llm_first"])
+def test_an_unconfirmed_proposal_name_still_stops_where_the_run_is_not_orchestrated(make_env, mode):
+    """With orchestration on, a soft (unconfirmed) fact is a lead only on the orchestrated path. A lookup that
+    would run on a legacy path stops on it, in the cascade pre-check as well as in the router handoff."""
+    world = World([delegation("answer_single")], {})
+    env = make_env(world)
+    ask = ask_service(env, ScriptedRouter(intent="CURRENT", bind=True, leads=()), mode)
+    query = "Who replaced Cobalt B in the rollout?"
+    ask._router_blocked_entities = lambda workspace_id, slots=None: (("Cobalt B", "NO_CONFIRMED_RECORD"),)
+    result, status = ask.ask(dict(query=query, workspace_id=env.workspace_id))
+    assert status == 200 and result["status"] == "NEEDS_SCOPE" and result["error"]["code"] == "NO_CONFIRMED_RECORD"
+    assert not result["evidence"] and not world.supervisor_requests and not world.workers

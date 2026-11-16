@@ -102,3 +102,10 @@ def test_ambiguity_and_unconfirmed_slots_are_never_guessed_away(monkeypatch):
                                            for key, value in ctx.candidates.items()})
     admission = admit_route(unconfirmed, route(ctx), model_entities=True, leads_allowed=True)
     assert admission.executor is None and admission.reason == "NO_CONFIRMED_RECORD"
+
+
+def test_without_orchestration_a_lead_only_route_still_ends_in_entity_not_found():
+    ctx = base_context("Why did ghostwood replace search_engine at Tamarack?")
+    proposed = route(ctx, bind=False, mentions=(), entities=("ghostwood",))
+    assert admit_route(ctx, proposed, model_entities=True).reason == "ENTITY_NOT_FOUND"
+    assert admit_route(ctx, proposed, model_entities=True).executor is None

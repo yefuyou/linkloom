@@ -1,6 +1,7 @@
 """LangGraph orchestration with the real RuntimeEngine, Reviewer gate and synthesis (offline fake models)."""
 import json
 import threading
+from pathlib import Path
 from threading import Barrier
 
 import pytest
@@ -375,3 +376,72 @@ def test_retryable_failure_is_retried_within_the_attempt_limit_only(tmp_path):
     assert [event["tasks"] for event in events(result, "wave_dispatched")] == [["task-1"], ["task-1"]]
     assert result["tasks"]["task-1"]["attempt"] == 2 and result["dispatches"] == 2
     assert len(world.workers) == 2 and result["status"] == "UNKNOWN"
+
+
+def _kill_before_receipt(monkeypatch, module, name):
+    """Die exactly when the receipt `name` would be written: after the paid provider call returned."""
+    real, state = module.write_json, dict(fired=False)
+
+    def write(path, data):
+        if Path(path).name == name and not state["fired"]:
+            state["fired"] = True
+            raise Crash()
+        return real(path, data)
+    monkeypatch.setattr(module, "write_json", write)
+    return state
+
+
+def test_kill_after_a_worker_request_before_its_receipt_is_never_paid_again(tmp_path, monkeypatch):
+    from linkloom.orchestration import worker as worker_module
+    world = World([delegation("delegate", [("succ", Q_SUCC, []), ("owner", Q_OWNER, [])]), delegation("stop")], TASKS)
+    orchestrator, deps = build(tmp_path, world, limits=OrchestrationLimits.split(
+        TOTAL, max_tasks=4, max_rounds=2, max_concurrency=1))
+    state = _kill_before_receipt(monkeypatch, worker_module, "status.json")
+    with pytest.raises(Crash):
+        orchestrator.start(GOAL)
+    assert state["fired"]
+    paid = {w.description: w.calls for w in world.workers}
+    assert paid and all(calls == 3 for calls in paid.values())  # a request was sent, the receipt was not written
+    monkeypatch.undo()
+    restarted, _ = build(tmp_path, world)
+    result = restarted.resume()
+    # the killed task was not sent again; its outcome is unknown, so it is a non-retryable gap
+    assert {w.description: w.calls for w in world.workers if w.description in paid} == paid
+    uncertain = [t for t in result["tasks"].values() if t["failure"] == "PROVIDER_UNCERTAIN"]
+    assert len(uncertain) == 1 and uncertain[0]["status"] == FAILED and uncertain[0]["retryable"] is False
+    assert result["status"] in {"PARTIAL", "UNKNOWN"}
+    assert len(world.supervisor_requests) == 2  # the first plan once, plus the later review of the gap
+
+
+def test_kill_after_the_supervisor_request_before_its_proposal_is_never_paid_again(tmp_path, monkeypatch):
+    from linkloom.orchestration import graph as graph_module
+    world = World([delegation("answer_single"), delegation("answer_single")], {GOAL: (FACT["succ"], "Meridian A", "ok")})
+    orchestrator, _ = build(tmp_path, world)
+    state = _kill_before_receipt(monkeypatch, graph_module, "proposal.json")
+    with pytest.raises(Crash):
+        orchestrator.start(GOAL)
+    assert state["fired"] and len(world.supervisor_requests) == 1
+    monkeypatch.undo()
+    restarted, _ = build(tmp_path, world)
+    result = restarted.resume()
+    assert len(world.supervisor_requests) == 1  # the unknown outcome is not re-sent
+    assert "HOST_FALLBACK" in result["tasks"]["task-1"]["spawn_reason"]  # fail closed: one task for the goal
+
+
+def test_a_kill_before_any_request_is_still_replayed(tmp_path):
+    world = World([delegation("delegate", [("succ", Q_SUCC, [])]), delegation("stop")], TASKS)
+    world.crash_once.add(Q_SUCC)  # dies in the model factory, before a request: nothing was reserved
+    orchestrator, _ = build(tmp_path, world)
+    with pytest.raises(Crash):
+        orchestrator.start(GOAL)
+    result = build(tmp_path, world)[0].resume()
+    assert result["tasks"]["succ"]["status"] == ACCEPTED
+
+
+def test_approved_plan_records_the_reviewer_as_self_asserted(tmp_path):
+    plan = delegation("delegate", [("succ", Q_SUCC, []), ("owner", Q_OWNER, [])])
+    limits = OrchestrationLimits.split(TOTAL, max_tasks=4, max_rounds=0, confirm_over_tasks=1)
+    orchestrator, _ = build(tmp_path, World([plan], TASKS), limits=limits)
+    orchestrator.start(GOAL)
+    result = orchestrator.resume(dict(approved=True, reviewer_id="anyone", reason="ok"))
+    assert result["approved_decisions"][0]["reviewer_identity"] == "self_asserted"

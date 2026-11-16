@@ -38,7 +38,7 @@ from linkloom.orchestration.supervisor import (
     ANSWER_SINGLE, DELEGATE, STOP, DelegationRejected, accept_delegation, delegation_request, single_task,
     tool_arguments,
 )
-from linkloom.orchestration.worker import HARD_FAILURES, WorkerDeps, build_worker_graph
+from linkloom.orchestration.worker import HARD_FAILURES, WorkerDeps, build_worker_graph, paid_without_receipt
 from linkloom.ui.branch_synthesis import merge_evidence, synthesize_reviewed
 from linkloom.ui.task_provider import TaskProviderSession
 
@@ -91,6 +91,10 @@ def build_graph(deps: WorkerDeps, checkpointer):
         root = deps.root / 'supervisor' / f'round-{round_number}'
         saved = _read(root / 'proposal.json')
         if saved is not None:
+            return saved
+        if paid_without_receipt(root):  # killed after a request may have been sent: never pay this round twice
+            saved = dict(payload=None, error='SUPERVISOR_FAILED', failure='PROVIDER_UNCERTAIN')
+            write_json(root / 'proposal.json', saved)
             return saved
         context = dict(user_goal=state['query'], **_context(state), tasks=_summary(state),
                        limits=dict(max_tasks=limits.task_cap(), max_depth=limits.max_depth),
@@ -147,7 +151,7 @@ def build_graph(deps: WorkerDeps, checkpointer):
         approved = isinstance(answer, dict) and answer.get('approved') is True
         if approved:
             decision = dict(kind='delegation_plan', task_ids=pending['task_ids'],
-                            reviewer_id=str(answer.get('reviewer_id') or ''), reason=str(answer.get('reason') or ''))
+                            reviewer_id=str(answer.get('reviewer_id') or ''), reviewer_identity='self_asserted', reason=str(answer.get('reason') or ''))
             return Command(update=dict(confirmation=dict(pending, status='approved'),
                                        approved_decisions=[decision],
                                        trace=[dict(event='plan_approved', tasks=pending['task_ids'])]),

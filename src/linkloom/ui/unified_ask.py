@@ -316,6 +316,13 @@ class UnifiedAskService:
                                                       values, as_of)
                     if response is not None:
                         return response
+                if cascade:
+                    # Only the orchestrated path above may carry an unconfirmed name as a lead. Every legacy
+                    # path below still stops on the full set of blocking facts.
+                    from linkloom.ui.router_context import blocked_entity_reason
+                    blocker = blocked_entity_reason(run.query, self._router_blocked_entities(run.workspace_id))
+                    if blocker:
+                        return self._router_stop(run, None, blocker)
                 if plan is not None or (not cascade and _RELATION_QUESTION.search(run.query)):
                     if cascade:
                         from linkloom.ui.router_context import router_query_date

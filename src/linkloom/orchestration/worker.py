@@ -132,8 +132,22 @@ def _read(path):
         return None
 
 
+def paid_without_receipt(root):
+    """True when a previous process reserved provider requests in this directory and left no receipt.
+
+    The budget journal is fsynced before each request crosses the transport, so reserved requests with no
+    receipt mean the process died while a paid call may have been in flight. Its outcome is unknown, and it
+    is never sent again."""
+    journal = _read(Path(root) / 'budget.json')
+    return isinstance(journal, dict) and (journal.get('requests_reserved') or 0) > 0
+
+
 def _run(deps, task, query):
     root = attempt_dir(deps, task)
+    if paid_without_receipt(root):
+        receipt = dict(run_status=None, failure='PROVIDER_UNCERTAIN', error=None)
+        write_json(root / 'status.json', receipt)
+        return receipt
     limits = deps.limits.per_task
     session = TaskProviderSession(root, limits, deps.validate)
     status, error = None, None
