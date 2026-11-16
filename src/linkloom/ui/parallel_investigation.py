@@ -107,7 +107,7 @@ def build_branch_row(name, question, plan, status, checkpoint_dir, checkpointer,
                      content_sha256=observed[item['ref']]['content_sha256'],
                      quote_sha256=observed[item['ref']]['quote_sha256'])
                 for item in snapshot['evidence']]
-    if not evidence:
+    if not evidence and snapshot['kind'] != 'insufficient':
         raise ValueError('PARALLEL_EVIDENCE_MISSING')
     team = artifact['result']['team_decision']
     # The artifact carries no structured subject/relation. The key comes from the Host-validated plan:
