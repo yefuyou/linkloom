@@ -792,6 +792,7 @@ class RuntimeAgentAdapter:
         prompt_profile: str = "zero-v1",
         verified_evidence_context_limit: int = 8,
         final_protocol: str = SCHEMA_VERSION,
+        reserve_final_turn: bool = False,
     ) -> dict[str, Any]:
         task_relations = workflow == "task_relations"
         context_runtime = None
@@ -947,6 +948,7 @@ class RuntimeAgentAdapter:
                 verified_evidence_context_limit=verified_evidence_context_limit,
                 memory_hints=memory_hints,
                 final_protocol=final_protocol,
+                reserve_final_turn=reserve_final_turn,
                 temporal_claim_validator=(
                     self._verify_temporal_claim
                     if self._temporal_claim_validator is not None else None

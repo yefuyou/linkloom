@@ -270,6 +270,8 @@ class ParallelInvestigation:
         if session.limits.max_requests < turns or session.limits.max_output_tokens < turns:
             session._error('TASK_PROVIDER_BUDGET_EXHAUSTED')
             raise ValueError('PARALLEL_BRANCH_BUDGET_INSUFFICIENT')
+        # Allow one more evidence turn within the assigned slice, then reserve Final.
+        turns = min(turns + 1, session.limits.max_requests, session.limits.max_output_tokens)
         adapter = _OutputBoundedAdapter(session.bind(self.model_factory(question), 'runtime'),
                                         min(4096, session.limits.max_output_tokens // turns))
         engine = RuntimeEngine(vault_root=self.vault, index_path=self.index,
@@ -279,6 +281,7 @@ class ParallelInvestigation:
         status = engine.start_multi_agent(RunRequest(request_id=f'{self.run_id}-{name}',
             thread_id=f'{self.run_id}-{name}', query=question, workflow='team_decision',
             task_plan=plan.to_dict() if plan else None, planning_mode='template',
-            max_steps=turns, max_provider_requests=turns, dry_run=True, caller='product_ui'))
+            max_steps=turns, max_provider_requests=turns, dry_run=True, caller='product_ui',
+            reserve_final_turn=True))
         return build_branch_row(name, question, plan, status, engine.checkpoint_dir, engine.checkpointer,
                                 self.workspace, self.source_versions, self.source_names)

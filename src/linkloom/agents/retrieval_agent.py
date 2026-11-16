@@ -119,6 +119,7 @@ class RetrievalAgent:
         final_protocol: str = SCHEMA_VERSION,
         temporal_claim_validator: Any | None = None,
         context_runtime: Any | None = None,
+        reserve_final_turn: bool = False,
     ) -> None:
         self.agent_id = agent_id
         self.model = model
@@ -135,6 +136,7 @@ class RetrievalAgent:
         self.final_protocol = final_protocol
         self.temporal_claim_validator = temporal_claim_validator
         self.context_runtime = context_runtime
+        self.reserve_final_turn = reserve_final_turn
         if prompt_profile not in PROMPT_PROFILES:
             raise ValidationError("Unsupported retrieval prompt profile.")
         self.prompt_profile = prompt_profile
@@ -1372,6 +1374,7 @@ class RetrievalAgent:
                 task_plan=self.task_plan if task.workflow == "team_decision" else None,
                 workspace_id=self.expected_workspace_id,
                 context_runtime=self.context_runtime,
+                reserve_final_turn=self.reserve_final_turn,
             )
             invoke_loop = loop.resume if self.resume_model_loop else loop.run
             loop_result = invoke_loop(

@@ -7,6 +7,9 @@ import pytest
 from linkloom.agents.model_adapter import ModelAction, ModelProviderError, ModelResponse, ModelUsage
 from linkloom.observability.reader import TraceReader
 from linkloom.runtime.checkpoint import SQLiteCheckpointer
+from linkloom.runtime.graph import RuntimeEngine
+from linkloom.runtime.models import RunRequest
+from linkloom.scanner import scan_vault
 from linkloom.tools.contracts import ToolCall
 from linkloom.ui.branch_budget import classify_branch_for_resume
 from linkloom.ui.investigation import ProductInvestigationService
@@ -23,6 +26,73 @@ FACTS = (
     "Mira Chen is the accountable owner of Cobalt B",
     "Mira Chen reports directly to Kai Wu",
 )
+
+
+@pytest.mark.parametrize("mode,max_steps", [("extra_read", 4), ("insufficient", 3),
+                                            ("ordinary", 3), ("tool_on_final", 3)])
+def test_reserved_final_turn_uses_only_existing_verified_evidence(tmp_path, monkeypatch, mode, max_steps):
+    monkeypatch.setenv("LINKLOOM_RETRIEVAL_MODE", "bm25")
+    vault = tmp_path / "vault"
+    vault.mkdir()
+    (vault / "decision.md").write_text(FACTS[0], encoding="utf-8")
+    (vault / "summary.md").write_text("Meridian A and Cobalt B were reviewed.", encoding="utf-8")
+    scan = scan_vault(vault, tmp_path / "scan")
+    requests = []
+    hits = []
+    verified_refs = []
+
+    class ScriptedBranch:
+        def complete(self, request):
+            requests.append(request)
+            number = len(requests)
+            if number == 1 or (mode == "insufficient" and number == 2):
+                source = json.loads(request.user_input.rsplit("team_decision_request=", 1)[1])["source_context"]
+                query = f"zzzz_no_match_{number}" if mode == "insufficient" else "Meridian A"
+                action = ModelAction.tool(ToolCall(f"search-{number}", "search_notes",
+                    dict(query=query, source_context=source, limit=5)))
+            elif number < max_steps:
+                if request.observation.tool_id == "search_notes":
+                    hits.extend(request.observation.value)
+                else:
+                    verified_refs.append(request.observation.value["evidence_id"])
+                hit = next(item for item in hits
+                           if item["relative_path"] == ("summary.md" if mode == "extra_read" and number == 2
+                                                        else "decision.md"))
+                action = ModelAction.tool(ToolCall(f"read-{number}", "read_verified_note",
+                                                  dict(note_ref=hit["evidence_id"])))
+            elif mode == "tool_on_final":
+                action = ModelAction.tool(ToolCall("late-read", "read_verified_note",
+                                                  dict(note_ref=request.observation.value["evidence_id"])))
+            else:
+                missing = mode == "insufficient"
+                if not missing:
+                    verified_refs.append(request.observation.value["evidence_id"])
+                action = ModelAction.final(json.dumps(dict(schema_version="team-decision-result/v1",
+                    decision=dict(value=None if missing else FACTS[0],
+                                  status="insufficient_evidence" if missing else "approved",
+                                  evidence_refs=verified_refs),
+                    rationale=[], rejected_alternatives=[], actions=[], unresolved_items=[],
+                    uncertainty=dict(status="insufficient_evidence" if missing else "none",
+                        statement=None, unknown_fields=["replacement"] if missing else [], evidence_refs=[]),
+                    evidence_refs=verified_refs)))
+            return ModelResponse(action=action)
+
+    engine = RuntimeEngine(vault, scan.index_path, tmp_path / "rt", trace_dir=tmp_path / "tr",
+                           model=ScriptedBranch(), memory_enabled=False, decision_memory_enabled=False)
+    result = engine.start_multi_agent(RunRequest(request_id="final-turn", thread_id="final-turn",
+        workflow="team_decision", query="What plan replaced Meridian A?",
+        max_steps=max_steps, max_provider_requests=max_steps, reserve_final_turn=True))
+    state = engine.checkpointer.load("final-turn")
+    assert len(requests) == max_steps and not requests[-1].available_tools
+    assert "Submit Final now" in requests[-1].recovery_guidance
+    assert len(state.tool_ledger) == max_steps - 1
+    if mode == "tool_on_final":
+        assert result.status == "failed" and result.error["code"] == "MODEL_FINAL_REQUIRED"
+    else:
+        assert result.status == "completed", result.error
+        artifact = json.loads((engine.checkpoint_dir / result.result_ref).read_text(encoding="utf-8"))
+        decision = artifact["result"]["team_decision"]["decision"]
+        assert decision["status"] == ("insufficient_evidence" if mode == "insufficient" else "approved")
 
 
 class MeetingProvider:
