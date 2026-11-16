@@ -119,7 +119,7 @@ def route_question(query: str, slots: list[dict[str, Any]], resolver: Any, *,
     # Explicit embedders remain available to comparative evaluation.
     if embedder is AUTO_EMBEDDER and provider_factory is None:
         embedder = None
-    # Recall runs before either understanding parser. Neither may gate it.
+    # Recall runs on the original question; the intent rule may not gate it.
     try:
         discovery = discover_scope(query, slots, resolver, workspace_id=workspace_id,
                                    subject=subject, relation=relation, embedder=embedder)
@@ -161,9 +161,10 @@ def route_question(query: str, slots: list[dict[str, Any]], resolver: Any, *,
                 llm_error = "NO_VALID_SINGLE_SELECTION"
         except Exception:
             llm_error = "SELECTION_UNAVAILABLE"
-    # Final raw-text check is independent of both the clue parser and selector.
+    # Explicit name positions (hard_veto) and role conflicts stay final. A capitalized word the rules
+    # cannot place is only a clue: it keeps the rule path from auto-binding, but cannot override the selector.
     safety = entity_check(query, workspace_snapshot(slots, resolver, workspace_id))
-    if safety.get("unbound_proper_names") or (safety["role_conflict"] and not (subject or relation)):
+    if safety["role_conflict"] and not (subject or relation):
         selected = None
     if safety["hard_veto"]:
         route, decided_by, selected = "NO_MATCH", "fallback", None

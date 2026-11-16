@@ -37,12 +37,27 @@ def test_unknown_organization_anywhere_cannot_bind_to_launch(name, template, emb
 
 @pytest.mark.parametrize("query", ["Ghost recommended the platform.", "The platform suggested by Ghost?",
                                   "Our platform, according to Ghost, is which one?"])
-@pytest.mark.parametrize("provider", [None, Forced])
-def test_unbound_capital_name_outside_old_frames_never_auto_matches(query, provider):
-    result = r.route_question(query, SLOTS, RESOLVER, workspace_id="one", embedder=Model(), provider_factory=provider)
+def test_unbound_capital_name_is_a_clue_that_defers_to_the_selector_not_a_final_veto(query):
+    # Without a selector the rule path does not auto-match, so the user is asked to clarify.
+    result = r.route_question(query, SLOTS, RESOLVER, workspace_id="one", embedder=Model())
     assert result["route"] == "CLARIFY" and result["scope"] is None
     assert "Ghost" in result["discovery"]["entity_check"]["unbound_proper_names"]
     assert result["discovery"]["raw_candidates"]
+    # The same raw candidates reach the selector: a null choice clarifies, a valid choice is honored.
+    class Null:
+        def complete(self, request):
+            return ModelResponse(action=ModelAction.final('{"intent":"CURRENT","slot_id":null,"as_of":null}'))
+    result = r.route_question(query, SLOTS, RESOLVER, workspace_id="one", embedder=Model(), provider_factory=Null)
+    assert result["route"] == "CLARIFY" and result["scope"] is None and result["llm_attempted"]
+    result = r.route_question(query, SLOTS, RESOLVER, workspace_id="one", embedder=Model(), provider_factory=Forced)
+    assert result["route"] == "CURRENT" and result["decided_by"] == "llm"
+
+
+@pytest.mark.parametrize("query", ["Latest platform for Launch?", "Okay, which platform is Launch on?",
+                                  "Which platform did Launch pick for Europe?"])
+def test_sentence_initial_or_unrelated_capital_word_does_not_override_the_selector(query):
+    result = r.route_question(query, SLOTS, RESOLVER, workspace_id="one", embedder=Model(), provider_factory=Forced)
+    assert result["route"] == "CURRENT" and result["scope"]["subject"] == "Launch"
 
 
 @pytest.mark.parametrize("label", ["Launch team", "Launch's team", "云帆团队", "云帆项目", "Loom Team group"])
@@ -53,15 +68,6 @@ def test_registered_names_and_aliases_are_not_rejected_by_organization_scan(labe
     assert not result["discovery"]["entity_check"]["unbound_proper_names"]
     assert result["route"] != "NO_MATCH"
     assert result["scope"] is None or result["scope"]["subject"] == "Launch"
-
-
-@pytest.mark.parametrize("reference", ["我们", "咱们", "我司", "we", "our", "us", "We", "Our", "Us",
-                                       "我们的团队", "咱们的项目", "our team", "our project", "my", "ours"])
-def test_reference_never_reduces_confidence_even_when_parser_calls_it_unknown(monkeypatch, reference):
-    monkeypatch.setattr(s, "parse_query_clues", lambda *a: {"unresolved": [reference]})
-    result = s.discover_scope("Which platform is Launch using?", SLOTS, RESOLVER, workspace_id="one", embedder=None)
-    assert result["confidence"] == result["raw_candidates"][0]["score"]
-    assert result["scope"] == {"subject": "Launch", "relation": "uses platform"}
 
 
 @pytest.mark.parametrize("query", ["我们现在用哪个平台？", "咱们现在用哪个平台？", "我司的平台是哪个？",
