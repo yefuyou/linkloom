@@ -81,7 +81,9 @@ def _sides(answers):
 
 
 def _compose(rows, gaps, unstarted, evidence_index, questions):
-    questions = list(questions or ())
+    # questions is a list in branch-N order (two-branch caller) or a {task id: question} mapping (N tasks).
+    named = dict(questions) if isinstance(questions, dict) else {}
+    questions = [] if named else list(questions or ())
     by_name = {_name(row): row for row in rows}
     cited = {identity: item['id'] for identity, item in evidence_index.items()}
     answers, unknowns = [], []
@@ -107,7 +109,7 @@ def _compose(rows, gaps, unstarted, evidence_index, questions):
             unknowns.append(_unknown('BRANCH_REPORTS_CONFLICTING_EVIDENCE', question, name))
     for name in sorted(gaps):
         number = int(name.rsplit('-', 1)[-1]) if name.rsplit('-', 1)[-1].isdigit() else 0
-        question = questions[number - 1] if 0 < number <= len(questions) else None
+        question = named.get(name) or (questions[number - 1] if 0 < number <= len(questions) else None)
         unknowns.append(_unknown('BRANCH_' + str(gaps[name]), question, name))
     pending = [f'branch-{i}' for i in range(1, len(questions) + 1)
                if f'branch-{i}' not in by_name and f'branch-{i}' not in gaps]
