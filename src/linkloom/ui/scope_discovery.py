@@ -388,8 +388,7 @@ def retrieve_raw(query: str, snapshot: WorkspaceSnapshot, config: RetrievalConfi
                              for phrase in aliases + slot.get("values", []))
         by_id[identifier] = dict(slot, aliases=aliases, conflicting_mentions=False,
                                  topic_anchored=topic_anchored,
-                                 history_anchor=len(history_matches) == 1 and identifier in history_matches,
-                                 unresolved_topic=False)
+                                 history_anchor=len(history_matches) == 1 and identifier in history_matches)
         topic_tokens[identifier] = _tokens(topic) - _RELATION_VERBS
     index = BM25Index()
     index.build(documents)
@@ -448,8 +447,7 @@ def retrieve_raw(query: str, snapshot: WorkspaceSnapshot, config: RetrievalConfi
 
 
 def rank_decision_slots(query: str, slots: list[dict[str, Any]], resolver: FrozenRelationResolver,
-                        *, workspace_id: str, embedder: Any = AUTO_EMBEDDER,
-                        include_weak: bool = False) -> list[dict[str, Any]]:
+                        *, workspace_id: str, embedder: Any = AUTO_EMBEDDER) -> list[dict[str, Any]]:
     """Compatibility entry; raw recall is independent of every understanding rule."""
     return retrieve_raw(query, workspace_snapshot(slots, resolver, workspace_id), RetrievalConfig(embedder))
 
@@ -558,7 +556,7 @@ def parse_query_clues(query: str, snapshot: WorkspaceSnapshot) -> dict[str, Any]
 
 def discover_scope(query: str, slots: list[dict[str, Any]], resolver: FrozenRelationResolver,
                    *, workspace_id: str, subject: str = "", relation: str = "",
-                   embedder: Any = AUTO_EMBEDDER, include_weak: bool = False) -> dict[str, Any]:
+                   embedder: Any = AUTO_EMBEDDER) -> dict[str, Any]:
     snapshot = workspace_snapshot(slots, resolver, workspace_id)
     # Run before parsing. Even a parser exception cannot cancel or change recall.
     raw = retrieve_raw(query, snapshot, RetrievalConfig(embedder))
@@ -594,7 +592,6 @@ def discover_scope(query: str, slots: list[dict[str, Any]], resolver: FrozenRela
     multiple_topics = len({s["relation"] for s in snapshot.slots if s["slot_id"] in groups}) > 1
     for candidate in candidates:
         candidate["conflicting_mentions"] = multiple_topics or len(subject_hits) > 1
-        candidate["unresolved_topic"] = bool(clues.get("unresolved"))
     explicit = bool(subject or relation)
     if explicit:
         canonical = resolver.resolve(relation).canonical_relation or relation
