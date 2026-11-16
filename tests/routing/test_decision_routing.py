@@ -185,13 +185,25 @@ def test_llm_cannot_invent_a_date():
         assert result["route"] == "CLARIFY" and result["decided_by"] == "fallback"
 
 
-def test_model_selected_intent_is_honored_for_why_question():
+def test_model_current_intent_is_honored_when_investigation_words_misfire():
     inputs = ambiguous_slots()
     identifier = inputs[0]["slot_id"]
+    question = "Which platform are we using now since it changed?"
+    assert classify_task(question)["intent"] == "INVESTIGATION"
     provider = Selector(json.dumps(dict(intent="CURRENT", slot_id=identifier, as_of=None)))
-    result = route_question("Why did the platform change?", inputs, RESOLVER,
+    result = route_question(question, inputs, RESOLVER,
                             workspace_id="one", provider_factory=lambda: provider)
     assert result["route"] == "CURRENT" and result["decided_by"] == "llm"
+    assert result["scope"]["subject"] == inputs[0]["subject"]
+
+
+def test_model_investigation_intent_is_honored_for_why_question():
+    inputs = ambiguous_slots()
+    identifier = inputs[0]["slot_id"]
+    provider = Selector(json.dumps(dict(intent="INVESTIGATION", slot_id=identifier, as_of=None)))
+    result = route_question("Why did the platform change?", inputs, RESOLVER,
+                            workspace_id="one", provider_factory=lambda: provider)
+    assert result["route"] == "INVESTIGATION" and result["decided_by"] == "llm"
     assert result["scope"]["subject"] == inputs[0]["subject"]
 
 
