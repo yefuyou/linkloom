@@ -66,7 +66,6 @@ def test_workspace_and_review_filter_run_before_indexing_and_embedding():
     "Which platform does project 456 use?",
     "Which platform does Juniper or Stranger use?",
     "陌生项目当前采用哪个平台？",
-    "Juniper 现在采用哪家支付平台？",
     "Why did Juniper switch from Quartz to Unrecorded?",
     "What is Support's current platform?",
     "Which platform has Support chosen?",
@@ -81,16 +80,17 @@ def test_unknown_or_foreign_explicit_binding_never_borrows_a_known_slot(question
     provider = Selector('{"intent":"CURRENT","slot_id":"forged","as_of":null}')
     result = route_question(question, [slot(), slot("Support", workspace="other")], RESOLVER,
                             workspace_id="one", provider_factory=lambda: provider)
-    # Authorized contract migration: an unknown common-noun topic qualifier
-    # is soft uncertainty; all explicit unknown proper-name cases remain hard.
-    soft_topic = question == "Juniper 现在采用哪家支付平台？"
-    assert result["route"] == ("CLARIFY" if soft_topic else "NO_MATCH")
+    assert result["route"] == "NO_MATCH"
     assert result["scope"] is None and result["decided_by"] == "fallback"
-    if soft_topic:
-        assert slot()["slot_id"] in {c["slot_id"] for c in result["discovery"]["raw_candidates"]}
-        assert len(provider.requests) == 1
-    else:
-        assert provider.requests == []
+    assert provider.requests == []
+
+
+def test_unrecorded_topic_qualifier_does_not_block_a_named_subject():
+    # "支付" is not a recorded topic word. The named project and recorded relation still anchor the slot;
+    # the answer shows the recorded slot and its sources instead of a rule-based refusal.
+    result = route_question("Juniper 现在采用哪家支付平台？", [slot(), slot("Support", workspace="other")],
+                            RESOLVER, workspace_id="one")
+    assert result["route"] == "CURRENT" and result["scope"]["subject"] == "Juniper"
 
 
 def test_same_question_resolves_only_in_its_own_workspace():
@@ -255,20 +255,30 @@ def test_original_relation_and_task_dispatch_never_enter_slot_router(case, monke
 
 
 @pytest.mark.parametrize("question", [
-    "为什么石英被花岗岩替换？", "石英为什么换成花岗岩？",
-    "比较石英和花岗岩的平台方案？",
     "Why was Quartz replaced by Unrecorded?",
     "Compare Quartz and unrecorded in the platform choice.",
 ])
-def test_unknown_replacement_and_comparison_values_fail_closed(question):
+def test_unknown_latin_replacement_and_comparison_values_fail_closed(question):
     item = slot()
     item["values"] = ["石英", "青玉", "Quartz"]
     result = route_question(question, [item], RESOLVER, workspace_id="one")
-    # Authorized migration: unmarked Chinese rock/material nouns are not
-    # independently proven proper names. Named Latin operands remain hard.
-    assert result["route"] == ("CLARIFY" if "石英" in question else "NO_MATCH")
-    assert result["scope"] is None
+    assert result["route"] == "NO_MATCH" and result["scope"] is None
     assert item["slot_id"] in {c["slot_id"] for c in result["discovery"]["raw_candidates"]}
+
+
+@pytest.mark.parametrize("question", [
+    "为什么石英被花岗岩替换？", "石英为什么换成花岗岩？", "比较石英和花岗岩的平台方案？",
+])
+def test_unrecorded_chinese_value_does_not_hide_the_recorded_value_anchor(question):
+    # 石英 is recorded only in this slot, so scope is not ambiguous. The unrecorded 花岗岩 is a claim for
+    # the evidence stage to report as absent; the scope step must not reject or rebind it.
+    item = slot()
+    item["values"] = ["石英", "青玉", "Quartz"]
+    result = route_question(question, [item], RESOLVER, workspace_id="one")
+    assert result["route"] == "INVESTIGATION" and result["scope"]["subject"] == "Juniper"
+    other = dict(slot("Willow", value="Jasper"), values=["花岗岩"])
+    result = route_question(question, [item, other], RESOLVER, workspace_id="one")
+    assert result["scope"] is None and result["route"] == "CLARIFY"
 
 
 def test_declared_subject_alias_is_scoped_and_consistent_with_retrieval():

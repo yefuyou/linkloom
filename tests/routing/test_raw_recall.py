@@ -23,7 +23,7 @@ class Model:
 @pytest.mark.parametrize("query,gold", [("Which platform is Launch using?", "platform"),
     ("Launch 当前采用哪个平台？", "platform"), ("Quartz 还在用吗？", "platform"),
     ("What is Launch's allocation?", "allocation")])
-@pytest.mark.parametrize("failure", ["normal", "UNKNOWN", "wrong_subject", "wrong_topic", "exception"])
+@pytest.mark.parametrize("failure", ["normal", "UNKNOWN", "exception"])
 def test_original_pool_and_scores_survive_all_rule_failures(monkeypatch, query, gold, embedded, failure):
     model = Model() if embedded else None
     snapshot = scope.workspace_snapshot(SLOTS, RESOLVER, "one")
@@ -32,13 +32,6 @@ def test_original_pool_and_scores_survive_all_rule_failures(monkeypatch, query, 
     expected = scope.retrieve_raw(query, snapshot, config)
     assert gold in {c["slot_id"] for c in expected}
     if failure != "normal":
-        def broken(*args, **kwargs):
-            if failure == "exception":
-                raise ValueError("injected parser failure")
-            return {"subjects": ["Other"] if failure == "wrong_subject" else [],
-                    "topics": ["Other"] if failure == "wrong_topic" else [],
-                    "values": [], "unresolved": []}
-        monkeypatch.setattr(scope, "parse_query_clues", broken)
         def intent(*args, **kwargs):
             if failure == "exception":
                 raise ValueError("injected intent failure")
@@ -56,8 +49,6 @@ def test_original_pool_and_scores_survive_all_rule_failures(monkeypatch, query, 
 def test_raw_retrieval_never_invokes_a_parser(monkeypatch):
     def forbidden(*args, **kwargs):
         raise AssertionError("raw retrieval called a rule parser")
-    monkeypatch.setattr(scope, "_query_bindings", forbidden)
-    monkeypatch.setattr(scope, "parse_query_clues", forbidden)
     monkeypatch.setattr(routing, "classify_task", forbidden)
     hits = scope.retrieve_raw("Which platform now?", scope.workspace_snapshot(SLOTS, RESOLVER, "one"), scope.RetrievalConfig(None))
     assert hits[0]["slot_id"] == "platform"
@@ -118,7 +109,6 @@ def test_new_metrics_use_raw_pool_and_do_not_count_clarification_as_correct_auto
 def test_malformed_rule_outputs_keep_original_candidates(monkeypatch, value):
     query = "Which platform is Launch using?"
     raw = scope.retrieve_raw(query, scope.workspace_snapshot(SLOTS, RESOLVER, "one"), scope.RetrievalConfig(None))
-    monkeypatch.setattr(scope, "parse_query_clues", lambda *a: deepcopy(value))
     monkeypatch.setattr(routing, "classify_task", lambda *a: deepcopy(value))
     result = routing.route_question(query, SLOTS, RESOLVER, workspace_id="one", embedder=None)
     assert result["discovery"]["raw_candidates"] == raw
@@ -137,17 +127,19 @@ def test_passive_operators_are_not_unknown_proper_names(operator):
     assert "platform" in {c["slot_id"] for c in result["discovery"]["raw_candidates"]}
 
 
-def test_parser_cannot_mutate_raw_snapshot_or_candidates(monkeypatch):
-    query = "Which platform is Launch using?"
-    raw = scope.retrieve_raw(query, scope.workspace_snapshot(SLOTS, RESOLVER, "one"), scope.RetrievalConfig(None))
-    def mutate(query, snapshot):
-        snapshot.slots[0]["values"].append("MUTATED")
-        snapshot.slots[0]["subject"] = "Other"
-        return {"unresolved": []}
-    monkeypatch.setattr(scope, "parse_query_clues", mutate)
-    result = routing.route_question(query, SLOTS, RESOLVER, workspace_id="one", embedder=None)
-    assert result["discovery"]["raw_candidates"] == raw
-    assert result["scope"]["subject"] == "Launch"
+def test_rephrased_question_about_existing_subject_still_binds():
+    result = routing.route_question("What platform does Launch run on?", SLOTS, RESOLVER,
+                                    workspace_id="one", embedder=None)
+    assert result["scope"] == {"subject": "Launch", "relation": "uses platform"}
+
+
+def test_unrecorded_value_comparison_across_two_slots_is_not_auto_bound():
+    # Each operand is recorded in a different slot: retrieval ties, so rules must not pick one.
+    slots = [dict(SLOTS[0]), dict(SLOTS[0], subject="Harbor", slot_id="harbor", values=["Granite"])]
+    result = routing.route_question("Compare Quartz and Granite for the platform.", slots, RESOLVER,
+                                    workspace_id="one", embedder=None)
+    assert result["route"] == "CLARIFY" and result["scope"] is None
+    assert {"platform", "harbor"} <= {c["slot_id"] for c in result["discovery"]["candidates"]}
 
 
 @pytest.mark.parametrize("query", ["Which platform does Ghost Harbor currently use?",
