@@ -127,20 +127,24 @@ class MeetingProvider:
             statements = "; ".join(FACTS) if self.chain else FACTS[0]
             if self.mode == "natural" and not self.chain:
                 statements = REASON
-            if self.mode == "abstain" and not self.chain:
-                # A reasonable abstention: the branch read its source and reports that it cannot answer.
+            refs = self.refs
+            if not self.chain and self.mode in ("uncited_abstain", "uncited_not_found", "uncited_answer"):
+                refs = []
+            if not self.chain and self.mode in ("abstain", "uncited_abstain", "uncited_not_found"):
+                # The branch read its source and reports that it cannot answer.
+                status = "not_found" if self.mode == "uncited_not_found" else "insufficient_evidence"
                 action = ModelAction.final(json.dumps(dict(schema_version="team-decision-result/v1",
-                    decision=dict(value=None, status="insufficient_evidence", evidence_refs=self.refs),
+                    decision=dict(value=None, status=status, evidence_refs=refs),
                     rationale=[], rejected_alternatives=[], actions=[], unresolved_items=[],
                     uncertainty=dict(status="insufficient_evidence", statement=None,
                                      unknown_fields=["replacement"], evidence_refs=[]),
-                    evidence_refs=self.refs)))
+                    evidence_refs=refs)))
             else:
                 action = ModelAction.final(json.dumps(dict(schema_version="team-decision-result/v1",
-                    decision=dict(value=statements, status="approved", evidence_refs=self.refs),
+                    decision=dict(value=statements, status="approved", evidence_refs=refs),
                     rationale=[], rejected_alternatives=[], actions=[], unresolved_items=[],
                     uncertainty=dict(status="none", statement=None, unknown_fields=[], evidence_refs=[]),
-                    evidence_refs=self.refs)))
+                    evidence_refs=refs)))
         elif self.calls % 2:
             context = json.loads(request.user_input.rsplit("team_decision_request=", 1)[1])["source_context"]
             query = "Meridian A"
@@ -168,7 +172,8 @@ class MeetingProvider:
     ("timeout", "PARTIAL"), ("hard", "ABORTED"), ("cancel", "CANCELLED"),
     ("source_change", "ABORTED"), ("review_rejected", "PARTIAL"),
     ("late_source_change", "ABORTED"), ("late_cancel", "CANCELLED"), ("abstain", "PARTIAL"),
-    ("natural", "COMPLETE"),
+    ("natural", "COMPLETE"), ("uncited_abstain", "PARTIAL"), ("uncited_not_found", "PARTIAL"),
+    ("uncited_answer", "PARTIAL"),
 ])
 def test_scoped_parallel_investigation_uses_two_durable_runtimes(tmp_path, monkeypatch, mode, expected):
     monkeypatch.setenv("LINKLOOM_RETRIEVAL_MODE", "bm25")
@@ -197,6 +202,7 @@ def test_scoped_parallel_investigation_uses_two_durable_runtimes(tmp_path, monke
             natural_source = imported["source"]["source_id"]
             _wait_source(base, natural_source)
         complete = mode in ("complete", "natural")
+        abstained = mode in ("abstain", "uncited_abstain", "uncited_not_found")
         evidence_count = 4 if mode == "natural" else 3
 
         overlapped = Event()
@@ -297,10 +303,10 @@ def test_scoped_parallel_investigation_uses_two_durable_runtimes(tmp_path, monke
             assert len(projected["result"]["evidence"]) == evidence_count
             assert len(final["evidence"]) == evidence_count, final
             assert len({row["source_id"] for row in final["evidence"]}) == evidence_count
-            assert outcome["gaps"] == ({} if complete or mode == "abstain" else {
+            assert outcome["gaps"] == ({} if complete or abstained else {
                 "branch-2": "UNCERTAIN" if mode in ("timeout", "uncertain") else "FAILED"})
             assert [row["branch"] for row in outcome["branches"]] == (
-                ["branch-1", "branch-2"] if complete or mode == "abstain" else ["branch-1"])
+                ["branch-1", "branch-2"] if complete or abstained else ["branch-1"])
             for branch in outcome["branches"]:
                 path = root / "branches" / branch["branch"]
                 state = SQLiteCheckpointer(path / "runtime").load(branch["thread_id"])
@@ -340,12 +346,16 @@ def test_scoped_parallel_investigation_uses_two_durable_runtimes(tmp_path, monke
                     assert {row[key] for row in cited} == {observed[0][key]}, key
                 _, source = _client(base, f"/api/sources/{natural_source}")
                 assert {row["source_version"] for row in cited} == {str(source["source"]["source_version"])}
-            elif mode == "abstain":
+            elif abstained:
                 # The abstaining branch passed review and read its source; it is an unknown, not a failure.
                 assert [(row["branch"], row["reason"]) for row in answer["unknowns"]] == [
                     ("branch-2", "BRANCH_NO_DECISION")]
-            elif mode == "review_rejected":
+            elif mode in ("review_rejected", "uncited_answer"):
                 assert [row["reason"] for row in answer["unknowns"]] == ["BRANCH_FAILED"]
+                if mode == "uncited_answer":
+                    [artifact] = (root / "branches/branch-2/runtime/results").glob("*/result.json")
+                    error = json.loads(artifact.read_text(encoding="utf-8"))["error"]
+                    assert error["code"] == "TEAM_DECISION_CONTRACT_ERROR"
             if mode in ("timeout", "uncertain"):
                 assert next(model for model in models.values() if not model.chain).calls == 1
                 assert classify_branch_for_resume(root / "branches" / "branch-2") == "UNCERTAIN"
