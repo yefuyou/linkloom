@@ -70,7 +70,13 @@ def render_snapshot(run_id, query, workspace, *, stop, outcome, questions, plann
                 cache['answer'] = synthesize_reviewed(
                     list(results.values()), outcome['gaps'], outcome['unstarted'],
                     merged, questions, source_check=source_check, review_id=f'{run_id}-aggregate')
-            snapshot['parallel_investigation']['answer'] = deepcopy(cache['answer'])
+            answer = cache['answer']
+            snapshot['parallel_investigation']['answer'] = deepcopy(answer)
+            # The pool status only says whether each branch passed review. A reasonable abstention
+            # passes review but leaves a gap in the answer, so a published answer sets the shown status.
+            if answer.get('published') is True and answer.get('status') in ('COMPLETE', 'PARTIAL'):
+                snapshot['parallel_investigation']['status'] = answer['status']
+                snapshot.update(kind='success' if answer['status'] == 'COMPLETE' else 'insufficient')
     else:
         snapshot['parallel_investigation'] = dict(status='RUNNING')
     if planner is not None:
@@ -282,6 +288,6 @@ class ParallelInvestigation:
             thread_id=f'{self.run_id}-{name}', query=question, workflow='team_decision',
             task_plan=plan.to_dict() if plan else None, planning_mode='template',
             max_steps=turns, max_provider_requests=turns, dry_run=True, caller='product_ui',
-            reserve_final_turn=True))
+            reserve_final_turn=True, cited_answer=plan is None))
         return build_branch_row(name, question, plan, status, engine.checkpoint_dir, engine.checkpointer,
                                 self.workspace, self.source_versions, self.source_names)
