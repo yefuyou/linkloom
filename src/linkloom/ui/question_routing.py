@@ -109,8 +109,6 @@ def _select(provider: Any, query: str, candidates: list[dict[str, Any]], task: d
         return None
     if data["intent"] == "CURRENT" and as_of is not None:
         return None
-    if _INVESTIGATION.search(query) and data["intent"] != "INVESTIGATION":
-        return None
     return data
 
 
@@ -124,8 +122,7 @@ def route_question(query: str, slots: list[dict[str, Any]], resolver: Any, *,
     # Recall runs before either understanding parser. Neither may gate it.
     try:
         discovery = discover_scope(query, slots, resolver, workspace_id=workspace_id,
-                                   subject=subject, relation=relation, embedder=embedder,
-                                   include_weak=provider_factory is not None)
+                                   subject=subject, relation=relation, embedder=embedder)
     except (ImportError, OSError, RuntimeError, ValueError) as exc:
         raise ProductApplicationError("RETRIEVAL_FAILED", "Decision retrieval could not complete.", status=503) from exc
     try:

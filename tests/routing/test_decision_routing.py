@@ -173,17 +173,26 @@ def test_unique_match_and_explicit_rule_do_not_call_optional_model():
     assert provider.requests == []
 
 
-def test_llm_cannot_invent_a_date_or_downgrade_explanation():
+def test_llm_cannot_invent_a_date():
     inputs = ambiguous_slots()
     identifier = inputs[0]["slot_id"]
     for question, answer in (
         ("Which platform now?", dict(intent="AS_OF", slot_id=identifier, as_of="2021-01-01")),
-        ("Why did the platform change?", dict(intent="CURRENT", slot_id=identifier, as_of=None)),
         ("Which platform on 2026-10-06?", dict(intent="AS_OF", slot_id=identifier, as_of="2026-10-07")),
     ):
         provider = Selector(json.dumps(answer))
         result = route_question(question, inputs, RESOLVER, workspace_id="one", provider_factory=lambda: provider)
         assert result["route"] == "CLARIFY" and result["decided_by"] == "fallback"
+
+
+def test_model_selected_intent_is_honored_for_why_question():
+    inputs = ambiguous_slots()
+    identifier = inputs[0]["slot_id"]
+    provider = Selector(json.dumps(dict(intent="CURRENT", slot_id=identifier, as_of=None)))
+    result = route_question("Why did the platform change?", inputs, RESOLVER,
+                            workspace_id="one", provider_factory=lambda: provider)
+    assert result["route"] == "CURRENT" and result["decided_by"] == "llm"
+    assert result["scope"]["subject"] == inputs[0]["subject"]
 
 
 def test_multiple_explicit_topics_and_unresolved_dates_remain_clarifications():
