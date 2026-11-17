@@ -44,6 +44,7 @@ def _run(tmp_path, monkeypatch, build, *, cited=True, search=True):
 
         def complete(self, request):
             self.calls += 1
+            assert request.final_only == (self.calls == 3)
             if search and self.calls == 1:
                 context = json.loads(request.user_input.rsplit("team_decision_request=", 1)[1])["source_context"]
                 return ModelResponse(action=ModelAction.tool(ToolCall("s", "search_notes",
