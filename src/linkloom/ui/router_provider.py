@@ -207,7 +207,12 @@ class RouterProvider:
 
     def reserve(self, app, owner, request, validate):
         models = owner.task_models
-        timeout = CONFIG["security_timeout_seconds"] if request.agent_id == "ask-security" else CONFIG["timeout_seconds"]
+        if request.agent_id == "ask-security":
+            timeout = CONFIG["security_timeout_seconds"]
+        elif isinstance(self.adapter, GeminiRouterAdapter):
+            timeout = CONFIG["gemini_router_timeout_seconds"]
+        else:
+            timeout = CONFIG["timeout_seconds"]
         limits = getattr(models, "provider_limits", None) or TaskProviderLimits(
             1, 12000, max(CONFIG["max_output_tokens"], CONFIG["security_max_output_tokens"]),
             .03, timeout, timeout, .00656)
@@ -231,7 +236,7 @@ def configured_router():
         if not key:
             return RouterProvider(None, external_provider=True, mode=mode)
         client = build_gemini_sdk_client(key, http_options_kwargs=dict(
-            timeout=CONFIG["timeout_seconds"] * 1000, retry_options=dict(attempts=1)))
+            timeout=CONFIG["gemini_router_timeout_seconds"] * 1000, retry_options=dict(attempts=1)))
         security_client = build_gemini_sdk_client(key, http_options_kwargs=dict(
             timeout=CONFIG["security_timeout_seconds"] * 1000, retry_options=dict(attempts=1)))
         return RouterProvider(GeminiRouterAdapter(client), external_provider=True, mode=mode,

@@ -198,8 +198,9 @@ def test_gemini_router_and_security_use_independent_transport_timeouts(monkeypat
 
     monkeypatch.setattr('linkloom.ui.router_provider.build_gemini_sdk_client', build)
     provider = configured_router()
+    assert provider.adapter.client is not provider.security_adapter.client
     assert clients == [
-        (provider.adapter.client, dict(timeout=6000, retry_options=dict(attempts=1))),
+        (provider.adapter.client, dict(timeout=15000, retry_options=dict(attempts=1))),
         (provider.security_adapter.client, dict(timeout=15000, retry_options=dict(attempts=1))),
     ]
 

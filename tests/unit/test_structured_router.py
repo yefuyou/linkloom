@@ -22,6 +22,58 @@ def context(query='联调报告现在谁负责', selected=None, *, second=False)
                          spans, unresolved, candidates, len(candidates), 'hash', True)
 
 
+@pytest.mark.parametrize("upstream_timing,expected", [(None, (15, 15)), ((180, 30), (180, 15)),
+                                                     ((12, 12), (12, 12))])
+def test_gemini_router_uses_supported_wire_deadline_and_bounded_session(
+    tmp_path, monkeypatch, upstream_timing, expected,
+):
+    from contextlib import ExitStack
+    from threading import Lock
+
+    import httpx
+
+    from linkloom.agents.providers.gemini_api import build_gemini_sdk_client
+    from linkloom.ui.router_provider import configured_router
+
+    captured = []
+
+    def receive(request):
+        captured.append(request.headers["X-Server-Timeout"])
+        route = dict(decision="ROUTE", operation="READ", intent="CURRENT", candidate_id="c0",
+                     mentions=["联调报告"], unresolved_names=[], entity_mentions=["联调报告"],
+                     time_text="", time_role="NONE", reason_code="NONE")
+        return httpx.Response(200, json={"candidates": [
+            {"content": {"parts": [{"text": json.dumps(route)}]}, "finishReason": "STOP"}
+        ]})
+
+    with ExitStack() as stack:
+        def build(key, *, http_options_kwargs):
+            return stack.enter_context(build_gemini_sdk_client(key, http_options_kwargs={
+                **http_options_kwargs, "client_args": {"transport": httpx.MockTransport(receive)},
+            }))
+
+        monkeypatch.setenv("LINKLOOM_LLM_ROUTER", "llm_first")
+        monkeypatch.setenv("LINKLOOM_ROUTER_PROVIDER", "gemini")
+        monkeypatch.setenv("GEMINI_API_KEY", "offline-placeholder")
+        monkeypatch.setattr("linkloom.ui.router_provider.build_gemini_sdk_client", build)
+        router = configured_router()
+        upstream = TaskProviderLimits(21, 400_000, 60_000, .35, *upstream_timing, .01) if upstream_timing else None
+        owner = SimpleNamespace(task_models=SimpleNamespace(provider_limits=upstream),
+                                _lock=Lock(), _provider_sessions=[])
+        app = SimpleNamespace(repository=SimpleNamespace(database_path=tmp_path / "product.sqlite"))
+        ctx = context()
+        request = request_for(ctx)
+        session = router.reserve(app, owner, request, lambda: None)
+        try:
+            result = route_with_adapter(session.bind(router.adapter, "ask-router"), request, ctx)
+            assert result.decision == "ROUTE"
+            assert (session.limits.max_seconds, session.limits.request_timeout_seconds) == expected
+            assert session.limits.max_requests == session.requests == 1
+            assert captured == ["15"]
+        finally:
+            session.close()
+
+
 def response(**changes):
     data = dict(schema_version='router/v2', decision='ROUTE', intent='CURRENT', domain='TASK', operation='READ',
         candidate_ids=['c0'], mentions=['联调报告'],
