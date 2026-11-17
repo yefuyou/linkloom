@@ -51,6 +51,8 @@ time_role: NONE without a time or for current state, AS_OF for state at one exac
 a meeting on a date, RANGE for an explicit range or open-ended before/after, UNRESOLVED for an unanchored
 relative or vague time such as last week. Names and identifiers are not time.
 Report unmatched named objects in unresolved_names as exact question text.
+For INVESTIGATION, a named object without a candidate is a lead the host verifies in source text, not an error:
+keep intent INVESTIGATION, report the object in unresolved_names and leave candidate_ids empty.
 entity_mentions: every project, task, person, named value or other name in the question, copied exactly, matched or not.
 Pronouns and generic words are not names.
 Mentions are optional hints. Omit terms you cannot copy exactly.

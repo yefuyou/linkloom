@@ -2358,6 +2358,7 @@ class SingleAgentModelLoop:
                         recovery_guidance=guidance,
                         observation=None if grouped_history else observation,
                         available_tools=[] if final_only else list(tool_definitions),
+                        final_only=final_only,
                         previous_tool_call=None if grouped_history else previous_tool_call,
                         provider_continuation=(
                             None if grouped_history else provider_continuation

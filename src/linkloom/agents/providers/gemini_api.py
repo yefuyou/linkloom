@@ -725,6 +725,16 @@ def _build_contents(
     contents: list[dict[str, Any]] = [
         {"role": "user", "parts": [{"text": initial_user_text}]}
     ]
+    if request.final_only and request.observation is None and request.tool_turns:
+        # Start a text-only Gemini turn when the verified context already carries
+        # all completed reads. Preserve history if it contains other tool results.
+        verified_reads = {result.call_id for result in request.evidence_context
+                          if result.tool_id == "read_verified_note"}
+        if verified_reads and all(
+            result.result.tool_id == "search_notes" or result.runtime_call_id in verified_reads
+            for turn in request.tool_turns for result in turn.tool_results
+        ):
+            return contents
     for tool_turn in request.tool_turns:
         contents.extend(_model_tool_turn_contents(tool_turn))
     if request.observation is None:
@@ -869,9 +879,9 @@ def build_gemini_request(
         "tools": [{"function_declarations": declarations}] if declarations else [],
         "automatic_function_calling": {"disable": True},
     }
-    if options.require_tool_call:
+    if request.final_only or options.require_tool_call:
         config["tool_config"] = {
-            "function_calling_config": {"mode": "ANY"}
+            "function_calling_config": {"mode": "NONE" if request.final_only else "ANY"}
         }
     if options.max_output_tokens is not None:
         config["max_output_tokens"] = options.max_output_tokens

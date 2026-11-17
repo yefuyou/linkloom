@@ -806,51 +806,33 @@
   }
 
   function renderBranchTrace(trace, t) {
-    const na = (value, reason) => value === null || value === undefined
-      ? `<span class="trace-na">N/A (${escapeHtml(reason || "UNKNOWN")})</span>` : escapeHtml(value);
+    const na = value => value === null || value === undefined ? `<span class="trace-na">N/A</span>` : escapeHtml(value);
     const usd = value => (value === null || value === undefined ? value : `$${Number(value).toFixed(6)}`);
-    const reasons = item => item.na || {};
-    const axis = trace.axis ? Number(trace.axis.duration_seconds) : 0;
-    const percent = value => Math.max(0, Math.min(100, axis > 0 ? (Number(value) / axis) * 100 : 0));
-    const noteLabel = {
-      OUTCOME_UNCERTAIN_MAY_BE_BILLED: t("Result uncertain, may have been billed", "结果不确定，可能已计费"),
-      OUTCOME_PENDING_NOT_VERIFIED: t("Pending, not verified", "待核实，未验证"),
-      RESULT_WITHHELD: t("Result withheld", "结果已保留不展示"), REQUEST_FAILED: t("Request failed", "请求失败"),
-    };
-    const bar = (label, slot) => `<li class="trace-row"><span class="trace-label">${escapeHtml(label)}</span>${slot.interval
-      ? `<span class="trace-track"><span class="trace-bar" style="left:${percent(slot.interval.offset_seconds)}%;width:${Math.max(0.5, percent(slot.interval.duration_seconds))}%"></span></span> ${escapeHtml(slot.interval.duration_seconds)}s`
-      : `<span class="trace-track"></span> ${na(null, reasons(slot).interval)}`}</li>`;
-    const attempts = slot => (slot.attempts || []).map(row => `<tr data-outcome="${escapeHtml(row.outcome)}"><td>${escapeHtml(row.sequence)}</td><td>${escapeHtml(row.stage)}</td>
-      <td>${escapeHtml(row.outcome)}${row.note ? ` · ${escapeHtml(noteLabel[row.note] || row.note)}` : ""}</td>
-      <td>${na(row.input_tokens, reasons(row).tokens)} / ${na(row.output_tokens, reasons(row).tokens)}</td>
-      <td>${na(usd(row.estimated_cost_usd), reasons(row).estimated_cost_usd)}</td><td>${na(usd(row.reserved_cost_usd), reasons(row).reserved_cost_usd || "RESERVATION_NOT_RECORDED")}</td></tr>`).join("");
-    const table = slot => slot.attempts && slot.attempts.length ? `<table class="trace-attempts"><thead><tr><th>#</th><th>${t("Stage", "阶段")}</th><th>${t("Outcome", "结果")}</th>
-      <th>${t("Tokens in / out", "输入 / 输出 Token")}</th><th>${t("Estimated cost", "估算费用")}</th><th>${t("Reserved ceiling", "预留上限")}</th></tr></thead><tbody>${attempts(slot)}</tbody></table>` : "";
-    const events = branch => branch.events ? `<ol class="trace-events">${branch.events.map(event =>
-      `<li>${escapeHtml(event.seq)} · ${escapeHtml(event.event_type)} · ${escapeHtml(event.status)}${event.tool ? ` · ${escapeHtml(event.tool)}` : ""}</li>`).join("")}</ol>
-      <p class="hint">${na(null, reasons(branch).event_timing)}</p>` : `<p>${na(null, reasons(branch).events)}</p>`;
-    const planner = trace.planner;
-    const branches = (trace.branches || []).map(branch => `<details class="trace-branch" data-branch="${escapeHtml(branch.name)}"><summary><strong>${escapeHtml(branch.name)}</strong> · ${escapeHtml(branch.pool_status || "N/A")}${branch.verified ? "" : ` · ${t("not verified", "未核实")}`}</summary>
-      ${branch.question ? `<p>${escapeHtml(branch.question)}</p>` : ""}
-      <p>${t("Requests", "请求数")}: ${na(branch.requests, reasons(branch).requests)} · ${t("Estimated cost", "估算费用")}: ${na(usd(branch.estimated_cost_usd), reasons(branch).estimated_cost_usd)} · ${t("Reserved ceiling", "预留上限")}: ${na(usd(branch.reserved_cost_usd), reasons(branch).reserved_cost_usd)}</p>
-      ${branch.reviewer ? `<p>${t("Reviewer", "Reviewer")}: ${escapeHtml(branch.reviewer.decision)}</p>` : branch.question ? `<p>${t("Reviewer", "Reviewer")}: ${na(null, reasons(branch).reviewer)}</p>` : ""}
-      ${table(branch)}${branch.question ? events(branch) : ""}</details>`).join("");
-    const overlap = trace.totals.overlap;
-    const totals = trace.totals;
-    const gaps = [];
-    if (totals.slots_without_record > 0) gaps.push(t(`Includes ${totals.slots_without_record} slot(s) with no record; totals are incomplete`, `含 ${totals.slots_without_record} 个无记录的槽位，合计不完整`));
-    if (totals.unestimated_requests > 0) gaps.push(t(`${totals.unestimated_requests} request(s) cannot be estimated`, `${totals.unestimated_requests} 次请求无法估算费用`));
-    if (totals.reservation_unrecorded_requests > 0) gaps.push(t(`${totals.reservation_unrecorded_requests} request(s) have no recorded reservation, left out of the reserved total`, `${totals.reservation_unrecorded_requests} 次请求没有预留记录，未计入预留合计`));
-    const synth = trace.synthesizer;
+    const attempts = task => (task.attempts || []).map(row => `<tr data-attempt="${escapeHtml(row.attempt)}"><td>${escapeHtml(row.attempt)}</td>
+      <td>${na(row.requests_reserved)}</td><td>${na(row.input_tokens_reserved)} / ${na(row.output_tokens_reserved)}</td>
+      <td>${na(usd(row.cost_reserved_usd))}</td><td>${row.failure ? escapeHtml(row.failure) : escapeHtml((row.attempts || []).map(item => item.outcome).join(", "))}</td></tr>`).join("");
+    const tasks = (trace.tasks || []).map(task => `<details class="trace-task" data-task="${escapeHtml(task.id)}"><summary><strong>${escapeHtml(task.id)}</strong> · ${escapeHtml(task.status)}${(task.depends_on || []).length ? ` · ${t("after", "依赖")} ${task.depends_on.map(escapeHtml).join(", ")}` : ""}</summary>
+      <p>${escapeHtml(task.description)}</p>
+      ${task.spawn_reason ? `<p>${t("Why this task exists", "派生原因")}: ${escapeHtml(task.spawn_reason)}</p>` : ""}
+      ${task.failure ? `<p>${t("Stopped because", "停止原因")}: ${escapeHtml(task.failure)}</p>` : ""}
+      ${task.attempts && task.attempts.length ? `<table class="trace-attempts"><thead><tr><th>${t("Attempt", "尝试")}</th><th>${t("Requests", "请求数")}</th><th>${t("Tokens in / out", "输入 / 输出 Token")}</th><th>${t("Reserved ceiling", "预留上限")}</th><th>${t("Outcome", "结果")}</th></tr></thead><tbody>${attempts(task)}</tbody></table>` : ""}</details>`).join("");
+    const decisions = (trace.events || []).filter(event => event.event === "supervisor_decision").map(event =>
+      `<li>${t("Round", "轮次")} ${escapeHtml(event.round)} · ${escapeHtml(event.action)}${(event.tasks || []).length ? ` · ${event.tasks.map(escapeHtml).join(", ")}` : ""}${event.reason ? ` · ${escapeHtml(event.reason)}` : ""}</li>`).join("");
+    const waves = (trace.events || []).filter(event => event.event === "wave_dispatched").map(event =>
+      `<li>${(event.tasks || []).map(escapeHtml).join(" ∥ ")}</li>`).join("");
+    const board = trace.blackboard || {};
+    const totals = trace.totals || {};
+    const synth = trace.synthesizer || {};
+    const leads = (trace.entity_leads || []).map(escapeHtml).join(", ");
     return `<section class="ask-trace-view" data-trace-status="${escapeHtml(trace.status)}">
-      <p class="hint">${t("Intervals run from session creation to the last receipt write and cover the whole session, not only model requests. Costs are estimates from usage, not a bill; the reserved ceiling is separate.", "区间从会话创建到最后一次记录写入，覆盖整个会话而非仅模型请求。费用为按用量的估算，不是账单；预留上限单独列出。")}</p>
-      <ul class="trace-bars">${bar(`${t("Planner", "规划器")} (${planner.source})`, planner)}${(trace.branches || []).map(branch => bar(branch.name, branch)).join("")}</ul>
-      <p>${t("Session overlap between sibling branches (does not mean requests ran in parallel)", "兄弟分支会话重叠（不代表请求并行）")}: ${na(overlap.session_overlap_seconds === null ? null : `${overlap.session_overlap_seconds}s`, (overlap.na || {}).session_overlap_seconds)}
-        · ${t("Total", "总时长")}: ${na(trace.totals.wall_seconds === null ? null : `${trace.totals.wall_seconds}s`, (trace.totals.na || {}).wall_seconds)}</p>
-      <p>${t("Requests", "请求数")}: ${escapeHtml(trace.totals.requests)} · ${t("Estimated cost", "估算费用")}: ${na(usd(trace.totals.estimated_cost_usd), (trace.totals.na || {}).estimated_cost_usd)} · ${t("Reserved ceiling", "预留上限")}: ${na(usd(trace.totals.reserved_cost_usd), (trace.totals.na || {}).reserved_cost_usd)}</p>
-      ${gaps.length ? `<p class="hint trace-incomplete">${gaps.join(" · ")}</p>` : ""}
-      <p>${t("Synthesizer", "汇总")}: ${escapeHtml(synth.status)} · ${synth.published ? t("published", "已发布") : t("not published", "未发布")}${synth.reason_code ? ` · ${escapeHtml(synth.reason_code)}` : ""} · ${t("branches compared", "跨分支比较")}: ${na(synth.cross_branch_compared === null ? null : String(synth.cross_branch_compared), (synth.na || {}).cross_branch_compared)}</p>
-      ${table(planner)}${branches}</section>`;
+      <p class="hint">${t("Costs are reservations recorded before each request, not a bill.", "费用为每次请求前记录的预留额度，不是账单。")}</p>
+      ${leads ? `<p>${t("Names to verify in sources (not confirmed)", "待来源核实的名称（未确认）")}: ${leads}</p>` : ""}
+      ${decisions ? `<h3>${t("Supervisor decisions", "Supervisor 决策")}</h3><ol class="trace-decisions">${decisions}</ol>` : ""}
+      ${waves ? `<h3>${t("Waves (tasks in one wave ran in parallel)", "批次（同一批次并行）")}</h3><ol class="trace-waves">${waves}</ol>` : ""}
+      ${tasks}
+      <p>${t("Requests", "请求数")}: ${na(totals.requests_reserved)} · ${t("Reserved ceiling", "预留上限")}: ${na(usd(totals.cost_reserved_usd))}</p>
+      <p>${t("Shared evidence", "共享证据")}: ${escapeHtml((board.verified_evidence || []).length)} · ${t("unreviewed retrievals", "未核验检索")}: ${escapeHtml(board.raw_retrievals || 0)} · ${t("Agent inferences", "Agent 推断")}: ${escapeHtml(board.inferences || 0)} · ${t("approved decisions", "已批准决策")}: ${escapeHtml((board.approved_decisions || []).length)}</p>
+      <p>${t("Synthesizer", "汇总")}: ${na(synth.status)} · ${synth.published ? t("published", "已发布") : t("not published", "未发布")}${synth.fallback_reason ? ` · ${escapeHtml(synth.fallback_reason)}` : ""}</p></section>`;
   }
 
   function renderAskResult(result, viewToken) {
@@ -868,8 +850,14 @@
       const title = {
         COMPLETE: t("Verified investigation evidence", "已核验的调查证据"),
         PARTIAL: t("Partial investigation evidence", "部分调查证据已核验"),
+        UNKNOWN: t("No verified answer", "没有可核验的回答"),
         CANCELLED: t("Investigation cancelled", "调查已取消"),
       }[parallel.status] || t("Investigation stopped", "调查已停止");
+      const dagTasks = Array.isArray(parallel.tasks) ? parallel.tasks : [];
+      const dag = dagTasks.length ? `<h3>${t("Investigation tasks", "调查任务")}</h3><ul class="ask-tasks">${dagTasks.map(task =>
+        `<li data-task="${escapeHtml(task.id)}" data-status="${escapeHtml(task.status)}"><strong>${escapeHtml(task.id)}</strong> · ${escapeHtml(task.status)}${(task.depends_on || []).length ? ` · ${t("after", "依赖")} ${task.depends_on.map(escapeHtml).join(", ")}` : ""}${task.spawn_reason ? ` · ${escapeHtml(task.spawn_reason)}` : ""}<br>${escapeHtml(task.description)}</li>`).join("")}</ul>` : "";
+      const leadNames = (parallel.entity_leads || []).map(escapeHtml).join(", ");
+      const leadNote = leadNames ? `<p class="hint">${t("Names checked against sources, not assumed to exist", "已对照来源核实、未预设存在的名称")}: ${leadNames}</p>` : "";
       const gaps = Object.entries(parallel.gaps || {}).map(([branch, reason]) =>
         `<li>${escapeHtml(branch)} · ${escapeHtml(reason)}</li>`).join("");
       const evidence = (result.evidence || []).map((item, index) => askEvidence(item, index, locale)).join("");
@@ -905,14 +893,15 @@
       };
       const branchStates = Array.isArray(parallel.branch_states) ? parallel.branch_states : null;
       const continuable = Array.isArray(parallel.continuable) ? parallel.continuable : [];
-      const resume = branchStates ? `<h3>${t("Branch resume state", "分支恢复状态")}</h3><ul class="ask-branch-states">${branchStates.map(row =>
-        `<li data-branch-state="${escapeHtml(row.state)}"><strong>${escapeHtml(row.branch)}</strong> · ${escapeHtml(stateLabel[row.state] || row.state)}${row.reason ? ` · ${escapeHtml(row.reason)}` : ""}${row.message ? ` · ${escapeHtml(row.message)}` : ""}</li>`).join("")}</ul>${continuable.length && result.agent_run_id ? `<p class="hint">${t("Continuing sends the unstarted branches to the model. Tick the external provider permission above first if it is required.", "继续会把尚未启动的分支发送给模型。如需外部模型,请先勾选上方的外部模型授权。")}</p>
-        <button class="button" type="button" data-action="continue-parallel" data-run-id="${escapeHtml(result.agent_run_id)}">${t("Continue unfinished branches", "继续未完成的分支")}</button><p id="ask-continue-note" role="alert"></p>` : ""}` : "";
+      const resume = branchStates ? `<h3>${t("Task resume state", "任务恢复状态")}</h3><ul class="ask-branch-states">${branchStates.map(row =>
+        `<li data-branch-state="${escapeHtml(row.state)}"><strong>${escapeHtml(row.branch)}</strong> · ${escapeHtml(stateLabel[row.state] || row.state)}${row.reason ? ` · ${escapeHtml(row.reason)}` : ""}${row.message ? ` · ${escapeHtml(row.message)}` : ""}</li>`).join("")}</ul>${continuable.length && result.agent_run_id ? `<p class="hint">${t("Continuing resumes the saved run; finished tasks are reused and only unfinished tasks are sent to the model. Tick the external provider permission above first if it is required.", "继续会从已保存的运行恢复；已完成的任务不会重复执行，只有未完成的任务会发送给模型。如需外部模型,请先勾选上方的外部模型授权。")}</p>
+        <button class="button" type="button" data-action="continue-parallel" data-run-id="${escapeHtml(result.agent_run_id)}">${t("Continue unfinished tasks", "继续未完成的任务")}</button><p id="ask-continue-note" role="alert"></p>` : ""}` : "";
       target.innerHTML = `<section class="panel ask-answer" role="status"><h2>${title}</h2>
         ${synthesis}
+        ${leadNote}${dag}
         ${resume}
         ${result.agent_run_id ? `<details class="ask-trace"><summary>${t("Call chain", "调用链")}</summary><button class="button" type="button" data-action="load-trace" data-run-id="${escapeHtml(result.agent_run_id)}">${t("Load call chain", "加载调用链")}</button><div id="ask-trace-body" role="region"></div></details>` : ""}
-        ${gaps ? `<h3>${t("Incomplete branches", "未完成的分支")}</h3><ul>${gaps}</ul>` : ""}
+        ${gaps ? `<h3>${t("Incomplete tasks", "未完成的任务")}</h3><ul>${gaps}</ul>` : ""}
         ${evidence}${askTechnical(result, locale, true)}</section>`;
       return;
     }

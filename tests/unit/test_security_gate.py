@@ -69,7 +69,7 @@ def test_shared_wire_transport_accepts_valid_tool_plus_text_only(content, argume
     class Opener:
         def open(self, request, *, timeout):
             payload = json.loads(request.data)
-            assert timeout == CONFIG['timeout_seconds']
+            assert timeout == CONFIG['security_timeout_seconds'] == 15
             assert payload['thinking'] == CONFIG['thinking']
             assert 'temperature' not in payload  # provider-neutral security request
             assert len(payload['tools']) == 1
@@ -184,18 +184,25 @@ def test_gemini_security_uses_json_schema_and_reports_truncation(finish, text, c
                                            visible_output_tokens=8, output_tokens=128, input_tokens=100)
 
 
-def test_gemini_router_client_uses_the_shared_sdk_entry(monkeypatch):
-    seen = {}
+def test_gemini_router_and_security_use_independent_transport_timeouts(monkeypatch):
+    clients = []
     monkeypatch.setenv('LINKLOOM_LLM_ROUTER', 'llm_first')
     monkeypatch.setenv('LINKLOOM_ROUTER_PROVIDER', 'gemini')
     monkeypatch.setenv('GEMINI_API_KEY', 'offline-placeholder')
-    monkeypatch.setattr('linkloom.ui.router_provider.build_gemini_sdk_client',
-                        lambda key, **kwargs: seen.update(key=key, **kwargs) or SimpleNamespace(
-                            models=SimpleNamespace(generate_content=lambda **_: None)))
+
+    def build(key, *, http_options_kwargs):
+        assert key == 'offline-placeholder'
+        client = SimpleNamespace(models=SimpleNamespace(generate_content=lambda **_: None))
+        clients.append((client, http_options_kwargs))
+        return client
+
+    monkeypatch.setattr('linkloom.ui.router_provider.build_gemini_sdk_client', build)
     provider = configured_router()
-    assert seen['key'] == 'offline-placeholder'
-    assert seen['http_options_kwargs'] == dict(timeout=CONFIG['timeout_seconds'] * 1000, retry_options=dict(attempts=1))
-    assert provider.adapter.client is provider.security_adapter.client
+    assert provider.adapter.client is not provider.security_adapter.client
+    assert clients == [
+        (provider.adapter.client, dict(timeout=15000, retry_options=dict(attempts=1))),
+        (provider.security_adapter.client, dict(timeout=15000, retry_options=dict(attempts=1))),
+    ]
 
 
 def test_deepseek_security_length_keeps_provider_usage():

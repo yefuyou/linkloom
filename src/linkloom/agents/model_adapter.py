@@ -1507,6 +1507,7 @@ class ModelTurnRequest:
     tool_history: list[ModelToolInteraction] = field(default_factory=list)
     tool_turns: list[ModelToolTurn] = field(default_factory=list)
     recovery_guidance: str | None = None
+    final_only: bool = False
 
     def __post_init__(self) -> None:
         for field_name, value in (
@@ -1519,6 +1520,8 @@ class ModelTurnRequest:
         if isinstance(self.sequence, bool) or not isinstance(self.sequence, int) or self.sequence < 1:
             raise ValidationError("ModelTurnRequest.sequence must be a positive integer.")
         _require_text(self.user_input, "ModelTurnRequest.user_input")
+        if type(self.final_only) is not bool or (self.final_only and self.available_tools):
+            raise ValidationError("ModelTurnRequest.final_only requires an empty tool list.")
         if self.recovery_guidance is not None:
             _require_text(self.recovery_guidance, "ModelTurnRequest.recovery_guidance")
             if len(self.recovery_guidance) > 512:
@@ -1711,6 +1714,8 @@ class ModelTurnRequest:
             payload["tool_turns"] = [turn.to_dict() for turn in self.tool_turns]
         if self.recovery_guidance is not None:
             payload["recovery_guidance"] = self.recovery_guidance
+        if self.final_only:
+            payload["final_only"] = True
         if self.provider_continuation is not None:
             payload["provider_continuation"] = self.provider_continuation.to_dict()
         return payload
@@ -1738,6 +1743,7 @@ class ModelTurnRequest:
                 "tool_history",
                 "tool_turns",
                 "recovery_guidance",
+                "final_only",
             },
             "ModelTurnRequest",
         )
@@ -1804,6 +1810,7 @@ class ModelTurnRequest:
             ],
             tool_turns=[ModelToolTurn.from_dict(item) for item in raw_tool_turns],
             recovery_guidance=data.get("recovery_guidance"),
+            final_only=data.get("final_only", False),
         )
 
 

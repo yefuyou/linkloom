@@ -7,7 +7,6 @@ import json
 from copy import deepcopy
 from pathlib import Path
 import re
-import shutil
 from tempfile import TemporaryDirectory
 from threading import Lock
 from typing import Any, Callable
@@ -18,20 +17,16 @@ from linkloom.runtime.context_engineering import ContextRuntimeConfig
 from linkloom.runtime.errors import CheckpointError
 from linkloom.runtime.errors import ToolArgumentValidationError, ValidationError
 from linkloom.runtime.task_plan import TaskPlan, assess_task_plan, verified_plan_conflict_refs
-from linkloom.runtime.team_decision_planner import plan_relation_investigation, plan_team_decision_query
+from linkloom.runtime.team_decision_planner import plan_relation_investigation
 from linkloom.agents.claim_grounding import assess_claim_text, ClaimSupportStatus, TYPED_CLAIM_RELATIONS
 from linkloom.ui.projection import collect_observed_evidence
 from linkloom.scanner import scan_vault
 from linkloom.ui.backend import RuntimeRunBackend
 from linkloom.ui.lifecycle import (
     BackgroundShutdownTimeout, BackgroundTasks, BackgroundWorkStopped, DEFAULT_SHUTDOWN_TIMEOUT, shutdown_deadline)
-from linkloom.ui.branch_budget import _write_json
+from linkloom.orchestration.files import write_json as _write_json
 from linkloom.ui.product import ProductApplication, ProductApplicationError
 from linkloom.ui.projection import WorkspacePresentationContext
-
-
-class BranchPlanUnavailable(Exception):
-    """No two-branch plan was accepted; the caller keeps the routing it would use without the Planner."""
 
 
 @dataclass
@@ -63,16 +58,16 @@ class ProductInvestigationService:
         task_relation_paths: dict[str, Path] | None = None,
         task_only: bool = False,
         parallel_limits=None,
-        branch_planner=False,
+        confirm_over_tasks=None,
     ) -> None:
         self.product_app = product_app
         self.model_factory = model_factory
         self.task_models = task_models
         self.task_only = task_only
-        self.parallel_limits = parallel_limits
-        self.branch_planner = bool(branch_planner)
-        self._parallel_jobs = {}
-        self._resume_jobs = {}
+        self.parallel_limits = parallel_limits  # total Provider budget of one orchestrated run (Host configured)
+        self.confirm_over_tasks = confirm_over_tasks  # a Supervisor plan larger than this waits for a reviewer
+        self._orch_runs = {}
+        self._active = set()
         self._parallel_workers = BackgroundTasks()
         # Local Host composition only. HTTP/model arguments cannot choose paths.
         self.task_relation_paths = dict(task_relation_paths or {})
@@ -138,12 +133,15 @@ class ProductInvestigationService:
         with self._lock:
             backends = tuple(self._backends)
             sessions = tuple(self._provider_sessions)
+            orchestrations = tuple(self._orch_runs.values())
         for backend in backends:
             backend.stop_accepting()
         for backend in backends:
             backend.close(deadline=deadline)
         for session in sessions:
             session.close(deadline=deadline)
+        for run in orchestrations:
+            run.close()
 
     def release_resources(self, *, deadline=None):
         # HTTP inspectors can still read Runtime files after workers finish.
@@ -174,7 +172,6 @@ class ProductInvestigationService:
         task_plan: TaskPlan | None = None,
         task_investigation: bool = False,
         task_source_authorization: dict | None = None,
-        branch_context=None,
     ) -> dict[str, Any]:
         if self.model_factory is None:
             raise ProductApplicationError(
@@ -198,10 +195,6 @@ class ProductInvestigationService:
         graph_provider_session = current_graph_provider_session()
         max_steps = self.relation_max_steps if source_run else self.max_steps
         workspace, sources = self.product_app.snapshot_investigation_sources(workspace_id)
-        subplans = (self.parallel_subplans(query)
-                    if temporal_scope is not None and len(sources) >= 2 else ())
-        planner = (temporal_scope is not None and branch_context is not None and len(sources) >= 2
-                   and self.branch_planner_eligible())
         task_models, outer_model = self.task_models, None
         temporal_view_holder: dict[str, Any] | None = None
         if temporal_scope is not None:
@@ -253,7 +246,7 @@ class ProductInvestigationService:
             raise ProductApplicationError(
                 "EMPTY_WORKSPACE", "Import a source into this workspace before investigating.", status=409
             )
-        temporary_root = None if task_investigation or subplans or planner else TemporaryDirectory(prefix="linkloom-investigate-")
+        temporary_root = None if task_investigation else TemporaryDirectory(prefix="linkloom-investigate-")
         if temporary_root is not None:
             with self._lock:
                 self._temporary_roots.append(temporary_root)
@@ -295,57 +288,7 @@ class ProductInvestigationService:
                         reviewer={'performed': False}, preparation=preparation.manifest,
                         error=dict(code=preparation.manifest.get('provider_failure', 'TASK_PLAN_BLOCKED'), classification='validation',
                                    message='The investigation plan did not pass Host admission.'))
-            vault = root / "vault"
-            vault.mkdir()
-            source_names: dict[str, str] = {}
-            source_versions: dict[str, dict[str, str]] = {}
-            for source in sources:
-                # The repository issued source ID is the path identity. The user name is display only.
-                source_id = str(source["source_id"])
-                if re.fullmatch(r"src_[0-9a-f]{32}", source_id) is None:
-                    raise ProductApplicationError("SOURCE_ID_INVALID", "A source ID is invalid.", status=409)
-                relative_path = f"{source_id}.md"
-                (vault / relative_path).write_text(str(source["content"]), encoding="utf-8")
-                source_names[relative_path] = str(source["name"])
-                source_versions[relative_path] = {"source_id": source_id, "source_version": str(source["source_version"])}
-            index = scan_vault(vault, root / "scan").index_path
-            job = None
-            if subplans or planner:
-                from linkloom.ui.parallel_investigation import ParallelInvestigation
-                from linkloom.ui.task_investigation import ProductTaskSources
-                identity = ProductTaskSources._identity(sources)
-
-                def validate():
-                    _, current = self.product_app.snapshot_investigation_sources(workspace_id)
-                    if ProductTaskSources._identity(current) != identity:
-                        raise ValueError('TASK_SOURCE_AUTHORIZATION_CHANGED')
-
-                run_id = 'ui-parallel-' + root.name
-                job = ParallelInvestigation(root, run_id, query.strip(), WorkspacePresentationContext(
-                    display_name=str(workspace["name"]), document_count=len(sources)), self.parallel_limits,
-                    validate, subplans, self.model_factory, vault, index, source_names, source_versions, workspace_id, planner)
-                if planner:
-                    # The single model call of this request; routing never reaches the Provider.
-                    job.plan(temporal_scope[2], self.relation_max_steps, branch_context)
-                    if not job.subplans and not job.pool.stop_state:
-                        try:
-                            job.pool.close()  # joins every pool thread; nothing usable: the ordinary path continues
-                        except BackgroundShutdownTimeout:
-                            pass  # a Provider call that cannot be stopped may still write here: leave the files
-                        else:
-                            self._discard_planning_root(root, job.pool)
-                        raise BranchPlanUnavailable()
-            if job is not None:
-                # Durable description and pointer before any branch starts, so a restart can read this run.
-                job.save_record(identity, index)
-                _write_json(root.parent / (run_id + '.json'), dict(run_id=run_id, thread_id=run_id,
-                    workspace_id=workspace_id, root=root.name, kind='parallel'))
-                initial = job.snapshot()
-                with self._lock:
-                    self._provider_sessions.append(job.pool)
-                    self._parallel_workers.start(run_id, job.execute)
-                    self._parallel_jobs[run_id] = job
-                return initial
+            vault, index, source_names, source_versions = self._materialize_sources(root, sources)
             from linkloom.ui.task_provider import _ROUTER_RESERVATION, TaskProviderSession
             if self.external_provider and not task_investigation and graph_provider_session is None and _ROUTER_RESERVATION.get() is not None:
                 if task_models is None or task_models.provider_limits is None:
@@ -421,10 +364,133 @@ class ProductInvestigationService:
         pointer['ask'] = ask_run
         path.write_text(json.dumps(pointer, ensure_ascii=False), encoding='utf8')
 
+    # --- Orchestrated (LangGraph) investigations --------------------------------------------------------
+
+    def orchestration_enabled(self):
+        """The Host configured orchestration budgets; a graph/router Provider reservation uses the old single path."""
+        from linkloom.ui.graph_investigation import current_graph_provider_session
+        return bool(self.parallel_limits and self.model_factory is not None and not self.task_only
+                    and current_graph_provider_session() is None)
+
+    def start_orchestrated(self, query, workspace_id, *, temporal_scope=None, entity_leads=(), blocked_entities=()):
+        """Start a Supervisor/Worker run on LangGraph. Host-confirmed scope and unconfirmed leads stay separate."""
+        try:
+            with self._starts.operation("orchestration-start-" + uuid4().hex[:12]):
+                return self._start_orchestrated(query, workspace_id, temporal_scope=temporal_scope,
+                    entity_leads=entity_leads, blocked_entities=blocked_entities)
+        except BackgroundWorkStopped as error:
+            raise ProductApplicationError("APPLICATION_SHUTTING_DOWN", str(error), status=503) from error
+
+    def _start_orchestrated(self, query, workspace_id, *, temporal_scope=None, entity_leads=(), blocked_entities=()):
+        from linkloom.orchestration.limits import OrchestrationLimits
+        from linkloom.orchestration.runs import OrchestrationRun, load_record, write_record
+        from linkloom.ui.task_investigation import ProductTaskSources
+        from linkloom.ui.task_provider import remaining_provider_limits
+        if self.model_factory is None:
+            raise ProductApplicationError("MODEL_NOT_CONFIGURED", self.config()["message"], status=503)
+        if not self.orchestration_enabled():
+            raise ProductApplicationError("ORCHESTRATION_UNAVAILABLE",
+                "Orchestrated investigation needs the configured task budgets.", status=409)
+        if not isinstance(query, str) or not query.strip() or len(query.strip()) > 4000:
+            raise ProductApplicationError("INVALID_QUERY", "Enter a question of at most 4000 characters.")
+        if not isinstance(workspace_id, str) or not workspace_id.strip():
+            raise ProductApplicationError("WORKSPACE_REQUIRED", "Select a workspace first.", status=409)
+        workspace, sources = self.product_app.snapshot_investigation_sources(workspace_id)
+        if not sources:
+            raise ProductApplicationError(
+                "EMPTY_WORKSPACE", "Import a source into this workspace before investigating.", status=409)
+        confirmed = dict(workspace_id=workspace_id, blocked_entities=[list(fact) for fact in blocked_entities])
+        if temporal_scope is not None:
+            if len(temporal_scope) != 3 or not all(isinstance(value, str) and value.strip() for value in temporal_scope):
+                raise ProductApplicationError("TEMPORAL_SCOPE_INVALID", "A decision slot and as_of are required.")
+            subject, relation, as_of = temporal_scope
+            view = self.product_app.recover_decision(subject, relation, as_of, _workspace_id=workspace_id)
+            if view["status"] != "FOUND":
+                raise ProductApplicationError(
+                    "TEMPORAL_SCOPE_UNVERIFIED", "No reviewed decision is available for that scope.", status=409)
+            confirmed.update(subject=subject, relation=relation, as_of=view["as_of"])
+        leads = list(dict.fromkeys(str(name).strip() for name in entity_leads if str(name).strip()))
+        if len(leads) > 8 or any(len(name) > 160 for name in leads):
+            raise ProductApplicationError("ENTITY_LEADS_INVALID", "At most eight short entity leads are accepted.")
+        try:
+            limits = OrchestrationLimits.for_budget(remaining_provider_limits(self.parallel_limits),
+                                                    confirm_over_tasks=self.confirm_over_tasks)
+        except ValueError as error:
+            raise ProductApplicationError("TASK_PROVIDER_BUDGET_EXHAUSTED",
+                "No remaining Provider budget for investigation.", status=409) from error
+        root = self._parallel_base() / uuid4().hex[:12]
+        root.mkdir(parents=True)
+        run_id = "ui-parallel-" + root.name
+        vault, index, source_names, source_versions = self._materialize_sources(root, sources)
+        identity = ProductTaskSources._identity(sources)
+        write_record(root, query=query.strip(), workspace_id=workspace_id, identity=identity,
+            workspace=WorkspacePresentationContext(display_name=str(workspace["name"]), document_count=len(sources)),
+            source_names=source_names, source_versions=source_versions, index=index,
+            confirmed_scope=confirmed, entity_leads=leads, limits=limits)
+        run = OrchestrationRun(root, run_id, load_record(root), model_factory=self.model_factory,
+                               validate=self._parallel_validator(workspace_id, identity))
+        _write_json(root.parent / (run_id + ".json"), dict(run_id=run_id, thread_id=run_id,
+            workspace_id=workspace_id, root=root.name, kind="parallel"))
+        with self._lock:
+            self._orch_runs[run_id] = run
+            self._active.add(run_id)
+        self._parallel_workers.start(run_id, lambda: self._drive(run, None))
+        return self._orch_snapshot(run)
+
+    def _drive(self, run, approval):
+        """Worker thread: run or resume the LangGraph run. All orchestration state lives in its checkpoint."""
+        try:
+            run.resume(approval) if approval is not None else run.start()  # start resumes an existing checkpoint
+        except BaseException as error:  # a stop leaves the checkpoint; a later continue resumes from it
+            _write_json(run.root / "failure.json", dict(error=type(error).__name__))
+        finally:
+            with self._lock:
+                self._active.discard(run.run_id)
+
+    @staticmethod
+    def _materialize_sources(root, sources):
+        """Copy the frozen source versions into a read-only vault and index them for the Workers' retrieval."""
+        vault = root / "vault"
+        vault.mkdir()
+        source_names: dict[str, str] = {}
+        source_versions: dict[str, dict[str, str]] = {}
+        for source in sources:
+            # The repository issued source ID is the path identity. The user name is display only.
+            source_id = str(source["source_id"])
+            if re.fullmatch(r"src_[0-9a-f]{32}", source_id) is None:
+                raise ProductApplicationError("SOURCE_ID_INVALID", "A source ID is invalid.", status=409)
+            relative_path = f"{source_id}.md"
+            (vault / relative_path).write_text(str(source["content"]), encoding="utf-8")
+            source_names[relative_path] = str(source["name"])
+            source_versions[relative_path] = {"source_id": source_id, "source_version": str(source["source_version"])}
+        index = scan_vault(vault, root / "scan").index_path
+        return vault, index, source_names, source_versions
+
+    def _orch_snapshot(self, run):
+        """Render one run from its LangGraph state. Source authorization is re-checked on every render."""
+        from linkloom.orchestration.runs import is_cancelled
+        from linkloom.orchestration.snapshot import ABORTED, CANCELLED, render_snapshot
+        withheld = None
+        if is_cancelled(run.root):
+            withheld = (CANCELLED, "PARALLEL_CANCELLED")
+        else:
+            try:
+                self._parallel_validator(run.record["workspace_id"], run.record["identity"])()
+            except Exception:
+                withheld = (ABORTED, "TASK_SOURCE_AUTHORIZATION_CHANGED")
+        try:
+            values = run.state()
+        except Exception:
+            return self._parallel_failure(run.run_id, "PARALLEL_STATE_UNREADABLE", run.record["query"], run.workspace)
+        with self._lock:
+            running = run.run_id in self._active
+        return render_snapshot(run.run_id, run.record["query"], run.workspace, values, running=running,
+                               withheld=withheld, pending=values.get("interrupts") or ())
+
     def save_parallel_ask(self, run_id, ask_run):
         """Keep the Ask identity next to the pointer so a restarted server can show this run."""
         path = self._parallel_base() / (run_id + '.json')
-        if run_id in self._parallel_jobs and path.is_file():
+        if run_id in self._orch_runs and path.is_file():
             pointer = json.loads(path.read_text(encoding='utf8'))
             pointer['ask'] = ask_run
             _write_json(path, pointer)
@@ -433,7 +499,8 @@ class ProductInvestigationService:
         return Path(self.product_app.repository.database_path).parent / 'work' / 'investigations'
 
     def _parallel_pointer(self, run_id, workspace_id):
-        """Validated (root, pointer) of a saved parallel run, or None. The caller holds the store lock."""
+        """Validated (root, pointer) of a saved orchestrated run, or None. The caller holds the store lock."""
+        from linkloom.orchestration.runs import CHECKPOINT, RECORD
         if re.fullmatch(r'ui-parallel-[0-9a-f]{12}', run_id) is None:
             return None
         base = self._parallel_base()
@@ -447,18 +514,19 @@ class ProductInvestigationService:
                     or run_id != 'ui-parallel-' + pointer['root']):
                 return None
             root = (base / pointer['root']).resolve()
-            if not root.is_relative_to(base.resolve()) or not (root / 'parallel.json').is_file():
+            if not root.is_relative_to(base.resolve()) or not (root / RECORD).is_file() \
+                    or not (root / CHECKPOINT).is_file():
                 return None
         except Exception:
             return None
         return root, pointer
 
     def _ask_of(self, pointer, root, workspace_id):
-        from linkloom.ui.parallel_resume import load_record
+        from linkloom.orchestration.runs import load_record
         if isinstance(pointer.get('ask'), dict):
             return pointer['ask']
         route = dict(intent='INVESTIGATION', route='INVESTIGATION', code='SOURCE_INVESTIGATION',
-                     reason='The selected decision has two independent investigation plan components.')
+                     reason='The Supervisor delegated this investigation to Workers.')
         return dict(query=load_record(root)['query'], workspace_id=workspace_id, scope={}, route=route)
 
     def _parallel_validator(self, workspace_id, identity):
@@ -469,8 +537,19 @@ class ProductInvestigationService:
                 raise ValueError('TASK_SOURCE_AUTHORIZATION_CHANGED')
         return validate
 
+    def _open_saved(self, root, run_id, workspace_id):
+        """A run object for a saved directory: the live one if this process owns it, else read from disk."""
+        from linkloom.orchestration.runs import OrchestrationRun, load_record
+        with self._lock:
+            live = self._orch_runs.get(run_id)
+        if live is not None:
+            return live, False
+        record = load_record(root)
+        return OrchestrationRun(root, run_id, record, model_factory=self.model_factory,
+                                validate=self._parallel_validator(workspace_id, record['identity'])), True
+
     def read_saved_parallel(self, run_id, workspace_id):
-        """Read a parallel run from its run directory. Never calls a model and never writes there."""
+        """Read an orchestrated run from its LangGraph checkpoint. Never calls a model and never writes there."""
         with self.product_app._store_lock:
             found = self._parallel_pointer(run_id, workspace_id)
             if found is None:
@@ -478,132 +557,73 @@ class ProductInvestigationService:
             root, pointer = found
             try:
                 ask = self._ask_of(pointer, root, workspace_id)
+                run, cold = self._open_saved(root, run_id, workspace_id)
             except Exception:
                 return None
-            with self._lock:
-                resumed = self._resume_jobs.get(run_id)
-            if resumed is not None and resumed.outcome is None:
-                return ask, resumed.snapshot()
-            return ask, self._cold_parallel(root, run_id, workspace_id, ask.get('query'))
+            try:
+                return ask, self._orch_snapshot(run)
+            finally:
+                if cold:
+                    run.close()
 
     def parallel_trace(self, run_id, workspace_id):
-        """Read-only call chain of a parallel run as (source, trace), or None. Never calls a model or writes."""
-        from linkloom.ui.branch_trace import build_branch_trace
+        """Read-only trace of an orchestrated run as (source, trace), or None. Never calls a model or writes."""
+        from linkloom.orchestration.trace import build_trace
         if not self.parallel_limits or re.fullmatch(r'ui-parallel-[0-9a-f]{12}', str(run_id)) is None:
             return None
         with self.product_app._store_lock:
             if self.product_app._workspace_id() != workspace_id:
                 return None
-            with self._lock:
-                resumed, parallel = self._resume_jobs.get(run_id), self._parallel_jobs.get(run_id)
-            live = resumed or parallel
-            if live is not None:
-                if live.workspace_id != workspace_id:
-                    return None
-                root, source = (resumed.root.parent if resumed else parallel.root), 'LIVE'
-                # Never inspect() or snapshot() here: they validate the pool parent and may write the stop state.
-                if live.outcome is None:
-                    snapshot = self._running_parallel(live, root, run_id, workspace_id)
-                else:
-                    snapshot = self._cold_parallel(root, run_id, workspace_id)
-            else:
-                found = self._parallel_pointer(run_id, workspace_id)
-                if found is None:
-                    return None
-                root, source = found[0], 'SAVED'
-                snapshot = self._cold_parallel(root, run_id, workspace_id)
-            if snapshot is None:
+            found = self._parallel_pointer(run_id, workspace_id)
+            if found is None:
                 return None
             try:
-                return source, build_branch_trace(root, run_id, snapshot, self.relation_max_steps)
+                run, cold = self._open_saved(found[0], run_id, workspace_id)
+            except Exception:
+                return None
+            with self._lock:
+                source = 'LIVE' if not cold else 'SAVED'
+            try:
+                snapshot = self._orch_snapshot(run)
+                return source, build_trace(run.root, run_id, run.state(), snapshot['parallel_investigation'])
             except Exception:
                 raise ProductApplicationError('TRACE_UNREADABLE', 'The saved call chain cannot be read.', status=409)
-
-    def _running_parallel(self, job, root, run_id, workspace_id):
-        """Minimal read-only snapshot of a run that is still running: status and run level facts only.
-
-        The source identity is compared without touching the pool. A change is reported as a withheld
-        (aborted) snapshot in this response only; the pool, pool.json and the running branches stay as they are.
-        """
-        from linkloom.ui import parallel_resume
-        from linkloom.ui.parallel_investigation import render_snapshot
-        try:
-            record = parallel_resume.load_record(Path(root))
-            workspace = WorkspacePresentationContext(display_name=str(record['workspace']['display_name']),
-                                                     document_count=record['workspace']['document_count'])
-        except Exception:
-            return self._parallel_failure(run_id, 'PARALLEL_STATE_UNREADABLE')
-        stop = job.pool.stop_state
-        try:
-            self._parallel_validator(workspace_id, record['identity'])()
-        except Exception:
-            stop = ('HARD_ABORT', 'TASK_SOURCE_AUTHORIZATION_CHANGED')
-        return render_snapshot(run_id, record['query'], workspace, stop=stop, outcome=None,
-            questions=[entry['question'] for entry in record['branches']], planner=record.get('planner'),
-            source_check=None, cache={})
-
-    def _cold_parallel(self, root, run_id, workspace_id, query=None):
-        from linkloom.runtime.models import RunStatus
-        from linkloom.ui import parallel_resume
-        from linkloom.ui.parallel_investigation import render_snapshot
-        root = Path(root)
-        try:
-            record = parallel_resume.load_record(root)
-            workspace = WorkspacePresentationContext(display_name=str(record['workspace']['display_name']),
-                                                     document_count=record['workspace']['document_count'])
-        except Exception:
-            return self._parallel_failure(run_id, 'PARALLEL_STATE_UNREADABLE', query)
-        names = [entry['name'] for entry in record['branches']]
-        validate = self._parallel_validator(workspace_id, record['identity'])
-        stop, outcome, states = None, None, []
-        try:
-            validate()
-        except Exception:
-            stop = ('HARD_ABORT', 'TASK_SOURCE_AUTHORIZATION_CHANGED')
-            states = [dict(branch=name, state=parallel_resume.WITHHELD, reason=stop[1]) for name in names]
-        if stop is None:
-            try:
-                classified = parallel_resume.classify_run(root, record, run_id, self.relation_max_steps)
-            except Exception:
-                return self._parallel_failure(run_id, 'PARALLEL_STATE_UNREADABLE', record['query'], workspace)
-            stop, states = classified['stop'], classified['states']
-            outcome = None if stop else parallel_resume.outcome_of(classified)
-        snapshot = render_snapshot(run_id, record['query'], workspace, stop=stop, outcome=outcome,
-            questions=[entry['question'] for entry in record['branches']], planner=record.get('planner'),
-            source_check=validate, cache={})
-        snapshot['parallel_investigation'].update(branch_states=states, continuable=[
-            item['branch'] for item in states if item['state'] == parallel_resume.CONTINUABLE])
-        return snapshot
+            finally:
+                if cold:
+                    run.close()
 
     @staticmethod
     def _parallel_failure(run_id, code, query=None, workspace=None):
-        from linkloom.ui.parallel_investigation import render_snapshot
-        snapshot = render_snapshot(run_id, query or 'Saved parallel investigation',
-            workspace or WorkspacePresentationContext(display_name='Workspace'),
-            stop=None, outcome=dict(status='FAILED', reason=code, results={}, gaps={}, unstarted=0),
-            questions=[], planner=None, source_check=None, cache={})
-        snapshot['parallel_investigation'].update(reason=code, branch_states=[], continuable=[])
+        from linkloom.runtime.models import RunStatus
+        from linkloom.ui.projection import project_run_snapshot
+        snapshot = project_run_snapshot(query=query or 'Saved orchestrated investigation',
+            workspace=workspace or WorkspacePresentationContext(display_name='Workspace'),
+            status=RunStatus(run_id=run_id, thread_id=run_id, status='failed',
+                             error=dict(code=code, category='runtime', message='Orchestrated investigation stopped.')))
+        snapshot['parallel_investigation'] = dict(status='FAILED', reason=code, tasks=[], branch_states=[],
+                                                  continuable=[])
+        snapshot['read_only'] = True
         return snapshot
 
-    def continue_parallel(self, run_id, workspace_id, *, allow_external_provider=False):
-        """Start the branches that never sent a request, once, under their original names."""
+    def continue_parallel(self, run_id, workspace_id, *, allow_external_provider=False, approval=None):
+        """Resume a saved run from its LangGraph checkpoint. Accepted tasks are reused, never paid again."""
         if self.external_provider and allow_external_provider is not True:
             raise ProductApplicationError('EXTERNAL_PROVIDER_PERMISSION_REQUIRED',
                 'Allow this bounded external investigation before source text is sent or model costs are incurred.',
                 status=403)
         try:
             with self._starts.operation('parallel-continue-' + uuid4().hex[:12]):
-                return self._continue_parallel(run_id, workspace_id)
+                return self._continue_parallel(run_id, workspace_id, approval)
         except BackgroundWorkStopped as error:
             raise ProductApplicationError('APPLICATION_SHUTTING_DOWN', str(error), status=503) from error
 
-    def _continue_parallel(self, run_id, workspace_id):
-        from linkloom.ui import parallel_resume
-        from linkloom.ui.branch_budget import continuation_limits
-        from linkloom.ui.parallel_investigation import ParallelInvestigation
-        if self.model_factory is None or self.task_only or not self.parallel_limits:
+    def _continue_parallel(self, run_id, workspace_id, approval):
+        from linkloom.orchestration.runs import is_cancelled
+        if approval is not None and not isinstance(approval, dict):
+            raise ProductApplicationError('INVALID_APPROVAL', 'A reviewer decision must be an object.')
+        if not self.orchestration_enabled():
             raise ProductApplicationError('PARALLEL_CONTINUE_UNAVAILABLE',
-                'Continuing a parallel run needs the configured parallel investigation.', status=409)
+                'Continuing a run needs the configured orchestrated investigation.', status=409)
         with self.product_app._store_lock:
             if self.product_app._workspace_id() != workspace_id:
                 raise ProductApplicationError('WORKSPACE_MISMATCH',
@@ -613,64 +633,35 @@ class ProductInvestigationService:
                 raise ProductApplicationError('RUN_NOT_FOUND', 'The parallel run was not found.', status=404)
             root, pointer = found
             with self._lock:
-                active = self._parallel_jobs.get(run_id)
-                if (active is not None and active.outcome is None) or run_id in self._resume_jobs:
-                    raise ProductApplicationError('PARALLEL_RUN_ACTIVE',
-                        'This run is still running or was already continued.', status=409)
-                try:
-                    record = parallel_resume.load_record(root)
-                    validate = self._parallel_validator(workspace_id, record['identity'])
-                    validate()
-                except Exception as error:
-                    raise ProductApplicationError('TASK_SOURCE_AUTHORIZATION_CHANGED',
-                        'The authorized sources changed; ask again.', status=409) from error
-                if (root / 'resumed.json').exists():
-                    raise ProductApplicationError('PARALLEL_ALREADY_RESUMED',
-                        'Each branch is continued at most once.', status=409)
-                try:
-                    classified = parallel_resume.classify_run(root, record, run_id, self.relation_max_steps)
-                    index = (root / record['index']).resolve()
-                    if not index.is_relative_to(root) or not index.is_file():
-                        raise ValueError('INDEX_PATH_INVALID')
-                    names = [item['branch'] for item in classified['states']
-                             if item['state'] == parallel_resume.CONTINUABLE]
-                    entries = {entry['name']: entry for entry in record['branches']}
-                    subplans = [(entries[name]['question'], parallel_resume.plan_of(entries[name], self.relation_max_steps))
-                                for name in names]
-                except Exception as error:
-                    raise ProductApplicationError('PARALLEL_STATE_UNREADABLE',
-                        'The saved parallel run cannot be continued.', status=409) from error
-                if classified['stop']:
-                    raise ProductApplicationError('PARALLEL_RUN_STOPPED',
-                        'The run was stopped; nothing is continued.', status=409)
-                if not names:
-                    raise ProductApplicationError('NO_CONTINUABLE_BRANCH',
-                        'No branch is waiting to start.', status=409)
-                try:
-                    limits = continuation_limits(root, run_id, self.parallel_limits)
-                except (OSError, ValueError, KeyError, TypeError) as error:
-                    raise ProductApplicationError('PARALLEL_STATE_UNREADABLE',
-                        'The saved parallel budget cannot be verified.', status=409) from error
-                if limits is None or not any(
-                        min(limits.max_requests, limits.max_output_tokens) // len(names)
-                        >= (2 * len(plan.subgoals) + 1 if plan else 3)
-                        for _, plan in subplans):
-                    raise ProductApplicationError('TASK_PROVIDER_BUDGET_EXHAUSTED',
-                        'The original investigation has insufficient remaining Provider budget.', status=409)
-                try:
-                    parallel_resume.claim_continuation(root, names)
-                except FileExistsError as error:
-                    raise ProductApplicationError('PARALLEL_ALREADY_RESUMED',
-                        'Each branch is continued at most once.', status=409) from error
-                workspace = WorkspacePresentationContext(display_name=str(record['workspace']['display_name']),
-                                                         document_count=record['workspace']['document_count'])
-                job = ParallelInvestigation(root / parallel_resume.RESUME_DIR, run_id, record['query'], workspace,
-                    limits, validate, subplans, self.model_factory, root / 'vault', index,
-                    record['source_names'], record['source_versions'], workspace_id, names=names)
-                self._provider_sessions.append(job.pool)
-                self._parallel_workers.start(run_id + '-resume', job.execute)
-                self._resume_jobs[run_id] = job
-            return self._ask_of(pointer, root, workspace_id), job.snapshot()
+                if run_id in self._active:
+                    raise ProductApplicationError('PARALLEL_RUN_ACTIVE', 'This run is still running.', status=409)
+            try:
+                run, cold = self._open_saved(root, run_id, workspace_id)
+                self._parallel_validator(workspace_id, run.record['identity'])()
+            except Exception as error:
+                raise ProductApplicationError('TASK_SOURCE_AUTHORIZATION_CHANGED',
+                    'The authorized sources changed; ask again.', status=409) from error
+            try:
+                values = run.state()
+                if is_cancelled(root) or values.get('status') == 'ABORTED':
+                    raise ProductApplicationError('PARALLEL_RUN_STOPPED', 'The run was stopped; nothing is continued.',
+                                                  status=409)
+                if values.get('status', 'RUNNING') != 'RUNNING':
+                    raise ProductApplicationError('NO_CONTINUABLE_BRANCH', 'The run has already finished.', status=409)
+                if values.get('interrupts') and approval is None:
+                    raise ProductApplicationError('CONFIRMATION_REQUIRED',
+                        'The Supervisor plan waits for a reviewer decision.', status=409)
+                if not values.get('interrupts'):
+                    approval = None  # nothing is waiting for a human; a stray decision resumes nothing
+            except BaseException:
+                if cold:
+                    run.close()
+                raise
+            with self._lock:
+                self._orch_runs[run_id] = run
+                self._active.add(run_id)
+            self._parallel_workers.start(run_id + '-resume', lambda: self._drive(run, approval))
+            return self._ask_of(pointer, root, workspace_id), self._orch_snapshot(run)
 
     @staticmethod
     def _task_blocked(run_id, code):
@@ -757,22 +748,16 @@ class ProductInvestigationService:
 
     def inspect(self, run_id: str) -> dict[str, Any] | None:
         with self._lock:
-            parallel = self._parallel_jobs.get(run_id)
-            resumed = self._resume_jobs.get(run_id)
+            orchestrated = self._orch_runs.get(run_id)
             job = self._jobs.get(run_id)
             if (job and job.task_preparation and job.task_preparation.provider_session
                     and job.task_preparation.provider_session.failure):
                 return self._task_blocked(run_id, job.task_preparation.provider_session.failure)
-        if resumed is not None:
+        if orchestrated is not None:
             with self.product_app._store_lock:
-                if self.product_app._workspace_id() != resumed.workspace_id:
+                if self.product_app._workspace_id() != orchestrated.record['workspace_id']:
                     return None
-                if resumed.outcome is None:
-                    return resumed.snapshot()
-                return self._cold_parallel(resumed.root.parent, run_id, resumed.workspace_id)
-        if parallel is not None:
-            with self.product_app._store_lock:
-                return parallel.snapshot()
+                return self._orch_snapshot(orchestrated)
         if job is None:
             return None
         if job.task_preparation is not None:
@@ -831,18 +816,18 @@ class ProductInvestigationService:
 
     def start_temporal(
         self, query: str, workspace_id: str, *, subject: str, relation: str,
-        as_of: str | None = None, branch_context=None,
+        as_of: str | None = None, entity_leads=(), blocked_entities=(),
     ) -> dict[str, Any]:
         try:
             with self._starts.operation("temporal-start-" + uuid4().hex[:12]):
                 return self._start_temporal(query, workspace_id, subject=subject, relation=relation, as_of=as_of,
-                                            branch_context=branch_context)
+                                            entity_leads=entity_leads, blocked_entities=blocked_entities)
         except BackgroundWorkStopped as error:
             raise ProductApplicationError("APPLICATION_SHUTTING_DOWN", str(error), status=503) from error
 
     def _start_temporal(
         self, query: str, workspace_id: str, *, subject: str, relation: str,
-        as_of: str | None = None, branch_context=None,
+        as_of: str | None = None, entity_leads=(), blocked_entities=(),
     ) -> dict[str, Any]:
         if self.task_only:
             raise ProductApplicationError('AGENT_STAGE_NOT_AUTHORIZED', 'Temporal stages are not enabled.', status=403)
@@ -857,47 +842,20 @@ class ProductInvestigationService:
         view = self.product_app.recover_decision(
             subject, relation, as_of, _workspace_id=workspace_id,
         )
-        return self._start(query, workspace_id, temporal_scope=(subject, relation, view["as_of"]),
-                           branch_context=branch_context)
+        scope = (subject, relation, view["as_of"])
+        if self.orchestration_enabled():
+            return self._start_orchestrated(query, workspace_id, temporal_scope=scope,
+                                            entity_leads=entity_leads, blocked_entities=blocked_entities)
+        return self._start(query, workspace_id, temporal_scope=scope)
 
     def cancel_parallel(self, run_id: str) -> bool:
-        from linkloom.ui.branch_budget import CANCELLED
+        """Cancel is a HARD stop: the next Provider call is refused and nothing from this run is published."""
         with self._lock:
-            job = self._parallel_jobs.get(run_id)
-        if job is None:
+            run = self._orch_runs.get(run_id)
+        if run is None:
             return False
-        job.pool.stop(CANCELLED, 'PARALLEL_CANCELLED')
+        run.cancel()
         return True
-
-    @staticmethod
-    def _discard_planning_root(root, pool):
-        """Remove the directory prepared for a parallel run that never started.
-
-        It holds a copy of every source. Only when the Planner call is UNCERTAIN (it may have been billed with
-        no usable receipt) the two small audit files stay: pool.json and the Planner budget.json."""
-        keep = set()
-        planner = pool.branches.get('planner')
-        if planner is not None and planner['status'] == 'UNCERTAIN':
-            keep = {root / 'pool.json', root / 'branches', root / 'branches' / 'planner',
-                    root / 'branches' / 'planner' / 'budget.json'}
-        if not keep:
-            shutil.rmtree(root, ignore_errors=True)
-            return
-        for path in sorted(root.rglob('*'), key=lambda item: len(item.parts), reverse=True):
-            if path not in keep:
-                shutil.rmtree(path, ignore_errors=True) if path.is_dir() else path.unlink(missing_ok=True)
-
-    def branch_planner_eligible(self):
-        from linkloom.ui.graph_investigation import current_graph_provider_session
-        return bool(self.branch_planner and self.parallel_limits and not self.task_only
-                    and current_graph_provider_session() is None)
-
-    def parallel_subplans(self, query):
-        from linkloom.ui.graph_investigation import current_graph_provider_session
-        if not self.parallel_limits or self.task_only or current_graph_provider_session() is not None:
-            return ()
-        from linkloom.ui.parallel_investigation import independent_subplans
-        return independent_subplans(plan_team_decision_query(query), self.relation_max_steps)
 
     def _decorate(self, snapshot, state, *, source_names=None, source_versions=None, temporal_scope=None,
                   temporal_view_holder=None, task_plan=None, max_steps=None):

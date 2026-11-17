@@ -1,7 +1,7 @@
 """Compute request-local authority and time facts before model routing."""
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import UTC, datetime
 import re
 
@@ -225,11 +225,12 @@ def _ascii_word(char):
     return normalized.isascii() and (normalized.isalnum() or normalized == "_")
 
 
-def blocked_entity_reason(query, facts, *, mentions=()):
+def _matching_facts(query, facts, mentions=()):
     normalized_mentions = {normalize_mention(text) for text in mentions}
     for label, reason in facts:
         if normalize_mention(label) in normalized_mentions:
-            return reason
+            yield label, reason
+            continue
         for start, end in mention_spans(query, label):
             # Keep ASCII word boundaries (a workspace called "Ops" does
             # not block "DevOps"), including in mixed-language questions.
@@ -237,8 +238,17 @@ def blocked_entity_reason(query, facts, *, mentions=()):
                 continue
             if end < len(query) and _ascii_word(query[end - 1]) and _ascii_word(query[end]):
                 continue
-            return reason
-    return None
+            yield label, reason
+            break
+
+
+def blocked_entity_reason(query, facts, *, mentions=()):
+    return next((reason for _, reason in _matching_facts(query, facts, mentions)), None)
+
+
+def authorization_facts(facts):
+    """The facts that deny access (another workspace). Every other fact only says a name is not confirmed."""
+    return tuple(fact for fact in facts if fact[1] == "WORKSPACE_DENIED")
 
 
 def build_context(query, workspace, slots, resolver, *, view, graph_snapshot=None,
@@ -363,25 +373,83 @@ class RouterAdmission:
     reason: str
     candidate: RouteCandidate | None = None
     as_of: str | None = None
+    # Names the question mentions that are not confirmed in this workspace. Only the orchestrated
+    # investigation executor carries them; it resolves them through source evidence.
+    leads: tuple[str, ...] = ()
 
 
-def admit_route(context, route, *, model_entities=False):
+def _lead_names(context, route, listed):
+    """Names to verify in sources: unknown to the confirmed catalogue, or known only as unconfirmed proposals.
+
+    Another workspace's name is never a lead (the caller stops on it before this point).
+    """
+    # Only names the model reported (each already located literally in the question) become leads. The rule
+    # detector's guesses (context.missing_names) can name ordinary words, so they never become leads.
+    names = tuple(name for name in (*(listed or ()), *route.unresolved_names)
+                  if name_missing(name, context.catalogue_names))
+    soft = tuple(fact for fact in context.blocked_entities if fact[1] != "WORKSPACE_DENIED")
+    names += tuple(label for label, _ in _matching_facts(
+        context.query, soft, (*(text for text, _, _ in route.mentions), *(listed or ()))))
+    return tuple(dict.fromkeys(names))
+
+
+def _investigation_handoff(context, route, listed):
+    """An INVESTIGATION question about a confirmed subject or about names the workspace does not confirm.
+
+    The confirmed scope (a unique grounded candidate, or just the current workspace) and the unconfirmed leads
+    are kept apart. Nothing is bound to a lead: the Supervisor and Workers verify it against source text.
+    """
+    leads = _lead_names(context, route, listed)
+    if not leads or route.intent != "INVESTIGATION" or route.operation != "READ":
+        return None
+    # Only a route, or a clarification that exists solely because a named object has no candidate, may hand off.
+    if route.decision == "REFUSE" or (route.decision == "CLARIFY" and route.reason_code != "ENTITY_NOT_FOUND"):
+        return None
+    if route.time_role in {"RANGE", "UNRESOLVED"}:
+        return RouterAdmission(None, "TIME_SCOPE_UNRESOLVED")
+    if any(context.candidates[key].status != "confirmed" for key in route.candidate_ids):
+        return RouterAdmission(None, "NO_CONFIRMED_RECORD")
+    names = {normalize_mention(name) for name in leads}
+    kept = tuple(item for item in route.mentions if normalize_mention(item[0]) not in names)
+    candidate = None
+    if route.candidate_ids:
+        try:
+            candidate = bind_candidate(context, replace(route, decision="ROUTE", reason_code="NONE", mentions=kept))
+        except RouterInvalid as error:
+            if str(error) != "ENTITY_NOT_FOUND":
+                return RouterAdmission(None, str(error))  # ambiguity or no confirmed record is never guessed away
+    as_of = context.time_options[route.time_ref_ids[0]].value if route.time_role == "AS_OF" else None
+    return RouterAdmission("investigation", "NONE", candidate, as_of, leads)
+
+
+def admit_route(context, route, *, model_entities=False, leads_allowed=False):
     """Choose only installed read paths after authority and semantic validation.
 
     model_entities (cascade mode): entity names come from the model's entity_mentions, each already located
     in the question. One that is not a known name or alias of this workspace is an unknown entity: the
     request clarifies with ENTITY_NOT_FOUND and no candidate or recorded value may bind in its place.
+
+    leads_allowed (Host has the orchestrated investigation): an INVESTIGATION question may carry unconfirmed
+    names as leads instead of stopping. Access is still decided first: another workspace's name always stops.
     """
     listed = route.entity_mentions if model_entities else None
-    blocker = blocked_entity_reason(context.query, context.blocked_entities,
-                                    mentions=(*(text for text, _, _ in route.mentions), *(listed or ())))
+    named = (*(text for text, _, _ in route.mentions), *(listed or ()))
+    blocker = blocked_entity_reason(context.query, context.blocked_entities, mentions=named)
     from linkloom.ui.ask_admission import router_safety_reason
     safety = router_safety_reason(context.query, operation=route.operation,
                                   reason=route.reason_code, host_reason=blocker)
     if safety:
         return RouterAdmission(None, safety)
-    if blocker:
-        return RouterAdmission(None, blocker)
+    hard = (blocked_entity_reason(context.query, authorization_facts(context.blocked_entities), mentions=named)
+            if leads_allowed else blocker)
+    if hard:
+        return RouterAdmission(None, hard)
+    if leads_allowed:
+        handoff = _investigation_handoff(context, route, listed)
+        if handoff is not None:
+            return handoff
+        if blocker:  # not an investigation: an unconfirmed name still stops the lookup
+            return RouterAdmission(None, blocker)
     missing = (context.missing_names if listed is None else
                any(name_missing(name, context.catalogue_names) for name in listed))
     if missing or any(name_missing(name, context.catalogue_names) for name in route.unresolved_names):
