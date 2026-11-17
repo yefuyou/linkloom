@@ -179,8 +179,10 @@ def build_graph(deps: WorkerDeps, checkpointer):
             task.update(fields)
             changed[task['id']] = task
 
+        budget_failure = 'TASK_PROVIDER_BUDGET_EXHAUSTED'
         for task in tasks.values():  # retry a retryable failure as a new paid attempt
-            if (task['status'] == FAILED and task.get('retryable') and task['attempt'] < limits.max_attempts
+            if (task['status'] == FAILED and task.get('retryable') and task.get('failure') != budget_failure
+                    and task['attempt'] < limits.max_attempts
                     and not stop_reason and left > 0):
                 put(task, status=PENDING, epoch=task['epoch'] + 1, failure=None, retryable=False)
         progressed = True
@@ -212,7 +214,10 @@ def build_graph(deps: WorkerDeps, checkpointer):
             return Command(update=update, goto=sends)
         update = dict(tasks=dict(changed)) if changed else {}
         merged = dict(state, tasks={**state['tasks'], **changed})
-        reviewable = (not stop_reason and state.get('round', 0) <= limits.max_rounds
+        # A review can propose equivalent work under a new ID, but it cannot enlarge the Worker slice.
+        budget_exhausted = any(task['status'] == FAILED and task.get('failure') == budget_failure
+                               for task in tasks.values())
+        reviewable = (not stop_reason and not budget_exhausted and state.get('round', 0) <= limits.max_rounds
                       and len(tasks) < limits.task_cap() and left > 0 and _has_gaps(merged)
                       and not any(task['status'] in (PENDING, RUNNING) for task in tasks.values()))
         return Command(update=update, goto='supervisor' if reviewable else 'synthesize')

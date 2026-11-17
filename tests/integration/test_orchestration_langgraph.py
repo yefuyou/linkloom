@@ -1,4 +1,5 @@
 """LangGraph orchestration with the real RuntimeEngine, Reviewer gate and synthesis (offline fake models)."""
+from dataclasses import replace
 import json
 import threading
 from pathlib import Path
@@ -229,6 +230,23 @@ def test_failed_and_abstained_tasks_keep_other_results_as_partial(tmp_path):
     assert reasons == {("owner", "BRANCH_FAILED"), ("leader", "BRANCH_NO_DECISION"), ("risk", "BRANCH_SKIPPED")}
     owners = {item["task_id"] for item in result["verified_evidence"].values()}
     assert "succ" in owners and not owners & {"owner", "risk"}
+
+
+def test_local_worker_budget_failure_keeps_receipt_and_does_not_retry_or_review(tmp_path):
+    world = World([delegation("answer_single"), delegation("delegate", [("again", GOAL, [])])],
+                  {GOAL: (FACT["succ"], "Meridian A", "ok")})
+    limits = OrchestrationLimits.split(TOTAL, max_tasks=3, max_rounds=1, max_attempts=2)
+    limits = replace(limits, per_task=replace(limits.per_task, max_cost_usd=.001))
+    orchestrator, _ = build(tmp_path, world, limits=limits)
+
+    result = orchestrator.start(GOAL)
+
+    assert result["status"] == "UNKNOWN"
+    task, = result["tasks"].values()
+    assert task["failure"] == "TASK_PROVIDER_BUDGET_EXHAUSTED"
+    assert task["attempt"] == result["dispatches"] == 1
+    assert len(world.supervisor_requests) == 1
+    assert world.workers == []
 
 
 def test_every_task_failing_gives_unknown(tmp_path):

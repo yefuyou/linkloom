@@ -47,6 +47,11 @@ class TaskProviderLimits:
         if self.request_timeout_seconds > self.max_seconds:
             raise ValueError('task request timeout exceeds total duration budget')
 
+    def reservation_cost(self, input_tokens, output_tokens):
+        return max(self.request_cost_upper_bound_usd,
+                   (input_tokens * self.input_usd_per_million
+                    + output_tokens * self.output_usd_per_million) / 1_000_000)
+
 
 _ROUTER_RESERVATION = ContextVar("ask_router_reservation", default=None)
 
@@ -152,8 +157,7 @@ class TaskProviderSession:
             # One byte per token plus conservative framing/schema allowance.
             size = len(json.dumps(request.to_dict(), ensure_ascii=False).encode('utf8')) + 4096
             output = request.generation_options.max_output_tokens
-            cost = max(self.limits.request_cost_upper_bound_usd,
-                (size * self.limits.input_usd_per_million + output * self.limits.output_usd_per_million) / 1_000_000)
+            cost = self.limits.reservation_cost(size, output)
             if (self.requests >= self.limits.max_requests
                     or self.input_tokens + size > self.limits.max_input_tokens
                     or self.output_tokens + output > self.limits.max_output_tokens

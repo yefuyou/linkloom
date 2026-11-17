@@ -175,7 +175,8 @@ def _run(deps, task, query):
             raise ValueError('WORKER_BUDGET_INSUFFICIENT')
         turns = min(turns + 1, limits.max_requests, limits.max_output_tokens)
         adapter = OutputBoundedAdapter(session.bind(deps.model_factory(task['description']), 'runtime'),
-                                        min(4096, limits.max_output_tokens // turns))
+                                        min(OrchestrationLimits.WORKER_MAX_OUTPUT_PER_REQUEST,
+                                            limits.max_output_tokens // turns))
         engine = RuntimeEngine(vault_root=deps.vault, index_path=deps.index,
             checkpoint_dir=root / 'runtime', trace_dir=root / 'traces', model=adapter,
             memory_enabled=False, decision_memory_enabled=False,

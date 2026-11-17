@@ -9,6 +9,8 @@ from __future__ import annotations
 from dataclasses import asdict, dataclass, fields, replace
 import math
 
+from linkloom.agents.model_adapter import MAX_VERIFIED_EVIDENCE_CONTEXT_BYTES
+from linkloom.orchestration.supervisor import SUPERVISOR_OUTPUT_TOKENS
 from linkloom.ui.task_provider import TaskProviderLimits
 
 _BUDGET_KEYS = ('max_requests', 'max_input_tokens', 'max_output_tokens', 'max_cost_usd')
@@ -84,21 +86,35 @@ class OrchestrationLimits:
                    max_tasks=max_tasks, max_rounds=max_rounds, **options)
 
     WORKER_MIN_REQUESTS = 4  # search, read, one more evidence turn and the reserved Final turn
+    WORKER_MAX_OUTPUT_PER_REQUEST = 4096
+    # A planning allowance per turn for an evidence-sized request plus framing.
+    # Tool history and other fields can make the serialized request larger.
+    WORKER_INPUT_ALLOWANCE = MAX_VERIFIED_EVIDENCE_CONTEXT_BYTES + 4096
+
+    @classmethod
+    def _fits_worker_turns(cls, budget):
+        turns = cls.WORKER_MIN_REQUESTS
+        output_per_turn = min(cls.WORKER_MAX_OUTPUT_PER_REQUEST, budget.max_output_tokens // turns)
+        return (budget.max_requests >= turns
+                and budget.max_input_tokens >= turns * cls.WORKER_INPUT_ALLOWANCE
+                and budget.max_output_tokens >= SUPERVISOR_OUTPUT_TOKENS  # equal-sized Supervisor slice
+                and budget.max_cost_usd >= turns * budget.reservation_cost(
+                    cls.WORKER_INPUT_ALLOWANCE, output_per_turn))
 
     @classmethod
     def for_budget(cls, provider, *, max_tasks=6, max_rounds=2, **options):
-        """The largest plan the total budget can pay for, each Worker slice holding a full Runtime turn set.
+        """The largest plan whose equal slices cover the nominal Worker turn set.
 
-        Raises ValueError when not even one Worker and one Supervisor decision fit.
+        Actual serialized requests and elapsed time stay subject to the Provider session.
+        Raises ValueError when no allocation meets the planning allowance.
         """
         for tasks in range(max_tasks, 0, -1):
             for rounds in range(min(max_rounds, tasks), -1, -1):
                 if rounds == 0 and tasks > 1:
                     continue  # a delegation without a review round is only offered for a single Worker
-                slots = tasks + rounds + 1
-                if (provider.max_requests // slots >= cls.WORKER_MIN_REQUESTS
-                        and provider.max_output_tokens // slots >= cls.WORKER_MIN_REQUESTS):
-                    return cls.split(provider, max_tasks=tasks, max_rounds=rounds,
-                                     deadline_seconds=float(provider.max_seconds),
-                                     **dict(dict(max_concurrency=min(3, tasks)), **options))
+                limits = cls.split(provider, max_tasks=tasks, max_rounds=rounds,
+                                   deadline_seconds=float(provider.max_seconds),
+                                   **dict(dict(max_concurrency=min(3, tasks)), **options))
+                if cls._fits_worker_turns(limits.per_task):
+                    return limits
         raise ValueError('TASK_PROVIDER_BUDGET_EXHAUSTED')
