@@ -1,9 +1,15 @@
 """Real Ask validation/dispatch with a scripted, single-call safety classifier."""
+from http.client import HTTPConnection
 import json
+from threading import Event, Thread
+
 import pytest
 
 from linkloom.agents.model_adapter import ModelAction, ModelResponse
+from linkloom.ui.lifecycle import BackgroundWorkStopped
 from linkloom.ui.router_provider import RouterProvider
+from linkloom.ui.server import create_http_server
+from linkloom.ui.structured_router import CONFIG
 from linkloom.ui.unified_ask import UnifiedAskService
 from test_structured_router_ask import decisions, ScriptedRouter, output
 
@@ -182,6 +188,58 @@ def test_authorized_classifier_is_one_budgeted_call_before_capability(decisions)
     assert not session.pending_task_ids()
 
 
+def test_budgeted_security_timeout_returns_http_result_and_ignores_late_allow(decisions, monkeypatch):
+    monkeypatch.setitem(CONFIG, 'security_timeout_seconds', .2)
+    release = Event()
+
+    class SlowGate(Gate):
+        def complete(self, request):
+            self.requests.append(request)
+            assert release.wait(5)
+            return ModelResponse(action=ModelAction.final(self.text))
+
+    gate = SlowGate()
+    router = ScriptedRouter(lambda _: pytest.fail('The timed-out Ask reached the Router'))
+    owner = decisions.configure_agent()
+    monkeypatch.setattr(owner, 'start_orchestrated', lambda *a, **kw: pytest.fail('Ask reached LangGraph'))
+    monkeypatch.setattr(owner, 'start', lambda *a, **kw: pytest.fail('Ask reached Runtime'))
+    with create_http_server(None, product_app=decisions.app, investigation_service=owner,
+                            enable_temporal_graph=False, port=0,
+                            router_provider=RouterProvider(router, external_provider=True,
+                                                           security_adapter=gate)) as server:
+        thread = Thread(target=server.serve_forever, daemon=True)
+        thread.start()
+        client = HTTPConnection('127.0.0.1', server.server_port, timeout=4)
+        try:
+            client.request('POST', '/api/product/ask', json.dumps(dict(
+                query='Why did Launch switch suppliers?', workspace_id=decisions.app._workspace_id(),
+                allow_external_provider=True)), {'Content-Type': 'application/json'})
+            reply = client.getresponse()
+            assert reply.status == 200
+            result = json.load(reply)['result']
+            assert result['status'] == 'NEEDS_SCOPE' and result['error']['code'] == 'MODEL_UNAVAILABLE'
+            assert not result['agent_run_id'] and not result['evidence']
+            security = result['security_gate']
+            assert security['status'] == 'INCOMPLETE' and 'decision' not in security
+            assert security['fallback_reason'] == 'PROVIDER_TIMEOUT_UNCERTAIN'
+            session, = owner._provider_sessions
+            assert session.pending_task_ids()
+            with pytest.raises(BackgroundWorkStopped):
+                session.complete(gate, 'ask-security', gate.requests[0])
+            release.set()
+            session.close(timeout=2)
+            receipt = json.loads((session.root / 'budget.json').read_text(encoding='utf8'))
+            assert receipt['failure'] == 'PROVIDER_TIMEOUT_UNCERTAIN'
+            assert [attempt['outcome'] for attempt in receipt['attempts']] == ['UNCERTAIN']
+            assert receipt['attempts'][0].get('response_sha256') is None
+            assert len(gate.requests) == 1 and not router.requests
+        finally:
+            release.set()
+            client.close()
+            server.shutdown()
+            thread.join()
+
+
 def test_truncated_security_reply_clarifies_and_is_persisted_separately(decisions):
     from linkloom.agents.model_adapter import ModelUsage
 
@@ -247,6 +305,9 @@ def test_allow_uses_at_most_one_security_and_one_existing_router_send(decisions)
     assert len(gate.requests) == len(router.requests) == 1
     assert [s.attempts[0]['stage'] for s in owner._provider_sessions] == ['ask-security', 'ask-router']
     assert all(s.requests == s.limits.max_requests == 1 for s in owner._provider_sessions)
+    assert [(s.limits.max_seconds, s.limits.request_timeout_seconds) for s in owner._provider_sessions] == [
+        (15, 15), (6, 6),
+    ]
 
 
 def test_workspace_source_change_during_classification_cannot_release_results(decisions):

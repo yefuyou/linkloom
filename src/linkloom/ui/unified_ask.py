@@ -175,7 +175,7 @@ class UnifiedAskService:
     def _classify_security(self, run, payload):
         from linkloom.ui.security_gate import classify, request_for
         from linkloom.ui.structured_router import RouterInvalid
-        from linkloom.ui.lifecycle import BackgroundWorkStopped
+        from linkloom.ui.lifecycle import BackgroundShutdownTimeout, BackgroundWorkStopped
         from time import monotonic
         provider = self.router_provider
         result = dict(status="INCOMPLETE", attempted=False)
@@ -206,10 +206,17 @@ class UnifiedAskService:
             result.update(status="COMPLETED", **decision)
         except (RouterInvalid, BackgroundWorkStopped, OSError, ValueError) as error:
             result["fallback_reason"] = str(error) if isinstance(error, RouterInvalid) else "PROVIDER_UNAVAILABLE"
+            if session is not None and session.failure in {"PROVIDER_TIMEOUT_UNCERTAIN", "PROVIDER_UNCERTAIN"}:
+                result["fallback_reason"] = session.failure
         finally:
             if session is not None:
                 session.record_validation(result)
-                session.close(timeout=0)
+                try:
+                    session.close(timeout=0)
+                except BackgroundShutdownTimeout:
+                    # The investigation service still owns this stopped session
+                    # and drains its in-flight call at application shutdown.
+                    pass
             result["seconds"] = round(monotonic() - started, 4)
         validate()
         return result

@@ -141,7 +141,8 @@ class _DeepSeekJSONClient:
         payload["tool_choice"] = {"type": "function", "function": {"name": tool["function"]["name"]}}
         request = Request(CONFIG["endpoint"], data=json.dumps(payload, ensure_ascii=False).encode("utf8"),
             headers={"Authorization": "Bearer " + self._key, "Content-Type": "application/json"}, method="POST")
-        with self._opener.open(request, timeout=CONFIG["timeout_seconds"]) as response:
+        timeout = CONFIG["security_timeout_seconds"] if self._purpose == "security" else CONFIG["timeout_seconds"]
+        with self._opener.open(request, timeout=timeout) as response:
             body = response.read(65537)
             if len(body) > 65536:
                 raise ValueError("ROUTER_PROVIDER_RESPONSE_LIMIT")
@@ -206,10 +207,11 @@ class RouterProvider:
 
     def reserve(self, app, owner, request, validate):
         models = owner.task_models
+        timeout = CONFIG["security_timeout_seconds"] if request.agent_id == "ask-security" else CONFIG["timeout_seconds"]
         limits = getattr(models, "provider_limits", None) or TaskProviderLimits(
             1, 12000, max(CONFIG["max_output_tokens"], CONFIG["security_max_output_tokens"]),
-            .03, 6, 6, .00656)
-        limits = replace(limits, max_requests=1, request_timeout_seconds=min(limits.request_timeout_seconds, CONFIG["timeout_seconds"]))
+            .03, timeout, timeout, .00656)
+        limits = replace(limits, max_requests=1, request_timeout_seconds=min(limits.request_timeout_seconds, timeout))
         root = Path(app.repository.database_path).parent / "router-provider" / request.run_id
         session = TaskProviderSession(root, limits, validate)
         with owner._lock:
@@ -230,8 +232,10 @@ def configured_router():
             return RouterProvider(None, external_provider=True, mode=mode)
         client = build_gemini_sdk_client(key, http_options_kwargs=dict(
             timeout=CONFIG["timeout_seconds"] * 1000, retry_options=dict(attempts=1)))
+        security_client = build_gemini_sdk_client(key, http_options_kwargs=dict(
+            timeout=CONFIG["security_timeout_seconds"] * 1000, retry_options=dict(attempts=1)))
         return RouterProvider(GeminiRouterAdapter(client), external_provider=True, mode=mode,
-                              security_adapter=GeminiRouterAdapter(client, purpose="security"))
+                              security_adapter=GeminiRouterAdapter(security_client, purpose="security"))
     key = os.environ.get("DEEPSEEK_API_KEY", "").strip()
     adapter = DeepSeekProviderAdapter(_DeepSeekJSONClient(key), model_id=CONFIG["model_id"],
                                     json_output=True) if key else None
