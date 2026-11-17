@@ -21,13 +21,16 @@ from tests.integration.test_orchestration_product import (
 Q3 = ("Which plan replaced Meridian A, who owns it, who is that owner's direct leader, "
       "and when did the replacement take effect?")
 LEAD = "Meridian A"
+SUPPLIER_Q3 = ("Why did Launch replace Meridian A with Cobalt B? Identify the previous supplier, the replacement "
+               "supplier, and the documented reason. Cite the original meeting evidence.")
 
 
 class ScriptedRouter:
     """Replies like the router contract asks for an investigation question that names an unknown object."""
 
-    def __init__(self, *, bind=False, intent="INVESTIGATION", leads=(LEAD,)):
+    def __init__(self, *, bind=False, intent="INVESTIGATION", leads=(LEAD,), mentions=None):
         self.bind, self.intent, self.leads, self.requests = bind, intent, tuple(leads), []
+        self.mentions = None if mentions is None else list(mentions)
 
     def complete(self, request):
         self.requests.append(request)
@@ -35,7 +38,8 @@ class ScriptedRouter:
         ids = [item["id"] for item in data["candidates"]][:1] if self.bind else []
         reply = dict(schema_version="router/v5", decision="ROUTE" if ids else "CLARIFY", intent=self.intent,
             domain="DECISION", operation="READ", candidate_ids=ids, mentions=["Launch"] if ids else [],
-            unresolved_names=list(self.leads), entity_mentions=list(self.leads) + (["Launch"] if ids else []),
+            unresolved_names=list(self.leads), entity_mentions=self.mentions if self.mentions is not None
+            else list(self.leads) + (["Launch"] if ids else []),
             time_text="", time_role="NONE", reason_code="NONE" if ids else "ENTITY_NOT_FOUND")
         return ModelResponse(action=ModelAction.final(json.dumps(reply)))
 
@@ -82,6 +86,27 @@ def test_original_q3_runs_on_the_graph_with_the_unknown_entity_as_a_lead(make_en
     assert LEAD not in json.dumps(context["confirmed_scope"])
     supervisor = json.loads(world.supervisor_requests[0].user_input.split("context=", 1)[1])
     assert supervisor["entity_leads"] == [LEAD] and LEAD not in json.dumps(supervisor["confirmed_scope"])
+
+
+def test_original_supplier_q3_runs_on_the_graph_and_answers_from_the_meeting_source(make_env):
+    # Routing as the real router returned it: ROUTE / INVESTIGATION / c0 (Launch uses supplier) with the
+    # unknown historical entity only in unresolved_names. The old build ended in NEEDS_SCOPE / ENTITY_NOT_FOUND.
+    world = World([delegation("answer_single")], {SUPPLIER_Q3: (SOURCE_REASON, LEAD, "ok")})
+    env = make_env(world)
+    router = ScriptedRouter(bind=True, mentions=["Launch", "Meridian A", "Cobalt B"])
+    started, final = drive(env, ask_service(env, router, "llm_first"), SUPPLIER_Q3)
+    assert started["router"]["decision"] == "ROUTE" and started["error"] is None
+    assert started["router"]["entity_leads"] == [LEAD] and final["status"] == "COMPLETED"
+    assert final["parallel_investigation"]["status"] == "COMPLETE"
+    answer, evidence = assert_cited(final)
+    assert any("Launch replaced Meridian A with Cobalt B because" in item["quote"] for item in evidence.values())
+    assert {item["source_id"] for item in evidence.values()} == {env.source_ids[SOURCE_REASON]}
+    state = trace_of(env, final["agent_run_id"])
+    assert state["entity_leads"] == [LEAD] and LEAD not in json.dumps(state["confirmed_scope"])
+    assert state["confirmed_scope"]["workspace_id"] == env.workspace_id
+    assert (state["confirmed_scope"]["subject"], state["confirmed_scope"]["relation"]) == ("Launch", "uses supplier")
+    context = worker_context(world, SUPPLIER_Q3)
+    assert context["entity_leads_unverified"] == [LEAD] and LEAD not in json.dumps(context["confirmed_scope"])
 
 
 @pytest.mark.parametrize("mode", ["llm_first", "cascade"])

@@ -445,3 +445,77 @@ def test_approved_plan_records_the_reviewer_as_self_asserted(tmp_path):
     orchestrator.start(GOAL)
     result = orchestrator.resume(dict(approved=True, reviewer_id="anyone", reason="ok"))
     assert result["approved_decisions"][0]["reviewer_identity"] == "self_asserted"
+
+
+def _provider_threads():
+    return [t for t in threading.enumerate() if t.name.startswith("task-provider-") and t.is_alive()]
+
+
+def test_worker_session_is_closed_after_a_normal_run_and_leaves_no_provider_thread(tmp_path):
+    from linkloom.orchestration import worker as worker_module
+    world = World([delegation("answer_single")], TASKS)
+    _, deps = build(tmp_path, world)
+    closed = []
+    real = worker_module.close_session
+    worker_module.close_session = lambda session, *a, **k: closed.append(real(session, *a, **k)) or closed[-1]
+    try:
+        receipt = worker_module._run(deps, dict(id="t", description=Q_SUCC, epoch=0, attempt=1), Q_SUCC)
+    finally:
+        worker_module.close_session = real
+    assert receipt["failure"] is None and receipt["run_status"]["status"] == "completed"
+    assert closed == [True] and _provider_threads() == []
+
+
+def test_a_timed_out_provider_call_is_uncertain_and_its_session_stops_accepting_work(tmp_path):
+    from dataclasses import replace
+    from linkloom.orchestration import worker as worker_module
+    release = threading.Event()
+
+    class Hang:
+        def complete(self, request):
+            release.wait(timeout=20)
+            return ModelResponse(error=ModelProviderError("MODEL_UNAVAILABLE", "unavailable_model", "late",
+                                                          outcome="known_failure"))
+    world = World([], {})
+    limits = OrchestrationLimits.split(TOTAL, max_tasks=4, max_rounds=2, max_concurrency=1)
+    limits = replace(limits, per_task=replace(limits.per_task, request_timeout_seconds=0.2))
+    _, deps = build(tmp_path, world, limits=limits)
+    deps.model_factory = lambda text: Hang()
+    try:
+        receipt = worker_module._run(deps, dict(id="t", description=Q_SUCC, epoch=0, attempt=1), Q_SUCC)
+        assert receipt["failure"] == "PROVIDER_TIMEOUT_UNCERTAIN"  # the in-flight outcome is never guessed
+        budget = json.loads((worker_module.attempt_dir(deps, dict(id="t", epoch=0, attempt=1)) / "budget.json")
+                            .read_text(encoding="utf-8"))
+        assert budget["attempts"][0]["outcome"] == "UNCERTAIN" and budget["failure"] == "PROVIDER_TIMEOUT_UNCERTAIN"
+        assert len(_provider_threads()) == 1  # still blocked inside the model, but owned and not accepting more
+    finally:
+        release.set()
+    for thread in _provider_threads():
+        thread.join(5)
+    assert _provider_threads() == []
+    # a replay of this attempt sends nothing again
+    assert worker_module.paid_without_receipt(worker_module.attempt_dir(deps, dict(id="t", epoch=0, attempt=1)))
+
+
+def test_session_is_closed_when_the_run_is_cancelled_by_a_base_exception(tmp_path):
+    from linkloom.orchestration import worker as worker_module
+    world = World([], TASKS)
+    world.crash_once.add(Q_SUCC)
+    _, deps = build(tmp_path, world)
+    seen = []
+    real = worker_module.TaskProviderSession
+
+    class Spy(real):
+        def __init__(self, *args):
+            super().__init__(*args)
+            seen.append(self)
+    worker_module.TaskProviderSession = Spy
+    try:
+        with pytest.raises(Crash):
+            worker_module._run(deps, dict(id="t", description=Q_SUCC, epoch=0, attempt=1), Q_SUCC)
+    finally:
+        worker_module.TaskProviderSession = real
+    from linkloom.ui.lifecycle import BackgroundWorkStopped
+    assert len(seen) == 1 and seen[0].pending_task_ids() == ()
+    with pytest.raises(BackgroundWorkStopped):  # closed: no call can start afterwards
+        seen[0]._calls.operation("late").__enter__()

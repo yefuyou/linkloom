@@ -38,7 +38,8 @@ from linkloom.orchestration.supervisor import (
     ANSWER_SINGLE, DELEGATE, STOP, DelegationRejected, accept_delegation, delegation_request, single_task,
     tool_arguments,
 )
-from linkloom.orchestration.worker import HARD_FAILURES, WorkerDeps, build_worker_graph, paid_without_receipt
+from linkloom.orchestration.worker import (
+    HARD_FAILURES, WorkerDeps, build_worker_graph, close_session, paid_without_receipt)
 from linkloom.ui.branch_synthesis import merge_evidence, synthesize_reviewed
 from linkloom.ui.task_provider import TaskProviderSession
 
@@ -108,6 +109,8 @@ def build_graph(deps: WorkerDeps, checkpointer):
             saved = dict(payload=None, error=str(exc))
         except Exception:
             saved = dict(payload=None, error='SUPERVISOR_FAILED')
+        finally:
+            close_session(session)
         saved['failure'] = session.failure
         write_json(root / 'proposal.json', saved)
         return saved

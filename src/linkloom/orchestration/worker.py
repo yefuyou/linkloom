@@ -26,6 +26,7 @@ from linkloom.runtime.graph import RuntimeEngine
 from linkloom.runtime.models import RunRequest, RunStatus
 from linkloom.ui.backend import project_reviewer
 from linkloom.ui.projection import collect_observed_evidence, project_run_snapshot
+from linkloom.ui.lifecycle import BackgroundShutdownTimeout
 from linkloom.ui.task_provider import TaskProviderSession
 
 HARD_FAILURES = frozenset({'MODEL_AUTH_REQUIRED', 'MODEL_BILLING_BLOCKED', 'TASK_SOURCE_AUTHORIZATION_CHANGED'})
@@ -142,6 +143,22 @@ def paid_without_receipt(root):
     return isinstance(journal, dict) and (journal.get('requests_reserved') or 0) > 0
 
 
+def close_session(session, timeout=1.0):
+    """Stop the session accepting calls and wait briefly for its in-flight provider thread.
+
+    A call still running after the wait cannot be killed. Its outcome is unknown, so the session is marked
+    PROVIDER_UNCERTAIN (kept if it already carries a failure) and the attempt is never sent again.
+    Returns True when nothing is left running."""
+    try:
+        session.close(timeout)
+        return True
+    except BackgroundShutdownTimeout:
+        if session.failure is None:
+            session.failure = 'PROVIDER_UNCERTAIN'
+        session._save()
+        return False
+
+
 def _run(deps, task, query):
     root = attempt_dir(deps, task)
     if paid_without_receipt(root):
@@ -170,6 +187,8 @@ def _run(deps, task, query):
             cited_answer=True))
     except Exception as exc:
         error = str(exc) if isinstance(exc, ValueError) and str(exc).isupper() else 'WORKER_RUNTIME_FAILED'
+    finally:  # normal end, timeout, cancel or a BaseException: no provider thread is left owned by nobody
+        close_session(session)
     receipt = dict(run_status=status.to_dict() if status else None, failure=session.failure, error=error)
     write_json(root / 'status.json', receipt)
     return receipt
