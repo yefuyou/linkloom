@@ -9,14 +9,19 @@ Limits, stated plainly:
   quote text that does not match its hash, a changed source, a citation outside the merged set,
   an unverified operand branch, forbidden fields). They cannot judge whether a quote supports a
   conclusion. That judgement stays with the per-branch Reviewer.
-* Conflicts are grouped by the structured key conclusion['claim_key'] (subject, relation). Inside a
-  group, the model-written decision values (conclusion['claim_value']) are compared by exact string
-  equality. Two differently worded values with the same meaning are therefore reported as a conflict
-  (conservative). Semantic comparison is out of scope. No winner is chosen.
-* A branch counts as compared only when its key group holds two or more branches. Branches alone in
-  their group, or without a claim_key, are listed under result['conflict_check']['uncompared'], and
-  result['conflict_check']['cross_branch_compared'] is False when no group was compared. COMPLETE
-  means only that every sub question has a verified answer. It does not imply a conflict check.
+* Whether two answers conflict is decided in this order. (1) A trusted structured identity
+  conclusion['claim_key'] (subject, relation, optional as_of) set by the Runtime: different identities
+  are unrelated. (2) Identical answer text cannot contradict itself: AGREE. (3) A task that depends on
+  the other is a later step, not a competing claim: UNRELATED. (4) Everything else is a pending pair.
+  A pending pair needs a meaning judgement, which this module never makes. The Host asks one bounded
+  comparison (orchestration/comparison.py) and passes the validated verdicts in as `comparison`.
+  Without them a pending pair is UNAVAILABLE, never silently "no conflict".
+* A verdict is only AGREE, CONFLICT, UNRELATED, UNCERTAIN or UNAVAILABLE. The comparison adds no fact,
+  no citation and no evidence: conflict sides are built here from the Reviewer-passed answers.
+  No winner is chosen.
+* result['conflict_check']['status'] is separate from result['status']. COMPLETE or PARTIAL describes
+  answer completeness only; a real CONFLICT makes it PARTIAL. UNAVAILABLE or UNCERTAIN leaves it unchanged and
+  is reported as verified=False, so a reader is told the conflict check did not run or was inconclusive.
 """
 
 from datetime import datetime, timezone
@@ -27,6 +32,11 @@ from linkloom.tools.tool_policy import P4_TOOL_POLICY_VERSION, ToolCallPolicy, T
 
 FORBIDDEN_FIELDS = frozenset({'gold', 'expected', 'label', 'mutation_approval'})
 _NO_DECISION = ('insufficient_evidence', 'not_found')
+AGREE, CONFLICT, UNRELATED, UNCERTAIN, UNAVAILABLE = 'AGREE', 'CONFLICT', 'UNRELATED', 'UNCERTAIN', 'UNAVAILABLE'
+NOT_APPLICABLE = 'NOT_APPLICABLE'  # fewer than two answers: there is nothing to compare
+VERDICTS = (AGREE, CONFLICT, UNRELATED, UNCERTAIN)  # what a comparison may return; UNAVAILABLE is Host-only
+_SEVERITY = (CONFLICT, UNAVAILABLE, UNCERTAIN, AGREE, UNRELATED)  # overall status: first present wins
+_VERIFIED = frozenset({AGREE, CONFLICT, UNRELATED})
 
 
 def identity_of(item):
@@ -65,22 +75,97 @@ def _status(answers, unknowns, conflicts, rows_count):
     return 'COMPLETE' if len(answers) == rows_count and not unknowns and not conflicts else 'PARTIAL'
 
 
-def _sides(answers):
-    groups = {}
-    for answer in answers:
-        key = answer.get('claim_key')
-        if key:
-            groups.setdefault((key['subject'], key['relation']), []).append(answer)
+def _identity(key):
+    return (key['subject'], key['relation'], key.get('as_of')) if key else None
+
+
+def _claims(rows):
+    """Answers that take part in a comparison: a decision value, in branch-name order."""
+    claims = []
+    for row in sorted(rows, key=_name):
+        conclusion = row.get('conclusion') or {}
+        decision = conclusion.get('decision') or {}
+        if decision.get('value') and decision.get('status') not in _NO_DECISION:
+            claims.append(dict(branch=_name(row), question=conclusion.get('question'),
+                               value=conclusion.get('claim_value') or decision['value'],
+                               identity=_identity(conclusion.get('claim_key'))))
+    return claims
+
+
+def _closure(dependencies):
+    reach = {}
+
+    def visit(node, seen=()):
+        if node not in reach:
+            found = set()
+            for dep in (dependencies or {}).get(node, ()):
+                if dep not in seen:
+                    found.add(dep)
+                    found |= visit(dep, seen + (node,))
+            reach[node] = found
+        return reach[node]
+    for node in (dependencies or {}):
+        visit(node)
+    return reach
+
+
+def plan_comparison(rows, dependencies=None):
+    """Pure. Split every pair of answers into decided (structure or identical text) and pending (needs meaning).
+
+    dependencies maps a task id to the task ids it depends on (Host-held, never model output)."""
+    claims = _claims(rows)
+    reach = _closure(dependencies)
+    decided, pending = [], []
+    for i, first in enumerate(claims):
+        for second in claims[i + 1:]:
+            a, b = first['branch'], second['branch']
+            if first['identity'] and second['identity'] and first['identity'] != second['identity']:
+                decided.append(dict(a=a, b=b, verdict=UNRELATED, basis='structured_identity'))
+            elif first['value'] == second['value']:
+                decided.append(dict(a=a, b=b, verdict=AGREE, basis='identical_value'))
+            elif b in reach.get(a, ()) or a in reach.get(b, ()):
+                decided.append(dict(a=a, b=b, verdict=UNRELATED, basis='dependent_task'))
+            else:
+                pending.append((a, b))
+    return dict(claims=claims, decided=decided, pending=pending)
+
+
+def resolve_pairs(plan, verdicts=None, reason='COMPARISON_NOT_RUN'):
+    """Decided pairs plus one verdict per pending pair. A pending pair without a verdict is UNAVAILABLE."""
+    pairs = list(plan['decided'])
+    for pair in plan['pending']:
+        found = (verdicts or {}).get(pair)
+        pairs.append(dict(a=pair[0], b=pair[1], verdict=found[0] if found else UNAVAILABLE,
+                          basis=found[1] if found else reason))
+    return sorted(pairs, key=lambda p: (p['a'], p['b']))
+
+
+def _conflicts(answers, pairs):
+    by_branch = {a['branch']: a for a in answers}
     conflicts = []
-    for (subject, relation), group in sorted(groups.items()):
-        if len({answer['claim_value'] for answer in group}) > 1:
-            conflicts.append(dict(subject=subject, relation=relation, sides=[
-                dict(branch=a['branch'], value=a['claim_value'], citations=list(a['citations']))
-                for a in sorted(group, key=lambda a: a['branch'])]))
+    for pair in pairs:
+        if pair['verdict'] != CONFLICT:
+            continue
+        sides = [dict(branch=a['branch'], question=a['question'], value=a['claim_value'] or a['text'],
+                      citations=list(a['citations'])) for a in (by_branch[pair['a']], by_branch[pair['b']])]
+        keys = {_identity(a['claim_key']) for a in (by_branch[pair['a']], by_branch[pair['b']])}
+        key = next(iter(keys)) if len(keys) == 1 else None
+        conflicts.append(dict(subject=key[0] if key else None, relation=key[1] if key else None,
+                              basis=pair['basis'], sides=sides))
     return conflicts
 
 
-def _compose(rows, gaps, unstarted, evidence_index, questions):
+def _conflict_check(answers, pairs):
+    statuses = {pair['verdict'] for pair in pairs}
+    status = NOT_APPLICABLE if len(answers) < 2 else next((s for s in _SEVERITY if s in statuses), UNRELATED)
+    compared = {branch for pair in pairs if pair['verdict'] in (AGREE, CONFLICT) for branch in (pair['a'], pair['b'])}
+    reasons = sorted({pair['basis'] for pair in pairs if pair['verdict'] in (UNAVAILABLE, UNCERTAIN)})
+    return dict(status=status, verified=status in _VERIFIED or status == NOT_APPLICABLE,
+                reasons=reasons, pairs=pairs, cross_branch_compared=bool(compared), compared=sorted(compared),
+                uncompared=sorted(a['branch'] for a in answers if a['branch'] not in compared))
+
+
+def _compose(rows, gaps, unstarted, evidence_index, questions, comparison=None):
     # questions is a list in branch-N order (two-branch caller) or a {task id: question} mapping (N tasks).
     named = dict(questions) if isinstance(questions, dict) else {}
     questions = [] if named else list(questions or ())
@@ -116,17 +201,11 @@ def _compose(rows, gaps, unstarted, evidence_index, questions):
     for i in range(unstarted):
         name = pending[i] if i < len(pending) else None
         unknowns.append(_unknown('BRANCH_UNSTARTED', questions[int(name[7:]) - 1] if name else None, name))
-    conflicts = _sides(answers)
-    groups = {}
-    for a in answers:
-        if a.get('claim_key'):
-            groups.setdefault((a['claim_key']['subject'], a['claim_key']['relation']), set()).add(a['branch'])
-    compared = {branch for group in groups.values() if len(group) > 1 for branch in group}
+    pairs = comparison if comparison is not None else resolve_pairs(plan_comparison(rows))
+    conflicts = _conflicts(answers, pairs)
     return dict(
         status=_status(answers, unknowns, conflicts, len(rows) + len(gaps) + unstarted),
-        answers=answers, conflicts=conflicts, unknowns=unknowns,
-        conflict_check=dict(cross_branch_compared=bool(compared), compared=sorted(compared),
-                            uncompared=sorted(a['branch'] for a in answers if a['branch'] not in compared)))
+        answers=answers, conflicts=conflicts, unknowns=unknowns, conflict_check=_conflict_check(answers, pairs))
 
 
 def _text(draft):
@@ -134,16 +213,20 @@ def _text(draft):
     for a in draft['answers']:
         lines.append(f"{a['question']}: {a['text']} [{', '.join(a['citations'])}]")
     for c in draft['conflicts']:
-        lines.append(f"Conflict on {c['subject']} / {c['relation']}: " + '; '.join(
+        topic = f"{c['subject']} / {c['relation']}" if c['subject'] else 'the same question'
+        lines.append(f"Conflict on {topic}: " + '; '.join(
             f"{s['branch']} says {s['value']} [{', '.join(s['citations'])}]" for s in c['sides']))
+    check = draft['conflict_check']
+    if check['status'] in (UNAVAILABLE, UNCERTAIN):
+        lines.append(f"Conflict check {check['status']}: answers were not verified against each other")
     for u in draft['unknowns']:
         lines.append(f"Unknown: {u['question'] or u['branch'] or 'unassigned question'} ({u['reason']})")
     return '\n'.join(lines)
 
 
-def synthesize(rows, gaps, unstarted, evidence_index, questions=None):
-    """Pure and deterministic: the same input gives an equal result."""
-    draft = _compose(rows, gaps, unstarted, evidence_index, questions)
+def synthesize(rows, gaps, unstarted, evidence_index, questions=None, comparison=None):
+    """Pure and deterministic: the same input gives an equal result. comparison is resolve_pairs output."""
+    draft = _compose(rows, gaps, unstarted, evidence_index, questions, comparison)
     draft['text'] = _text(draft)
     return draft
 
@@ -218,7 +301,7 @@ def _fallback(status, draft, evidence_index, reason):
     for a in (draft['answers'] if draft else ()):
         unknowns.append(_unknown(reason, a['question'], a['branch']))
     result = dict(status=status, answers=[], conflicts=[], unknowns=unknowns, published=False,
-                  fallback_reason=reason,
+                  fallback_reason=reason, conflict_check=draft['conflict_check'] if draft else None,
                   evidence=[{k: v for k, v in item.items() if k in ('id', 'source_id', 'source_version',
                              'line_start', 'line_end', 'quote_sha256')} for item in evidence_index.values()])
     result['text'] = '\n'.join(f"Unknown: {u['question'] or u['branch'] or 'unassigned question'} ({u['reason']})"
@@ -227,11 +310,11 @@ def _fallback(status, draft, evidence_index, reason):
 
 
 def synthesize_reviewed(rows, gaps, unstarted, evidence_index, questions=None, source_check=None,
-                        review_id='aggregate-review'):
+                        review_id='aggregate-review', comparison=None):
     """Synthesize, review the aggregate, and fall back instead of ever raising."""
     draft = None
     try:
-        draft = synthesize(rows, gaps, unstarted, evidence_index, questions)
+        draft = synthesize(rows, gaps, unstarted, evidence_index, questions, comparison)
         reason = _review(draft, rows, evidence_index, source_check, review_id) if draft['answers'] else None
     except Exception:
         reason = 'AGGREGATE_SYNTHESIS_FAILED'

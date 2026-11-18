@@ -40,7 +40,8 @@ from linkloom.orchestration.supervisor import (
 )
 from linkloom.orchestration.worker import (
     HARD_FAILURES, WorkerDeps, build_worker_graph, close_session, paid_without_receipt)
-from linkloom.ui.branch_synthesis import merge_evidence, synthesize_reviewed
+from linkloom.orchestration.comparison import compare_pending
+from linkloom.ui.branch_synthesis import merge_evidence, plan_comparison, resolve_pairs, synthesize_reviewed
 from linkloom.ui.task_provider import TaskProviderSession
 
 
@@ -232,8 +233,12 @@ def build_graph(deps: WorkerDeps, checkpointer):
                 for task_id, task in tasks.items() if task['status'] in (FAILED, SKIPPED)}
         merged = merge_evidence(reviewed)
         questions = {task_id: task['description'] for task_id, task in tasks.items()}
+        # Structure decides first; only pairs it cannot decide cost the one comparison call (a receipt, never resent).
+        plan = plan_comparison(reviewed, {task_id: task['depends_on'] for task_id, task in tasks.items()})
+        verdicts, reason = compare_pending(deps, plan)
+        comparison = resolve_pairs(plan, verdicts, reason or 'COMPARISON_FAILED')
         answer = synthesize_reviewed(reviewed, gaps, 0, merged, questions, source_check=deps.validate,
-                                     review_id=f'{deps.run_id}-aggregate')
+                                     review_id=f'{deps.run_id}-aggregate', comparison=comparison)
         status = answer['status'] if answer.get('published') else 'UNKNOWN'
         return dict(status=status, answer=answer, trace=[dict(event='synthesized', status=status)])
 

@@ -42,14 +42,17 @@ def build_trace(root, run_id, values, outcome):
         receipt = _receipt(directory, root)
         if receipt is not None:
             supervisor.append(dict(receipt, round=directory.name))
-    for item in (*supervisor, *(attempt for task in tasks for attempt in task['attempts'])):
+    comparison = _receipt(root / 'comparison', root)
+    for item in (*supervisor, *([comparison] if comparison else ()), *(attempt for task in tasks for attempt in task['attempts'])):
         for key in _KEYS:
             totals[key] += item[key] or 0
     answer = values.get('answer') or {}
     return dict(run_id=run_id, status=outcome['status'], rounds=values.get('round', 0),
                 dispatches=values.get('dispatches', 0), tasks=tasks, supervisor=supervisor,
-                events=list(values.get('trace') or []), blackboard=blackboard_summary(values),
+                comparison=comparison, events=list(values.get('trace') or []), blackboard=blackboard_summary(values),
                 synthesizer=dict(status=answer.get('status'), published=answer.get('published'),
                                  fallback_reason=answer.get('fallback_reason'),
-                                 cross_branch_compared=(answer.get('conflict_check') or {}).get('cross_branch_compared')),
+                                 cross_branch_compared=(answer.get('conflict_check') or {}).get('cross_branch_compared'),
+                                 conflict_check=(answer.get('conflict_check') or {}).get('status'),
+                                 conflict_check_verified=(answer.get('conflict_check') or {}).get('verified')),
                 totals=totals, **public_scope(values))

@@ -21,6 +21,7 @@ class OrchestrationLimits:
     provider: TaskProviderLimits     # the whole run
     per_task: TaskProviderLimits     # one Worker attempt
     supervisor: TaskProviderLimits   # one Supervisor decision
+    comparison: TaskProviderLimits | None = None  # the one bounded claim comparison; None = not budgeted
     max_tasks: int = 6
     max_concurrency: int = 3
     max_depth: int = 3
@@ -51,15 +52,20 @@ class OrchestrationLimits:
         data = dict(data)
         for key in ('provider', 'per_task', 'supervisor'):
             data[key] = TaskProviderLimits(**data[key])
-        return cls(**{field.name: data[field.name] for field in fields(cls)})
+        data['comparison'] = TaskProviderLimits(**data['comparison']) if data.get('comparison') else None
+        return cls(**{field.name: data[field.name] for field in fields(cls) if field.name in data})
 
     def supervisor_reserve(self):
         """Every Supervisor decision the run may take: the first plan plus max_rounds reviews."""
         return {key: getattr(self.supervisor, key) * (self.max_rounds + 1) for key in _BUDGET_KEYS}
 
+    def comparison_reserve(self):
+        """The single claim-comparison request, held back from the Worker budget so it can always be paid."""
+        return {key: getattr(self.comparison, key) if self.comparison else 0 for key in _BUDGET_KEYS}
+
     def affordable_dispatches(self):
-        """How many Worker attempts the total budget can pay for after the Supervisor reserve."""
-        reserve = self.supervisor_reserve()
+        """How many Worker attempts the total budget can pay for after the Supervisor and comparison reserve."""
+        reserve = {key: value + self.comparison_reserve()[key] for key, value in self.supervisor_reserve().items()}
         counts = [max(0, math.floor((getattr(self.provider, key) - reserve[key]) / getattr(self.per_task, key) + 1e-9))
                   for key in _BUDGET_KEYS]
         return min(counts)
@@ -73,8 +79,9 @@ class OrchestrationLimits:
 
     @classmethod
     def split(cls, provider, *, max_tasks=6, max_rounds=2, **options):
-        """Equal slices of one total budget: max_tasks Workers and max_rounds + 1 Supervisor decisions."""
-        slots = max_tasks + max_rounds + 1
+        """Equal slices of one total budget: max_tasks Workers, max_rounds + 1 Supervisor decisions and, when
+        two or more answers can exist, one claim comparison."""
+        slots = max_tasks + max_rounds + 1 + (1 if max_tasks > 1 else 0)
 
         def share(count):
             data = {key: getattr(provider, key) / slots * count for key in _BUDGET_KEYS}
@@ -83,7 +90,7 @@ class OrchestrationLimits:
                            max_output_tokens=max(1, int(data['max_output_tokens'])),
                            max_cost_usd=data['max_cost_usd'])
         return cls(provider=provider, per_task=share(1), supervisor=share(1),
-                   max_tasks=max_tasks, max_rounds=max_rounds, **options)
+                   comparison=share(1) if max_tasks > 1 else None, max_tasks=max_tasks, max_rounds=max_rounds, **options)
 
     WORKER_MIN_REQUESTS = 4  # search, read, one more evidence turn and the reserved Final turn
     WORKER_MAX_OUTPUT_PER_REQUEST = 4096

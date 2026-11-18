@@ -3,7 +3,7 @@ import hashlib
 
 from linkloom.orchestration.snapshot import ABORTED, CANCELLED, render_snapshot
 from linkloom.orchestration.state import ACCEPTED, FAILED
-from linkloom.ui.branch_synthesis import identity_of, merge_evidence, synthesize_reviewed
+from linkloom.ui.branch_synthesis import identity_of, merge_evidence, plan_comparison, resolve_pairs, synthesize_reviewed
 from linkloom.ui.projection import WorkspacePresentationContext
 
 import pytest
@@ -23,7 +23,7 @@ def _row(name, question, value, item, claim_value=None, subject=None):
         claim_value=claim_value or value))
 
 
-def _values(rows, gaps=None, validate=lambda: None, *, extra_tasks=()):
+def _values(rows, gaps=None, validate=lambda: None, *, extra_tasks=(), verdicts=None):
     """What the graph's synthesize node leaves in the LangGraph state, then rendered for the product."""
     gaps = gaps or {}
     tasks = {row['run']['branch']: dict(id=row['run']['branch'], description=row['conclusion']['question'],
@@ -34,7 +34,9 @@ def _values(rows, gaps=None, validate=lambda: None, *, extra_tasks=()):
                               spawn_reason='test', failure='WORKER_RUNTIME_FAILED', attempt=1, result_ref=None)
     questions = {task_id: task['description'] for task_id, task in tasks.items()}
     merged = merge_evidence(rows)
-    answer = synthesize_reviewed(rows, gaps, 0, merged, questions, source_check=validate, review_id='run-1-aggregate')
+    comparison = resolve_pairs(plan_comparison(rows), verdicts)
+    answer = synthesize_reviewed(rows, gaps, 0, merged, questions, source_check=validate, review_id='run-1-aggregate',
+                                 comparison=comparison)
     return dict(status=answer['status'] if answer.get('published') else 'UNKNOWN', tasks=tasks,
                 rows={row['run']['branch']: row for row in rows}, answer=answer, trace=[], round=1)
 
@@ -74,11 +76,28 @@ def test_gap_branch_gives_partial_with_unknown_question(tmp_path):
 def test_same_plan_question_with_different_decisions_is_a_conflict_without_winner(tmp_path):
     rows = [_row('branch-1', 'Q1?', 'X', _item('s1', 'alpha', 1), subject='Same?'),
             _row('branch-2', 'Q2?', 'Y', _item('s2', 'beta', 2), subject='Same?')]
-    answer = _snapshot(rows)['parallel_investigation']['answer']
+    # the same structured identity does not decide it: the values are model text, so the comparison judges them
+    verdicts = {('branch-1', 'branch-2'): ('CONFLICT', 'semantic_comparison')}
+    outcome = _snapshot(rows, verdicts=verdicts)['parallel_investigation']
+    answer = outcome['answer']
     assert answer['status'] == 'PARTIAL' and answer['published'] is True
     (conflict,) = answer['conflicts']
+    assert (conflict['subject'], conflict['relation']) == ('Same?', 'subgoal_question')
     assert [(s['branch'], s['value']) for s in conflict['sides']] == [('branch-1', 'X'), ('branch-2', 'Y')]
     assert not {'winner', 'chosen'} & set(conflict)
+    assert outcome['conflict_check_status'] == 'CONFLICT' and outcome['conflict_check_verified'] is True
+
+
+def test_unavailable_conflict_check_keeps_the_real_completeness_and_is_disclosed_as_unverified(tmp_path):
+    rows = [_row('branch-1', 'Q1?', 'X', _item('s1', 'alpha', 1), subject='Same?'),
+            _row('branch-2', 'Q2?', 'Y', _item('s2', 'beta', 2), subject='Same?')]
+    outcome = _snapshot(rows)['parallel_investigation']  # no comparison result at all
+    answer = outcome['answer']
+    assert answer['status'] == 'COMPLETE' and answer['conflicts'] == []  # completeness is not rewritten
+    assert outcome['status'] == 'COMPLETE'
+    assert outcome['conflict_check_status'] == 'UNAVAILABLE' and outcome['conflict_check_verified'] is False
+    assert answer['conflict_check']['cross_branch_compared'] is False
+    assert 'UNAVAILABLE' in answer['text']
 
 
 def test_forged_quote_from_mock_investigator_is_rejected_with_fallback(tmp_path):

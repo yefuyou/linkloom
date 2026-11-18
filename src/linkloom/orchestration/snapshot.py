@@ -126,6 +126,10 @@ def render_snapshot(run_id, query, workspace, values, *, running, withheld=None,
         snapshot['evidence'] = [deepcopy(item) for item in merged.values()]
         if answer is not None:
             outcome['answer'] = deepcopy(answer)
+            # Reported next to, never inside, `status`: completeness and the conflict check are separate facts.
+            check = answer.get('conflict_check') or {}
+            outcome['conflict_check_status'] = check.get('status', 'UNAVAILABLE')
+            outcome['conflict_check_verified'] = check.get('verified') is True
     if not running:
         # A viewer of a saved run learns which tasks a resume would run; accepted tasks are reused, not repaid.
         outcome['branch_states'] = task_states(values, running=False)

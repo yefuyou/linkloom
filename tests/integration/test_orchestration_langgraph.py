@@ -93,6 +93,9 @@ class World:
         self.decisions, self.tasks = list(decisions), tasks
         self.barrier, self.barrier_for = barrier, set(barrier_for)
         self.started, self.supervisor_requests, self.workers = [], [], []
+        # Scripted comparator (offline). verdict(a, b, claims) -> AGREE | CONFLICT | UNRELATED | UNCERTAIN, or a
+        # callable result of ("raw", payload) to return a malformed reply, or ("error", None) for a Provider error.
+        self.comparison_requests, self.verdict = [], lambda a, b, claims: "UNRELATED"
         self.crash_once = set()  # a task whose first Worker start dies like a stopped process
         self.lock = threading.Lock()
 
@@ -113,6 +116,8 @@ class World:
                     return ModelResponse(action=ModelAction.tool(
                         ToolCall(f"delegate-{len(world.supervisor_requests)}", "submit_delegation", payload)),
                         usage=ModelUsage(input_tokens=10, output_tokens=10))
+                if request.agent_id == "orchestration-comparator":
+                    return world.compare(request)
                 return self.worker().complete(request)
 
             def worker(self):
@@ -122,6 +127,27 @@ class World:
                     world.workers.append(self._worker)
                 return self._worker
         return Router()
+
+
+def _compare(self, request):
+    with self.lock:
+        self.comparison_requests.append(request)
+    context = json.loads(request.user_input.split("context=", 1)[1])
+    claims = {item["id"]: item for item in context["claims"]}
+    answers = [self.verdict(pair["a"], pair["b"], claims) for pair in context["pairs"]]
+    if any(isinstance(item, tuple) and item[0] == "error" for item in answers):
+        return ModelResponse(error=ModelProviderError("MODEL_UNAVAILABLE", "unavailable_model",
+            "Synthetic Provider failure.", outcome="known_failure"))
+    if any(isinstance(item, tuple) and item[0] == "raw" for item in answers):
+        payload = next(item[1] for item in answers if isinstance(item, tuple) and item[0] == "raw")
+    else:
+        payload = dict(pairs=[dict(a=pair["a"], b=pair["b"], verdict=verdict)
+                              for pair, verdict in zip(context["pairs"], answers)])
+    return ModelResponse(action=ModelAction.tool(ToolCall("compare-1", "submit_comparison", payload)),
+                         usage=ModelUsage(input_tokens=10, output_tokens=10))
+
+
+World.compare = _compare
 
 
 def build(tmp_path, world, *, limits=None, name="run"):
