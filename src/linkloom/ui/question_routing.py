@@ -11,7 +11,6 @@ from linkloom.agents.model_adapter import ModelGenerationOptions, ModelTurnReque
 from linkloom.ui.product import ProductApplicationError, _parse_as_of
 from linkloom.ui.scope_discovery import (
     AUTO_EMBEDDER, SLOT_CLARIFY_CANDIDATES, SLOT_LLM_CANDIDATES, discover_scope, resolve_query_date,
-    entity_check, workspace_snapshot,
 )
 
 SLOT_LLM_MAX_TEXT_CHARS = 2000
@@ -147,7 +146,12 @@ def route_question(query: str, slots: list[dict[str, Any]], resolver: Any, *,
     if not (_STATE_FORM.search(query) or _INVESTIGATION.search(query)) and not (subject or relation) and not (
             candidates and candidates[0].get("history_anchor")):
         selected = None
-    if selected is None and candidates and provider_factory is not None and not discovery["entity_check"]["hard_veto"]:
+    safety = discovery["entity_check"]
+    # With an authorized model the regex intent and entity guesses are clues: the model chooses the slot
+    # and intent from the raw candidates. A rule binding is kept only when the model gives no valid choice.
+    # An explicit name position (hard_veto) is not sent to the selector: the selector reply has no
+    # entity field, so the host could not verify it against the unconfirmed name.
+    if candidates and provider_factory is not None and not (subject or relation) and not safety["hard_veto"]:
         llm_attempted = True
         try:
             choice = _select(provider_factory(), query, candidates, task, date,
@@ -163,7 +167,6 @@ def route_question(query: str, slots: list[dict[str, Any]], resolver: Any, *,
             llm_error = "SELECTION_UNAVAILABLE"
     # Explicit name positions (hard_veto) and role conflicts stay final. A capitalized word the rules
     # cannot place is only a clue: it keeps the rule path from auto-binding, but cannot override the selector.
-    safety = entity_check(query, workspace_snapshot(slots, resolver, workspace_id))
     if safety["role_conflict"] and not (subject or relation):
         selected = None
     if safety["hard_veto"]:

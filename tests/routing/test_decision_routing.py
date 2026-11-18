@@ -164,13 +164,25 @@ def test_top_five_membership_and_top_three_fallback():
     assert len(result["discovery"]["candidates"]) == 3
 
 
-def test_unique_match_and_explicit_rule_do_not_call_optional_model():
+def test_explicit_subject_relation_does_not_call_optional_model():
     provider = Selector(RuntimeError("must not run"))
-    for extra, layer in (({}, "slot_match"), ({"subject": "Juniper", "relation": "uses platform"}, "rule")):
-        result = route_question("Which platform is Juniper using?", [slot()], RESOLVER,
-                                workspace_id="one", provider_factory=lambda: provider, **extra)
-        assert result["route"] == "CURRENT" and result["decided_by"] == layer
+    result = route_question("Which platform is Juniper using?", [slot()], RESOLVER, workspace_id="one",
+                            provider_factory=lambda: provider, subject="Juniper", relation="uses platform")
+    assert result["route"] == "CURRENT" and result["decided_by"] == "rule"
     assert provider.requests == []
+
+
+def test_model_intent_overrides_the_regex_intent_clue_on_a_rule_bound_question():
+    # "changed" makes the rule intent INVESTIGATION; the model reads the negation and says CURRENT.
+    question = "Which platform is Juniper using now, not the one that changed?"
+    assert classify_task(question)["intent"] == "INVESTIGATION"
+    provider = Selector(json.dumps(dict(intent="CURRENT", slot_id=slot()["slot_id"], as_of=None)))
+    result = route_question(question, [slot()], RESOLVER, workspace_id="one", provider_factory=lambda: provider)
+    assert result["route"] == "CURRENT" and result["decided_by"] == "llm" and provider.requests
+    # Without a usable model reply the deterministic rule binding stands.
+    broken = Selector(RuntimeError("down"))
+    result = route_question(question, [slot()], RESOLVER, workspace_id="one", provider_factory=lambda: broken)
+    assert result["scope"]["subject"] == "Juniper" and result["llm_error"] == "SELECTION_UNAVAILABLE"
 
 
 def test_llm_cannot_invent_a_date():
