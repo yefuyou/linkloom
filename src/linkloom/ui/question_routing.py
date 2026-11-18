@@ -163,6 +163,9 @@ def route_question(query: str, slots: list[dict[str, Any]], resolver: Any, *,
                 task["supported"] = True
             else:
                 llm_error = "NO_VALID_SINGLE_SELECTION"
+                if choice and choice["slot_id"] is None:
+                    # A valid abstention is the model's decision: do not execute the rule binding.
+                    selected = None
         except Exception:
             llm_error = "SELECTION_UNAVAILABLE"
     # Explicit name positions (hard_veto) and role conflicts stay final. A capitalized word the rules

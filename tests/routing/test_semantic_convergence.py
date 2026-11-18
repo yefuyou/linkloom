@@ -84,3 +84,20 @@ def test_model_slot_outside_candidates_is_rejected_and_rule_binding_kept():
     provider = reply("not-a-candidate")
     result = route("Which platform is Juniper using now?", [slot()], provider)
     assert result["scope"]["subject"] == "Juniper" and result["decided_by"] != "llm"
+
+
+def test_model_abstention_on_a_rule_bound_question_clarifies():
+    question = "Which platform is Juniper using now?"
+    assert route(question, [slot()])["route"] == "CURRENT"
+    provider = reply(None)
+    result = route(question, [slot()], provider)
+    assert provider.requests and result["route"] == "CLARIFY" and result["scope"] is None
+    assert result["decided_by"] == "fallback" and result["llm_error"] == "NO_VALID_SINGLE_SELECTION"
+
+
+def test_model_as_of_mismatch_is_rejected_and_rule_binding_kept():
+    question = "Which platform was Juniper using on 2024-03-01?"
+    provider = reply(slot()["slot_id"], intent="AS_OF", as_of="2024-03-02")
+    result = route(question, [slot()], provider)
+    assert provider.requests and result["scope"]["subject"] == "Juniper"
+    assert result["decided_by"] != "llm" and result["llm_error"] == "NO_VALID_SINGLE_SELECTION"
