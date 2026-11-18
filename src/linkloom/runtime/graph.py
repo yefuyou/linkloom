@@ -170,7 +170,9 @@ class RuntimeEngine:
         decision_memory_enabled: bool = True,
         task_relation_tools: Any = None,
         context_runtime_config: Any = None,
+        lexical_indexes: Any = None,
     ) -> None:
+        self._lexical_indexes = lexical_indexes
         self.vault_root = Path(vault_root)
         self.index_path = Path(index_path)
         self.checkpoint_dir = Path(checkpoint_dir)
@@ -247,12 +249,12 @@ class RuntimeEngine:
         if task_relations:
             if self._task_relation_tools is None:
                 raise ValidationError("Task relation tools are not configured.")
-            return RuntimeAgentAdapter(self.vault_root, self.index_path,
+            return RuntimeAgentAdapter(self.vault_root, self.index_path, lexical_indexes=self._lexical_indexes,
                 workspace_id=self._task_relation_tools.workspace_id, decision_memory_enabled=False,
                 task_relation_tools=self._task_relation_tools, context_runtime_config=self._context_runtime_config)
 
         if not self.decision_memory_enabled:
-            return RuntimeAgentAdapter(self.vault_root, self.index_path,
+            return RuntimeAgentAdapter(self.vault_root, self.index_path, lexical_indexes=self._lexical_indexes,
                 workspace_id=self._decision_memory_workspace_id, decision_memory_enabled=False)
         try:
             decision_memory_store = self._get_decision_memory_store()
@@ -264,6 +266,7 @@ class RuntimeEngine:
         return RuntimeAgentAdapter(
             self.vault_root,
             self.index_path,
+            lexical_indexes=self._lexical_indexes,
             decision_memory_store=decision_memory_store,
             decision_memory_store_unavailable=decision_memory_store_unavailable,
             workspace_id=self._decision_memory_workspace_id,

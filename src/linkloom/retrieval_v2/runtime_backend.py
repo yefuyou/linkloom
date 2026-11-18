@@ -6,6 +6,8 @@ import importlib.util
 import logging
 import time
 import re
+from contextlib import nullcontext
+from threading import RLock
 from copy import deepcopy
 from collections.abc import Callable
 from dataclasses import dataclass, field
@@ -25,6 +27,7 @@ from linkloom.indexing import (
 from linkloom.retrieval import retrieve_evidence
 from linkloom.schemas import NoteDocument
 
+from .shared_lexical import WorkspaceLexicalIndexes
 from .models import RetrievedEvidence, RetrievalQuery
 from .retrievers import (
     BM25Retriever,
@@ -106,6 +109,7 @@ class RuntimeRetrievalBackend:
         index_update_coordinator: IndexUpdateCoordinator | None = None,
         index_version: int = 2,
         reranker: Reranker | None = None,
+        lexical_indexes: WorkspaceLexicalIndexes | None = None,
     ) -> None:
         if not workspace_id.strip():
             raise ValueError("workspace_id must not be empty")
@@ -113,6 +117,9 @@ class RuntimeRetrievalBackend:
             raise ValueError("document_provider must be callable")
         if index_version <= 0:
             raise ValueError("index_version must be positive")
+        self._search_lock = RLock()
+        self._lexical_indexes = lexical_indexes if index_update_coordinator is None else None
+        self._shared_lexical_state = None
         self.workspace_id = workspace_id
         self.document_provider = document_provider
         self.requested_mode = RetrievalMode.parse(mode)
@@ -169,7 +176,17 @@ class RuntimeRetrievalBackend:
         self._vector_index: VectorIndex | None = None
         self._directory_index: DirectoryIndex | None = None
 
-    def search(
+    def search(self, query: str, *, top_k: int, scope_path: str | None = None) -> RuntimeRetrievalResult:
+        access = (self._lexical_indexes.access(self.workspace_id)
+                  if self._lexical_indexes is not None else nullcontext(None))
+        with self._search_lock, access as state:
+            self._shared_lexical_state = state
+            try:
+                return self._search(query, top_k=top_k, scope_path=scope_path)
+            finally:
+                self._shared_lexical_state = None
+
+    def _search(
         self,
         query: str,
         *,
@@ -427,6 +444,13 @@ class RuntimeRetrievalBackend:
             )
             return timings
         if fingerprint == self._fingerprint:
+            # Another run may have aligned the shared index to a different
+            # authorized snapshot since this backend last searched.
+            if (self._lexical_index is not None and self._shared_lexical_state is not None
+                    and self._shared_lexical_state.documents != self._indexed_documents):
+                sync_started = time.perf_counter()
+                self._shared_lexical_state.synchronize(self._indexed_documents)
+                timings["bm25_index_build_ms"] += (time.perf_counter() - sync_started) * 1000.0
             timings["index_setup_total_ms"] = entry_gap_ms + (
                 time.perf_counter() - started
             ) * 1000.0
@@ -478,8 +502,12 @@ class RuntimeRetrievalBackend:
             RetrievalMode.DIRECTORY_HYBRID,
         }
         needs_directory = self.mode is RetrievalMode.DIRECTORY_HYBRID
+        if needs_lexical and self._shared_lexical_state is not None:
+            index_started = time.perf_counter()
+            self._lexical_index = self._shared_lexical_state.synchronize(index_documents)
+            timings["bm25_index_build_ms"] += (time.perf_counter() - index_started) * 1000.0
         if self._fingerprint is None:
-            if needs_lexical:
+            if needs_lexical and self._shared_lexical_state is None:
                 self._lexical_index = BM25Index()
                 index_started = time.perf_counter()
                 self._lexical_index.build(index_documents.values())
@@ -511,7 +539,7 @@ class RuntimeRetrievalBackend:
             }
             removed_ids = self._indexed_documents.keys() - index_documents.keys()
             for resource_id in removed_ids:
-                if self._lexical_index is not None:
+                if self._lexical_index is not None and self._shared_lexical_state is None:
                     index_started = time.perf_counter()
                     self._lexical_index.remove(self.workspace_id, resource_id)
                     timings["bm25_index_build_ms"] += (
@@ -527,7 +555,7 @@ class RuntimeRetrievalBackend:
                     ) * 1000.0
             for resource_id in sorted(changed_ids):
                 document = index_documents[resource_id]
-                if self._lexical_index is not None:
+                if self._lexical_index is not None and self._shared_lexical_state is None:
                     index_started = time.perf_counter()
                     self._lexical_index.upsert(document)
                     timings["bm25_index_build_ms"] += (
