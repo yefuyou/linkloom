@@ -338,8 +338,11 @@ def test_e10_a_delegation_naming_a_blocked_workspace_is_replaced_by_the_original
 
 
 @pytest.mark.xfail(strict=True, reason="KNOWN_LIMITATION: the Supervisor-side check for a blocked name is a "
-                   "normalized substring match. A hyphenated, truncated or descriptive reference passes. The Ask "
-                   "router stops these questions earlier; this is the residual gap of the second line of defence.")
+                   "normalized substring match, so a hyphenated, truncated or descriptive reference passes it. "
+                   "This is an early convenience check, not the authorization boundary. The boundary is the "
+                   "Workspace-scoped vault the Worker tools read, the Reviewer source identity check and the "
+                   "accepted-rows-only publication; tests/integration/test_orchestration_workspace_auth.py "
+                   "shows these variants reach no data of another Workspace.")
 @pytest.mark.parametrize("text", ["Who owns Orchid-Labs?", "Who owns Orchid Lab?", "Who owns the Orchid group?"])
 def test_e10_known_limitation_a_reworded_blocked_name_is_not_caught_by_the_supervisor_check(text):
     with pytest.raises(DelegationRejected, match="SUPERVISOR_ENTITY_BLOCKED"):
