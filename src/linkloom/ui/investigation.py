@@ -56,6 +56,9 @@ class ProductInvestigationService:
         task_relation_paths: dict[str, Path] | None = None,
         task_only: bool = False,
     ) -> None:
+        from linkloom.retrieval_v2.shared_lexical import WorkspaceLexicalIndexes
+
+        self._lexical_indexes = WorkspaceLexicalIndexes()
         self.product_app = product_app
         self.model_factory = model_factory
         self.task_models = task_models
@@ -135,6 +138,7 @@ class ProductInvestigationService:
             temporary_roots = tuple(self._temporary_roots)
         for root in temporary_roots:
             root.cleanup()
+        self._lexical_indexes.clear()
 
     def start(
         self, query: str, workspace_id: str, *,
@@ -304,6 +308,7 @@ class ProductInvestigationService:
                 from linkloom.ui.graph_investigation import bind_graph_fallback
                 model = bind_graph_fallback(model, 'legacy-runtime')
             engine = RuntimeEngine(
+                lexical_indexes=self._lexical_indexes,
                 vault_root=vault,
                 index_path=index,
                 checkpoint_dir=root / "runtime",
