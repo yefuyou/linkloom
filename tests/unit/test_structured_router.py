@@ -8,7 +8,7 @@ import pytest
 from linkloom.agents.model_adapter import ModelAction, ModelResponse, ModelUsage
 from linkloom.agents.providers.deepseek_api import DeepSeekProviderAdapter
 from linkloom.ui.router_context import RouteCandidate, RouterContext, bind_candidate, time_context
-from linkloom.ui.structured_router import CONFIG, RouterInvalid, request_for, route_with_adapter, validate_output
+from linkloom.ui.structured_router import CONFIG, RouterInvalid, normalize_mention, request_for, route_with_adapter, validate_output
 from linkloom.ui.task_provider import TaskProviderLimits, TaskProviderSession, pass_router_reservation
 
 
@@ -19,7 +19,8 @@ def context(query='联调报告现在谁负责', selected=None, *, second=False)
     if second:
         candidates['c1'] = replace(task, identity=('other-confirmed-task',))
     return RouterContext(query, 'local-workspace', '2026-11-05T00:00:00+00:00', options, required,
-                         spans, unresolved, candidates, len(candidates), 'hash', True)
+                         spans, unresolved, candidates, len(candidates), 'hash', True,
+                         catalogue_names=frozenset(map(normalize_mention, ('联调报告', 'Orchid', 'Clover'))))
 
 
 @pytest.mark.parametrize("upstream_timing,expected", [(None, (15, 15)), ((180, 30), (180, 15)),

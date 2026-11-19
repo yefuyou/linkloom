@@ -187,7 +187,8 @@ def rule_date_blocker(date_error, *, has_scope):
 
 
 def rule_needs_router(route, *, blocker=None):
-    return blocker is None and route in {"NO_MATCH", "CLARIFY", "AMBIGUOUS"}
+    # INVESTIGATION is only wording read by the rules; negation or contrast may mean a plain lookup.
+    return blocker is None and route in {"NO_MATCH", "CLARIFY", "AMBIGUOUS", "INVESTIGATION"}
 
 
 def routing_domain(candidate_domain, intent):
@@ -457,7 +458,7 @@ def route_with_adapter(adapter, request, context, record=None):
             offered = {row["id"] for row in route_payload(context)["candidates"]}
             ids = proposal.get("candidate_ids")
             if (checked.time_role == "UNRESOLVED" and names and isinstance(ids, list)
-                    and len(ids) == 1 and ids[0] in offered and not context.missing_names
+                    and len(ids) == 1 and ids[0] in offered
                     and any(normalize_mention(name) in {normalize_mention(anchor)
                             for anchor in context.candidates[ids[0]].anchors} for name in names)
                     and not any(name_missing(name, context.catalogue_names) for name in (*names, *checked.unresolved_names))

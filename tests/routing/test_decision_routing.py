@@ -82,7 +82,28 @@ def test_unknown_or_foreign_explicit_binding_never_borrows_a_known_slot(question
                             workspace_id="one", provider_factory=lambda: provider)
     assert result["route"] == "NO_MATCH"
     assert result["scope"] is None and result["decided_by"] == "fallback"
-    assert provider.requests == []
+    assert result["discovery"]["status"] == "NO_MATCH" and result["discovery"]["scope"] is None
+
+
+@pytest.mark.parametrize("question,unknown", [
+    ("Which platform does Support currently use?", "Support"),
+    ("Which platform does project 456 use?", "project 456"),
+    ("Which platform is Juniper using with Stranger?", "Stranger"),
+    ("陌生项目当前采用哪个平台？", "陌生项目"),
+])
+@pytest.mark.parametrize("mentions", ["unknown", "omitted", "none"])
+def test_a_model_reply_never_binds_a_name_the_catalogue_does_not_know(question, unknown, mentions):
+    # The model may be asked, but whatever it replies, the unknown or other-workspace name ends in NO_MATCH.
+    slots = [slot(), slot("Support", workspace="other")]
+    chosen = dict(intent="CURRENT", slot_id=slots[0]["slot_id"], as_of=None)
+    if mentions == "unknown":
+        chosen["entity_mentions"] = [unknown]
+    elif mentions == "omitted":
+        chosen["entity_mentions"] = ["platform"] if "platform" in question else []
+    provider = Selector(json.dumps(chosen))
+    result = route_question(question, slots, RESOLVER, workspace_id="one", provider_factory=lambda: provider)
+    assert result["route"] == "NO_MATCH" and result["scope"] is None and result["decided_by"] == "fallback"
+    assert result["discovery"]["scope"] is None
 
 
 def test_unrecorded_topic_qualifier_does_not_block_a_named_subject():
@@ -179,10 +200,10 @@ def test_model_intent_overrides_the_regex_intent_clue_on_a_rule_bound_question()
     provider = Selector(json.dumps(dict(intent="CURRENT", slot_id=slot()["slot_id"], as_of=None)))
     result = route_question(question, [slot()], RESOLVER, workspace_id="one", provider_factory=lambda: provider)
     assert result["route"] == "CURRENT" and result["decided_by"] == "llm" and provider.requests
-    # Without a usable model reply the deterministic rule binding stands.
+    # A failed model reply is never read as "the rules were right" when the wording reads as an investigation.
     broken = Selector(RuntimeError("down"))
     result = route_question(question, [slot()], RESOLVER, workspace_id="one", provider_factory=lambda: broken)
-    assert result["scope"]["subject"] == "Juniper" and result["llm_error"] == "SELECTION_UNAVAILABLE"
+    assert result["route"] == "CLARIFY" and result["scope"] is None and result["llm_error"] == "SELECTION_UNAVAILABLE"
 
 
 def test_llm_cannot_invent_a_date():

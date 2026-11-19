@@ -49,10 +49,15 @@ def test_mixed_chinese_english_entity_binds():
     assert result["route"] == "CURRENT" and result["scope"]["subject"] == "Juniper 项目"
 
 
-def test_unknown_and_known_entity_mixed_is_refused_without_model_call():
-    provider = reply("forged")
-    result = route("Which platform is Juniper using with Stranger?", [slot()], provider)
-    assert result["route"] == "NO_MATCH" and result["scope"] is None and provider.requests == []
+def test_unknown_and_known_entity_mixed_is_refused():
+    result = route("Which platform is Juniper using with Stranger?", [slot()], reply("forged"))
+    assert result["route"] == "NO_MATCH" and result["scope"] is None
+    # A model reply that picks the known slot, whether it lists the unknown name or not, still ends NO_MATCH.
+    for mentions in (["Juniper", "Stranger"], ["Juniper"], []):
+        chosen = Selector(json.dumps(dict(intent="CURRENT", slot_id=slot()["slot_id"], as_of=None,
+                                          entity_mentions=mentions)))
+        result = route("Which platform is Juniper using with Stranger?", [slot()], chosen)
+        assert result["route"] == "NO_MATCH" and result["scope"] is None and result["decided_by"] == "fallback"
 
 
 def test_ambiguous_candidates_clarify_and_never_guess():
@@ -65,7 +70,13 @@ def test_cross_workspace_subject_is_never_bound():
     foreign = slot("Support", workspace="other")
     provider = reply(foreign["slot_id"])
     result = route("Which platform does Support currently use?", [slot(), foreign], provider)
-    assert result["route"] == "NO_MATCH" and result["scope"] is None and provider.requests == []
+    assert result["route"] == "NO_MATCH" and result["scope"] is None
+    # The other workspace's slot is not even a candidate, so a reply naming it cannot bind.
+    assert foreign["slot_id"] not in {item["slot_id"] for item in result["discovery"]["candidates"]}
+    chosen = Selector(json.dumps(dict(intent="CURRENT", slot_id=slot()["slot_id"], as_of=None,
+                                      entity_mentions=["platform"])))
+    result = route("Which platform does Support currently use?", [slot(), foreign], chosen)
+    assert result["route"] == "NO_MATCH" and result["scope"] is None
 
 
 def test_without_router_model_the_rule_outcome_is_unchanged():
@@ -86,18 +97,27 @@ def test_model_slot_outside_candidates_is_rejected_and_rule_binding_kept():
     assert result["scope"]["subject"] == "Juniper" and result["decided_by"] != "llm"
 
 
-def test_model_abstention_on_a_rule_bound_question_clarifies():
-    question = "Which platform is Juniper using now?"
-    assert route(question, [slot()])["route"] == "CURRENT"
+def test_a_unique_rule_binding_needs_no_model():
+    provider = reply(None)
+    result = route("Which platform is Juniper using now?", [slot()], provider)
+    assert provider.requests == [] and result["route"] == "CURRENT" and result["scope"]["subject"] == "Juniper"
+
+
+def test_model_abstention_on_a_rule_bound_investigation_wording_clarifies():
+    question = "Which platform is Juniper using now, not the one that changed?"
+    assert route(question, [slot()])["route"] == "INVESTIGATION"
     provider = reply(None)
     result = route(question, [slot()], provider)
     assert provider.requests and result["route"] == "CLARIFY" and result["scope"] is None
     assert result["decided_by"] == "fallback" and result["llm_error"] == "NO_VALID_SINGLE_SELECTION"
 
 
-def test_model_as_of_mismatch_is_rejected_and_rule_binding_kept():
-    question = "Which platform was Juniper using on 2024-03-01?"
+def test_model_as_of_mismatch_is_rejected_and_never_changes_the_date():
+    question = "Which platform was Juniper using on 2024-03-01, not the one that changed?"
     provider = reply(slot()["slot_id"], intent="AS_OF", as_of="2024-03-02")
     result = route(question, [slot()], provider)
-    assert provider.requests and result["scope"]["subject"] == "Juniper"
+    assert provider.requests and result["route"] == "CLARIFY" and result["scope"] is None and result["as_of"] is None
     assert result["decided_by"] != "llm" and result["llm_error"] == "NO_VALID_SINGLE_SELECTION"
+    settled = reply(slot()["slot_id"], intent="AS_OF", as_of="2024-03-02")
+    result = route("Which platform was Juniper using on 2024-03-01?", [slot()], settled)
+    assert settled.requests == [] and result["route"] == "AS_OF" and result["as_of"] == "2024-03-01"

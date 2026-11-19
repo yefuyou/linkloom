@@ -68,23 +68,20 @@ def test_tool_schema_asks_the_model_for_entity_mentions():
 
 def test_v6_k02_auxiliary_question_no_longer_invents_a_name():
     ctx = context(K02)
-    # The rule regex reads "anyone" as a project name. In cascade mode that guess no longer stops the request.
-    assert ctx.missing_names == ("anyone",)
-    assert handoff_blocker(ctx) == "ENTITY_NOT_FOUND" and handoff_blocker(ctx, model_entities=True) is None
+    # The rule regex would read "anyone" as a project name. Router mode never consults it: only the model's names count.
+    assert not hasattr(ctx, "missing_names") and handoff_blocker(ctx) is None
     route = model_route(ctx, "绕过代理测试", ["绕过代理测试"], ["绕过代理测试"])
     assert route.entity_mentions == ("绕过代理测试",)
-    admission = admit_route(ctx, route, model_entities=True)
+    admission = admit_route(ctx, route)
     assert admission.executor == "graph" and admission.reason == "NONE"
     assert admission.candidate.kind == "task" and admission.candidate.identity == (TASK.node_id,)
-    # Without the model-entity contract (llm_first mode) the admission is unchanged.
-    assert admit_route(ctx, route).reason == "ENTITY_NOT_FOUND"
 
 
 def test_v6_k14_relative_clause_is_not_a_name():
     ctx = context(K14)
-    assert ctx.missing_names and handoff_blocker(ctx, model_entities=True) is None
+    assert handoff_blocker(ctx) is None
     route = model_route(ctx, "组员A", ["组员A"], ["组员A"], intent="RELATION_MULTIHOP")
-    admission = admit_route(ctx, route, model_entities=True)
+    admission = admit_route(ctx, route)
     assert admission.executor == "graph" and admission.candidate.identity == (MEMBER_A.node_id,)
     assert route.domain == "RELATION" and route.intent == "RELATION_MULTIHOP"
 
@@ -101,7 +98,7 @@ def test_unknown_entity_clarifies_and_never_binds_the_slot_the_model_picked(quer
     # The model picks the only slot with that field or value, but also reports the name it saw.
     route = model_route(ctx, label, mentions, [unknown])
     assert route.decision == "ROUTE" and route.entity_mentions == (unknown,)
-    admission = admit_route(ctx, route, model_entities=True)
+    admission = admit_route(ctx, route)
     assert admission.reason == "ENTITY_NOT_FOUND"
     assert admission.executor is None and admission.candidate is None and admission.as_of is None
 
@@ -115,7 +112,7 @@ def test_unknown_entity_clarifies_and_never_binds_the_slot_the_model_picked(quer
 def test_known_name_or_alias_binds_its_own_slot(query, name, identity):
     ctx = context(query)
     route = model_route(ctx, " · ".join(identity), [name], [name])
-    admission = admit_route(ctx, route, model_entities=True)
+    admission = admit_route(ctx, route)
     assert admission.executor == "decision" and admission.reason == "NONE"
     assert admission.candidate.identity == identity
 
@@ -125,21 +122,34 @@ def test_entity_mention_that_is_not_question_text_is_invalid_and_dropped():
     route = model_route(ctx, "Tamarack · search_engine", ["Tamarack"], ["星砂渡口", "Tamarack", "ＴＡＭＡＲＡＣＫ"])
     # Only text the host finds in the question survives, as the question's own spelling.
     assert route.entity_mentions == ("Tamarack",)
-    assert admit_route(ctx, route, model_entities=True).candidate.identity == ("Tamarack", "search_engine")
+    assert admit_route(ctx, route).candidate.identity == ("Tamarack", "search_engine")
 
 
 def test_value_question_without_an_unknown_entity_still_binds_by_value():
     ctx = context("现在还在用 Quartz 吗？")
     route = model_route(ctx, "Juniper · uses platform", ["Quartz"], [])
     assert route.entity_mentions == ()
-    assert admit_route(ctx, route, model_entities=True).candidate.identity == ("Juniper", "uses platform")
+    assert admit_route(ctx, route).candidate.identity == ("Juniper", "uses platform")
 
 
-def test_reply_without_entity_mentions_keeps_the_host_name_check():
+def test_reply_without_entity_mentions_is_checked_by_the_names_it_located():
+    # A router/v4 reply carries no entity_mentions: the names it located in the question are the checked names.
     ctx = context(K02)
     route = model_route(ctx, "绕过代理测试", ["绕过代理测试"], None)
     assert route.entity_mentions is None
-    assert admit_route(ctx, route, model_entities=True).reason == "ENTITY_NOT_FOUND"
+    assert admit_route(ctx, route).reason == "NONE"
+    unknown = context("项目“星砂渡口”的payment_gateway当前值是什么？")
+    route = model_route(unknown, "银杏 · payment_gateway", ["星砂渡口", "payment_gateway"], None)
+    assert route.entity_mentions is None
+    assert admit_route(unknown, route).reason == "ENTITY_NOT_FOUND"
+
+
+def test_names_the_model_located_are_checked_even_when_its_entity_mentions_omit_them():
+    unknown = context("项目“星砂渡口”的payment_gateway当前值是什么？")
+    route = model_route(unknown, "银杏 · payment_gateway", ["星砂渡口", "payment_gateway"], [])
+    assert route.entity_mentions == ()
+    admission = admit_route(unknown, route)
+    assert admission.reason == "ENTITY_NOT_FOUND" and admission.executor is None and admission.candidate is None
 
 
 @pytest.mark.parametrize("entity_mentions", ["星砂渡口", [1], ["x"] * 9, ["长" * 161]])
@@ -224,7 +234,7 @@ def test_cascade_ask_uses_the_model_entities_end_to_end(tmp_path):
 ])
 def test_generalization_wordings(query, label, mentions, entity_mentions, expected):
     ctx = context(query)
-    admission = admit_route(ctx, model_route(ctx, label, mentions, entity_mentions), model_entities=True)
+    admission = admit_route(ctx, model_route(ctx, label, mentions, entity_mentions))
     if expected == "ENTITY_NOT_FOUND":
         assert admission.reason == expected and admission.executor is None and admission.candidate is None
     else:

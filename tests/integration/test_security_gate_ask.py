@@ -38,6 +38,14 @@ def service(decisions, gate, mode, router=None, **kwargs):
         router_provider=RouterProvider(router, mode=mode, security_adapter=gate, **kwargs), slot_embedder=None)
 
 
+def supplier_router():
+    """A usable Router reply for 'What supplier is Launch currently using?' (llm_first has no rules to lean on)."""
+    def reply(data):
+        supplier = next(c for c in data['candidates'] if 'uses supplier' in c['label'])
+        return output(domain='DECISION', candidate_ids=[supplier['id']], mentions=['supplier'])
+    return ScriptedRouter(reply)
+
+
 @pytest.mark.parametrize('mode', ['cascade', 'llm_first'])
 def test_block_is_before_missing_entity_time_and_candidate_recall(decisions, monkeypatch, mode):
     gate = Gate('SECRET_OR_POLICY_OVERRIDE')
@@ -55,17 +63,19 @@ def test_block_is_before_missing_entity_time_and_candidate_recall(decisions, mon
 
 
 @pytest.mark.parametrize('mode', ['cascade', 'llm_first'])
-def test_allow_preserves_existing_answer_and_router_fallback_classifies_once(decisions, mode):
+def test_allow_preserves_existing_answer_and_classifies_once(decisions, mode):
     gate = Gate()
-    ask = service(decisions, gate, mode)
+    ask = service(decisions, gate, mode, supplier_router())
     query = dict(query='What supplier is Launch currently using?', workspace_id=decisions.app._workspace_id())
-    baseline, code = service(decisions, None, mode).ask(query)
+    baseline, code = service(decisions, None, mode, supplier_router()).ask(query)
     result, status = ask.ask(query)
     assert status == code == 200 and result['status'] == baseline['status'] == 'COMPLETED'
     assert result['conclusions'] == baseline['conclusions'] and result['evidence'] == baseline['evidence']
     assert result.get('router') == baseline.get('router')
     assert result['security_gate']['decision'] == 'ALLOW'
     assert len(gate.requests) == 1
+    if mode == 'llm_first':  # the Router decides alone: one routing call, no rule pass behind it
+        assert result['router']['source'] == 'llm' and result['router']['domain'] == 'DECISION'
     assert len(ask.router_provider.adapter.requests) == (1 if mode == 'llm_first' else 0)
 
 
@@ -115,7 +125,7 @@ def test_any_safety_code_blocks_and_none_allows(decisions, mode, reason):
     blocked, _ = service(decisions, Gate(reason), mode).ask(query)
     assert blocked['router']['decision'] == 'REFUSE' and blocked['error']['code'] == reason
     assert blocked['security_gate']['decision'] == 'BLOCK' and not blocked['evidence']
-    allowed, _ = service(decisions, Gate('NONE'), mode).ask(query)
+    allowed, _ = service(decisions, Gate('NONE'), mode, supplier_router()).ask(query)
     assert allowed['status'] == 'COMPLETED' and allowed['evidence']
     assert allowed['security_gate']['decision'] == 'ALLOW'
 

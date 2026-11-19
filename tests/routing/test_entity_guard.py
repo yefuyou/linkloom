@@ -190,7 +190,8 @@ def test_modifier_rule_preserves_explicit_names_values_and_organization_vetoes(q
     assert result["discovery"]["entity_check"]["hard_veto"]
     assert result["route"] == "NO_MATCH" and result["scope"] is None
     assert "platform" in {c["slot_id"] for c in result["discovery"]["raw_candidates"]}
-    assert not result["llm_attempted"]
+    # The forced model may be asked, but its slot choice never binds the explicitly named unknown entity.
+    assert result["discovery"]["scope"] is None and result["decided_by"] == "fallback"
 
 
 

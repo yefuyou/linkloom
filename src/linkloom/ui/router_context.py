@@ -10,9 +10,9 @@ from linkloom.indexing.models import IndexDocument
 from linkloom.temporal_graph.dates import date_tokens
 from linkloom.temporal_graph.models import digest
 from linkloom.ui.scope_discovery import (
-    RetrievalConfig, _grammar_token, _mentions, _relation_phrases, entity_check, resolve_query_date, retrieve_raw, workspace_snapshot,
+    RetrievalConfig, _mentions, _relation_phrases, resolve_query_date, retrieve_raw, workspace_snapshot,
 )
-from linkloom.ui.structured_router import CONFIG, SAFETY, RouterInvalid, mention_spans, normalize_mention, routing_domain
+from linkloom.ui.structured_router import CONFIG, RouterInvalid, mention_spans, normalize_mention, routing_domain
 
 # Existing date parsing handles timestamps and invalid/relative dates. Mask
 # complete timestamps before lexing meeting-date tokens, so they are not split.
@@ -65,7 +65,6 @@ class RouterContext:
     default_subject: str | None = None
     blocked_entities: tuple[tuple[str, str], ...] = ()
     catalogue_names: frozenset[str] = frozenset()
-    missing_names: tuple[str, ...] = ()
 
     def public(self):
         return dict(question=self.query, workspace_scope="CURRENT_ONLY", query_time=self.query_time,
@@ -283,17 +282,15 @@ def build_context(query, workspace, slots, resolver, *, view, graph_snapshot=Non
                             *slot.get("values", ()), *slot.get("aliases", ()),
                             *_relation_phrases(slot["relation"], resolver))}
     labels.update(anchor for candidate in decision if candidate.status == "unconfirmed" for anchor in candidate.anchors)
+    labels.update(references)  # a first-person workspace word names the workspace's own default subject
     if graph_snapshot:
         labels.update(node.label for node in graph_snapshot.nodes if node.kind != "task_observation")
         labels.update(value for row in graph_snapshot.records for value in
                       (row.get("title"), row.get("project"), *row.get("project_aliases", ())) if value)
     names = frozenset(normalize_mention(value) for value in labels if value)
-    detected = entity_check(query, reviewed)
-    missing = tuple(sorted({name for name in detected["unbound_names"]
-                            if not _grammar_token(name) and name_missing(name, names)}))
     return RouterContext(query, workspace, now, options, required, spans, unresolved, catalog,
                          len(ranked), signature, graph_available, default_subject, blocked_entities,
-                         names, missing)
+                         names)
 
 
 def name_missing(name, catalogue_names):
@@ -316,12 +313,10 @@ def value_only_binding(query, scope, slots):
                    for name in (slot["subject"], *slot.get("subject_aliases", ())))
 
 
-def handoff_blocker(context, *, model_entities=False):
-    """model_entities: the model will report the question's entity names; rule-detected names do not gate."""
+def handoff_blocker(context):
+    """Host-only facts that stop a handoff; entity names are checked from the model's own reply at admission."""
     if context.unresolved_time:
         return "TIME_SCOPE_UNRESOLVED"
-    if context.missing_names and not model_entities:
-        return "ENTITY_NOT_FOUND"
     if not context.candidates:
         return "NO_ROUTER_CANDIDATES"
     return None
@@ -383,8 +378,7 @@ def _lead_names(context, route, listed):
 
     Another workspace's name is never a lead (the caller stops on it before this point).
     """
-    # Only names the model reported (each already located literally in the question) become leads. The rule
-    # detector's guesses (context.missing_names) can name ordinary words, so they never become leads.
+    # Only names the model reported (each already located literally in the question) become leads.
     names = tuple(name for name in (*(listed or ()), *route.unresolved_names)
                   if name_missing(name, context.catalogue_names))
     soft = tuple(fact for fact in context.blocked_entities if fact[1] != "WORKSPACE_DENIED")
@@ -422,17 +416,17 @@ def _investigation_handoff(context, route, listed):
     return RouterAdmission("investigation", "NONE", candidate, as_of, leads)
 
 
-def admit_route(context, route, *, model_entities=False, leads_allowed=False):
+def admit_route(context, route, *, leads_allowed=False):
     """Choose only installed read paths after authority and semantic validation.
 
-    model_entities (cascade mode): entity names come from the model's entity_mentions, each already located
-    in the question. One that is not a known name or alias of this workspace is an unknown entity: the
-    request clarifies with ENTITY_NOT_FOUND and no candidate or recorded value may bind in its place.
+    Entity names come from the model's entity_mentions (router/v5) or, for a v4 reply, its located mentions,
+    each already found in the question. One that is not a known name or alias of this workspace is an unknown
+    entity: the request clarifies with ENTITY_NOT_FOUND and no candidate or recorded value may bind in its place.
 
     leads_allowed (Host has the orchestrated investigation): an INVESTIGATION question may carry unconfirmed
     names as leads instead of stopping. Access is still decided first: another workspace's name always stops.
     """
-    listed = route.entity_mentions if model_entities else None
+    listed = route.entity_mentions
     named = (*(text for text, _, _ in route.mentions), *(listed or ()))
     blocker = blocked_entity_reason(context.query, context.blocked_entities, mentions=named)
     from linkloom.ui.ask_admission import router_safety_reason
@@ -450,9 +444,10 @@ def admit_route(context, route, *, model_entities=False, leads_allowed=False):
             return handoff
         if blocker:  # not an investigation: an unconfirmed name still stops the lookup
             return RouterAdmission(None, blocker)
-    missing = (context.missing_names if listed is None else
-               any(name_missing(name, context.catalogue_names) for name in listed))
-    if missing or any(name_missing(name, context.catalogue_names) for name in route.unresolved_names):
+    # Every name the model itself reported is checked: entity_mentions (v5), the mentions it located and its
+    # unresolved_names. A list that omits a name the model located elsewhere cannot hide it.
+    names = (*(listed or ()), *(text for text, start, end in route.mentions if (start, end) not in context.date_spans))
+    if any(name_missing(name, context.catalogue_names) for name in (*names, *route.unresolved_names)):
         return RouterAdmission(None, "ENTITY_NOT_FOUND")
     if any(context.candidates[key].status != "confirmed" for key in route.candidate_ids):
         return RouterAdmission(None, "NO_CONFIRMED_RECORD")

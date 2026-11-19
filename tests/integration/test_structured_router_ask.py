@@ -87,16 +87,21 @@ def decisions(tmp_path):
         demo.stop()
 
 
-def test_bad_output_falls_back_once_and_keeps_legacy_reviewed_answer(decisions):
+def test_bad_output_stops_with_an_explicit_reason_and_never_reruns_the_rules(decisions):
     model = ScriptedRouter(lambda _: 'not JSON')
     ask = UnifiedAskService(decisions.app, lambda:None, graph_service=False, router_provider=RouterProvider(model), slot_embedder=None)
     query = dict(query='What supplier is Launch currently using?',workspace_id=decisions.app._workspace_id())
     off = UnifiedAskService(decisions.app, lambda:None, graph_service=False, slot_embedder=None)
     baseline,code = off.ask(query)
     result,status = ask.ask(query)
+    # Router off is the explicit deterministic rules mode and still answers.
     assert status == code == 200 and baseline['status']=='COMPLETED', baseline
-    assert result['conclusions'] == baseline['conclusions'] and result['evidence'] == baseline['evidence']
-    assert result['router']==dict(source='rule',fallback_reason='ROUTER_SCHEMA_INVALID',attempted=True,
+    # Router on but its reply unusable: the request clarifies once and the rules are never run in its place.
+    assert result['status']=='NEEDS_SCOPE' and result['error']['code']=='MODEL_UNAVAILABLE'
+    assert not result['conclusions'] and not result['evidence']
+    assert result['router']==dict(intent='OTHER',domain='NONE',candidate_ids=[],time_ref_ids=[],time_role='NONE',
+        source='host',decision='CLARIFY',reason_code='MODEL_UNAVAILABLE',reason_class='CAPABILITY',
+        fallback_reason='ROUTER_SCHEMA_INVALID',attempted=True,
         invalid_response_counts=dict(truncated=0, missing_fields=0, invalid_enum=0,
                                      invalid_combination=0, schema_invalid=1))
     assert len(model.requests)==1
@@ -164,8 +169,10 @@ def test_router_external_transport_requires_this_question_consent(decisions):
     ask=UnifiedAskService(decisions.app,lambda:owner,graph_service=False,
                           router_provider=RouterProvider(model,external_provider=True),slot_embedder=None)
     result,status=ask.ask(dict(query='What supplier is Launch currently using?',workspace_id=decisions.app._workspace_id()))
+    # An external provider without this question's consent is refused; it never silently continues model-less.
     assert status==200 and result['router']['fallback_reason']=='PROVIDER_PERMISSION_REQUIRED'
-    assert result['status']=='COMPLETED' and not model.requests
+    assert result['router']['decision']=='REFUSE' and result['router']['reason_code']=='PROVIDER_PERMISSION_REQUIRED'
+    assert result['status']!='COMPLETED' and not result['evidence'] and not result['conclusions'] and not model.requests
 
 
 
@@ -196,10 +203,10 @@ def test_cascade_runs_rules_first_and_does_not_send_unknown_names(decisions):
     assert not model.requests
     result, status = ask.ask(dict(query='What supplier is UnlistedProject using?', workspace_id=workspace))
     assert status == 200 and result['status'] == 'NEEDS_SCOPE' and not result['evidence']
-    assert result['router']['reason_code'] == 'ENTITY_NOT_FOUND'
-    # Entity names are now the model's to report: the question reaches it once. Its reply is unusable,
-    # so the rules' own name check decides and keeps its reason code.
-    assert len(model.requests) == 1
+    # Entity names are the model's to report: the question reaches it once. Its reply is unusable, so Ask
+    # stops with an explicit reason and no rule result, binding or evidence.
+    assert result['error']['code'] == 'MODEL_UNAVAILABLE' and result['router']['reason_code'] == 'MODEL_UNAVAILABLE'
+    assert result['router']['fallback_reason'] == 'ROUTER_SCHEMA_INVALID' and len(model.requests) == 1
 
 
 def quoted(data, time_text, time_role, intent):
@@ -238,11 +245,11 @@ def test_cascade_hands_every_exact_date_to_the_model_which_judges_point_or_range
     assert status == 200 and len(model.requests) == 1 and result['status'] == 'NEEDS_SCOPE'
     assert result['router']['reason_code'] == result['error']['code'] == 'NO_VALID_RECORD_AT_TIME'
     assert result['router']['time_role'] == 'AS_OF' and not result['conclusions']
-    # Model unusable: the rules fallback clarifies and never turns the range into 2026-10-01.
+    # Model unusable: Ask stops and never turns the range into 2026-10-01.
     model, ask = service(lambda _: 'not JSON')
     result, status = ask.ask(dict(query=open_ended, workspace_id=workspace))
-    assert status == 200 and len(model.requests) == 1 and result['router']['source'] == 'rule'
-    assert result['error']['code'] == 'DATE_SCOPE_REQUIRED' and not result['conclusions']
+    assert status == 200 and len(model.requests) == 1 and result['router']['source'] == 'host'
+    assert result['error']['code'] == 'MODEL_UNAVAILABLE' and not result['conclusions'] and not result['scope'].get('as_of')
 
 
 @pytest.mark.parametrize('query,reason', [
@@ -327,5 +334,6 @@ def test_allowed_identity_claim_still_obeys_capability_and_date_checks(decisions
                                  workspace_id=decisions.app._workspace_id()))
     assert status == 200 and result['status'] == 'NEEDS_SCOPE'
     assert result['security_gate']['decision'] == 'ALLOW' and len(gate.requests) == 1
-    assert result['error']['code'] in {'INVALID_AS_OF', 'DECISION_SCOPE_NO_MATCH', 'DECISION_SCOPE_AMBIGUOUS'}
+    # cascade checks the exact date before the model; llm_first asks the model, which here is unusable.
+    assert result['error']['code'] == ('INVALID_AS_OF' if mode == 'cascade' else 'MODEL_UNAVAILABLE')
     assert not result['evidence'] and not result['conclusions']

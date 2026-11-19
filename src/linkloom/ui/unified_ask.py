@@ -221,8 +221,7 @@ class UnifiedAskService:
         validate()
         return result
 
-    def _ask(self, payload: dict[str, Any], *, use_graph: bool = True, use_router: bool = True,
-             allow_selector: bool = True, security=None) -> tuple[dict[str, Any], int]:
+    def _ask(self, payload: dict[str, Any], *, use_graph: bool = True, security=None) -> tuple[dict[str, Any], int]:
         query = payload.get("query")
         if not isinstance(query, str) or not query.strip() or len(query.strip()) > 4000:
             raise ProductApplicationError("INVALID_QUERY", "Enter a question of at most 4000 characters.")
@@ -262,7 +261,7 @@ class UnifiedAskService:
                             and security.get("status") != "COMPLETED"
                             and security.get("fallback_reason") != "PROVIDER_PERMISSION_REQUIRED"):
                         return self._router_stop(run, None, "MODEL_UNAVAILABLE")
-                ordinary_router = (use_router and self.router_provider is not None and not context
+                ordinary_router = (self.router_provider is not None and not context
                                    and not (values["subject"] or values["relation"]))
                 cascade = ordinary_router and self.router_provider.mode == "cascade"
                 if ordinary_router:
@@ -306,11 +305,29 @@ class UnifiedAskService:
                 # investigation go to the Supervisor; it decides whether to delegate. Everything else
                 # below runs exactly as before.
                 service = self.investigation()
+                routing = []
+                def routed_once():
+                    if not routing:
+                        slots, resolver, memory = self._trusted_slots(run.workspace_id), self.app.relation_resolver, None
+                        if self.feedback_memory is not None and not (values["subject"] or values["relation"]):
+                            resolver, memory = self.feedback_memory.snapshot(run.workspace_id, run.query, resolver, slots)
+                        selector = None
+                        if (not cascade and service is not None and service.model_factory is not None
+                                and not getattr(service, "task_only", False)
+                                and (not service.external_provider or payload.get("allow_external_provider") is True)
+                                and not (memory and memory["conflicts"])):
+                            from linkloom.ui.graph_investigation import bind_graph_fallback
+                            selector = lambda: bind_graph_fallback(service.model_factory(run.query), 'legacy-selector')
+                        routing.extend((slots, memory, route_question(run.query, slots, resolver, workspace_id=run.workspace_id,
+                            subject=values["subject"], relation=values["relation"], as_of=payload.get("as_of"),
+                            provider_factory=selector, embedder=self.slot_embedder)))
+                    return routing
                 orchestrated = bool(not context and values["subject"] and values["relation"]
                                     and service is not None and service.orchestration_enabled())
                 eligible = bool(orchestrated and (plan is not None
                                                   or (not cascade and _RELATION_QUESTION.search(run.query))
-                                                  or self._baseline_investigation(run, values, payload)))
+                                                  or (routed_once()[2]["route"] == "INVESTIGATION"
+                                                      and routed_once()[2]["scope"] is not None and routed_once()[2]["supported"])))
                 if eligible:
                     as_of, date_error = resolve_query_date(run.query, payload.get("as_of"))
                     if date_error:
@@ -338,23 +355,7 @@ class UnifiedAskService:
                         if invalid_date:
                             return self._router_stop(run, None, invalid_date)
                     return self._source_request(run, payload, plan)
-                slots = self._trusted_slots(run.workspace_id)
-                resolver, memory = self.app.relation_resolver, None
-                if self.feedback_memory is not None and not (values["subject"] or values["relation"]):
-                    resolver, memory = self.feedback_memory.snapshot(run.workspace_id, run.query, resolver, slots)
-                # This point is deliberately AFTER the unchanged task/relation
-                # dispatch. Selection reuses only the explicitly configured model.
-                service = self.investigation()
-                selector = None
-                if (allow_selector and not cascade and service is not None and service.model_factory is not None
-                        and not getattr(service, "task_only", False)
-                        and (not service.external_provider or payload.get("allow_external_provider") is True)
-                        and not (memory and memory["conflicts"])):
-                    from linkloom.ui.graph_investigation import bind_graph_fallback
-                    selector = lambda: bind_graph_fallback(service.model_factory(run.query), 'legacy-selector')
-                routed = route_question(run.query, slots, resolver, workspace_id=run.workspace_id,
-                    subject=values["subject"], relation=values["relation"],
-                    as_of=payload.get("as_of"), provider_factory=selector, embedder=self.slot_embedder)
+                slots, memory, routed = routed_once()
                 discovery = routed["discovery"]
                 if memory is not None:
                     discovery["memory"] = memory
@@ -410,7 +411,7 @@ class UnifiedAskService:
                     return self._failure(result, "TASK_UNCLASSIFIED", run.route["reason"], status="NEEDS_SCOPE"), 200
                 return self._decision_request(run, result, payload, values, as_of)
         except ProductApplicationError as error:
-            if use_router and self.router_provider is not None:
+            if self.router_provider is not None:
                 reason = {"WORKSPACE_REQUIRED": "WORKSPACE_DENIED", "WORKSPACE_MISMATCH": "WORKSPACE_DENIED",
                           "INVESTIGATION_CONTEXT_CHANGED": "EVIDENCE_INVALID"}.get(error.code)
                 if reason:
@@ -457,21 +458,6 @@ class UnifiedAskService:
                                      "statement": "The reviewed facts do not answer this question."}
             return result, 200
         return self._failure(result, outcome["code"], "The fact answer could not be verified.", category="runtime"), 200
-
-    def _baseline_investigation(self, run, values, payload):
-        """True when the ordinary path (Planner off) would run this question as an investigation.
-
-        It is the routing the ordinary path applies itself, with the same slots and resolver and no model
-        (provider_factory=None), so the entity veto and the date check decide exactly as they do there.
-        """
-        try:
-            routed = route_question(run.query, self._trusted_slots(run.workspace_id), self.app.relation_resolver,
-                                    workspace_id=run.workspace_id, subject=values["subject"],
-                                    relation=values["relation"], as_of=payload.get("as_of"),
-                                    provider_factory=None, embedder=self.slot_embedder)
-        except ProductApplicationError:
-            return False
-        return routed["route"] == "INVESTIGATION" and routed["scope"] is not None and routed["supported"]
 
     def _decision_request(self, run, result, payload, values, as_of, leads=()):
         view = self.app.recover_decision(values["subject"], values["relation"], as_of, _workspace_id=run.workspace_id)
@@ -575,27 +561,14 @@ class UnifiedAskService:
             proposals=tuple(item for item in self.app._supporting_proposals()
                             if item.get("source", {}).get("active")))
 
-    def _legacy_router_fallback(self, run, payload, reason, prior=None):
-        result, status = self._ask(payload, use_graph=False, use_router=False, allow_selector=False)
-        metadata = dict(source='rule', fallback_reason=reason, attempted=prior is not None)
-        rule_reason = (result.get('router') or {}).get('reason_code')
-        legacy_code = (result.get('error') or {}).get('code')
-        if legacy_code == 'INVESTIGATION_SCOPE_DENIED':
-            from linkloom.ui.ask_admission import legacy_denial_reason
-            metadata.update(decision='REFUSE', reason_code=legacy_denial_reason(run.query), reason_class='SAFETY')
-        elif legacy_code == 'EXTERNAL_PROVIDER_PERMISSION_REQUIRED':
-            metadata.update(decision='REFUSE', reason_code='PROVIDER_PERMISSION_REQUIRED', reason_class='SAFETY')
-        elif result.get('status') == 'NEEDS_SCOPE' and (rule_reason or legacy_code):
-            metadata.update(decision='CLARIFY', reason_code=rule_reason or legacy_code, reason_class='CAPABILITY')
-        if prior:
-            metadata['llm'] = prior
-        result['router'] = metadata
-        return result, status
-
     def _route_ordinary(self, run, payload, *, value_only=False):
-        """value_only (cascade): the rules could bind this question by a recorded value alone. Such a
+        """The Structured Router is the only semantic decider for an ordinary question. When it cannot
+        answer (provider, permission, retrieval, no candidates, invalid reply) Ask stops with an explicit
+        reason; rule classification and slot binding are never run again.
+
+        value_only (cascade): the rules could bind this question by a recorded value alone. Such a
         binding needs a valid model reply whose entity_mentions hold no unknown entity; without one the
-        request clarifies and the rules are not asked again."""
+        request clarifies."""
         from linkloom.ui.structured_router import RouterInvalid, request_for, route_with_adapter
         from linkloom.ui.router_context import blocked_entity_reason, handoff_blocker
         from linkloom.ui.task_provider import pass_router_reservation
@@ -606,23 +579,14 @@ class UnifiedAskService:
             return self._router_stop(run, None, safety)
         provider = self.router_provider
         owner = self.investigation()
-        def rules(reason, attempted=False):
-            # The model gave no usable answer. A value-only binding clarifies; otherwise the rules decide,
-            # and in cascade mode their own name check keeps its reason code.
-            missing_names = provider.mode == "cascade" and context is not None and context.missing_names
-            if value_only or missing_names:
-                result, status = self._router_stop(run, None, "ENTITY_NOT_FOUND" if missing_names else "ENTITY_AMBIGUOUS")
-                result['router'].update(fallback_reason=reason, attempted=attempted)
-                return result, status
-            result, status = self._legacy_router_fallback(run, payload, reason)
-            result['router']['attempted'] = attempted
+        def stop(reason, attempted=False, code=None):
+            result, status = self._router_stop(run, None, code or ("ENTITY_AMBIGUOUS" if value_only else "MODEL_UNAVAILABLE"))
+            result['router'].update(fallback_reason=reason, attempted=attempted)
             return result, status
-        context = None
         if provider.adapter is None or provider.external_provider and owner is None:
-            return rules('MODEL_UNAVAILABLE') if value_only else self._legacy_router_fallback(run, payload, 'MODEL_UNAVAILABLE')
+            return stop('MODEL_UNAVAILABLE')
         if provider.external_provider and payload.get('allow_external_provider') is not True:
-            return (rules('PROVIDER_PERMISSION_REQUIRED') if value_only else
-                    self._legacy_router_fallback(run, payload, 'PROVIDER_PERMISSION_REQUIRED'))
+            return stop('PROVIDER_PERMISSION_REQUIRED', code='PROVIDER_PERMISSION_REQUIRED')
         snapshot_hash = source_context(self.app, run.workspace_id)['snapshot_hash']
         def validate_sources():
             self._check_workspace(run.workspace_id)
@@ -637,9 +601,9 @@ class UnifiedAskService:
             if blocker:
                 return self._router_stop(run, None, blocker)
             if provider.mode == "cascade":
-                reason = handoff_blocker(context, model_entities=True)
+                reason = handoff_blocker(context)
                 if reason == "NO_ROUTER_CANDIDATES":
-                    return rules(reason) if value_only else self._legacy_router_fallback(run, payload, reason)
+                    return stop(reason)
                 if reason:
                     return self._router_stop(run, None, reason)
             request = request_for(context)
@@ -666,27 +630,21 @@ class UnifiedAskService:
             validate_sources()
             if str(error) == "EVIDENCE_INVALID":
                 return self._router_stop(run, None, "EVIDENCE_INVALID", http=409)
-            if str(error) == "ROUTER_OUTPUT_TRUNCATED":
-                result, status = self._router_stop(run, None, "MODEL_UNAVAILABLE")
-                result["router"].update(fallback_reason=str(error), attempted=attempted, **reply_record)
-                return result, status
             with pass_router_reservation(session):
-                result, status = rules(str(error), attempted)
+                result, status = stop(str(error), attempted)
                 result["router"].update(reply_record)
                 return result, status
         except (ImportError, OSError, ValueError):
             # Optional local retrieval can fail without any usable catalogue.
             validate_sources()
             with pass_router_reservation(session):
-                if value_only:
-                    return rules('RETRIEVAL_UNAVAILABLE', attempted)
-                return self._legacy_router_fallback(run, payload, 'RETRIEVAL_UNAVAILABLE')
+                return stop('RETRIEVAL_UNAVAILABLE', attempted)
         finally:
             if session is not None:
                 session.record_validation(reply_record)
         if value_only and route.decision == "ROUTE" and not route.entity_mentions:
             with pass_router_reservation(session):
-                return rules('ENTITY_MENTIONS_MISSING', attempted)
+                return stop('ENTITY_MENTIONS_MISSING', attempted)
         with pass_router_reservation(session):
             result, status = self._execute_router(run, payload, context, route)
             result["router"].update(reply_record)
@@ -707,8 +665,7 @@ class UnifiedAskService:
     def _execute_router(self, run, payload, context, route):
         from linkloom.ui.router_context import admit_route
         service = self.investigation()
-        admission = admit_route(context, route, model_entities=self.router_provider.mode == "cascade",
-                                leads_allowed=service is not None and service.orchestration_enabled())
+        admission = admit_route(context, route, leads_allowed=service is not None and service.orchestration_enabled())
         candidate, as_of = admission.candidate, admission.as_of
         if admission.executor is None:
             result, status = self._router_stop(run, route, admission.reason)
@@ -730,7 +687,9 @@ class UnifiedAskService:
             response = self._run_graph_request(replace(run, scope=dict(run.scope, as_of=as_of)), payload)
             if response is not None:
                 return response
-            return self._legacy_router_fallback(run, payload, 'GRAPH_NOT_AVAILABLE', metadata)
+            result, status = self._router_stop(run, route, 'UNSUPPORTED_QUERY')
+            result['router'].update(attempted=True, fallback_reason='GRAPH_NOT_AVAILABLE')
+            return result, status
         if admission.executor == "investigation":
             if candidate is None:
                 return self._lead_request(run, payload, admission.leads)
@@ -776,13 +735,14 @@ class UnifiedAskService:
     def _try_graph_fallback(self, run, payload, graph):
         context = dict(graph_run_id=graph['run_id'], graph_status=graph['graph_status'],
                        reason='GRAPH_INSUFFICIENT_' + graph['graph_status'])
+        if "router" in run.route:
+            # The Router decided this route: the graph result stands, rules never re-bind it.
+            return self._graph_result(run, graph), 200
         # graph_query_status was already counted by the worker; count this attempt once.
         self.graph_service.metrics.record('legacy_fallback', context['reason'])
         # Re-enter the unchanged admission/routing path without a second graph call
         # or a new Provider reservation. The outer graph_request_budget stays active.
-        legacy, status = self._ask(payload, use_graph=False, use_router=False, allow_selector="router" not in run.route)
-        if "router" in run.route:
-            legacy["router"] = deepcopy(run.route["router"])
+        legacy, status = self._ask(payload, use_graph=False)
         if legacy.get('agent_run_id'):
             with self._lock:
                 self._graph_fallbacks[legacy['agent_run_id']] = context

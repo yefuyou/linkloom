@@ -12,7 +12,8 @@ from linkloom.ui.investigation import ProductInvestigationService
 from scripts.gemini_transport.diagnostics import TransportDiagnostics
 from scripts.gemini_transport.product import TransportGeminiProviderAdapter, environment_snapshot
 from tests.smoke.provider_ledger import AppendOnlyProviderLedger, LedgeredGeminiClient, SmokeBlocked
-from tests.integration.unified_ask_fixture import UnifiedAskFixture, FakeTransport as ScriptedModel
+from linkloom.ui.question_routing import classify_task
+from tests.integration.unified_ask_fixture import UnifiedAskFixture, FakeTransport as ScriptedModel, SlotSelectorOnly
 
 MODEL = 'gemini-3.8-flash'
 
@@ -81,14 +82,26 @@ class UnifiedTransportHarness:
         self.scenario, self.broken_sink, self.delay = scenario, broken_sink, delay
         self.new_send_budget_seconds = new_send_budget_seconds
         self.runs = []
+        self.selector_turns = {}
         self.runtime_reservations = 0
         self.lock = Lock()
         self.sdk_constructions = 0
-        self.service = ProductInvestigationService(self.fixture.app,model_factory=self.model_factory,
+        self.service = ProductInvestigationService(self.fixture.app,model_factory=self.ask_model_factory,
             run_mode='GEMINI_38_FLASH_LEDGERED_UNIFIED' if live_key else 'OFFLINE_SDK_FAKE_TRANSPORT',
             max_steps=6,external_provider=bool(live_key))
         self.fixture.service = self.service
         self.fixture.server.investigation_service = self.service
+
+    def ask_model_factory(self, query):
+        """The service's factory. An explicit-scope question whose wording reads as an investigation first
+        asks the model once to decide the intent (the selector); that call gets its own turn and takes no
+        Runtime permission."""
+        with self.lock:
+            if classify_task(query)['intent'] == 'INVESTIGATION' and self.selector_turns.get(query, True):
+                self.selector_turns[query] = False
+                return SlotSelectorOnly()
+            self.selector_turns[query] = True
+        return self.model_factory(query)
 
     def model_factory(self, query):
         with self.lock:
