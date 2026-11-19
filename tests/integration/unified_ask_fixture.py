@@ -423,12 +423,12 @@ def wait_source(base_url: str, source_id: str, *, timeout: float = 10.0) -> dict
 def answer_slot_selector(request: Any) -> ModelResponse:
     """Scripted reply to the slot-selector prompt: INVESTIGATION for the one explicit slot, same date.
 
-    For an explicit Subject/Relation whose wording reads as an investigation, Ask asks the model once to
-    decide only the intent; the model can never change the scope.
+    The Legacy selector contract requires entity_mentions, so the scripted reply carries an empty list.
     """
     prompt = json.loads(request.user_input[request.user_input.index("\n") + 1:])
     return ModelResponse(action=ModelAction.final(json.dumps(
-        {"intent": "INVESTIGATION", "slot_id": prompt["candidates"][0]["slot_id"], "as_of": prompt["as_of"]})))
+        {"intent": "INVESTIGATION", "slot_id": prompt["candidates"][0]["slot_id"], "as_of": prompt["as_of"],
+         "entity_mentions": []})))
 
 
 class SlotSelectorOnly:

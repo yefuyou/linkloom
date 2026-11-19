@@ -186,9 +186,10 @@ def rule_date_blocker(date_error, *, has_scope):
     return "TIME_SCOPE_UNRESOLVED" if has_scope else None
 
 
-def rule_needs_router(route, *, blocker=None):
-    # INVESTIGATION is only wording read by the rules; negation or contrast may mean a plain lookup.
-    return blocker is None and route in {"NO_MATCH", "CLARIFY", "AMBIGUOUS", "INVESTIGATION"}
+def rule_needs_router(route, *, blocker=None, explicit=False):
+    # Rule wording never settles the intent of an ordinary question (history, negation, contrast), so the
+    # Router decides every one. Only an explicit scope with a plain lookup reading stays rule-answered.
+    return blocker is None and (not explicit or route in {"NO_MATCH", "CLARIFY", "AMBIGUOUS", "INVESTIGATION"})
 
 
 def routing_domain(candidate_domain, intent):

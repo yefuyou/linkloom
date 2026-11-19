@@ -312,7 +312,9 @@ class UnifiedAskService:
                         if self.feedback_memory is not None and not (values["subject"] or values["relation"]):
                             resolver, memory = self.feedback_memory.snapshot(run.workspace_id, run.query, resolver, slots)
                         selector = None
-                        if (not cascade and service is not None and service.model_factory is not None
+                        # Orchestrated explicit scope: the Supervisor decides whether to delegate, so no extra
+                        # selector call runs before it (the baseline made none).
+                        if (not cascade and not orchestrated and service is not None and service.model_factory is not None
                                 and not getattr(service, "task_only", False)
                                 and (not service.external_provider or payload.get("allow_external_provider") is True)
                                 and not (memory and memory["conflicts"])):
@@ -375,7 +377,8 @@ class UnifiedAskService:
                     # The rules never decide whether a literal date is one point or the edge of a range.
                     if date_blocker is None and (value_only or has_exact_date(run.query)):
                         return self._route_ordinary(run, payload, value_only=value_only)
-                if cascade and rule_needs_router(routed["route"], blocker=date_blocker):
+                if cascade and rule_needs_router(routed["route"], blocker=date_blocker,
+                                                          explicit=bool(values["subject"] or values["relation"])):
                     return self._route_ordinary(run, payload)
                 if date_blocker:
                     result["router"] = dict(source="host", reason_code=date_blocker, reason_class="CAPABILITY",

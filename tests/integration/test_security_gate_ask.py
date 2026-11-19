@@ -74,9 +74,9 @@ def test_allow_preserves_existing_answer_and_classifies_once(decisions, mode):
     assert result.get('router') == baseline.get('router')
     assert result['security_gate']['decision'] == 'ALLOW'
     assert len(gate.requests) == 1
-    if mode == 'llm_first':  # the Router decides alone: one routing call, no rule pass behind it
-        assert result['router']['source'] == 'llm' and result['router']['domain'] == 'DECISION'
-    assert len(ask.router_provider.adapter.requests) == (1 if mode == 'llm_first' else 0)
+    # The Router decides an ordinary question alone in both modes: one routing call, no rule pass behind it.
+    assert result['router']['source'] == 'llm' and result['router']['domain'] == 'DECISION'
+    assert len(ask.router_provider.adapter.requests) == 1
 
 
 FAILED_GATES = [Gate(text='invalid'), Gate(text='{"decision":"ALLOW","reason_code":"NONE"}'),
@@ -284,7 +284,8 @@ def test_graph_fallback_reentry_does_not_classify_again(decisions, monkeypatch):
     gate = Gate()
     ask = service(decisions, gate, 'cascade')
     records = []
-    ask.graph_service = SimpleNamespace(metrics=SimpleNamespace(record=lambda *args: records.append(args)))
+    ask.graph_service = SimpleNamespace(metrics=SimpleNamespace(record=lambda *args: records.append(args)),
+                                        store_factory=lambda _: SimpleNamespace(load_edges=lambda *args: None))
     original = ask._decision_request
     entered = []
     def decision(run, result, payload, values, as_of):
@@ -294,8 +295,9 @@ def test_graph_fallback_reentry_does_not_classify_again(decisions, monkeypatch):
                 dict(run_id='graph-fallback', graph_status='UNKNOWN'))
         return original(run, result, payload, values, as_of)
     monkeypatch.setattr(ask, '_decision_request', decision)
+    # An explicit scope is the rule path that can re-enter (a Router-decided route keeps its graph result).
     result, _ = ask.ask(dict(query='What supplier is Launch currently using?',
-        workspace_id=decisions.app._workspace_id()))
+        workspace_id=decisions.app._workspace_id(), subject='Launch', relation='uses supplier'))
     assert result['status'] == 'COMPLETED' and len(gate.requests) == 1
     assert result['answer_source'] == 'legacy' and records == [('legacy_fallback', 'GRAPH_INSUFFICIENT_UNKNOWN')]
 
@@ -339,7 +341,7 @@ def test_workspace_source_change_during_classification_cannot_release_results(de
 def test_without_a_configured_security_model_routing_keeps_its_previous_behavior(decisions, external):
     # Only a configured security model can fail closed; an unconfigured gate is not a failure.
     owner = decisions.configure_agent()
-    ask = service(decisions, None, 'cascade', external_provider=external)
+    ask = service(decisions, None, 'cascade', supplier_router(), external_provider=external)
     ask.investigation = lambda: owner
     result, status = ask.ask(dict(query='What supplier is Launch currently using?',
         workspace_id=decisions.app._workspace_id(), allow_external_provider=True))

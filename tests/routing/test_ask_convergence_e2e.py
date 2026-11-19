@@ -95,13 +95,9 @@ def test_current_intent_survives_history_negation_and_contrast_wording(demo, mod
     result, status, model = ask(demo, query, answer(), mode)
     assert status == 200 and result["status"] == "COMPLETED", result
     assert result["scope"]["subject"] == "Launch" and result["evidence"] and len(values(result)) == 1
-    if mode == "llm_first" or model.requests:
-        # The model read the question: its CURRENT decision is final, the wording clue never overrides it.
-        assert result["router"]["source"] == "llm" and result["router"]["intent"] == "CURRENT"
-        assert len(model.requests) == 1
-    else:
-        # cascade: the rules bound one slot as a plain lookup, no paid call.
-        assert result["path"] == "DETERMINISTIC"
+    # The model read the question in both modes: its CURRENT decision is final, no wording clue overrides it.
+    assert result["router"]["source"] == "llm" and result["router"]["intent"] == "CURRENT"
+    assert len(model.requests) == 1
 
 
 @pytest.mark.parametrize("query", [
@@ -264,12 +260,23 @@ def model_free_answer(result):
     return result["status"] == "COMPLETED"
 
 
-def test_cascade_answers_a_plain_rule_binding_without_the_model_and_llm_first_always_asks(demo):
-    query = "What supplier is Launch currently using?"
-    cascade, _, cascade_model = ask(demo, query, lambda _: pytest.fail("cascade asked the model"), "cascade")
-    first, _, first_model = ask(demo, query, answer(), "llm_first")
-    assert cascade["status"] == first["status"] == "COMPLETED" and values(cascade) == values(first)
-    assert not cascade_model.requests and len(first_model.requests) == 1
+@pytest.mark.parametrize("mode", MODES)
+def test_an_ordinary_question_is_decided_by_the_model_in_every_router_mode(demo, mode):
+    # A plain lookup the rules could bind uniquely still goes to the model: the rules never settle intent.
+    result, status, model = ask(demo, "What supplier is Launch currently using?", answer(), mode)
+    assert status == 200 and result["status"] == "COMPLETED" and values(result) and len(model.requests) == 1
+    assert result["router"]["source"] == "llm"
+
+
+@pytest.mark.parametrize("mode", MODES)
+@pytest.mark.parametrize("intent,outcome", [("INVESTIGATION", "AGENT"), ("HISTORY", None)])
+def test_history_question_without_a_keyword_follows_the_model_in_every_router_mode(demo, mode, intent, outcome):
+    # No _INVESTIGATION or _STATE_FORM trigger: only the model can tell this is not a current-value lookup.
+    result, status, model = ask(demo, "How has Launch's supplier evolved over time?", answer(intent=intent), mode)
+    assert len(model.requests) == 1 and result["router"]["source"] == "llm" and result["router"]["intent"] == intent
+    assert not result["conclusions"] or outcome is None
+    if outcome:
+        assert result["path"] == outcome
 
 
 # 12. Cross workspace, write, prompt injection and authorization denial never reach the model or evidence.

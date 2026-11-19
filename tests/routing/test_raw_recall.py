@@ -57,7 +57,7 @@ def test_raw_retrieval_never_invokes_a_parser(monkeypatch):
 def test_ghost_cannot_be_bound_to_launch_even_if_selector_proposes_it(monkeypatch):
     class Forced:
         def complete(self, request):
-            return ModelResponse(action=ModelAction.final('{"intent":"CURRENT","slot_id":"platform","as_of":null}'))
+            return ModelResponse(action=ModelAction.final('{"intent":"CURRENT","slot_id":"platform","as_of":null,"entity_mentions":[]}'))
     query = "Which platform does Ghost use?"
     discovery = scope.discover_scope(query, SLOTS, RESOLVER, workspace_id="one", embedder=None)
     choice = routing._select(Forced(), query, discovery["candidates"], routing.classify_task(query), None)
@@ -147,7 +147,7 @@ def test_unrecorded_value_comparison_across_two_slots_is_not_auto_bound():
 def test_multiword_unknown_names_cannot_be_selected_by_llm(query):
     class Forced:
         def complete(self, request):
-            return ModelResponse(action=ModelAction.final('{"intent":"CURRENT","slot_id":"platform","as_of":null}'))
+            return ModelResponse(action=ModelAction.final('{"intent":"CURRENT","slot_id":"platform","as_of":null,"entity_mentions":[]}'))
     result = routing.route_question(query, SLOTS, RESOLVER, workspace_id="one", embedder=None, provider_factory=Forced)
     assert result["route"] == "NO_MATCH" and result["scope"] is None
     assert result["discovery"]["entity_check"]["hard_veto"]

@@ -193,14 +193,17 @@ def test_authorized_router_has_one_bounded_send_and_verified_decision(decisions)
     assert session.requests==1 and session.limits.max_requests==1 and session.failure is None
     assert session.attempts[0]['stage']=='ask-router' and session.attempts[0]['outcome']=='SUCCEEDED'
 
-def test_cascade_runs_rules_first_and_does_not_send_unknown_names(decisions):
+def test_cascade_asks_the_model_for_ordinary_questions_and_stops_on_an_unusable_reply(decisions):
     model = ScriptedRouter(lambda _: 'not JSON')
     ask = UnifiedAskService(decisions.app, lambda: None, graph_service=False,
                             router_provider=RouterProvider(model, mode='cascade'), slot_embedder=None)
     workspace = decisions.app._workspace_id()
+    # A plain lookup the rules could bind is not answered by them: the model is asked, and its unusable reply
+    # stops Ask with an explicit reason instead of a rule answer.
     direct, status = ask.ask(dict(query='What supplier is Launch currently using?', workspace_id=workspace))
-    assert status == 200 and direct['status'] == 'COMPLETED' and direct['evidence']
-    assert not model.requests
+    assert status == 200 and direct['status'] == 'NEEDS_SCOPE' and not direct['evidence'] and len(model.requests) == 1
+    assert direct['router']['reason_code'] == 'MODEL_UNAVAILABLE'
+    model.requests.clear()
     result, status = ask.ask(dict(query='What supplier is UnlistedProject using?', workspace_id=workspace))
     assert status == 200 and result['status'] == 'NEEDS_SCOPE' and not result['evidence']
     # Entity names are the model's to report: the question reaches it once. Its reply is unusable, so Ask

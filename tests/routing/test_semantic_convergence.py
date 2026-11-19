@@ -7,7 +7,7 @@ from tests.routing.test_decision_routing import RESOLVER, Selector, ambiguous_sl
 
 
 def reply(slot_id=None, intent="CURRENT", as_of=None):
-    return Selector(json.dumps(dict(intent=intent, slot_id=slot_id, as_of=as_of)))
+    return Selector(json.dumps(dict(intent=intent, slot_id=slot_id, as_of=as_of, entity_mentions=[])))
 
 
 def route(question, slots, provider=None, **extra):
@@ -91,16 +91,33 @@ def test_explicit_subject_and_relation_skip_the_model():
     assert result["decided_by"] == "rule" and provider.requests == []
 
 
-def test_model_slot_outside_candidates_is_rejected_and_rule_binding_kept():
+def test_model_slot_outside_candidates_is_rejected_and_never_rebound_by_rules():
     provider = reply("not-a-candidate")
     result = route("Which platform is Juniper using now?", [slot()], provider)
-    assert result["scope"]["subject"] == "Juniper" and result["decided_by"] != "llm"
+    assert provider.requests and result["route"] == "CLARIFY" and result["scope"] is None
+    assert result["decided_by"] == "fallback" and result["llm_error"] == "NO_VALID_SINGLE_SELECTION"
 
 
-def test_a_unique_rule_binding_needs_no_model():
+def test_an_ordinary_question_is_decided_by_the_model_even_when_rules_bind_one_slot():
+    provider = reply(slot()["slot_id"], intent="INVESTIGATION")
+    result = route("How has Juniper's platform evolved over time?", [slot()], provider)
+    assert provider.requests and result["route"] == "INVESTIGATION" and result["decided_by"] == "llm"
+    assert result["scope"]["subject"] == "Juniper"
+
+
+def test_an_explicit_scope_with_a_plain_lookup_needs_no_model():
     provider = reply(None)
-    result = route("Which platform is Juniper using now?", [slot()], provider)
+    result = route("Which platform is Juniper using now?", [slot()], provider,
+                   subject=slot()["subject"], relation=slot()["relation"])
     assert provider.requests == [] and result["route"] == "CURRENT" and result["scope"]["subject"] == "Juniper"
+
+
+def test_a_failed_or_abstaining_selector_keeps_the_explicit_scope_and_the_rule_intent():
+    for provider in (reply(None), Selector("not json")):
+        result = route("Why did Juniper change its platform?", [slot()], provider,
+                       subject=slot()["subject"], relation=slot()["relation"])
+        assert provider.requests and result["route"] == "INVESTIGATION"
+        assert result["scope"] == {"subject": slot()["subject"], "relation": slot()["relation"]}
 
 
 def test_model_abstention_on_a_rule_bound_investigation_wording_clarifies():
@@ -119,5 +136,20 @@ def test_model_as_of_mismatch_is_rejected_and_never_changes_the_date():
     assert provider.requests and result["route"] == "CLARIFY" and result["scope"] is None and result["as_of"] is None
     assert result["decided_by"] != "llm" and result["llm_error"] == "NO_VALID_SINGLE_SELECTION"
     settled = reply(slot()["slot_id"], intent="AS_OF", as_of="2024-03-02")
-    result = route("Which platform was Juniper using on 2024-03-01?", [slot()], settled)
+    result = route("Which platform was Juniper using on 2024-03-01?", [slot()], settled,
+                   subject=slot()["subject"], relation=slot()["relation"])
     assert settled.requests == [] and result["route"] == "AS_OF" and result["as_of"] == "2024-03-01"
+
+
+def test_a_reply_without_entity_mentions_is_invalid_and_never_binds():
+    provider = Selector(json.dumps(dict(intent="CURRENT", slot_id=slot()["slot_id"], as_of=None)))
+    result = route("Which platform is Juniper using now?", [slot()], provider)
+    assert provider.requests and result["route"] == "CLARIFY" and result["scope"] is None
+    assert result["decided_by"] == "fallback" and result["llm_error"] == "NO_VALID_SINGLE_SELECTION"
+
+
+def test_a_valid_model_choice_is_not_overridden_by_the_rule_entity_guess():
+    # "Okay" is a sentence-initial capital word the grammar guess may read as a name; the model located no entity.
+    provider = reply(slot()["slot_id"])
+    result = route("Okay, which platform is Juniper using now?", [slot()], provider)
+    assert result["route"] == "CURRENT" and result["decided_by"] == "llm" and result["scope"]["subject"] == "Juniper"

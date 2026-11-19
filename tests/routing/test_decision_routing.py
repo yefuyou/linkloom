@@ -77,7 +77,7 @@ def test_workspace_and_review_filter_run_before_indexing_and_embedding():
     "Which platform is Juniper using with stranger?",
 ])
 def test_unknown_or_foreign_explicit_binding_never_borrows_a_known_slot(question):
-    provider = Selector('{"intent":"CURRENT","slot_id":"forged","as_of":null}')
+    provider = Selector('{"intent":"CURRENT","slot_id":"forged","as_of":null,"entity_mentions":[]}')
     result = route_question(question, [slot(), slot("Support", workspace="other")], RESOLVER,
                             workspace_id="one", provider_factory=lambda: provider)
     assert result["route"] == "NO_MATCH"
@@ -95,7 +95,7 @@ def test_unknown_or_foreign_explicit_binding_never_borrows_a_known_slot(question
 def test_a_model_reply_never_binds_a_name_the_catalogue_does_not_know(question, unknown, mentions):
     # The model may be asked, but whatever it replies, the unknown or other-workspace name ends in NO_MATCH.
     slots = [slot(), slot("Support", workspace="other")]
-    chosen = dict(intent="CURRENT", slot_id=slots[0]["slot_id"], as_of=None)
+    chosen = dict(intent="CURRENT", slot_id=slots[0]["slot_id"], as_of=None, entity_mentions=[])
     if mentions == "unknown":
         chosen["entity_mentions"] = [unknown]
     elif mentions == "omitted":
@@ -136,7 +136,7 @@ def test_missing_or_unreviewed_provenance_is_not_implicitly_trusted(metadata):
 
 def test_valid_llm_selection_is_one_bounded_choice_over_top_five():
     inputs = ambiguous_slots()
-    provider = Selector(json.dumps({"intent": "CURRENT", "slot_id": inputs[1]["slot_id"], "as_of": None}))
+    provider = Selector(json.dumps({"intent": "CURRENT", "slot_id": inputs[1]["slot_id"], "as_of": None, "entity_mentions": []}))
     result = route_question("Which platform are we using now?", inputs, RESOLVER,
                             workspace_id="one", provider_factory=lambda: provider)
     assert result["route"] == "CURRENT" and result["scope"]["subject"] == "Willow"
@@ -149,14 +149,14 @@ def test_valid_llm_selection_is_one_bounded_choice_over_top_five():
 
 
 @pytest.mark.parametrize("answer", [
-    '{"intent":"CURRENT","slot_id":"not-a-candidate","as_of":null}',
-    '{"intent":"CURRENT","slot_id":123,"as_of":null}',
-    '{"intent":"OTHER","slot_id":null,"as_of":null}',
+    '{"intent":"CURRENT","slot_id":"not-a-candidate","as_of":null,"entity_mentions":[]}',
+    '{"intent":"CURRENT","slot_id":123,"as_of":null,"entity_mentions":[]}',
+    '{"intent":"OTHER","slot_id":null,"as_of":null,"entity_mentions":[]}',
     '{"intent":"CURRENT","slot_id":null,"as_of":null,"extra":1}',
-    '{"intent":"CURRENT","intent":"AS_OF","slot_id":null,"as_of":null}',
+    '{"intent":"CURRENT","intent":"AS_OF","slot_id":null,"as_of":null,"entity_mentions":[]}',
     '{"intent":"CURRENT","slot_id":null,"as_of":"2020-01-01"}',
-    '{"intent":"AS_OF","slot_id":null,"as_of":null}',
-    chr(96) * 3 + 'json\n{"intent":"CURRENT","slot_id":null,"as_of":null}\n' + chr(96) * 3,
+    '{"intent":"AS_OF","slot_id":null,"as_of":null,"entity_mentions":[]}',
+    chr(96) * 3 + 'json\n{"intent":"CURRENT","slot_id":null,"as_of":null,"entity_mentions":[]}\n' + chr(96) * 3,
     '{"intent":"CURRENT","slot_id":null,"as_of":NaN}',
     '["CURRENT",null,null]', "not JSON", TimeoutError("private transport detail"),
 ])
@@ -177,7 +177,7 @@ def test_top_five_membership_and_top_three_fallback():
         assert len(options) == 5
         excluded = next(item["slot_id"] for item in inputs
                         if item["slot_id"] not in {option["slot_id"] for option in options})
-        return json.dumps({"intent": "CURRENT", "slot_id": excluded, "as_of": None})
+        return json.dumps({"intent": "CURRENT", "slot_id": excluded, "as_of": None, "entity_mentions": []})
     provider = Selector(outside)
     result = route_question("Which platform are we using now?", inputs, RESOLVER,
                             workspace_id="one", provider_factory=lambda: provider)
@@ -197,7 +197,7 @@ def test_model_intent_overrides_the_regex_intent_clue_on_a_rule_bound_question()
     # "changed" makes the rule intent INVESTIGATION; the model reads the negation and says CURRENT.
     question = "Which platform is Juniper using now, not the one that changed?"
     assert classify_task(question)["intent"] == "INVESTIGATION"
-    provider = Selector(json.dumps(dict(intent="CURRENT", slot_id=slot()["slot_id"], as_of=None)))
+    provider = Selector(json.dumps(dict(intent="CURRENT", slot_id=slot()["slot_id"], as_of=None, entity_mentions=[])))
     result = route_question(question, [slot()], RESOLVER, workspace_id="one", provider_factory=lambda: provider)
     assert result["route"] == "CURRENT" and result["decided_by"] == "llm" and provider.requests
     # A failed model reply is never read as "the rules were right" when the wording reads as an investigation.
@@ -223,7 +223,7 @@ def test_model_current_intent_is_honored_when_investigation_words_misfire():
     identifier = inputs[0]["slot_id"]
     question = "Which platform are we using now since it changed?"
     assert classify_task(question)["intent"] == "INVESTIGATION"
-    provider = Selector(json.dumps(dict(intent="CURRENT", slot_id=identifier, as_of=None)))
+    provider = Selector(json.dumps(dict(intent="CURRENT", slot_id=identifier, as_of=None, entity_mentions=[])))
     result = route_question(question, inputs, RESOLVER,
                             workspace_id="one", provider_factory=lambda: provider)
     assert result["route"] == "CURRENT" and result["decided_by"] == "llm"
@@ -233,7 +233,7 @@ def test_model_current_intent_is_honored_when_investigation_words_misfire():
 def test_model_investigation_intent_is_honored_for_why_question():
     inputs = ambiguous_slots()
     identifier = inputs[0]["slot_id"]
-    provider = Selector(json.dumps(dict(intent="INVESTIGATION", slot_id=identifier, as_of=None)))
+    provider = Selector(json.dumps(dict(intent="INVESTIGATION", slot_id=identifier, as_of=None, entity_mentions=[])))
     result = route_question("Why did the platform change?", inputs, RESOLVER,
                             workspace_id="one", provider_factory=lambda: provider)
     assert result["route"] == "INVESTIGATION" and result["decided_by"] == "llm"
@@ -327,7 +327,7 @@ def test_external_selector_factory_requires_per_question_authorization(monkeypat
     inputs = ambiguous_slots()
     def factory(query):
         calls.append(query)
-        return Selector(json.dumps({"intent": "CURRENT", "slot_id": inputs[1]["slot_id"], "as_of": None}))
+        return Selector(json.dumps({"intent": "CURRENT", "slot_id": inputs[1]["slot_id"], "as_of": None, "entity_mentions": []}))
     provider = SimpleNamespace(model_factory=factory, external_provider=True, task_only=False)
     app = SimpleNamespace(repository=SimpleNamespace(database_path=":memory:"), _store_lock=RLock(),
         _workspace_id=lambda: "one", relation_resolver=RESOLVER,
