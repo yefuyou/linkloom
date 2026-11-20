@@ -124,7 +124,11 @@ def test_investigation_and_history_intents_follow_the_model(demo, mode):
     assert status == 503 and result["error"]["code"] == "AGENT_NOT_CONFIGURED" and not result["conclusions"]
     result, status, model = ask(demo, query, answer(intent="HISTORY"), mode)
     assert status == 200 and len(model.requests) == 1 and result["router"]["intent"] == "HISTORY"
-    stopped(result, "UNSUPPORTED_QUERY")
+    # B1-5: a decision HISTORY question is answered from the reviewed store, with no answer model call.
+    assert result["path"] == "DETERMINISTIC" and result["status"] == "COMPLETED"
+    assert values(result) == ["Birchline", "Wrenwell"]
+    assert {item["kind"] for item in result["conclusions"]} == {"DECISION_HISTORY_ENTRY"}
+    assert result["execution"]["answer_provider_calls"] == 0
 
 
 @pytest.mark.parametrize("mode", MODES)
