@@ -1,20 +1,45 @@
-"""Opt-in, source-bound meeting task inbox. Review never grants task authority."""
+"""Opt-in, source-bound meeting task inbox backed by formal TaskStore / TaskEvent."""
 from dataclasses import asdict
+from datetime import date
+import hashlib
 import json
 
 from linkloom.semantic_ingestion.artifacts import EvidenceSpan
 from linkloom.semantic_ingestion.meeting_tasks_v2 import digest
 from linkloom.semantic_ingestion.task_extraction import build_meeting_extractor
+from linkloom.tasks.models import EvidenceReference, TaskCandidateInput
+from linkloom.tasks.store import CandidateAlreadyReviewedError, TaskNotFoundError, TaskStore
+
+
+def _line_bounds(text: str, char_start: int, char_end: int) -> tuple[int, int]:
+    line_start = text.count("\n", 0, char_start) + 1
+    tail = max(char_start, char_end - 1)
+    line_end = text.count("\n", 0, tail) + 1
+    return line_start, max(line_start, line_end)
+
+
+def _iso_deadline(value: object) -> str | None:
+    if not isinstance(value, str) or not value.strip():
+        return None
+    text = value.strip()
+    try:
+        if date.fromisoformat(text).isoformat() == text:
+            return text
+    except ValueError:
+        return None
+    return None
 
 
 class MeetingTaskReview:
-    def __init__(self, app, adapter, config, speakers, request_guard):
+    def __init__(self, app, adapter, config, speakers, request_guard, *, task_store: TaskStore | None = None):
         self.app, self.config = app, config
         # Copy trusted Host metadata; source text and HTTP payloads cannot edit it.
         self.speakers = json.loads(json.dumps(speakers))
         self.extractor = build_meeting_extractor(adapter, model_id=adapter.model_id,
             config=config, request_guard=request_guard)
         self.db = app.repository._connection
+        db_path = getattr(app.repository, "database_path", ":memory:")
+        self.task_store = task_store or TaskStore(db_path)
         self.db.execute("""CREATE TABLE IF NOT EXISTS ll_meeting_task_review (
             workspace_id TEXT NOT NULL, candidate_id TEXT NOT NULL, source_id TEXT NOT NULL,
             source_version TEXT NOT NULL, payload TEXT NOT NULL,
@@ -87,24 +112,118 @@ class MeetingTaskReview:
         rows = self.db.execute("SELECT * FROM ll_meeting_task_review WHERE workspace_id=? AND status='PENDING_REVIEW' ORDER BY candidate_id", (workspace_id,)).fetchall()
         return [item for row in rows if (item := self._current(row)) is not None]
 
+    def _to_candidate_input(self, row, candidate: dict, artifact) -> TaskCandidateInput:
+        source_sha256 = hashlib.sha256(artifact.content.encode("utf-8")).hexdigest()
+        evidence_refs: list[EvidenceReference] = []
+        for idx, item in enumerate(candidate.get("evidence", [])):
+            span = EvidenceSpan(**item["span"])
+            quote = artifact.content[span.char_start : span.char_end]
+            line_start, line_end = _line_bounds(artifact.content, span.char_start, span.char_end)
+            evidence_refs.append(
+                EvidenceReference(
+                    workspace_id=row["workspace_id"],
+                    source_id=row["source_id"],
+                    source_version_id=row["source_version"],
+                    quote=quote,
+                    quote_sha256=hashlib.sha256(quote.encode("utf-8")).hexdigest(),
+                    message_id=span.message_id or f"span-{idx}",
+                    line_start=line_start,
+                    line_end=line_end,
+                    char_start=span.char_start,
+                    char_end=span.char_end,
+                    source_sha256=source_sha256,
+                    meeting_time=None,
+                )
+            )
+        owners = candidate.get("owner_ids") or []
+        owner = str(owners[0]).strip() if owners and str(owners[0]).strip() else None
+        raw_deadline = candidate.get("deadline_text") or candidate.get("deadline")
+        if isinstance(raw_deadline, dict):
+            raw_deadline = raw_deadline.get("resolved_at") or raw_deadline.get("raw_text")
+        deadline_text = str(raw_deadline).strip() if isinstance(raw_deadline, str) and raw_deadline.strip() else None
+        deadline = _iso_deadline(deadline_text)
+        title = str(candidate.get("task") or candidate.get("deliverable_key") or row["candidate_id"]).strip()
+        return TaskCandidateInput(
+            candidate_id=row["candidate_id"],
+            workspace_id=row["workspace_id"],
+            title=title,
+            evidence=tuple(evidence_refs),
+            owner=owner,
+            deadline=deadline,
+            deadline_text=deadline_text,
+            source_fingerprint=source_sha256,
+        )
+
     def review(self, workspace_id, candidate_id, payload):
         from linkloom.ui.product import ProductApplicationError
         row = self.db.execute("SELECT * FROM ll_meeting_task_review WHERE workspace_id=? AND candidate_id=?",
                               (workspace_id, candidate_id)).fetchone()
-        if row is None or not self._current(row):
+        current = self._current(row) if row is not None else None
+        if row is None or not current:
             raise ProductApplicationError('MEETING_TASK_STALE', 'Refresh the current source before reviewing this candidate.', status=409)
         action, reviewer, note = payload.get('action'), payload.get('reviewer'), payload.get('note')
-        if (action not in {'CONFIRM', 'REJECT'} or payload.get('source_version') != row['source_version']
+        if (action not in {'CONFIRM', 'CREATE', 'MERGE', 'REJECT'} or payload.get('source_version') != row['source_version']
             or not isinstance(reviewer, str) or not reviewer.strip() or len(reviewer) > 160
             or not isinstance(note, str) or not note.strip() or len(note) > 4096):
             raise ProductApplicationError('INVALID_MEETING_TASK_REVIEW', 'Provide an action, current source version, reviewer and note.')
         if row['status'] != 'PENDING_REVIEW':
             raise ProductApplicationError('MEETING_TASK_ALREADY_REVIEWED', 'This candidate was already reviewed.', status=409)
-        status = 'CONFIRMED_BY_HUMAN' if action == 'CONFIRM' else 'REJECTED_BY_HUMAN'
+
+        source = self.app.repository.get_source(row['workspace_id'], row['source_id'])
+        artifact = self.app._source_artifact(source)
+        candidate_input = self._to_candidate_input(row, current, artifact)
+        target_task_id = payload.get('target_task_id')
+        apply_fields = tuple(payload.get('apply_fields') or ('owner', 'deadline', 'title'))
+
+        try:
+            if action == 'REJECT':
+                self.task_store.reject_candidate(
+                    workspace_id,
+                    candidate_input,
+                    reviewer=reviewer.strip(),
+                    reason=note.strip(),
+                )
+                status = 'REJECTED_BY_HUMAN'
+                result_payload = {'status': status, 'authority': 'REJECTED'}
+            elif action == 'MERGE' or (action == 'CONFIRM' and target_task_id):
+                if not isinstance(target_task_id, str) or not target_task_id.strip():
+                    raise ProductApplicationError('INVALID_MEETING_TASK_REVIEW', 'Provide target_task_id when merging into an existing task.')
+                task = self.task_store.merge_candidate(
+                    workspace_id,
+                    target_task_id.strip(),
+                    candidate_input,
+                    apply_fields=apply_fields,
+                    reviewer=reviewer.strip(),
+                    reason=note.strip(),
+                )
+                status = 'CONFIRMED_BY_HUMAN'
+                result_payload = {'status': status, 'authority': 'CONFIRMED', 'task_id': task.id, 'task': task.to_dict()}
+            else:
+                task = self.task_store.create_from_candidate(
+                    workspace_id,
+                    candidate_input,
+                    reviewer=reviewer.strip(),
+                    reason=note.strip(),
+                )
+                status = 'CONFIRMED_BY_HUMAN'
+                result_payload = {'status': status, 'authority': 'CONFIRMED', 'task_id': task.id, 'task': task.to_dict()}
+        except TaskNotFoundError as exc:
+            raise ProductApplicationError('TASK_NOT_FOUND', str(exc), status=404) from exc
+        except CandidateAlreadyReviewedError as exc:
+            raise ProductApplicationError('MEETING_TASK_ALREADY_REVIEWED', str(exc), status=409) from exc
+        except ValueError as exc:
+            raise ProductApplicationError('INVALID_MEETING_TASK_REVIEW', str(exc), status=400) from exc
+
         self.db.execute("UPDATE ll_meeting_task_review SET status=?,reviewer=?,note=? WHERE workspace_id=? AND candidate_id=?",
             (status, reviewer.strip(), note.strip(), workspace_id, candidate_id))
         self.db.commit()
         count = self.db.execute("SELECT COUNT(*) FROM ll_meeting_task_review WHERE workspace_id=? AND source_id=? AND source_version=? AND status='PENDING_REVIEW'",
             (workspace_id,row['source_id'],row['source_version'])).fetchone()[0]
         self.app.repository.set_review_required_count(workspace_id,row['source_id'],row['source_version'],count)
-        return {'status': status, 'authority': 'UNCONFIRMED'}
+        return result_payload
+
+    def list_formal_tasks(self, workspace_id: str):
+        return [task.to_dict() for task in self.task_store.list_tasks(workspace_id)]
+
+    def get_formal_task_events(self, workspace_id: str, task_id: str):
+        return [event.to_dict() for event in self.task_store.get_events(workspace_id, task_id)]
