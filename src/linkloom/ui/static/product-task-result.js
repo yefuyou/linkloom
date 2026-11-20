@@ -87,6 +87,7 @@ window.renderTaskAnswer = (result, {escapeHtml: esc, t, date, citation, original
             ${o.field_bindings ? `<p class="hint">${t('Model field roles with checked quotes; semantic confirmation is pending.', '以下字段角色为模型解释，原文已核验，语义仍待复核。')}</p><pre>${esc(JSON.stringify(o.field_bindings, null, 2))}</pre>` : ''}</details></article>`;
       }).join('')}</div></section>` : ''}
     ${(view.next_actions || []).length ? `<section class="task-next-actions"><h3>${t('Next steps', '下一步')}</h3>${[...new Set(view.next_actions.map(nextAction))].map(a => `<p>${esc(a)}</p>`).join('')}</section>` : ''}
+    ${window.LinkLoomWorkbench?.traceHtml(result.trace, esc, t) || ''}
     <details class="task-investigation-details ask-technical"><summary>${t('Relationship proposals and investigation details', '展开关系提案与调查详情')} (${proposals.length} / ${steps.length})</summary>
       <h3>${t('Model proposals · not formal relationships', '模型提案 · 尚非正式关系')}</h3>
       ${proposals.map(p => `<article class="ask-evidence"><h4>${esc(label(p.predicate))}</h4>

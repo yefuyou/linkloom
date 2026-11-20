@@ -401,7 +401,7 @@
         const value = field === 'data-merge-field' ? active.dataset.mergeField : active.dataset.field;
         if (field && /^[a-zA-Z_-]+$/.test(value)) focus = {selector: '[' + field + '="' + value + '"]', start: active.selectionStart, end: active.selectionEnd};
       }
-      root.innerHTML = '<div class="tasks-heading"><h1>待办</h1><nav class="tabs" aria-label="待办视图"><button type="button" data-action="tab-candidates"' + (state.view === 'candidates' ? ' aria-current="page"' : '') + '>看板</button><button type="button" data-action="tab-tasks"' + (state.view === 'tasks' ? ' aria-current="page"' : '') + '>按负责人</button></nav></div>' + (state.view === 'candidates' ? boardHtml() : '<div class="layout owner-layout">' + tasksHtml() + (state.detail ? detailHtml() : '<aside class="detail"><h2>任务详情与变化历史</h2><p class="empty">从左侧选择一项任务。</p></aside>') + '</div>');
+      root.innerHTML = '<div class="tasks-heading"><h1>任务演变</h1><nav class="tabs" aria-label="任务视图"><button type="button" data-action="tab-candidates"' + (state.view === 'candidates' ? ' aria-current="page"' : '') + '>看板</button><button type="button" data-action="tab-tasks"' + (state.view === 'tasks' ? ' aria-current="page"' : '') + '>按负责人</button></nav></div>' + (state.view === 'candidates' ? boardHtml() : '<div class="layout owner-layout">' + tasksHtml() + (state.detail ? detailHtml() : '<aside class="detail"><h2>任务详情与变化历史</h2><p class="empty">从左侧选择一项任务。</p></aside>') + '</div>');
       if (waiting && root.querySelectorAll) root.querySelectorAll('button,input,select,textarea').forEach((element) => { element.disabled = true; });
       state.renderedForm = state.form;
       if (!waiting && focus && root.querySelector) {
@@ -544,7 +544,7 @@
       identityButton.onclick = () => { if (!state.busy) getIdentity(true); }; workspacePicker.onchange = () => { changeWorkspace(workspacePicker.value).catch(fail); }; identityLabel();
       try {
         const [workspaces, selected] = await Promise.all([request('/api/workspaces'), request('/api/workspaces/current')]); state.workspaces = workspaces.workspaces || [];
-        const query = new URLSearchParams(loc.search || ''); state.workspace = state.workspaces.find((item) => item.workspace_id === query.get('workspace_id')) || selected.workspace || null;
+        const query = new URLSearchParams(loc.search || ''); if (query.get('view') === 'tasks') state.view = 'tasks'; state.workspace = state.workspaces.find((item) => item.workspace_id === query.get('workspace_id')) || selected.workspace || null;
         workspacePicker.innerHTML = state.workspaces.length ? state.workspaces.map((workspace) => '<option value="' + esc(workspace.workspace_id) + '"' + (state.workspace && workspace.workspace_id === state.workspace.workspace_id ? ' selected' : '') + '>' + esc(workspace.name) + '</option>').join('') : '<option>尚无工作区</option>';
         if (state.workspace) { state.loading = true; render(); await Promise.all([loadCandidates(), loadTasks(), loadCatalog()]); if (query.get('task')) { if (query.get('merge')) state.receipt = {task_id: query.get('task'), merge_id: query.get('merge')}; if (query.get('view') === 'candidates') { setNotice('操作已记录，可查看任务与变化历史。', 'success', '', {task_id: query.get('task'), merge_id: query.get('merge')}); } else { await openTask(query.get('task'), {keepReceipt: true}); } } }
       } catch (error) { fail(error); } finally { state.loading = false; render(); }

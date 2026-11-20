@@ -7,32 +7,52 @@
     <title>LinkLoom — Team Decision Memory</title>
     <link rel="icon" href="data:,">
     <link rel="stylesheet" href="/product.css">
+    <link rel="stylesheet" href="/workbench.css">
   </head>
   <body>
     <a id="skip-content" class="skip-link" href="#main-content">Skip to content</a>
-    <header class="topbar">
-      <a class="brand" href="/tasks" aria-label="LinkLoom home"><span class="brand-mark" aria-hidden="true"></span><span>LinkLoom</span></a>
+    <header class="topbar workbench-header">
+      <a class="brand" href="/#meetings" aria-label="LinkLoom"><span class="brand-mark" aria-hidden="true"></span><span>LinkLoom</span></a>
       <nav class="primary-nav" aria-label="主导航">
-        <a href="/#meetings" data-screen="sources"><span class="nav-label">会议</span></a>
-        <a href="/tasks" class="tasks-nav"><span id="tasks-nav-label" class="nav-label">待办</span></a>
-        <a href="/#decisions" data-screen="decisions"><span class="nav-label">决定</span></a>
-        <a href="/#ask" data-screen="ask"><span class="nav-label">提问</span></a>
+        <a href="/#meetings" data-screen="sources"><span class="nav-label">会议与审核</span></a>
+        <a href="/#decisions" data-screen="decisions"><span class="nav-label">决议与任务演变</span></a>
+        <a href="/#ask" data-screen="ask"><span class="nav-label">Ask 工作台</span></a>
       </nav>
       <div class="workspace-control">
-        <label id="workspace-label" for="workspace-picker">Workspace</label>
-        <select id="workspace-picker" aria-label="Select workspace"></select>
-        <button class="button quiet" id="new-workspace" type="button">New workspace</button>
+        <label id="workspace-label" for="workspace-picker">工作区</label>
+        <select id="workspace-picker" aria-label="选择工作区" disabled><option>正在加载…</option></select>
       </div>
-      <div class="interface-language"><label id="interface-language-label" for="interface-language">Language</label><select id="interface-language"><option value="en">English</option><option value="zh">中文</option></select></div>
-      <div id="provider-state" class="provider-state" role="status">Checking AI availability…</div>
+      <button class="workbench-settings-button" type="button" data-open-settings data-label-en="Settings" data-label-zh="设置">设置</button>
       <span id="review-count" class="sr-only"></span>
     </header>
+    <dialog class="workbench-settings" aria-labelledby="workbench-settings-title">
+      <header><h2 id="workbench-settings-title" data-label-en="Settings" data-label-zh="设置">设置</h2>
+        <form method="dialog"><button class="workbench-settings-button" type="submit" data-label-en="Close" data-label-zh="关闭" autofocus>关闭</button></form>
+      </header>
+      <div class="workbench-settings-group">
+        <h3 data-label-en="Workspace" data-label-zh="工作区">工作区</h3>
+        <p data-workspace-name></p>
+        <div class="actions">
+          <button type="button" class="button quiet" data-focus-workspace data-label-en="Switch workspace" data-label-zh="切换工作区">切换工作区</button>
+          <button class="button quiet" id="new-workspace" type="button">新建工作区</button>
+        </div>
+      </div>
+      <div class="workbench-settings-group">
+        <h3 data-label-en="Glossary" data-label-zh="术语">术语</h3>
+        <a class="button quiet" href="/?settings=glossary#ask" data-open-glossary data-label-en="Manage terminology" data-label-zh="管理术语">管理术语</a>
+      </div>
+      <div class="workbench-settings-group">
+        <div class="interface-language"><label id="interface-language-label" for="interface-language">界面语言</label><select id="interface-language"><option value="en">English</option><option value="zh">中文</option></select></div>
+        <p id="provider-state" class="provider-state" role="status">正在检查 AI 可用性…</p>
+      </div>
+    </dialog>
     <main id="main-content" class="page-shell" tabindex="-1">
       <div id="page" aria-live="polite"><section class="state-card"><p>Opening LinkLoom…</p></section></div>
     </main>
     <div class="sr-only" id="status-live" aria-live="polite" aria-atomic="true"></div>
     <script src="/product-task-result.js" defer></script>
     <script src="/product-task-review.js" defer></script>
+    <script src="/workbench.js" defer></script>
     <script src="/product.js" defer></script>
   </body>
 </html>

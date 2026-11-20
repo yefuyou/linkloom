@@ -1,4 +1,4 @@
-"""The separate formal-task page is reachable through the local HTTP host."""
+"""Workbench and formal-task assets are reachable through the local HTTP host."""
 from pathlib import Path
 from threading import Thread
 from urllib.request import urlopen
@@ -11,6 +11,8 @@ from tests.task_mvp_browser_server import BrowserBackend
 
 @pytest.mark.parametrize("route,filename,content_type", [
     ("/tasks", "tasks.html", "text/html"),
+    ("/workbench.css", "workbench.css", "text/css"),
+    ("/workbench.js", "workbench.js", "text/javascript"),
     ("/tasks.js", "tasks.js", "text/javascript"),
     ("/tasks.css", "tasks.css", "text/css"),
 ])

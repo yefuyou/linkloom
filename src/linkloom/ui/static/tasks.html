@@ -6,18 +6,40 @@
   <link rel="icon" href="data:,">
   <title>待办 · LinkLoom</title>
   <link rel="stylesheet" href="/tasks.css">
+  <link rel="stylesheet" href="/workbench.css">
   <script src="/tasks.js" defer></script>
+  <script src="/workbench.js" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#tasks-app">跳到待办内容</a>
-  <header class="site-header">
-    <a class="brand" href="/tasks"><span class="brand-mark" aria-hidden="true"></span>LinkLoom</a>
-    <nav class="primary-nav" aria-label="主导航"><a href="/#meetings">会议</a><a href="/tasks" aria-current="page">待办</a><a href="/#decisions">决定</a><a href="/#ask">提问</a></nav>
+  <header class="site-header workbench-header">
+    <a class="brand" href="/#meetings"><span class="brand-mark" aria-hidden="true"></span>LinkLoom</a>
+    <nav class="primary-nav" aria-label="主导航">
+      <a href="/#meetings">会议与审核</a>
+      <a href="/#decisions" aria-current="true">决议与任务演变</a>
+      <a href="/#ask">Ask 工作台</a>
+    </nav>
     <div class="header-controls">
       <label class="workspace-label" for="workspace">工作区 <select id="workspace" aria-label="工作区" disabled><option>正在加载…</option></select></label>
+    </div>
+    <button class="workbench-settings-button" type="button" data-open-settings>设置</button>
+  </header>
+  <dialog class="workbench-settings" aria-labelledby="workbench-settings-title">
+    <header><h2 id="workbench-settings-title">设置</h2><form method="dialog"><button class="workbench-settings-button" type="submit" autofocus>关闭</button></form></header>
+    <div class="workbench-settings-group">
+      <h3>工作区</h3><p data-workspace-name></p>
+      <button type="button" class="link" data-focus-workspace>切换工作区</button>
+      <a href="/#meetings">管理工作区</a>
+    </div>
+    <div class="workbench-settings-group">
+      <h3>本地操作身份</h3>
       <button id="identity" class="identity" type="button" data-testid="change-identity">设置操作身份</button>
     </div>
-  </header>
+    <div class="workbench-settings-group"><h3>术语</h3><a href="/?settings=glossary#ask">管理术语</a></div>
+  </dialog>
+  <nav class="evolution-switch task-evolution-switch" aria-label="演变视图">
+    <a href="/#decisions">决议</a><a href="/tasks?view=tasks" aria-current="page">任务</a>
+  </nav>
   <div id="notice" role="status" aria-live="polite" tabindex="-1"></div>
   <main id="tasks-app" aria-busy="true"><p class="empty">正在读取待办…</p></main>
   <noscript><p class="empty">请启用 JavaScript 后使用待办页面。</p></noscript>
