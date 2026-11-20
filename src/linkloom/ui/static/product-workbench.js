@@ -177,58 +177,95 @@
     page.appendChild(zone);
   }
 
-  /* ── 3. Ask Workbench: Truthful Trace Drawer ── */
-  function enhanceAskTraceDrawer() {
-    const askResult = page.querySelector("#ask-result");
-    const answerCard = askResult?.querySelector(".ask-answer");
-    if (!answerCard || answerCard.querySelector(".trace-drawer")) return;
+  /* ── 3. Ask Workbench: Truthful Execution & Trace Integration (no DOM JSON.parse) ── */
+  function formatUsage(usage) {
+    if (!usage || typeof usage !== "object") return t("Not reported", "未报告");
+    const inp = usage.input_tokens ?? usage.reported_input_tokens ?? usage.prompt_tokens;
+    const out = usage.output_tokens ?? usage.reported_output_tokens ?? usage.completion_tokens;
+    const tot = usage.total_tokens ?? usage.reported_total_tokens;
+    if (inp == null && out == null && tot == null) return t("Not reported", "未报告");
+    return `${inp ?? "?"} / ${out ?? "?"}${tot != null ? ` (total ${tot})` : ""}`;
+  }
 
-    const rawPre = answerCard.querySelector(".ask-technical pre");
-    let parsed = null;
-    if (rawPre?.textContent) {
-      try { parsed = JSON.parse(rawPre.textContent); } catch { parsed = null; }
+  function renderAskTraceFromResult(result, target) {
+    const answerCard = target?.querySelector?.(".ask-answer");
+    if (!result || !answerCard) return;
+
+    // Remove any previous injected strip/drawer on re-render
+    answerCard.querySelector(".trace-drawer")?.remove();
+    answerCard.querySelector(".trace-execution-strip")?.remove();
+
+    const exec = result.execution || null;
+    const routerCalls = exec?.router_provider_calls;
+    const answerCalls = exec?.answer_provider_calls;
+    const hasExec = exec && typeof exec === "object";
+    const totalKnownZero = hasExec && routerCalls === 0 && answerCalls === 0;
+    const routerUsageText = hasExec ? formatUsage(exec.router_reported_usage) : t("Not reported", "未报告");
+
+    const metrics = result.metrics || {};
+    const reservedUsd = metrics.reserved_upper_bound_usd ?? metrics.cost_reserved_usd ?? null;
+
+    const callBadge = !hasExec
+      ? t("Provider calls: Unknown", "模型调用: 未知")
+      : totalKnownZero
+        ? t("0 model calls", "0 模型调用")
+        : t(`Router: ${routerCalls ?? "?"} · Answer: ${answerCalls ?? "?"}`, `Router: ${routerCalls ?? "?"} · Answer: ${answerCalls ?? "?"}`);
+
+    // Reuse existing .ask-trace (GET /api/product/ask/runs/{id}/trace + renderBranchTrace) when present
+    const existingTrace = answerCard.querySelector(".ask-trace");
+    if (existingTrace) {
+      const strip = document.createElement("div");
+      strip.className = "trace-execution-strip";
+      strip.innerHTML = `
+        <div class="trace-summary-grid">
+          <div class="trace-stat"><span class="trace-stat-label">${escapeHtml(t("Answer path", "回答路径"))}</span><strong>${escapeHtml(exec?.answer_path || result.path || "UNKNOWN")}</strong></div>
+          <div class="trace-stat"><span class="trace-stat-label">${escapeHtml(t("Router calls", "Router 调用"))}</span><strong>${escapeHtml(routerCalls ?? t("Unknown", "未知"))}</strong></div>
+          <div class="trace-stat"><span class="trace-stat-label">${escapeHtml(t("Answer calls", "Answer 调用"))}</span><strong>${escapeHtml(answerCalls ?? t("Unknown", "未知"))}</strong></div>
+          <div class="trace-stat"><span class="trace-stat-label">${escapeHtml(t("Router reported usage", "Router 报告用量"))}</span><strong>${escapeHtml(routerUsageText)}</strong></div>
+          ${reservedUsd !== null ? `<div class="trace-stat"><span class="trace-stat-label">${escapeHtml(t("Reserved ceiling", "预留上限"))}</span><strong>${escapeHtml(`$${reservedUsd}`)}</strong></div>` : ""}
+        </div>
+      `;
+      const loadBtn = existingTrace.querySelector('[data-action="load-trace"]');
+      if (loadBtn) existingTrace.insertBefore(strip, loadBtn);
+      else existingTrace.appendChild(strip);
+      return;
     }
-    if (!parsed) return;
-
-    const path = String(parsed.path || "UNKNOWN");
-    const status = String(parsed.status || "UNKNOWN");
-    const runId = parsed.agent_run_id || null;
-    const isModelPath = path === "AGENT" || path === "TASK_INVESTIGATION" || path === "SOURCE_RELATION_INVESTIGATION";
-    const metrics = parsed.metrics || {};
-    const llmCalls = metrics.llm_calls ?? metrics.provider_calls?.attempted ?? (isModelPath ? t("Unknown", "未报告") : 0);
-    const inputTokens = metrics.reported_input_tokens ?? metrics.input_tokens ?? null;
-    const outputTokens = metrics.reported_output_tokens ?? metrics.output_tokens ?? null;
-    const costUsd = metrics.estimated_actual_usage_usd ?? metrics.cost_usd ?? null;
-    const reviewerDecision = parsed.reviewer?.decision || (parsed.reviewer?.accepted === true ? "ACCEPTED" : parsed.reviewer?.accepted === false ? "REJECTED" : t("Not invoked", "未触发"));
 
     const nodes = [];
-    if (parsed.route) nodes.push({ name: "Router", detail: `${parsed.route.route || "—"}` });
-    nodes.push({ name: "Host Gate", detail: parsed.scope?.subject ? `${parsed.scope.subject} · ${parsed.scope.relation || ""}` : t("Workspace scope checked", "已校验工作区范围") });
-    if (isModelPath) nodes.push({ name: "Investigation Worker", detail: runId ? `run_id: ${runId}` : t("Bounded execution", "受限执行") });
-    if (parsed.reviewer) nodes.push({ name: "Reviewer", detail: String(reviewerDecision) });
+    if (result.route) nodes.push({ name: "Router", detail: `${result.route.route || "—"} (${t("calls", "调用")}: ${routerCalls ?? t("Unknown", "未知")})` });
+    nodes.push({ name: "Host Gate", detail: result.scope?.subject ? `${result.scope.subject} · ${result.scope.relation || ""}` : t("Workspace scope checked", "已校验工作区范围") });
+    if (result.agent_run_id) nodes.push({ name: "Investigation Worker", detail: `run_id: ${result.agent_run_id}` });
+    if (result.reviewer) {
+      const rev = result.reviewer.decision || (result.reviewer.accepted === true ? "ACCEPTED" : result.reviewer.accepted === false ? "REJECTED" : "—");
+      nodes.push({ name: "Reviewer", detail: String(rev) });
+    }
 
     const drawer = document.createElement("details");
     drawer.className = "trace-drawer";
     drawer.innerHTML = `
-      <summary>${escapeHtml(t("Run Trace & Cost Ledger", "运行调用链与费用台账"))} · <span class="badge neutral">${escapeHtml(isModelPath ? t("Investigation", "调查链路") : t("0 model calls", "零模型调用"))}</span></summary>
+      <summary>${escapeHtml(t("Execution & Usage Summary", "执行与用量摘要"))} · <span class="badge neutral">${escapeHtml(callBadge)}</span></summary>
       <div class="trace-drawer-body">
         <div class="trace-summary-grid">
-          <div class="trace-stat"><span class="trace-stat-label">${escapeHtml(t("Execution path", "执行路径"))}</span><strong>${escapeHtml(path)}</strong></div>
-          <div class="trace-stat"><span class="trace-stat-label">${escapeHtml(t("Outcome", "终态"))}</span><strong>${escapeHtml(status)}</strong></div>
-          <div class="trace-stat"><span class="trace-stat-label">${escapeHtml(t("Provider calls", "模型调用"))}</span><strong>${escapeHtml(llmCalls)}</strong></div>
-          <div class="trace-stat"><span class="trace-stat-label">${escapeHtml(t("Reported tokens", "报告 Token"))}</span><strong>${inputTokens !== null || outputTokens !== null ? escapeHtml(`${inputTokens ?? "?"} / ${outputTokens ?? "?"}`) : escapeHtml(t("Not reported", "未报告 / 未知"))}</strong></div>
-          <div class="trace-stat"><span class="trace-stat-label">${escapeHtml(t("Estimated cost", "估算费用"))}</span><strong>${costUsd !== null ? escapeHtml(`$${costUsd}`) : escapeHtml(t("Unknown", "未知"))}</strong></div>
+          <div class="trace-stat"><span class="trace-stat-label">${escapeHtml(t("Answer path", "回答路径"))}</span><strong>${escapeHtml(exec?.answer_path || result.path || "UNKNOWN")}</strong></div>
+          <div class="trace-stat"><span class="trace-stat-label">${escapeHtml(t("Outcome", "终态"))}</span><strong>${escapeHtml(result.status || "UNKNOWN")}</strong></div>
+          <div class="trace-stat"><span class="trace-stat-label">${escapeHtml(t("Router calls", "Router 调用"))}</span><strong>${escapeHtml(routerCalls ?? t("Unknown", "未知"))}</strong></div>
+          <div class="trace-stat"><span class="trace-stat-label">${escapeHtml(t("Answer calls", "Answer 调用"))}</span><strong>${escapeHtml(answerCalls ?? t("Unknown", "未知"))}</strong></div>
+          <div class="trace-stat"><span class="trace-stat-label">${escapeHtml(t("Router reported usage", "Router 报告用量"))}</span><strong>${escapeHtml(routerUsageText)}</strong></div>
+          ${reservedUsd !== null ? `<div class="trace-stat"><span class="trace-stat-label">${escapeHtml(t("Reserved ceiling", "预留上限"))}</span><strong>${escapeHtml(`$${reservedUsd}`)}</strong></div>` : ""}
         </div>
         <ol class="trace-nodes">
           ${nodes.map(n => `<li><strong>${escapeHtml(n.name)}</strong><span>${escapeHtml(n.detail)}</span></li>`).join("")}
         </ol>
-        ${runId ? `<p class="hint">${escapeHtml(t("Detailed multi-agent trace endpoint (/api/product/ask/runs/{id}/trace) is pending B1-6 integration on this branch.", "完整多 Agent 调用链接口（/api/product/ask/runs/{id}/trace）将在 B1-6 集成分支接入。"))}</p>` : `<p class="hint">${escapeHtml(t("No external Provider was called for this deterministic lookup.", "本次为确定性直查，未调用外部模型 Provider。"))}</p>`}
       </div>
     `;
     const technicalEl = answerCard.querySelector(".ask-technical");
     if (technicalEl) answerCard.insertBefore(drawer, technicalEl);
     else answerCard.appendChild(drawer);
   }
+
+  window.onLinkLoomAskResult = (result, target) => {
+    renderAskTraceFromResult(result, target);
+  };
 
   /* ── 4. Global Settings Drawer (Workspace, Glossary, Provider) ── */
   let lastFocused = null;
@@ -423,7 +460,6 @@
     renderContextBar();
     enhanceCandidateReviewSplit();
     enhanceDecisionsEvolution();
-    enhanceAskTraceDrawer();
   }
 
   let scheduled = false;

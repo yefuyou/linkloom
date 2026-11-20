@@ -150,6 +150,11 @@ function makeEl(id, extra = {}) {
   const settingsBody = getEl("settings-drawer-body");
   const settingsTrigger = getEl("settings-trigger");
 
+  const windowObj = {
+    location,
+    localStorage: { getItem: () => "Alice", setItem() {} },
+    addEventListener: (t, fn) => { (windowListeners[t] ||= []).push(fn); },
+  };
   vm.runInNewContext(fs.readFileSync("src/linkloom/ui/static/product-workbench.js", "utf8"), {
     document: {
       documentElement: { lang: "zh" },
@@ -157,11 +162,7 @@ function makeEl(id, extra = {}) {
       getElementById: (id) => getEl(id),
       createElement: (tag) => makeEl(`created-${tag}`),
     },
-    window: {
-      location,
-      localStorage: { getItem: () => "Alice", setItem() {} },
-      addEventListener: (t, fn) => { (windowListeners[t] ||= []).push(fn); },
-    },
+    window: windowObj,
     MutationObserver: MockObserver,
     fetch,
     setTimeout,
@@ -191,15 +192,29 @@ function makeEl(id, extra = {}) {
   assert.match(undated.innerHTML, /时间未知 \/ 待核验区域/);
   assert.match(undated.innerHTML, /列表接口待接入/);
 
-  // 3. Ask truthful Trace drawer
+  // 3. Ask execution & trace drawer (direct data flow via onLinkLoomAskResult, no DOM JSON.parse)
   location.hash = "#ask";
   page.innerHTML = '<div id="ask-result"><section class="panel ask-answer"><details class="ask-technical"><pre></pre></details></section></div>';
   (windowListeners.hashchange || []).forEach((fn) => fn());
   await tick();
+  windowObj.onLinkLoomAskResult({
+    status: "COMPLETED",
+    path: "DETERMINISTIC",
+    scope: { subject: "Launch", relation: "uses supplier" },
+    execution: {
+      schema_version: "ask-execution/v1",
+      answer_path: "VERIFIED_STORE_LOOKUP",
+      answer_provider_calls: 0,
+      router_provider_calls: 1,
+      router_reported_usage: null,
+      agent_run_id: null,
+    },
+  }, page.querySelector("#ask-result"));
   const trace = page.children.find((c) => c.className === "trace-drawer");
   assert.ok(trace, "should render trace drawer");
-  assert.match(trace.innerHTML, /零模型调用/);
-  assert.match(trace.innerHTML, /未报告 \/ 未知/);
+  assert.match(trace.innerHTML, /Router: 1/);
+  assert.match(trace.innerHTML, /未报告/);
+  assert.doesNotMatch(trace.innerHTML, /0 模型调用/, "must not report 0 model calls when router_provider_calls is 1");
 
   // 4. Settings drawer & Glossary
   settingsTrigger.dispatch("click");
