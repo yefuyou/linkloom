@@ -3,11 +3,11 @@
 from tests.integration.test_product_application_flow import (
     _client, _start_product_server, _stop_product_server, _wait_source,
 )
-from tests.integration.test_text_source_import import _not_stated_claim
+from tests.integration.test_text_source_import import _quoted_claim
 
 MEETING_A = "# 周会 A\n决定：银杏项目使用 Halden 作为支付网关供应商。\n"
 MEETING_B = "# 周会 B\n决定：银杏项目改用 Wrenwell 作为支付网关供应商，启用时间待定。\n"
-REVIEW = {"reviewer_id": "local-user", "reason": "Confirmed in review", "subject": "银杏项目"}
+REVIEW = {"reviewer_id": "local-user", "reason": "Confirmed in review"}
 
 
 def _import_candidate(base, name, content):
@@ -30,7 +30,8 @@ def _ask(base, query):
 
 def test_confirm_unknown_time_then_fill_date_through_product_api(tmp_path):
     base, server, worker, app = _start_product_server(
-        tmp_path, [_not_stated_claim("Halden"), _not_stated_claim("Wrenwell")])
+        tmp_path, [_quoted_claim("Halden", "决定：银杏项目使用 Halden 作为支付网关供应商。"),
+                   _quoted_claim("Wrenwell", "决定：银杏项目改用 Wrenwell 作为支付网关供应商，启用时间待定。")])
     try:
         assert _client(base, "/api/workspaces", method="POST", data={"name": "Ginkgo"})[0] == 201
         first = _import_candidate(base, "a.md", MEETING_A)
