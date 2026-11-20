@@ -386,6 +386,32 @@ async function setup(storage = new Map()) {
   uncheckedPayload.result.parallel_investigation.answer.conflict_check.cross_branch_compared = false;
   uncheckedUi.pending[0](uncheckedPayload); await uncheckedOperation;
   assert.doesNotMatch(uncheckedUi.element("ask-result").innerHTML, /No conflicts|无冲突/);
+  for (const [status, verified, text] of [["UNAVAILABLE", false, /Conflict check unavailable: these answers are not verified against each other/],
+                                          ["UNCERTAIN", false, /Conflict check inconclusive: these answers are not verified against each other/]]) {
+    const unverifiedUi = await setup();
+    const unverifiedOperation = unverifiedUi.submit(); await tick();
+    const unverifiedPayload = JSON.parse(JSON.stringify(checkedPayload));
+    // completeness stays COMPLETE; the conflict check is a separate, explicitly unverified line
+    Object.assign(unverifiedPayload.result.parallel_investigation.answer, {conflict_check: {status, verified, cross_branch_compared: true}});
+    unverifiedUi.pending[0](unverifiedPayload); await unverifiedOperation;
+    const unverifiedHtml = unverifiedUi.element("ask-result").innerHTML;
+    assert.match(unverifiedHtml, text);
+    assert.match(unverifiedHtml, new RegExp(`data-conflict-check="${status}"`));
+    assert.match(unverifiedHtml, /Verified investigation evidence/);
+    assert.doesNotMatch(unverifiedHtml, /No conflicts|无冲突/);
+  }
+  const semanticUi = await setup();
+  const semanticOperation = semanticUi.submit(); await tick();
+  const semanticPayload = JSON.parse(JSON.stringify(checkedPayload));
+  Object.assign(semanticPayload.result.parallel_investigation.answer, {status: "PARTIAL",
+    conflict_check: {status: "CONFLICT", verified: true, cross_branch_compared: true},
+    conflicts: [{subject: null, relation: null, basis: "semantic_comparison", sides: [
+      {branch: "a", question: "Q" + evil, value: "V1", citations: ["citation-1"]}, {branch: "b", question: "Q2", value: "V2", citations: ["citation-1"]}]}]});
+  semanticUi.pending[0](semanticPayload); await semanticOperation;
+  const semanticHtml = semanticUi.element("ask-result").innerHTML;
+  assert.match(semanticHtml, /Same matter, different answers/);
+  assert.match(semanticHtml, /Q&lt;script&gt;/);
+  assert.doesNotMatch(semanticHtml, /<script>|No conflicts|null · null/);
   const withheldUi = await setup();
   const withheldOperation = withheldUi.submit(); await tick();
   const withheld = JSON.parse(JSON.stringify(parallelPayload));
@@ -437,7 +463,7 @@ async function setup(storage = new Map()) {
     events: [{event: "supervisor_decision", round: 0, action: "delegate", tasks: ["t1", "t2"], reason: evilTag},
       {event: "wave_dispatched", tasks: ["t1"]}, {event: "wave_dispatched", tasks: ["t2", evilTagImg]}],
     blackboard: {raw_retrievals: 3, verified_evidence: [{key: "k"}], inferences: 2, approved_decisions: []},
-    totals: {requests_reserved: 8, cost_reserved_usd: 1}, synthesizer: {status: "COMPLETE", published: true, fallback_reason: evilTag}};
+    totals: {requests_reserved: 8, cost_reserved_usd: 1}, synthesizer: {status: "COMPLETE", published: true, fallback_reason: evilTag, conflict_check: "UNAVAILABLE", conflict_check_verified: false}};
   traceUi.setTrace({result: traceBody});
   await traceUi.element("page").listeners.click({target: {closest: () => ({dataset: {action: "load-trace", runId: "ui-parallel-000000000001"}})}});
   assert.deepEqual(traceUi.traceRequests, ["/api/product/ask/runs/ui-parallel-000000000001/trace?workspace_id=a"]);
@@ -445,6 +471,7 @@ async function setup(storage = new Map()) {
   assert.doesNotMatch(traceHtml, /<script>|<img/);
   assert.match(traceHtml, /&lt;script&gt;alert\(1\)&lt;\/script&gt;/);
   assert.match(traceHtml, /&lt;img src=x onerror=alert\(1\)&gt;/);
+  assert.match(traceHtml, /data-conflict-check="UNAVAILABLE">Conflict check: UNAVAILABLE · not verified/);
   assert.match(traceHtml, /data-task="t2"[^>]*><summary><strong>t2<\/strong> · accepted · after t1/);
   assert.match(traceHtml, /t2 ∥ &lt;img/, "tasks of one wave are shown together");
   assert.match(traceHtml, /WORKER_RUNTIME_FAILED/);

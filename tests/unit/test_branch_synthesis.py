@@ -1,6 +1,8 @@
 import copy
 import hashlib
 
+import pytest
+
 from linkloom.ui import branch_synthesis as bs
 
 
@@ -63,38 +65,93 @@ def test_no_decision_branch_is_unknown_and_all_unknown_status():
     assert result['unknowns'][0]['reason'] == 'BRANCH_NO_DECISION'
 
 
-def test_conflict_lists_all_sides_without_winner():
+def _key_rows(first, second, first_key=None, second_key=None):
     a, b = _item('s1', 'alpha fact'), _item('s2', 'beta fact', 3)
-    key = dict(subject='Plan', relation='owner')
-    rows = [_row('branch-1', 'Q1?', 'X', [a], key, 'Mira'), _row('branch-2', 'Q2?', 'Y', [b], key, 'Kai')]
-    result = _run(rows, bs.merge_evidence(rows))
+    rows = [_row('branch-1', 'Q1?', first, [a], first_key), _row('branch-2', 'Q2?', second, [b], second_key)]
+    return rows, bs.merge_evidence(rows)
+
+
+def _verdict(verdict, basis='semantic_comparison'):
+    return {('branch-1', 'branch-2'): (verdict, basis)}
+
+
+def test_conflict_verdict_lists_all_sides_without_winner_and_makes_the_answer_partial():
+    rows, index = _key_rows('X', 'Y')
+    pairs = bs.resolve_pairs(bs.plan_comparison(rows), _verdict('CONFLICT'))
+    result = _run(rows, index, comparison=pairs)
     assert result['status'] == 'PARTIAL'
     (conflict,) = result['conflicts']
     assert [s['branch'] for s in conflict['sides']] == ['branch-1', 'branch-2']
+    assert [s['citations'] for s in conflict['sides']] == [['citation-1'], ['citation-2']]  # the Reviewer's evidence
     assert not any(k in conflict for k in ('winner', 'chosen'))
-    assert result['conflict_check']['uncompared'] == []
+    assert result['conflict_check']['status'] == 'CONFLICT' and result['conflict_check']['uncompared'] == []
 
 
-def test_same_claim_value_is_not_a_conflict_and_missing_keys_are_reported_uncompared():
+def test_pending_pair_without_a_comparison_is_unavailable_not_agreement():
     rows, index = _setup()
-    assert _run(rows, index)['conflict_check'] == dict(
-        cross_branch_compared=False, compared=[], uncompared=['branch-1', 'branch-2'])
-    key = dict(subject='Plan', relation='owner')
-    rows[0]['conclusion']['claim_key'] = rows[1]['conclusion']['claim_key'] = key
-    rows[0]['conclusion']['claim_value'] = rows[1]['conclusion']['claim_value'] = 'Mira'
+    plan = bs.plan_comparison(rows)
+    assert plan['pending'] == [('branch-1', 'branch-2')] and plan['decided'] == []
     result = _run(rows, index)
-    assert result['conflicts'] == []
-    assert result['conflict_check'] == dict(cross_branch_compared=True, compared=['branch-1', 'branch-2'], uncompared=[])
+    check = result['conflict_check']
+    assert (check['status'], check['verified']) == ('UNAVAILABLE', False)
+    assert check['reasons'] == ['COMPARISON_NOT_RUN'] and check['cross_branch_compared'] is False
+    assert check['uncompared'] == ['branch-1', 'branch-2']
+    assert result['status'] == 'COMPLETE'  # completeness is not rewritten by an unavailable check
+    assert 'Conflict check UNAVAILABLE' in result['text']
 
 
-def test_distinct_keys_are_not_compared_and_text_claims_no_conflict_check():
+@pytest.mark.parametrize('verdict', ['UNCERTAIN', 'UNAVAILABLE'])
+def test_uncertain_or_unavailable_verdict_keeps_completeness_and_is_unverified(verdict):
     rows, index = _setup()
-    rows[0]['conclusion'].update(claim_key=dict(subject='A', relation='r'), claim_value='x')
-    rows[1]['conclusion'].update(claim_key=dict(subject='B', relation='r'), claim_value='y')
+    result = _run(rows, index, comparison=bs.resolve_pairs(bs.plan_comparison(rows), _verdict(verdict, 'X')))
+    assert result['status'] == 'COMPLETE' and result['conflicts'] == []
+    assert (result['conflict_check']['status'], result['conflict_check']['verified']) == (verdict, False)
+
+
+@pytest.mark.parametrize(('verdict', 'compared'), [('AGREE', True), ('UNRELATED', False)])
+def test_agree_and_unrelated_are_verified_and_conflict_free(verdict, compared):
+    rows, index = _setup()
+    result = _run(rows, index, comparison=bs.resolve_pairs(bs.plan_comparison(rows), _verdict(verdict)))
+    check = result['conflict_check']
+    assert result['status'] == 'COMPLETE' and result['conflicts'] == []
+    assert (check['status'], check['verified'], check['cross_branch_compared']) == (verdict, True, compared)
+
+
+def test_identical_values_agree_without_a_comparison():
+    rows, index = _key_rows('same answer', 'same answer')
+    plan = bs.plan_comparison(rows)
+    assert plan['pending'] == [] and plan['decided'][0]['verdict'] == 'AGREE'
+    assert _run(rows, index)['conflict_check']['status'] == 'AGREE'
+
+
+def test_different_structured_identities_are_unrelated_without_a_comparison():
+    rows, index = _key_rows('x', 'y', dict(subject='A', relation='r'), dict(subject='B', relation='r'))
+    plan = bs.plan_comparison(rows)
+    assert plan['pending'] == [] and plan['decided'][0]['basis'] == 'structured_identity'
     result = _run(rows, index)
     assert result['status'] == 'COMPLETE' and result['conflicts'] == []
-    assert result['conflict_check'] == dict(cross_branch_compared=False, compared=[], uncompared=['branch-1', 'branch-2'])
-    assert 'conflict' not in result['text'].lower()
+    assert result['conflict_check']['status'] == 'UNRELATED' and result['conflict_check']['verified'] is True
+
+
+def test_same_structured_identity_with_different_values_still_needs_a_meaning_judgement():
+    key = dict(subject='Plan', relation='owner', as_of='2025-02-20')
+    rows, _ = _key_rows('Mira Chen', 'Chen, Mira', key, dict(key))
+    assert bs.plan_comparison(rows)['pending'] == [('branch-1', 'branch-2')]
+    other = dict(key, as_of='2025-03-01')  # a different time is a different fact
+    rows, _ = _key_rows('Mira Chen', 'Kai Wu', key, other)
+    assert bs.plan_comparison(rows)['pending'] == []
+
+
+def test_dependent_tasks_are_decided_by_structure_and_transitive_dependency_counts():
+    rows, _ = _key_rows('x', 'y')
+    plan = bs.plan_comparison(rows, {'branch-2': ['mid'], 'mid': ['branch-1']})
+    assert plan['pending'] == [] and plan['decided'][0]['basis'] == 'dependent_task'
+
+
+def test_a_single_answer_has_nothing_to_compare():
+    rows, index = _setup()
+    result = _run(rows[:1], index, gaps={'branch-2': 'FAILED'})
+    assert result['conflict_check']['status'] == 'NOT_APPLICABLE' and result['conflict_check']['pairs'] == []
 
 
 def test_deterministic():

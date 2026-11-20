@@ -832,7 +832,8 @@
       ${tasks}
       <p>${t("Requests", "请求数")}: ${na(totals.requests_reserved)} · ${t("Reserved ceiling", "预留上限")}: ${na(usd(totals.cost_reserved_usd))}</p>
       <p>${t("Shared evidence", "共享证据")}: ${escapeHtml((board.verified_evidence || []).length)} · ${t("unreviewed retrievals", "未核验检索")}: ${escapeHtml(board.raw_retrievals || 0)} · ${t("Agent inferences", "Agent 推断")}: ${escapeHtml(board.inferences || 0)} · ${t("approved decisions", "已批准决策")}: ${escapeHtml((board.approved_decisions || []).length)}</p>
-      <p>${t("Synthesizer", "汇总")}: ${na(synth.status)} · ${synth.published ? t("published", "已发布") : t("not published", "未发布")}${synth.fallback_reason ? ` · ${escapeHtml(synth.fallback_reason)}` : ""}</p></section>`;
+      <p>${t("Synthesizer", "汇总")}: ${na(synth.status)} · ${synth.published ? t("published", "已发布") : t("not published", "未发布")}${synth.fallback_reason ? ` · ${escapeHtml(synth.fallback_reason)}` : ""}</p>
+      <p class="trace-conflict-check" data-conflict-check="${escapeHtml(synth.conflict_check || "")}">${t("Conflict check", "冲突检查")}: ${na(synth.conflict_check)}${synth.conflict_check_verified === false ? ` · ${t("not verified", "未核验")}` : ""}</p></section>`;
   }
 
   function renderAskResult(result, viewToken) {
@@ -868,10 +869,17 @@
         const lines = (answer.answers || []).map(row =>
           `<li><strong>${escapeHtml(row.question)}</strong> ${escapeHtml(row.text)} ${cites(row.citations)}</li>`).join("");
         const conflicts = (answer.conflicts || []).map(row =>
-          `<li>${escapeHtml(row.subject)} · ${escapeHtml(row.relation)}<ul>${(row.sides || []).map(side =>
-            `<li>${escapeHtml(side.branch)}: ${escapeHtml(side.value)} ${cites(side.citations)}</li>`).join("")}</ul></li>`).join("");
-        const checked = answer.conflict_check?.cross_branch_compared === true && !conflicts
-          ? `<p>${t("No conflicts among the branches that were compared.", "已比较的分支之间无冲突。")}</p>` : "";
+          `<li>${row.subject ? `${escapeHtml(row.subject)} · ${escapeHtml(row.relation)}` : t("Same matter, different answers", "同一事项，回答不同")}<ul>${(row.sides || []).map(side =>
+            `<li>${escapeHtml(side.branch)}${side.question ? ` (${escapeHtml(side.question)})` : ""}: ${escapeHtml(side.value)} ${cites(side.citations)}</li>`).join("")}</ul></li>`).join("");
+        // The conflict check is reported on its own line; answer completeness is the title above.
+        const check = answer.conflict_check || {};
+        const unverified = check.verified === false || check.status === "UNAVAILABLE" || check.status === "UNCERTAIN";
+        const checked = unverified
+          ? `<p class="conflict-check" data-conflict-check="${escapeHtml(check.status || "UNAVAILABLE")}" role="alert">${check.status === "UNCERTAIN"
+              ? t("Conflict check inconclusive: these answers are not verified against each other.", "冲突检查未能得出结论：这些回答之间未经交叉核验。")
+              : t("Conflict check unavailable: these answers are not verified against each other. The answer completeness shown above is unchanged.", "冲突检查不可用：这些回答之间未经交叉核验。上方显示的回答完整度不受影响。")}</p>`
+          : check.cross_branch_compared === true && !conflicts
+            ? `<p class="conflict-check" data-conflict-check="${escapeHtml(check.status || "")}">${t("No conflicts among the branches that were compared.", "已比较的分支之间无冲突。")}</p>` : "";
         const unknowns = (answer.unknowns || []).map(row =>
           `<li>${escapeHtml(row.question || row.branch || "")} · ${escapeHtml(row.reason)}${row.detail ? ` · ${escapeHtml(row.detail)}` : ""}</li>`).join("");
         synthesis = `<h3>${t("Answer with sources", "附来源的回答")}</h3>${lines ? `<ul>${lines}</ul>` : ""}

@@ -97,13 +97,12 @@ def build_branch_row(name, question, status, checkpoint_dir, checkpointer, works
                       unresolved_items=[item['description'] for item in team['unresolved_items']],
                       uncertainty=dict(status=team['uncertainty']['status'],
                                        statement=team['uncertainty']['statement']),
+                      # No claim_key: the Runtime result carries no verified subject/relation/time for a
+                      # Worker, and the task text is not a fact identity. Same-meaning is judged by the
+                      # bounded comparison in graph.synthesize, never by this row.
                       evidence=[{key: item[key] for key in ('source_id', 'source_version', 'line_start',
                                                             'line_end', 'quote_sha256')}
-                                for item in evidence],
-                      # The key is the Host-held task text, never model output: equal keys mean the same
-                      # question was assigned twice, and then differing answers are reported as a conflict.
-                      claim_key=dict(subject=question, relation='subgoal_question'),
-                      claim_value=team['decision']['value'])
+                                for item in evidence])
     return dict(run=dict(branch=name, run_id=status.run_id, thread_id=status.thread_id,
                          review_id=review['review_id']), evidence=evidence, conclusion=conclusion)
 

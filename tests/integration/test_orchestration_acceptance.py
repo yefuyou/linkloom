@@ -3,18 +3,23 @@
 Fills the gaps found by the E1-E12 coverage audit; the scenarios that already have a test are only referenced
 in the report. Tests marked xfail(strict=True, reason="KNOWN_LIMITATION ...") describe behaviour the production
 code is known not to have (semantic judgement done by exact string or name matching). They are recorded, not
-fixed, in this change: a strict xfail turns into a failure the day the limitation is removed, so it cannot be
-forgotten. No test here adds a natural-language rule to production code or loosens an expectation to pass.
+fixed, in the change that adds them: a strict xfail turns into a failure the day the limitation is removed, so it
+cannot be forgotten. The two E7 limitations are fixed by the bounded claim comparison and are regular tests now. No test here adds a natural-language rule to production code or loosens an expectation to pass.
 """
+from dataclasses import replace
 import json
+from types import SimpleNamespace
 import threading
 from threading import Barrier
 
 import pytest
 
+from linkloom.agents.model_adapter import ModelAction, ModelResponse, ModelUsage
 from linkloom.orchestration import OrchestrationLimits
+from linkloom.orchestration.comparison import compare_pending
 from linkloom.orchestration.state import ACCEPTED
 from linkloom.orchestration.supervisor import DelegationRejected
+from linkloom.tools.contracts import ToolCall
 from linkloom.ui import branch_synthesis as bs
 from tests.integration import test_orchestration_langgraph as lg
 from tests.integration.test_orchestration_langgraph import (
@@ -209,11 +214,12 @@ class Sequenced(dict):
 def test_e7_same_question_with_different_answers_keeps_both_sides_and_is_not_complete(tmp_path):
     scripts = Sequenced({}, {Q_SUCC: [(FACT["succ"], "Cobalt B", "ok"), (FACT["owner"], "Cobalt B", "ok")]})
     world = World([delegation("delegate", [("a", Q_SUCC, []), ("b", Q_SUCC, [])]), delegation("stop")], scripts)
+    world.verdict = lambda a, b, claims: "CONFLICT"
     orchestrator, _ = build(tmp_path, world)
     result = orchestrator.start(GOAL)
     answer = result["answer"]
     (conflict,) = answer["conflicts"]
-    assert (conflict["subject"], conflict["relation"]) == (Q_SUCC, "subgoal_question")
+    assert conflict["subject"] is None and conflict["basis"] == "semantic_comparison"  # no task text as identity
     assert [side["branch"] for side in conflict["sides"]] == ["a", "b"]
     assert {side["value"] for side in conflict["sides"]} == {FACT["succ"], FACT["owner"]}
     assert all(side["citations"] for side in conflict["sides"])
@@ -221,67 +227,194 @@ def test_e7_same_question_with_different_answers_keeps_both_sides_and_is_not_com
     assert not any(key in conflict for key in ("winner", "chosen"))
     assert answer["published"] is True and result["status"] == "PARTIAL" != "COMPLETE"
     assert len(answer["answers"]) == 2  # neither side is dropped
-    assert answer["conflict_check"]["cross_branch_compared"] is True
+    assert answer["conflict_check"]["cross_branch_compared"] is True and answer["conflict_check"]["status"] == "CONFLICT"
+    assert len(world.comparison_requests) == 1  # one call for the whole run
 
 
-def test_e7_same_question_with_the_same_answer_is_not_a_conflict(tmp_path):
+def test_e7_same_question_with_the_same_answer_is_not_a_conflict_and_costs_no_comparison_call(tmp_path):
     world = World([delegation("delegate", [("a", Q_SUCC, []), ("b", Q_SUCC, [])]), delegation("stop")], TASKS)
     orchestrator, _ = build(tmp_path, world)
     result = orchestrator.start(GOAL)
     assert result["answer"]["conflicts"] == [] and result["status"] == "COMPLETE"
     assert result["answer"]["conflict_check"]["cross_branch_compared"] is True
+    assert result["answer"]["conflict_check"]["status"] == "AGREE" and world.comparison_requests == []
 
 
 def test_e7_different_questions_are_reported_as_not_compared_instead_of_claiming_agreement(tmp_path):
     world = World([delegation("delegate", [("a", Q_SUCC, []), ("b", Q_OWNER, [])]), delegation("stop")], TASKS)
-    orchestrator, _ = build(tmp_path, world)
+    orchestrator, _ = build(tmp_path, world)  # the scripted comparator says UNRELATED
     result = orchestrator.start(GOAL)
     check = result["answer"]["conflict_check"]
-    # COMPLETE only means "every task has an answer"; the disclosure says nothing was compared
+    # COMPLETE only means "every task has an answer"; the check says nothing was compared
     assert result["status"] == "COMPLETE" and check["cross_branch_compared"] is False
-    assert check["uncompared"] == ["a", "b"]
+    assert check["uncompared"] == ["a", "b"] and (check["status"], check["verified"]) == ("UNRELATED", True)
+    assert len(world.comparison_requests) == 1
 
 
 def _orchestration_row(name, question, text, value, source):
     item = _item(source, f"{source} quote")
-    return _row(name, question, text, [item], dict(subject=question, relation="subgoal_question"), value)
+    return _row(name, question, text, [item], None, value)
 
 
-def _synthesize(rows):
-    return bs.synthesize_reviewed(rows, {}, 0, bs.merge_evidence(rows), {row["run"]["branch"]: row["conclusion"]["question"]
-                                                                       for row in rows})
+def _deps(tmp_path, answers, **options):
+    """Host dependencies of the comparison step with a scripted comparator model; no Worker, no Runtime."""
+    world = World([], {})
+    for key, value in options.items():
+        setattr(world, key, value)
+    limits = OrchestrationLimits.split(TOTAL, max_tasks=4, max_rounds=2)
+    deps = SimpleNamespace(root=tmp_path / "run", run_id="run", limits=limits, validate=lambda: None,
+                           model_factory=world.factory)
+    return deps, world
 
 
-@pytest.mark.xfail(strict=True, reason="KNOWN_LIMITATION: claim_key is the task's own question text, so two "
-                   "differently worded tasks that ask the same thing are never compared and a contradiction "
-                   "between them is not reported (status stays COMPLETE).")
-def test_e7_known_limitation_contradiction_between_reworded_questions_is_not_detected():
+def _compare_and_synthesize(tmp_path, rows, dependencies=None, **options):
+    deps, world = _deps(tmp_path, rows, **options)
+    plan = bs.plan_comparison(rows, dependencies)
+    verdicts, reason = compare_pending(deps, plan)
+    pairs = bs.resolve_pairs(plan, verdicts, reason or "COMPARISON_FAILED")
+    merged = bs.merge_evidence(rows)
+    questions = {row["run"]["branch"]: row["conclusion"]["question"] for row in rows}
+    return bs.synthesize_reviewed(rows, {}, 0, merged, questions, comparison=pairs), world, deps
+
+
+def test_e7_contradiction_between_reworded_questions_is_detected(tmp_path):
     rows = [_orchestration_row("a", "Which supplier replaced Meridian A?", "Cobalt B", "Cobalt B", "s1"),
             _orchestration_row("b", "What did Meridian A get swapped out for?", "Meridian A stayed; Cobalt B was rejected",
                                "Meridian A stayed; Cobalt B was rejected", "s2")]
-    result = _synthesize(rows)
-    assert result["conflicts"] and result["status"] != "COMPLETE"
+    result, world, _ = _compare_and_synthesize(tmp_path, rows, verdict=lambda a, b, claims: "CONFLICT")
+    assert len(world.comparison_requests) == 1
+    assert result["conflicts"] and result["status"] == "PARTIAL"
+    (conflict,) = result["conflicts"]
+    # the sides carry the answers and citations the Reviewer already passed, nothing the comparison wrote
+    assert [(side["branch"], side["value"], side["citations"]) for side in conflict["sides"]] == [
+        ("a", "Cobalt B", ["citation-1"]), ("b", "Meridian A stayed; Cobalt B was rejected", ["citation-2"])]
+    assert result["conflict_check"]["status"] == "CONFLICT"
 
 
-@pytest.mark.xfail(strict=True, reason="KNOWN_LIMITATION: claim_value is compared by exact string equality, so "
-                   "the same fact worded two ways (case, punctuation, synonym) is reported as a conflict.")
 @pytest.mark.parametrize("second", ["cobalt b", "Cobalt B.", "Cobalt-B", "the Cobalt B supplier"])
-def test_e7_known_limitation_same_meaning_in_other_words_is_reported_as_a_conflict(second):
+def test_e7_same_meaning_in_other_words_is_not_reported_as_a_conflict(tmp_path, second):
     question = "Which supplier replaced Meridian A?"
     rows = [_orchestration_row("a", question, "Cobalt B", "Cobalt B", "s1"),
             _orchestration_row("b", question, second, second, "s2")]
-    assert _synthesize(rows)["conflicts"] == []
+    result, world, _ = _compare_and_synthesize(tmp_path, rows, verdict=lambda a, b, claims: "AGREE")
+    assert result["conflicts"] == [] and result["status"] == "COMPLETE"
+    assert result["conflict_check"]["status"] == "AGREE" and len(world.comparison_requests) == 1
 
 
-def test_e7_current_behaviour_of_the_two_limitations_is_visible_in_the_conflict_check():
-    """Not a pass for the limitations: it pins that the answer discloses what was and was not compared."""
-    question = "Which supplier replaced Meridian A?"
-    reworded = _synthesize([_orchestration_row("a", question, "Cobalt B", "Cobalt B", "s1"),
-                            _orchestration_row("b", "Who took over from Meridian A?", "Not Cobalt B", "Not Cobalt B", "s2")])
-    assert reworded["conflict_check"] == dict(cross_branch_compared=False, compared=[], uncompared=["a", "b"])
-    same_key = _synthesize([_orchestration_row("a", question, "Cobalt B", "Cobalt B", "s1"),
-                            _orchestration_row("b", question, "cobalt b", "cobalt b", "s2")])
-    assert len(same_key["conflicts"]) == 1 and same_key["status"] == "PARTIAL"  # conservative direction
+def test_e7_the_comparison_request_carries_only_questions_and_answers_not_evidence_or_gold(tmp_path):
+    rows = [_orchestration_row("a", "Q one?", "A", "A", "s1"), _orchestration_row("b", "Q two?", "B", "B", "s2")]
+    _, world, _ = _compare_and_synthesize(tmp_path, rows)
+    (request,) = world.comparison_requests
+    context = json.loads(request.user_input.split("context=", 1)[1])
+    assert context == dict(claims=[dict(id="a", question="Q one?", answer="A"), dict(id="b", question="Q two?", answer="B")],
+                           pairs=[dict(a="a", b="b")])
+    assert "s1 quote" not in request.user_input and request.generation_options.require_tool_call is True
+
+
+@pytest.mark.parametrize("reply", [
+    ("raw", dict(pairs=[dict(a="a", b="zzz", verdict="CONFLICT")])),                       # task id does not exist
+    ("raw", dict(pairs=[dict(a="a", b="b", verdict="CONFLICT", note="Cobalt B is cited at s9")])),  # a new field
+    ("raw", dict(pairs=[dict(a="a", b="b", verdict="WINNER_A")])),                         # verdict outside the set
+    ("raw", dict(pairs=[dict(a="a", b="b", verdict="AGREE"), dict(a="b", b="a", verdict="CONFLICT")])),  # twice
+    ("raw", dict(pairs=[])),                                                               # pair missing
+    ("raw", dict(pairs=[dict(a="a", b="b", verdict="AGREE")], citations=["citation-9"])),  # a new citation
+    ("error", None),
+])
+def test_e7_a_comparison_reply_that_fails_the_host_schema_is_unavailable_and_changes_nothing(tmp_path, reply):
+    rows = [_orchestration_row("a", "Q one?", "A", "A", "s1"), _orchestration_row("b", "Q two?", "B", "B", "s2")]
+    result, _, _ = _compare_and_synthesize(tmp_path, rows, verdict=lambda a, b, claims: reply)
+    check = result["conflict_check"]
+    assert (check["status"], check["verified"]) == ("UNAVAILABLE", False) and check["reasons"]
+    assert result["conflicts"] == [] and result["status"] == "COMPLETE" and result["published"] is True
+    assert [a["citations"] for a in result["answers"]] == [["citation-1"], ["citation-2"]]
+
+
+def test_e7_the_model_may_name_the_pair_in_either_order(tmp_path):
+    rows = [_orchestration_row("a", "Q one?", "A", "A", "s1"), _orchestration_row("b", "Q two?", "B", "B", "s2")]
+    deps, world = _deps(tmp_path, rows, verdict=lambda a, b, claims: "CONFLICT")
+    world.compare = lambda request: ModelResponse(action=ModelAction.tool(ToolCall("c", "submit_comparison",
+        dict(pairs=[dict(a="b", b="a", verdict="CONFLICT")]))), usage=ModelUsage(input_tokens=1, output_tokens=1))
+    verdicts, reason = compare_pending(deps, bs.plan_comparison(rows))
+    assert reason is None and verdicts == {("a", "b"): ("CONFLICT", "semantic_comparison")}
+
+
+def test_e7_an_unavailable_comparison_in_a_real_run_keeps_the_answer_status_and_discloses_it(tmp_path):
+    world = World([delegation("delegate", [("a", Q_SUCC, []), ("b", Q_OWNER, [])]), delegation("stop")], TASKS)
+    world.verdict = lambda a, b, claims: ("error", None)
+    orchestrator, deps = build(tmp_path, world)
+    result = orchestrator.start(GOAL)
+    check = result["answer"]["conflict_check"]
+    assert result["status"] == "COMPLETE"  # the real completeness of the answers
+    assert (check["status"], check["verified"]) == ("UNAVAILABLE", False)
+    assert result["answer"]["published"] is True and len(result["answer"]["answers"]) == 2
+    from linkloom.orchestration.snapshot import render_snapshot
+    outcome = render_snapshot("run", GOAL, deps.workspace, result, running=False)["parallel_investigation"]
+    assert outcome["status"] == "COMPLETE" and outcome["conflict_check_status"] == "UNAVAILABLE"
+    assert outcome["conflict_check_verified"] is False
+
+
+def test_e7_no_comparison_call_when_there_is_nothing_structure_cannot_decide(tmp_path):
+    (tmp_path / "single").mkdir()
+    (tmp_path / "chained").mkdir()
+    single = World([delegation("answer_single")], {GOAL: (FACT["succ"], "Meridian A", "ok")})
+    orchestrator, _ = build(tmp_path / "single", single)
+    assert orchestrator.start(GOAL)["answer"]["conflict_check"]["status"] == "NOT_APPLICABLE"
+    chained = World([delegation("delegate", [("a", Q_SUCC, []), ("b", Q_OWNER, ["a"], "needs a")]),
+                     delegation("stop")], TASKS)
+    orchestrator, _ = build(tmp_path / "chained", chained)
+    result = orchestrator.start(GOAL)
+    assert result["answer"]["conflict_check"]["status"] == "UNRELATED"
+    assert result["answer"]["conflict_check"]["pairs"][0]["basis"] == "dependent_task"
+    assert single.comparison_requests == [] and chained.comparison_requests == []
+
+
+def test_e7_the_comparison_is_paid_from_its_reserved_slice_inside_the_run_budget(tmp_path):
+    world = World([delegation("delegate", [("a", Q_SUCC, []), ("b", Q_OWNER, [])]), delegation("stop")], TASKS)
+    orchestrator, deps = build(tmp_path, world)
+    orchestrator.start(GOAL)
+    limits = deps.limits
+    receipt = json.loads((deps.root / "comparison" / "budget.json").read_text(encoding="utf-8"))
+    assert receipt["requests_reserved"] == 1 and receipt["attempts"]
+    for field in ("max_requests", "max_input_tokens", "max_output_tokens", "max_cost_usd"):
+        reserved = (limits.supervisor_reserve()[field] + limits.comparison_reserve()[field]
+                    + limits.dispatch_cap() * getattr(limits.per_task, field))
+        assert reserved <= getattr(limits.provider, field) + 1e-9
+    assert limits.comparison_reserve()["max_requests"] == limits.comparison.max_requests >= 1
+    assert OrchestrationLimits.from_dict(limits.to_dict()) == limits
+
+
+def test_e7_a_single_task_budget_reserves_no_comparison_and_old_records_still_load():
+    single = OrchestrationLimits.split(TOTAL, max_tasks=1, max_rounds=0)
+    assert single.comparison is None and single.comparison_reserve()["max_requests"] == 0
+    stored = single.to_dict()
+    stored.pop("comparison")
+    assert OrchestrationLimits.from_dict(stored).comparison is None
+
+
+def test_e7_a_resumed_synthesis_never_sends_an_accepted_comparison_again(tmp_path):
+    rows = [_orchestration_row("a", "Q one?", "A", "A", "s1"), _orchestration_row("b", "Q two?", "B", "B", "s2")]
+    first, world, deps = _compare_and_synthesize(tmp_path, rows, verdict=lambda a, b, claims: "CONFLICT")
+    assert len(world.comparison_requests) == 1 and first["conflict_check"]["status"] == "CONFLICT"
+    for _ in range(2):  # the synthesize node replays after a restart
+        verdicts, reason = compare_pending(deps, bs.plan_comparison(rows))
+        assert reason is None and verdicts[("a", "b")][0] == "CONFLICT"
+    assert len(world.comparison_requests) == 1
+
+
+def test_e7_a_comparison_killed_after_the_request_left_is_unavailable_and_not_resent(tmp_path):
+    rows = [_orchestration_row("a", "Q one?", "A", "A", "s1"), _orchestration_row("b", "Q two?", "B", "B", "s2")]
+    _, world, deps = _compare_and_synthesize(tmp_path, rows)
+    (deps.root / "comparison" / "result.json").unlink()  # the process died before the receipt was written
+    verdicts, reason = compare_pending(deps, bs.plan_comparison(rows))
+    assert verdicts == {} and reason == "PROVIDER_UNCERTAIN" and len(world.comparison_requests) == 1
+
+
+def test_e7_a_run_without_a_comparison_budget_is_unavailable_and_sends_nothing(tmp_path):
+    rows = [_orchestration_row("a", "Q one?", "A", "A", "s1"), _orchestration_row("b", "Q two?", "B", "B", "s2")]
+    deps, world = _deps(tmp_path, rows)
+    deps.limits = replace(deps.limits, comparison=None)
+    assert compare_pending(deps, bs.plan_comparison(rows)) == ({}, "COMPARISON_NOT_BUDGETED")
+    assert world.comparison_requests == []
 
 
 # ---------------------------------------------------------------- E8 cancel in the middle of a run
