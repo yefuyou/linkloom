@@ -377,7 +377,7 @@ def _named(phrase: str) -> bool:
 
 
 def entity_check(query: str, snapshot: WorkspaceSnapshot) -> dict[str, Any]:
-    """Independent raw-text name positions; never consumes parser hypotheses."""
+    """Raw-text name positions, never parser hypotheses. Router off: hard_veto/role_conflict only block, never bind."""
     slots, resolver = snapshot.slots, snapshot.resolver
     original_query = query
     names = {normalize_temporal_component(n) for slot in slots for n in

@@ -109,6 +109,9 @@ class World:
 
         class Router:
             def complete(self, request):
+                if request.agent_id == "slot-selector":  # Ask's one intent call for an explicit scope; no Worker
+                    from tests.integration.unified_ask_fixture import answer_slot_selector
+                    return answer_slot_selector(request)
                 if request.agent_id == "orchestration-supervisor":
                     with world.lock:
                         world.supervisor_requests.append(request)

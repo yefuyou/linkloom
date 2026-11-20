@@ -17,7 +17,7 @@ class Model:
 
 class Forced:
     def complete(self, request):
-        return ModelResponse(action=ModelAction.final('{"intent":"CURRENT","slot_id":"platform","as_of":null}'))
+        return ModelResponse(action=ModelAction.final('{"intent":"CURRENT","slot_id":"platform","as_of":null,"entity_mentions":[]}'))
 
 
 @pytest.mark.parametrize("name", ["Ghost team", "Ghost Team", "Ghost-team", "Ghost_team", "GhostTeam",
@@ -46,7 +46,7 @@ def test_unbound_capital_name_is_a_clue_that_defers_to_the_selector_not_a_final_
     # The same raw candidates reach the selector: a null choice clarifies, a valid choice is honored.
     class Null:
         def complete(self, request):
-            return ModelResponse(action=ModelAction.final('{"intent":"CURRENT","slot_id":null,"as_of":null}'))
+            return ModelResponse(action=ModelAction.final('{"intent":"CURRENT","slot_id":null,"as_of":null,"entity_mentions":[]}'))
     result = r.route_question(query, SLOTS, RESOLVER, workspace_id="one", embedder=Model(), provider_factory=Null)
     assert result["route"] == "CLARIFY" and result["scope"] is None and result["llm_attempted"]
     result = r.route_question(query, SLOTS, RESOLVER, workspace_id="one", embedder=Model(), provider_factory=Forced)
@@ -148,7 +148,10 @@ def test_verified_proposal_name_is_not_a_reviewed_answer_or_index_term():
     assert slots[0]["values"] == ["Quartz"]
     result = r.route_question("Which platform does ProposalOnly use?", slots, RESOLVER,
                               workspace_id="one", embedder=Model(), provider_factory=Forced)
-    assert result["scope"] is None and result["route"] == "CLARIFY"
+    # The model's reply is the only binding source: it chose the Launch slot, which is the scope. The proposal-only
+    # name is neither added to the slot's approved values nor treated as an unknown entity.
+    assert result["decided_by"] == "llm" and result["scope"] == {"subject": "Launch", "relation": "uses platform"}
+    assert slots[0]["values"] == ["Quartz"] and result["discovery"]["entity_check"]["unbound_proper_names"] == []
 
 
 
@@ -190,7 +193,8 @@ def test_modifier_rule_preserves_explicit_names_values_and_organization_vetoes(q
     assert result["discovery"]["entity_check"]["hard_veto"]
     assert result["route"] == "NO_MATCH" and result["scope"] is None
     assert "platform" in {c["slot_id"] for c in result["discovery"]["raw_candidates"]}
-    assert not result["llm_attempted"]
+    # The forced model may be asked, but its slot choice never binds the explicitly named unknown entity.
+    assert result["discovery"]["scope"] is None and result["decided_by"] == "fallback"
 
 
 

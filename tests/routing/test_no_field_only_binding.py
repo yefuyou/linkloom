@@ -170,9 +170,11 @@ def test_cascade_value_only_question_binds_when_the_model_reports_the_recorded_v
     assert result["conclusions"]
 
 
-def test_cascade_unavailable_router_preserves_rule_clarification_reason(tmp_path, monkeypatch):
+def test_cascade_unavailable_router_stops_with_an_explicit_reason(tmp_path, monkeypatch):
     rules, result, requests = cascade_ask(tmp_path, monkeypatch, "payment_gateway现在是什么？", None, slots=SLOTS)
     assert rules["route"] == "CLARIFY" and not requests
     assert result["router"]["fallback_reason"] == "MODEL_UNAVAILABLE"
-    assert result["router"]["reason_code"] == result["error"]["code"] == "DECISION_SCOPE_AMBIGUOUS"
+    # The rules clarified this question; with the Router unavailable Ask clarifies too, and says why.
+    assert result["router"]["reason_code"] == result["error"]["code"] == "MODEL_UNAVAILABLE"
+    assert result["router"]["source"] == "host" and result["router"]["decision"] == "CLARIFY"
     assert_nothing_bound(result)

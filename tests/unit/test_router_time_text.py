@@ -11,14 +11,15 @@ from linkloom.ui.router_context import (
 )
 from linkloom.ui.router_provider import _route_text, _submission
 from linkloom.ui.scope_discovery import resolve_query_date
-from linkloom.ui.structured_router import RouterInvalid, request_for, route_payload, route_with_adapter
+from linkloom.ui.structured_router import RouterInvalid, normalize_mention, request_for, route_payload, route_with_adapter
 
 
 def context(query, task, selected=None):
     options, required, spans, unresolved, point = time_context(query, selected)
     candidate = RouteCandidate('TASK', 'task', task, (task,), 1, 1 if point else None, 1, False, ('task-key',))
     return RouterContext(query, 'local-workspace', '2026-11-05T00:00:00+00:00', options, required,
-                         spans, unresolved, {'c0': candidate}, 1, 'hash', True)
+                         spans, unresolved, {'c0': candidate}, 1, 'hash', True,
+                         catalogue_names=frozenset({normalize_mention(task)}))
 
 
 def model_route(ctx, task, time_text, time_role, intent='CURRENT'):

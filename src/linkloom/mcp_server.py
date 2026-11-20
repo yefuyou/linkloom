@@ -117,7 +117,7 @@ def build_server(app, ask_service, task_api, *, allow_external_provider: bool = 
                  for evidence in item["evidence"]}
         return _result({
             "workspace": workspace, "status": result["status"], "decision": router.get("decision"),
-            "reason_code": error.get("code") or router.get("reason_code"), "message": error.get("message"),
+            "reason_code": error.get("code") or (router.get("reason_code") if router.get("reason_code") != "NONE" else None), "message": error.get("message"),
             "conclusions": result["conclusions"],
             "evidence": [_evidence(item, times.get(item.get("evidence_ref"))) for item in result["evidence"]],
             "uncertainty": result["uncertainty"],
