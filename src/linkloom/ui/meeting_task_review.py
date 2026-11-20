@@ -110,7 +110,8 @@ class MeetingTaskReview:
 
     def pending(self, workspace_id):
         rows = self.db.execute("SELECT * FROM ll_meeting_task_review WHERE workspace_id=? AND status='PENDING_REVIEW' ORDER BY candidate_id", (workspace_id,)).fetchall()
-        return [item for row in rows if (item := self._current(row)) is not None]
+        return [item for row in rows
+                if self._recover_from_receipt(row) is None and (item := self._current(row)) is not None]
 
     def _to_candidate_input(self, row, candidate: dict, artifact) -> TaskCandidateInput:
         source_sha256 = hashlib.sha256(artifact.content.encode("utf-8")).hexdigest()
@@ -166,6 +167,9 @@ class MeetingTaskReview:
             or not isinstance(reviewer, str) or not reviewer.strip() or len(reviewer) > 160
             or not isinstance(note, str) or not note.strip() or len(note) > 4096):
             raise ProductApplicationError('INVALID_MEETING_TASK_REVIEW', 'Provide an action, current source version, reviewer and note.')
+        recovered = self._recover_from_receipt(row)
+        if recovered is not None:
+            return recovered
         if row['status'] != 'PENDING_REVIEW':
             raise ProductApplicationError('MEETING_TASK_ALREADY_REVIEWED', 'This candidate was already reviewed.', status=409)
 
@@ -214,13 +218,37 @@ class MeetingTaskReview:
         except ValueError as exc:
             raise ProductApplicationError('INVALID_MEETING_TASK_REVIEW', str(exc), status=400) from exc
 
+        self._mark_reviewed(row, status, reviewer.strip(), note.strip())
+        return result_payload
+
+    def _mark_reviewed(self, row, status, reviewer, note):
         self.db.execute("UPDATE ll_meeting_task_review SET status=?,reviewer=?,note=? WHERE workspace_id=? AND candidate_id=?",
-            (status, reviewer.strip(), note.strip(), workspace_id, candidate_id))
+            (status, reviewer, note, row['workspace_id'], row['candidate_id']))
         self.db.commit()
         count = self.db.execute("SELECT COUNT(*) FROM ll_meeting_task_review WHERE workspace_id=? AND source_id=? AND source_version=? AND status='PENDING_REVIEW'",
-            (workspace_id,row['source_id'],row['source_version'])).fetchone()[0]
-        self.app.repository.set_review_required_count(workspace_id,row['source_id'],row['source_version'],count)
-        return result_payload
+            (row['workspace_id'],row['source_id'],row['source_version'])).fetchone()[0]
+        self.app.repository.set_review_required_count(row['workspace_id'],row['source_id'],row['source_version'],count)
+
+    def _recover_from_receipt(self, row):
+        """Finish a review whose TaskStore receipt committed but whose queue update did not.
+
+        TaskStore and this queue use separate SQLite connections. The receipt is the
+        authoritative record, so the queue row adopts it instead of reviewing again.
+        """
+        if row['status'] != 'PENDING_REVIEW':
+            return None
+        link = self.task_store.get_link(row['workspace_id'], row['candidate_id'])
+        if link is None:
+            return None
+        if link.task_id is None:
+            status, result = 'REJECTED_BY_HUMAN', {'status': 'REJECTED_BY_HUMAN', 'authority': 'REJECTED'}
+        else:
+            task = self.task_store.get_task(row['workspace_id'], link.task_id)
+            status = 'CONFIRMED_BY_HUMAN'
+            result = {'status': status, 'authority': 'CONFIRMED', 'task_id': link.task_id,
+                      'task': task.to_dict() if task else None}
+        self._mark_reviewed(row, status, link.reviewer, link.reason)
+        return result
 
     def list_formal_tasks(self, workspace_id: str):
         return [task.to_dict() for task in self.task_store.list_tasks(workspace_id)]

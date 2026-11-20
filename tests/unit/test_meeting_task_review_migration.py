@@ -254,6 +254,72 @@ class TestMeetingTaskReviewMigration(unittest.TestCase):
                 task_store.close()
                 app.repository._connection.close()
 
+    def test_legacy_update_failure_after_formal_write_recovers_from_receipt(self) -> None:
+        # TaskStore and ll_meeting_task_review commit on different connections; inject a
+        # failure between them and check that the receipt makes recovery idempotent.
+        content = "Li: I will ship the payment API by 2026-10-12.\nSomeone suggested rewriting the portal.\n"
+
+        class _FailingLegacyUpdate:
+            def __init__(self, connection):
+                self._connection, self.armed = connection, True
+
+            def execute(self, sql, *args):
+                if self.armed and sql.startswith("UPDATE ll_meeting_task_review"):
+                    self.armed = False
+                    raise sqlite3.OperationalError("database is locked")
+                return self._connection.execute(sql, *args)
+
+            def __getattr__(self, name):
+                return getattr(self._connection, name)
+
+        with TemporaryDirectory() as tmp:
+            db_path = Path(tmp) / "product.sqlite"
+            app = _FakeApp(db_path, content)
+            task_store = TaskStore(db_path)
+            try:
+                svc = MeetingTaskReview(
+                    app,
+                    _FakeAdapter(),
+                    TaskExtractionConfig(task_extraction_mode="meeting_v2"),
+                    [],
+                    lambda *a, **kw: None,
+                    task_store=task_store,
+                )
+                self._seed_pending(svc, candidate_id="cand-1", quote="Li: I will ship the payment API by 2026-10-12.",
+                                   content=content, title="Ship payment API", owner="Li", deadline="2026-10-12")
+                self._seed_pending(svc, candidate_id="cand-rej", quote="Someone suggested rewriting the portal.",
+                                   content=content, title="Rewrite portal", owner="Alex", deadline="2026-11-01")
+                legacy = svc.db
+                confirm = {"action": "CONFIRM", "source_version": "ver-1", "reviewer": "pm-1", "note": "Approved"}
+                reject = {"action": "REJECT", "source_version": "ver-1", "reviewer": "pm-1", "note": "Only a suggestion"}
+
+                svc.db = _FailingLegacyUpdate(legacy)
+                with self.assertRaises(sqlite3.OperationalError):
+                    svc.review("ws-1", "cand-1", confirm)
+                svc.db = legacy
+                self.assertEqual(len(svc.list_formal_tasks("ws-1")), 1)
+
+                # The formal receipt hides the candidate from the queue even before a retry.
+                self.assertEqual([item["candidate_id"] for item in svc.pending("ws-1")], ["cand-rej"])
+                status = legacy.execute("SELECT status,reviewer,note FROM ll_meeting_task_review WHERE candidate_id='cand-1'").fetchone()
+                self.assertEqual(tuple(status), ("CONFIRMED_BY_HUMAN", "pm-1", "Approved"))
+
+                # A retry neither creates a second task nor reports a false conflict.
+                svc.db = _FailingLegacyUpdate(legacy)
+                with self.assertRaises(sqlite3.OperationalError):
+                    svc.review("ws-1", "cand-rej", reject)
+                svc.db = legacy
+                retried = svc.review("ws-1", "cand-rej", reject)
+                self.assertEqual(retried, {"status": "REJECTED_BY_HUMAN", "authority": "REJECTED"})
+                self.assertEqual(svc.pending("ws-1"), [])
+                self.assertEqual(len(svc.list_formal_tasks("ws-1")), 1)
+                self.assertEqual(app.repository.review_counts[-1], ("ws-1", "src-1", "ver-1", 0))
+                with self.assertRaisesRegex(Exception, "already reviewed"):
+                    svc.review("ws-1", "cand-1", confirm)
+            finally:
+                task_store.close()
+                app.repository._connection.close()
+
 
 if __name__ == "__main__":
     unittest.main()
