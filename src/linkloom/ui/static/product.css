@@ -271,9 +271,14 @@ pre,code,.metadata{overflow-wrap:anywhere;max-width:100%;}pre{white-space:pre-wr
 
 /* Undated decisions zone */
 .undated-zone {
-  margin-top: 22px; border: 1px dashed #c8b896; background: #fffcf5;
+  margin-top: 22px; border: 1px dashed #c8b896; background: #fffcf5; display: grid; gap: 12px;
 }
 .undated-zone h2 { margin-bottom: 4px; font-size: 17px; }
+.undated-card { background: white; border: 1px solid var(--line); }
+.undated-promote-details { margin-top: 6px; padding-top: 8px; border-top: 1px dashed var(--line); }
+.undated-promote-details > summary { font-size: 13px; font-weight: 650; color: var(--green); }
+.undated-promote-form { margin-top: 10px; max-width: 420px; }
+.undated-promote-error[hidden] { display: none; }
 
 /* Ask Run Trace Drawer */
 .trace-drawer {
