@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from contextlib import contextmanager
 from contextvars import ContextVar
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import date, datetime
 import hashlib
 import re
@@ -188,3 +188,95 @@ def _parse_source_text(artifact: RawArtifact) -> TimestampedTextParseResult | Do
                              _labelled_date(text, "文档日期|Document date"),
                              _labelled_date(text, "会议日期|事件日期|Meeting date|Event date")),),
     )
+
+
+def document_quote_span(document: DocumentTextSegment, quote: str | None) -> EvidenceSpan | None:
+    """Bind a verbatim quote only when it identifies one range in the document."""
+    if not quote or not quote.strip():
+        return None
+    text = document.body_text
+    start = text.find(quote)
+    if start < 0 or text.find(quote, start + 1) >= 0:
+        return None
+    original = document.evidence_span
+    if quote == text:
+        return original
+    end = start + len(quote)
+    first, last = line_range_for(text, start, end)
+    quote_hash = hashlib.sha256(quote.encode("utf-8")).hexdigest()
+    segment_id = segment_id_for(original.artifact_version_id, original.message_id, start, end, quote_hash)
+    return replace(original, segment_id=segment_id, evidence_ref=evidence_ref_for(segment_id),
+                   char_start=start, char_end=end, line_start=first, line_end=last,
+                   quote=quote, quote_sha256=quote_hash)
+
+
+def source_segment_for_span(artifact: RawArtifact, span: EvidenceSpan) -> SourceSegment | None:
+    """Resolve the existing canonical segment or a verified ordinary-document quote."""
+    parsed = parse_source_text(artifact)
+    for segment in parsed.segments:
+        if segment.evidence_span == span:
+            return segment
+        if isinstance(segment, DocumentTextSegment) and document_quote_span(segment, span.quote) == span:
+            return DocumentTextSegment(
+                span.ordinal, span.message_id, span.segment_id, span.quote, span,
+                _labelled_date(span.quote, "文档日期|Document date"),
+                _labelled_date(span.quote, "会议日期|事件日期|Meeting date|Event date"),
+            )
+    return None
+
+
+def _source_evidence_catalogue_values(span: EvidenceSpan) -> dict:
+    """Use the existing SourceVersion evidence catalogue format."""
+    return dict(workspace_id=span.workspace_id, source_id=span.artifact_id,
+                artifact_version_id=span.artifact_version_id, evidence_ref=span.evidence_ref,
+                content_sha256=span.content_hash, quote_sha256=span.quote_sha256,
+                line_start=span.line_start, line_end=span.line_end, quote=span.quote)
+
+
+def resolve_source_evidence(artifact: RawArtifact, row) -> EvidenceSpan | None:
+    """Verify a catalogue row and recover its exact code-point range from the source."""
+    for segment in parse_source_text(artifact).segments:
+        span = segment.evidence_span
+        if row["evidence_ref"] != span.evidence_ref and isinstance(segment, DocumentTextSegment):
+            span = document_quote_span(segment, row["quote"])
+        if span is not None and all(row[key] == value for key, value in _source_evidence_catalogue_values(span).items()):
+            return span
+    return None
+
+
+def persist_document_quote_evidence(connection, registry, artifact: RawArtifact, spans) -> None:
+    """Publish validated subspans through the existing catalogue and source registry.
+
+    Call under the host's source-write lock before capturing candidates.
+    """
+    parsed = parse_source_text(artifact)
+    if not isinstance(parsed, DocumentTextParseResult):
+        return
+    document = parsed.segments[0]
+    excerpts = set(spans) - {document.evidence_span}
+    if not excerpts:
+        return
+    if any(document_quote_span(document, span.quote) != span for span in excerpts):
+        raise ValueError("document quote does not match its immutable source")
+    with connection:
+        connection.executemany(
+            """INSERT OR IGNORE INTO ll_source_evidence (
+                workspace_id, source_id, artifact_version_id, evidence_ref,
+                content_sha256, quote_sha256, line_start, line_end, quote
+            ) SELECT :workspace_id, :source_id, :artifact_version_id, :evidence_ref,
+                :content_sha256, :quote_sha256, :line_start, :line_end, :quote
+            FROM ll_source
+            WHERE workspace_id = :workspace_id AND source_id = :source_id
+                AND current_version_id = :artifact_version_id AND active = 1""",
+            (_source_evidence_catalogue_values(span) for span in excerpts),
+        )
+        active = connection.execute(
+            """SELECT 1 FROM ll_source WHERE workspace_id = ? AND source_id = ?
+               AND current_version_id = ? AND active = 1""",
+            (artifact.workspace_id, artifact.artifact_id, artifact.artifact_version_id),
+        ).fetchone()
+        if active is None:
+            raise ValueError("document quote source version is no longer current")
+    for span in excerpts:
+        registry.register_evidence(artifact.workspace_id, span.evidence_ref,
+                                   content_hash=artifact.content_hash, source_version=artifact.artifact_version_id)

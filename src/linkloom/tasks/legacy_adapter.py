@@ -5,6 +5,7 @@ import json
 
 from linkloom.semantic_ingestion.artifacts import RawArtifact
 from linkloom.semantic_ingestion.candidate_persistence import deserialize_candidate, serialize_candidate
+from linkloom.semantic_ingestion.document_text import DocumentTextSegment, document_quote_span
 from linkloom.tasks.models import EvidenceReference, TaskCandidateInput, canonical_json, required_text
 from linkloom.tasks.review_models import CandidateSnapshot, CandidateUnavailableError, digest
 from linkloom.tasks.read_context import memo
@@ -147,13 +148,19 @@ class LegacyTaskCandidateSource:
                 if (reference.workspace_id != workspace or reference.source_id != source_id
                     or reference.source_version_id != source_version_id or reference.source_sha256 != artifact.content_hash):
                     raise ValueError('reference is not bound to this source version')
-                matching = [segment for segment in segments if all(getattr(segment.evidence_span, left) == getattr(reference, right)
-                    for left, right in (('message_id', 'message_id'), ('quote', 'quote'), ('quote_sha256', 'quote_sha256'),
-                                        ('char_start', 'char_start'), ('char_end', 'char_end'),
-                                        ('line_start', 'line_start'), ('line_end', 'line_end')))]
-                if len(matching) != 1 or (reference.meeting_time is not None and reference.meeting_time != matching[0].event_time):
+                proofs = [(segment.evidence_span, segment.event_time) for segment in segments]
+                if len(segments) == 1 and isinstance(segments[0], DocumentTextSegment):
+                    excerpt = document_quote_span(segments[0], reference.quote)
+                    if excerpt is not None and excerpt != segments[0].evidence_span:
+                        proofs.append((excerpt, None))
+                matching = [(span, event_time) for span, event_time in proofs if all(
+                    getattr(span, field) == getattr(reference, field) for field in (
+                        'message_id', 'quote', 'quote_sha256', 'char_start', 'char_end', 'line_start', 'line_end'
+                    )
+                )]
+                if len(matching) != 1 or (reference.meeting_time is not None and reference.meeting_time != matching[0][1]):
                     raise ValueError('reference position or original recording time does not verify')
-                span = matching[0].evidence_span
+                span, _ = matching[0]
                 saved = connection.execute('''SELECT * FROM ll_source_evidence
                     WHERE workspace_id=? AND source_id=? AND artifact_version_id=? AND evidence_ref=?''',
                     (workspace, source_id, source_version_id, span.evidence_ref)).fetchone()

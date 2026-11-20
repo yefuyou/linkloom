@@ -106,6 +106,7 @@ class CandidateReasonCode(StrEnum):
     RELATION_UNRESOLVED = "RELATION_UNRESOLVED"
     TEMPORAL_UNRESOLVED = "TEMPORAL_UNRESOLVED"
     CONFLICT_REQUIRES_REVIEW = "CONFLICT_REQUIRES_REVIEW"
+    EVIDENCE_UNRESOLVED = "EVIDENCE_UNRESOLVED"
     PROVENANCE_INVALID = "PROVENANCE_INVALID"
     WORKSPACE_MISMATCH = "WORKSPACE_MISMATCH"
     PROVIDER_REQUEST_BLOCKED = "PROVIDER_REQUEST_BLOCKED"
@@ -154,6 +155,7 @@ class ExtractedClaim:
     confidence: CandidateConfidence
     task: TaskProposal | None = None
     fact_details: FactDetails | None = None
+    evidence_quote: str | None = None
 
     def __post_init__(self) -> None:
         if not isinstance(self.claim_type, ClaimType):
@@ -178,6 +180,10 @@ class ExtractedClaim:
                 or any(ord(character) < 32 for character in value)
             ):
                 raise ValueError(f"{name} must be a bounded date/time string or null")
+        if self.evidence_quote is not None and (
+            not isinstance(self.evidence_quote, str) or len(self.evidence_quote) > 4096
+        ):
+            raise ValueError("evidence_quote must be bounded text or null")
         if not isinstance(self.confidence, CandidateConfidence):
             raise ValueError("confidence must be CandidateConfidence")
         if self.fact_details is not None and (not isinstance(self.fact_details, FactDetails) or self.claim_type is not ClaimType.FACT):
@@ -214,6 +220,8 @@ class ExtractedClaim:
             payload["task"] = self.task.to_dict()
         if self.fact_details is not None:
             payload["fact_details"] = self.fact_details.to_dict()
+        if self.evidence_quote is not None:
+            payload["evidence_quote"] = self.evidence_quote
         return payload
 
 
@@ -592,7 +600,7 @@ def _claim_from_dict(data: object) -> ExtractedClaim:
         "valid_to_raw",
         "confidence",
     }
-    if not isinstance(data, dict) or set(data) - {"fact_details"} not in (expected, expected | {"task"}):
+    if not isinstance(data, dict) or set(data) - {"fact_details", "evidence_quote"} not in (expected, expected | {"task"}):
         raise ValueError("ExtractedClaim has missing or unsupported fields")
     raw_confidence = data["confidence"]
     if not isinstance(raw_confidence, dict) or set(raw_confidence) != {
@@ -629,6 +637,7 @@ def _claim_from_dict(data: object) -> ExtractedClaim:
         ),
         task=TaskProposal.from_dict(data["task"]) if data.get("task") is not None else None,
         fact_details=FactDetails.from_dict(data["fact_details"]) if data.get("fact_details") is not None else None,
+        evidence_quote=data.get("evidence_quote"),
     )
 
 
@@ -767,7 +776,6 @@ class CandidateDecisionFact:
             self.provenance.artifact_version_id,
             self.provenance.source_ref,
             self.provenance.content_hash,
-            self.provenance.segment_id,
             self.provenance.message_id,
             self.provenance.evidence_ref,
         ) != (
@@ -776,11 +784,15 @@ class CandidateDecisionFact:
             self.artifact_version_id,
             self.source_ref,
             self.content_sha256,
-            self.segment_id,
             self.message_id,
             self.evidence_ref,
         ):
             raise ValueError("candidate identity does not match its provenance")
+        narrowed_document = self.source_format == "document_text" and self.segment_id != self.provenance.segment_id
+        if self.segment_id != self.provenance.segment_id and (
+            not narrowed_document or self.segment_id != self.extraction_receipt.segment_id
+        ):
+            raise ValueError("candidate evidence must belong to its extraction segment")
         if self.extraction_fingerprint != self.extraction_receipt.extraction_fingerprint:
             raise ValueError("candidate extraction fingerprint does not match its receipt")
         if self.source_format not in {"timestamped_text", "document_text"}:
@@ -789,9 +801,10 @@ class CandidateDecisionFact:
             raise ValueError("transcript metadata must retain its original timestamp contract")
         if self.source_format == "document_text":
             from linkloom.semantic_ingestion.document_text import _labelled_date, document_valid_time_is_grounded
-            if (self.event_time is not None
-                or self.document_date != _labelled_date(self.provenance.quote, "文档日期|Document date")
-                or self.event_date != _labelled_date(self.provenance.quote, "会议日期|事件日期|Meeting date|Event date")):
+            if self.event_time is not None or (not narrowed_document and (
+                self.document_date != _labelled_date(self.provenance.quote, "文档日期|Document date")
+                or self.event_date != _labelled_date(self.provenance.quote, "会议日期|事件日期|Meeting date|Event date")
+            )):
                 raise ValueError("document dates must match exact source metadata; speech time is unknown")
             if self.temporal_basis is TemporalBasis.EXPLICIT and (
                 not document_valid_time_is_grounded(self.provenance.quote, self.valid_from)

@@ -282,7 +282,8 @@ def extract_product_tasks(extractor, segment, context):
     if extractor.max_attempts != 1:
         raise ValueError('two-stage product extraction forbids automatic retries')
     context.product_task_fields.input_for(segment, context.expected_workspace_id)
-    old_context = SemanticExtractionContext(context.expected_workspace_id, context.relation_resolver)
+    old_context = SemanticExtractionContext(context.expected_workspace_id, context.relation_resolver,
+                                             document_quote_evidence=context.document_quote_evidence)
     stage_one = extractor._extract(segment, old_context, isolate_product_tasks=True,
         current_source_guard=lambda: context.product_task_fields.input_for(segment, context.expected_workspace_id))
     context.product_task_fields.input_for(segment, context.expected_workspace_id)
@@ -346,10 +347,11 @@ def validate_stage_audit(result):
         raise ValueError('stage one source, request or prompt/schema receipt changed')
 
     from types import SimpleNamespace
-    from linkloom.semantic_ingestion.extraction import _EXTRACTION_SCHEMA_SHA256
+    from linkloom.semantic_ingestion.extraction import _EXTRACTION_SCHEMA_SHA256, is_document_quote_schema
     from linkloom.fact_memory.extraction import fact_schema_hash
-    fact_profile = first.receipt.schema_sha256 == fact_schema_hash()
-    if first.receipt.schema_sha256 != _EXTRACTION_SCHEMA_SHA256 and not fact_profile:
+    schema = first.receipt.schema_sha256
+    fact_profile = schema == fact_schema_hash() or is_document_quote_schema(schema, fact_profile=True)
+    if schema != _EXTRACTION_SCHEMA_SHA256 and not fact_profile and not is_document_quote_schema(schema):
         raise ValueError('stage one must retain a declared schema')
     message = audit['canonical_message']
     if (not isinstance(message, dict) or set(message) != {'text', 'ordinal', 'speaker'}
