@@ -49,7 +49,7 @@ from linkloom.semantic_ingestion.materialization import (
 )
 from linkloom.semantic_ingestion.pipeline import SemanticIngestionPipeline
 from linkloom.semantic_ingestion.relations import FrozenRelationResolver
-from linkloom.semantic_ingestion.timestamped_text import parse_timestamped_text
+from linkloom.semantic_ingestion.document_text import parse_source_text
 from linkloom.semantic_ingestion.validation import CandidateValidator
 from linkloom.ui.configuration import GEMINI_CONFIGURATION_HELP, OFFLINE_HELP
 
@@ -70,12 +70,15 @@ _REVIEW_NOT_READY = "This candidate needs additional source-supported review bef
 
 class ProductApplicationError(RuntimeError):
     def __init__(self, code: str, message: str, *, status: int = 400,
-                 reason_codes: tuple[str, ...] | None = None) -> None:
+                 reason_codes: tuple[str, ...] | None = None,
+                 details: dict[str, Any] | None = None) -> None:
         super().__init__(message)
         self.code = code
         self.status = status
         # Set only by the fact-memory switch; None keeps the error payload unchanged.
         self.reason_codes = reason_codes
+        # Structured, workspace-scoped context for a user choice (e.g. duplicates).
+        self.details = details
 
 
 class ProductRepository:
@@ -120,8 +123,35 @@ class ProductRepository:
                 error_message TEXT,
                 created_at TEXT NOT NULL,
                 updated_at TEXT NOT NULL,
+                meeting_date TEXT,
+                meeting_date_basis TEXT,
+                input_kind TEXT,
+                revision INTEGER NOT NULL DEFAULT 1,
                 PRIMARY KEY (workspace_id, source_id),
                 FOREIGN KEY (workspace_id) REFERENCES ll_workspace(workspace_id)
+            );
+            CREATE TABLE IF NOT EXISTS ll_source_import_request (
+                workspace_id TEXT NOT NULL,
+                request_id TEXT NOT NULL,
+                payload_sha256 TEXT NOT NULL,
+                source_id TEXT NOT NULL,
+                created_at TEXT NOT NULL,
+                PRIMARY KEY (workspace_id, request_id),
+                FOREIGN KEY (workspace_id, source_id) REFERENCES ll_source(workspace_id, source_id)
+            );
+            CREATE TABLE IF NOT EXISTS ll_source_revision (
+                workspace_id TEXT NOT NULL,
+                source_id TEXT NOT NULL,
+                revision INTEGER NOT NULL,
+                changed_fields TEXT NOT NULL,
+                version_id TEXT NOT NULL,
+                previous_version_id TEXT,
+                name TEXT NOT NULL,
+                meeting_date TEXT,
+                meeting_date_basis TEXT,
+                created_at TEXT NOT NULL,
+                PRIMARY KEY (workspace_id, source_id, revision),
+                FOREIGN KEY (workspace_id, source_id) REFERENCES ll_source(workspace_id, source_id)
             );
             CREATE TABLE IF NOT EXISTS ll_source_version (
                 workspace_id TEXT NOT NULL,
@@ -188,6 +218,21 @@ class ProductRepository:
                 ON ll_source_evidence(workspace_id, source_id, artifact_version_id);
             """
         )
+        # Additive migration for databases created before Source metadata/revision.
+        columns = {str(row["name"]) for row in self._connection.execute("PRAGMA table_info(ll_source)")}
+        with self._connection:
+            for column, ddl in (
+                ("meeting_date", "meeting_date TEXT"),
+                ("meeting_date_basis", "meeting_date_basis TEXT"),
+                ("input_kind", "input_kind TEXT"),
+                ("revision", "revision INTEGER NOT NULL DEFAULT 1"),
+            ):
+                if column not in columns:
+                    self._connection.execute(f"ALTER TABLE ll_source ADD COLUMN {ddl}")
+            self._connection.execute(
+                "CREATE INDEX IF NOT EXISTS idx_ll_source_version_hash "
+                "ON ll_source_version(workspace_id, content_sha256)"
+            )
 
     def close(self) -> None:
         with self._lock:
@@ -272,8 +317,18 @@ class ProductRepository:
         name: str,
         artifact: RawArtifact,
         spans: tuple[EvidenceSpan, ...],
+        *,
+        meeting_date: str | None = None,
+        meeting_date_basis: str | None = None,
+        input_kind: str | None = None,
+        request: tuple[str, str] | None = None,
     ) -> tuple[dict[str, Any], str | None]:
-        return self._insert_source(workspace_id, source_id, name, artifact, spans), None
+        """Create a Source; ``request`` = (request_id, payload_sha256) is recorded atomically."""
+        source = self._insert_source(
+            workspace_id, source_id, name, artifact, spans,
+            metadata=(meeting_date, meeting_date_basis), input_kind=input_kind, request=request,
+        )
+        return source, None
 
     def update_source(
         self,
@@ -283,24 +338,120 @@ class ProductRepository:
         artifact: RawArtifact,
         spans: tuple[EvidenceSpan, ...],
     ) -> tuple[dict[str, Any], str | None, bool]:
+        source, old_version, changed, _ = self.revise_source(workspace_id, source_id, name, artifact, spans)
+        return source, old_version, changed
+
+    def revise_source(
+        self,
+        workspace_id: str,
+        source_id: str,
+        name: str,
+        artifact: RawArtifact,
+        spans: tuple[EvidenceSpan, ...],
+        *,
+        metadata: tuple[str | None, str | None] | None = None,
+        expected_revision: int | None = None,
+    ) -> tuple[dict[str, Any], str | None, bool, tuple[str, ...]]:
+        """One Source revision covers title, meeting date and content together.
+
+        ``metadata`` None keeps the stored meeting date. Returns the source, the
+        previous version, whether content changed (new immutable version), and
+        which fields changed. Nothing changed means no revision and no write.
+        """
         current = self.get_source(workspace_id, source_id, include_deleted=True)
         if current is None:
             raise ProductApplicationError("SOURCE_NOT_FOUND", "The source is unavailable in this workspace.", status=404)
         if not current["active"]:
             raise ProductApplicationError("SOURCE_DELETED", "Restore a deleted source by importing it again.", status=409)
+        if expected_revision is not None and expected_revision != current["revision"]:
+            raise ProductApplicationError(
+                "VERSION_CONFLICT",
+                "This meeting was changed elsewhere. Reload it, then reapply your unsaved edits.",
+                status=409,
+                details={"current_revision": current["revision"]},
+            )
         if current["ingestion_status"] == "INGESTING":
             raise ProductApplicationError("SOURCE_BUSY", "Wait for the current source ingestion to finish.", status=409)
-        if current["content_sha256"] == artifact.content_hash:
-            with self._lock, self._connection:
-                self._connection.execute(
-                    "UPDATE ll_source SET name = ?, updated_at = ? WHERE workspace_id = ? AND source_id = ?",
-                    (name, _now(), workspace_id, source_id),
-                )
-            updated = self.get_source(workspace_id, source_id, include_deleted=True)
-            assert updated is not None
-            return updated, str(current["source_version"]), False
-        updated = self._insert_source(workspace_id, source_id, name, artifact, spans)
-        return updated, str(current["source_version"]), True
+        current_metadata = (current["meeting_date"], current["meeting_date_basis"])
+        new_metadata = current_metadata if metadata is None else metadata
+        content_changed = current["content_sha256"] != artifact.content_hash
+        changed_fields = tuple(
+            field for field, differs in (
+                ("title", name != current["name"]),
+                ("meeting_date", new_metadata != current_metadata),
+                ("content", content_changed),
+            ) if differs
+        )
+        old_version = str(current["source_version"])
+        if not changed_fields:
+            return current, old_version, False, ()
+        if content_changed:
+            updated = self._insert_source(
+                workspace_id, source_id, name, artifact, spans,
+                metadata=new_metadata, changed_fields=changed_fields, previous_version=old_version,
+            )
+            return updated, old_version, True, changed_fields
+        now = _now()
+        with self._lock, self._connection:
+            self._connection.execute(
+                "UPDATE ll_source SET name = ?, meeting_date = ?, meeting_date_basis = ?, "
+                "revision = revision + 1, updated_at = ? WHERE workspace_id = ? AND source_id = ?",
+                (name, new_metadata[0], new_metadata[1], now, workspace_id, source_id),
+            )
+            self._record_revision(workspace_id, source_id, changed_fields, old_version, old_version,
+                                  name, new_metadata, now)
+        updated = self.get_source(workspace_id, source_id, include_deleted=True)
+        assert updated is not None
+        return updated, old_version, False, changed_fields
+
+    def _record_revision(self, workspace_id, source_id, changed_fields, version_id, previous_version,
+                         name, metadata, now) -> None:
+        # Caller holds the lock and transaction; append-only audit of one revision.
+        row = self._connection.execute(
+            "SELECT revision FROM ll_source WHERE workspace_id = ? AND source_id = ?",
+            (workspace_id, source_id),
+        ).fetchone()
+        self._connection.execute(
+            """INSERT OR REPLACE INTO ll_source_revision(workspace_id, source_id, revision, changed_fields,
+               version_id, previous_version_id, name, meeting_date, meeting_date_basis, created_at)
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+            (workspace_id, source_id, int(row["revision"]), json.dumps(list(changed_fields)),
+             version_id, previous_version, name, metadata[0], metadata[1], now),
+        )
+
+    def source_revisions(self, workspace_id: str, source_id: str) -> tuple[dict[str, Any], ...]:
+        with self._lock:
+            rows = self._connection.execute(
+                "SELECT * FROM ll_source_revision WHERE workspace_id = ? AND source_id = ? ORDER BY revision",
+                (workspace_id, source_id),
+            ).fetchall()
+        return tuple({**dict(row), "changed_fields": json.loads(row["changed_fields"])} for row in rows)
+
+    def find_duplicate_sources(self, workspace_id: str, content_sha256: str) -> tuple[dict[str, Any], ...]:
+        """Active sources in this workspace whose current text has the exact same hash."""
+        with self._lock:
+            rows = self._connection.execute(
+                """SELECT source.source_id FROM ll_source AS source
+                   JOIN ll_source_version AS version
+                     ON version.workspace_id = source.workspace_id AND version.source_id = source.source_id
+                    AND version.artifact_version_id = source.current_version_id
+                   WHERE source.workspace_id = ? AND source.active = 1 AND version.content_sha256 = ?
+                   ORDER BY source.created_at, source.source_id""",
+                (workspace_id, content_sha256),
+            ).fetchall()
+        found = (self.get_source(workspace_id, str(row["source_id"])) for row in rows)
+        return tuple(
+            {key: item[key] for key in ("source_id", "name", "meeting_date", "created_at", "ingestion_status")}
+            for item in found if item is not None
+        )
+
+    def import_request(self, workspace_id: str, request_id: str) -> dict[str, Any] | None:
+        with self._lock:
+            row = self._connection.execute(
+                "SELECT * FROM ll_source_import_request WHERE workspace_id = ? AND request_id = ?",
+                (workspace_id, request_id),
+            ).fetchone()
+        return dict(row) if row is not None else None
 
     def _insert_source(
         self,
@@ -309,31 +460,57 @@ class ProductRepository:
         name: str,
         artifact: RawArtifact,
         spans: tuple[EvidenceSpan, ...],
+        *,
+        metadata: tuple[str | None, str | None] | None = None,
+        input_kind: str | None = None,
+        request: tuple[str, str] | None = None,
+        changed_fields: tuple[str, ...] | None = None,
+        previous_version: str | None = None,
     ) -> dict[str, Any]:
         now = _now()
         with self._lock, self._connection:
             existing = self._connection.execute(
-                "SELECT created_at FROM ll_source WHERE workspace_id = ? AND source_id = ?",
+                "SELECT created_at, name, meeting_date, meeting_date_basis, current_version_id "
+                "FROM ll_source WHERE workspace_id = ? AND source_id = ?",
                 (workspace_id, source_id),
             ).fetchone()
             if existing is None:
+                metadata = metadata or (None, None)
                 self._connection.execute(
                     """INSERT INTO ll_source(
                         workspace_id, source_id, name, current_version_id, active,
                         ingestion_status, candidate_count, review_required_count,
-                        error_message, created_at, updated_at
-                    ) VALUES (?, ?, ?, ?, 1, 'INGESTING', 0, 0, NULL, ?, ?)""",
-                    (workspace_id, source_id, name, artifact.artifact_version_id, now, now),
+                        error_message, created_at, updated_at,
+                        meeting_date, meeting_date_basis, input_kind, revision
+                    ) VALUES (?, ?, ?, ?, 1, 'INGESTING', 0, 0, NULL, ?, ?, ?, ?, ?, 1)""",
+                    (workspace_id, source_id, name, artifact.artifact_version_id, now, now,
+                     metadata[0], metadata[1], input_kind),
                 )
                 created_at = now
+                changed_fields = ("created",)
             else:
                 created_at = str(existing["created_at"])
+                metadata = metadata or (existing["meeting_date"], existing["meeting_date_basis"])
+                previous_version = previous_version or str(existing["current_version_id"])
+                if changed_fields is None:
+                    changed_fields = tuple(field for field, differs in (
+                        ("title", name != existing["name"]),
+                        ("content", artifact.artifact_version_id != existing["current_version_id"]),
+                    ) if differs) or ("content",)
                 self._connection.execute(
                     """UPDATE ll_source SET name = ?, current_version_id = ?, active = 1,
                        ingestion_status = 'INGESTING', candidate_count = 0,
-                       review_required_count = 0, error_message = NULL, updated_at = ?
+                       review_required_count = 0, error_message = NULL, updated_at = ?,
+                       meeting_date = ?, meeting_date_basis = ?, revision = revision + 1
                        WHERE workspace_id = ? AND source_id = ?""",
-                    (name, artifact.artifact_version_id, now, workspace_id, source_id),
+                    (name, artifact.artifact_version_id, now, metadata[0], metadata[1],
+                     workspace_id, source_id),
+                )
+            if request is not None:
+                self._connection.execute(
+                    "INSERT INTO ll_source_import_request(workspace_id, request_id, payload_sha256, "
+                    "source_id, created_at) VALUES (?, ?, ?, ?, ?)",
+                    (workspace_id, request[0], request[1], source_id, now),
                 )
             self._connection.execute(
                 """INSERT OR IGNORE INTO ll_source_version(
@@ -371,6 +548,8 @@ class ProductRepository:
                     for span in spans
                 ],
             )
+            self._record_revision(workspace_id, source_id, changed_fields, artifact.artifact_version_id,
+                                  previous_version, name, metadata, now)
         result = self.get_source(workspace_id, source_id, include_deleted=True)
         assert result is not None
         return result
@@ -609,6 +788,11 @@ class ProductRepository:
             "workspace_id": str(row["workspace_id"]),
             "source_id": str(row["source_id"]),
             "name": str(row["name"]),
+            "title": str(row["name"]),
+            "meeting_date": row["meeting_date"],
+            "meeting_date_basis": row["meeting_date_basis"],
+            "input_kind": row["input_kind"],
+            "revision": int(row["revision"]),
             "source_version": str(row["current_version_id"]),
             "source_name_at_version": str(row["source_name"]),
             "source_uri": str(row["source_uri"]),
@@ -952,6 +1136,7 @@ class ProductApplication:
             ))
             for segment in source["segments"]:
                 segment.pop("extraction_json", None)
+            source["revisions"] = list(self.repository.source_revisions(str(source["workspace_id"]), source_id))
             return {"source": source}
         if path == "/api/review/candidates":
             return {
@@ -987,16 +1172,7 @@ class ProductApplication:
             workspace = self.repository.create_workspace(_required_payload_text(payload, "name", 120))
             return {"workspace": workspace}, 201
         if path == "/api/sources/import":
-            workspace_id = self._workspace_id()
-            name, content = _source_payload(payload)
-            source_id = f"src_{uuid4().hex}"
-            artifact = self._artifact(workspace_id, source_id, content)
-            spans = self._parse_artifact(artifact)
-            source, _ = self.repository.create_source(workspace_id, source_id, name, artifact, spans)
-            self._register_new_version(artifact, spans)
-            self._reconcile()
-            self._start_ingestion(workspace_id, str(source["source_id"]), artifact)
-            return {"source": source}, 202
+            return self._import_source(payload)
         if path == "/api/workspaces/current":
             workspace_id = _required_payload_text(payload, "workspace_id", 128)
             return {"workspace": self.repository.select_workspace(workspace_id)}, 200
@@ -1038,19 +1214,80 @@ class ProductApplication:
         workspace_id = self._workspace_id()
         source_id = match.group(1)
         name, content = _source_payload(payload)
+        # Absent key keeps the stored meeting date (older clients); null/"" clears it.
+        metadata = _meeting_date_payload(payload) if "meeting_date" in payload else None
+        expected_revision = payload.get("expected_revision")
+        if expected_revision is not None and (
+                isinstance(expected_revision, bool) or not isinstance(expected_revision, int)):
+            raise ProductApplicationError("INVALID_REQUEST", "expected_revision must be an integer.")
         artifact = self._artifact(workspace_id, source_id, content)
         spans = self._parse_artifact(artifact)
-        source, old_version, changed = self.repository.update_source(
-            workspace_id, source_id, name, artifact, spans
+        source, old_version, changed, changed_fields = self.repository.revise_source(
+            workspace_id, source_id, name, artifact, spans,
+            metadata=metadata, expected_revision=expected_revision,
         )
+        result = {"source": source, "changed_fields": list(changed_fields)}
         if changed:
             self._register_new_version(artifact, spans, old_version=old_version)
             self._stale_review_candidates(workspace_id, source_id, artifact.artifact_version_id)
             self._reconcile()
             self._start_ingestion(workspace_id, source_id, artifact)
-            return {"source": source, "changed": True}, 202
+            return {**result, "changed": True}, 202
+        # Title/date-only edits keep the immutable version: no re-extraction or cost.
+        # Extraction never receives the Host meeting date, so no derived item depends on it.
         self._reconcile()
-        return {"source": source, "changed": False}, 200
+        return {**result, "changed": False}, 200
+
+    def _import_source(self, payload: dict[str, Any]) -> tuple[dict[str, Any], int]:
+        workspace_id = self._workspace_id()
+        name, content = _source_payload(payload)
+        meeting_date, meeting_date_basis = _meeting_date_payload(payload)
+        input_kind = payload.get("input_kind")
+        if input_kind not in (None, "paste", "file"):
+            raise ProductApplicationError("INVALID_REQUEST", "input_kind must be paste or file.")
+        request_id = _request_id_payload(payload)
+        content_sha256 = hashlib.sha256(content.encode("utf-8")).hexdigest()
+        # allow_duplicate is the user's answer to the duplicate prompt, not part
+        # of what is being created, so it stays outside the fingerprint.
+        fingerprint = hashlib.sha256(json.dumps(
+            [name, content_sha256, meeting_date, meeting_date_basis, input_kind],
+            ensure_ascii=False,
+        ).encode("utf-8")).hexdigest()
+        if request_id is not None:
+            previous = self.repository.import_request(workspace_id, request_id)
+            if previous is not None:
+                if previous["payload_sha256"] != fingerprint:
+                    raise ProductApplicationError(
+                        "REQUEST_ID_CONFLICT",
+                        "This import request was already used for different content. Start a new import.",
+                        status=409,
+                    )
+                existing = self.repository.get_source(
+                    workspace_id, str(previous["source_id"]), include_deleted=True)
+                assert existing is not None
+                return {"source": existing, "replayed": True}, 200
+        if payload.get("allow_duplicate") is not True:
+            duplicates = self.repository.find_duplicate_sources(workspace_id, content_sha256)
+            if duplicates:
+                # A prompt, not a creation: the request_id stays unused.
+                raise ProductApplicationError(
+                    "SOURCE_DUPLICATE",
+                    "A meeting with exactly the same text already exists in this workspace.",
+                    status=409,
+                    details={"duplicates": list(duplicates)},
+                )
+        source_id = f"src_{uuid4().hex}"
+        artifact = self._artifact(workspace_id, source_id, content)
+        spans = self._parse_artifact(artifact)
+        source, _ = self.repository.create_source(
+            workspace_id, source_id, name, artifact, spans,
+            meeting_date=meeting_date, meeting_date_basis=meeting_date_basis, input_kind=input_kind,
+            request=(request_id, fingerprint) if request_id is not None else None,
+        )
+        self._register_new_version(artifact, spans)
+        self._reconcile()
+        self._start_ingestion(workspace_id, str(source["source_id"]), artifact)
+        return {"source": source}, 202
 
     def handle_delete(self, path: str) -> dict[str, Any]:
         return self._api_request("delete", lambda: self._handle_delete(path))
@@ -1397,11 +1634,11 @@ class ProductApplication:
                     status=503,
                 )
             with self._ingest_lock:
-                parsed = parse_timestamped_text(artifact)
+                parsed = parse_source_text(artifact)
                 if parsed.issues or not parsed.segments:
                     raise ProductApplicationError(
                         "SOURCE_PARSE_FAILED",
-                        "Use timestamped lines such as [2026-10-08T10:00:00Z] Speaker: decision text.",
+                        "The saved source text could not be split into source segments.",
                         status=422,
                     )
                 context = SemanticExtractionContext(
@@ -1697,7 +1934,7 @@ class ProductApplication:
             artifact = self._artifact_from_version(version)
             verified = candidate.provenance.verify(artifact)
             try:
-                speaker = next((segment.speaker for segment in parse_timestamped_text(artifact).segments
+                speaker = next((segment.speaker for segment in parse_source_text(artifact).segments
                                 if segment.segment_id == candidate.segment_id), None)
             except ValueError:
                 speaker = None
@@ -1885,7 +2122,7 @@ class ProductApplication:
         if source is None:
             return {"evidence_ref": evidence_ref, "verified": False, "source_name": "Source unavailable"}
         artifact = self._artifact_from_version(source)
-        parsed = parse_timestamped_text(artifact)
+        parsed = parse_source_text(artifact)
         span = next((item.evidence_span for item in parsed.segments if item.evidence_span.evidence_ref == evidence_ref), None)
         if span is None or not span.verify(artifact):
             return {"evidence_ref": evidence_ref, "verified": False, "source_name": str(source["source_name"])}
@@ -2033,12 +2270,15 @@ class ProductApplication:
         )
 
     def _parse_artifact(self, artifact: RawArtifact) -> tuple[EvidenceSpan, ...]:
-        parsed = parse_timestamped_text(artifact)
+        # Plain notes/Markdown become one exact document span with no speaker or
+        # speech time; timestamped transcripts keep their per-message spans.
+        parsed = parse_source_text(artifact)
         if parsed.issues or not parsed.segments:
-            detail = parsed.issues[0].detail if parsed.issues else "no timestamped segments were found"
+            detail = parsed.issues[0].detail if parsed.issues else "no segments were found"
             raise ProductApplicationError(
                 "SOURCE_PARSE_FAILED",
-                f"This source needs timestamped lines such as [2026-10-08T10:00:00Z] Speaker: decision text ({detail}).",
+                "Timestamped transcript lines must all look like [2026-10-08T10:00:00Z] Speaker: text; "
+                f"remove the timestamps to import it as plain notes ({detail}).",
                 status=422,
             )
         return tuple(segment.evidence_span for segment in parsed.segments)
@@ -2095,7 +2335,39 @@ def _source_payload(payload: dict[str, Any]) -> tuple[str, str]:
         raise ProductApplicationError("INVALID_SOURCE_CONTENT", "Add non-empty timestamped source text.")
     if len(content.encode("utf-8")) > MAX_SOURCE_BYTES:
         raise ProductApplicationError("SOURCE_TOO_LARGE", "The source is larger than the 256 KB V1 limit.", status=413)
+    if "\x00" in content:
+        raise ProductApplicationError("INVALID_SOURCE_CONTENT", "The source text contains unreadable binary data.")
     return name, content
+
+
+_MEETING_DATE_BASES = frozenset({"USER_SELECTED", "USER_TODAY"})
+_REQUEST_ID = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.:-]{7,127}$")
+
+
+def _meeting_date_payload(payload: dict[str, Any]) -> tuple[str | None, str | None]:
+    """Optional user-entered meeting date; never defaulted to the import day."""
+    value = payload.get("meeting_date")
+    if value is None or value == "":
+        return None, None
+    if not isinstance(value, str) or not re.fullmatch(r"\d{4}-\d{2}-\d{2}", value):
+        raise ProductApplicationError("INVALID_MEETING_DATE", "Use a meeting date like 2026-11-20, or leave it empty.")
+    try:
+        date.fromisoformat(value)
+    except ValueError as error:
+        raise ProductApplicationError("INVALID_MEETING_DATE", "Use a real calendar date.") from error
+    basis = payload.get("meeting_date_basis") or "USER_SELECTED"
+    if basis not in _MEETING_DATE_BASES:
+        raise ProductApplicationError("INVALID_MEETING_DATE", "meeting_date_basis must be USER_SELECTED or USER_TODAY.")
+    return value, basis
+
+
+def _request_id_payload(payload: dict[str, Any]) -> str | None:
+    value = payload.get("request_id")
+    if value is None:
+        return None
+    if not isinstance(value, str) or not _REQUEST_ID.fullmatch(value):
+        raise ProductApplicationError("INVALID_REQUEST", "request_id must be 8-128 URL-safe characters.")
+    return value
 
 
 def _parse_as_of(value: object) -> datetime | None:
@@ -2202,11 +2474,12 @@ def _segments_for_source_version(version: dict[str, Any]):
         source_uri=str(version["source_uri"]),
         ingestion_time=_datetime_from_text(str(version["created_at"])),
     )
-    return parse_timestamped_text(artifact).segments
+    return parse_source_text(artifact).segments
 
 
 def _evidence_identity(segment: Any) -> tuple[str, str, str]:
-    return (segment.event_time.isoformat(), segment.speaker, segment.body_text)
+    event_time = segment.event_time.isoformat() if segment.event_time is not None else ""
+    return (event_time, segment.speaker or "", segment.body_text)
 
 
 def _now() -> str:
