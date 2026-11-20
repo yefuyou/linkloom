@@ -48,6 +48,7 @@
       const error = new Error(payload?.error?.message || copy("The operation could not be completed.", "操作暂时无法完成。"));
       error.code = payload?.error?.code || "REQUEST_FAILED";
       error.status = response.status;
+      error.details = payload?.error?.details || null;
       throw error;
     }
     return payload;
@@ -92,15 +93,19 @@
       SOURCE_BUSY: ["Source processing is in progress. Wait for it to finish, then try again.", "来源正在处理中，请等待完成后再操作。"],
       NO_RETRYABLE_SEGMENT: ["No failed segment has a retry remaining. Check the source and extraction details.", "暂无可重试片段，请核对来源和提取详情。"],
       ATTEMPT_LIMIT: ["The retry limit was reached. Check the extraction details before importing again.", "重试次数已用完，请检查提取详情后重新导入。"],
-      INGESTION_FAILED: ["Extraction failed. Check AI setup and source timestamps before retrying.", "提取失败，请检查 AI 配置和来源时间戳后重试。"],
+      INGESTION_FAILED: ["Extraction failed. Check AI setup before retrying.", "提取失败，请检查 AI 配置后重试。"],
+      SOURCE_DUPLICATE: ["A meeting with exactly the same text already exists. View it, or import this as a separate meeting.", "工作区里已有正文完全相同的会议。可以查看已有会议，或仍作为独立会议导入。"],
+      REQUEST_ID_CONFLICT: ["This import was already submitted with different content. Start a new import.", "此导入请求已用不同内容提交过，请重新发起导入。"],
+      VERSION_CONFLICT: ["This meeting was changed elsewhere. Your edits are kept here; reload the meeting and reapply them.", "此会议已在别处被修改。你的编辑仍保留在此，请重新加载会议后再应用。"],
+      INVALID_MEETING_DATE: ["Choose a real meeting date, or leave it empty.", "请选择有效的会议日期，或留空。"],
       INVALID_AS_OF: ["Choose a valid historical date.", "请选择有效的历史日期。"],
       INVALID_REVIEW_RESOLUTION: ["Check the review fields against the source evidence.", "请根据原文核对审核字段。"],
-      INVALID_SOURCE_CONTENT: ["Enter source text with one timestamped message per line.", "请填写来源文本，每条消息独占一行并包含时间戳。"],
+      INVALID_SOURCE_CONTENT: ["Enter the meeting text.", "请填写会议正文。"],
       INVALID_SOURCE_NAME: ["Use a file name without directory separators.", "请使用文件名，不包含目录分隔符。"],
       INVALID_VALID_TIME: ["Enter a date or a timestamp with a timezone.", "请输入日期或包含时区的时间戳。"],
       PROVIDER_UNAVAILABLE: ["AI extraction is unavailable. Enable it before extracting source text.", "AI 提取未启用，请配置后再提取来源内容。"],
       SOURCE_DELETED: ["This source was removed. Import it again to restore it.", "此来源已移除，可重新导入。"],
-      SOURCE_PARSE_FAILED: ["Use timestamped lines: [2026-10-08T10:00:00Z] Speaker: message.", "请使用带时间戳的格式：[2026-10-08T10:00:00Z] 发言人：内容。"],
+      SOURCE_PARSE_FAILED: ["Some lines look like a timestamped transcript but are incomplete. Use [2026-10-08T10:00:00Z] Speaker: message on every line, or remove the timestamps to import plain notes.", "部分行看起来是带时间戳的发言记录但格式不完整。请每行都使用 [2026-10-08T10:00:00Z] 发言人：内容，或去掉时间戳按普通纪要导入。"],
       SOURCE_VERSION_MISMATCH: ["The source changed. Refresh it before continuing.", "来源已变化，请刷新后继续。"],
       SOURCE_VERSION_NOT_FOUND: ["The current source version is unavailable. Check Sources.", "当前来源版本不可用，请检查来源列表。"],
       WORKSPACE_MISMATCH: ["The workspace changed. Select the intended workspace and try again.", "工作区已变化，请选择目标工作区后重试。"],
@@ -256,11 +261,12 @@
     for (let offset = 0; offset < sources.length; offset += 8) {
       await Promise.all(sources.slice(offset, offset + 8).map(async source => {
         const cached = state.meetingMetadata?.[source.source_id];
-        if (cached?.version === source.source_version) { metadata[source.source_id] = cached; return; }
+        if (cached?.version === source.source_version && cached.meetingDate === (source.meeting_date || null)) { metadata[source.source_id] = cached; return; }
         let detail;
         try { detail = (await request('/api/sources/' + encodeURIComponent(source.source_id))).source; } catch { /* A missing source remains visibly unavailable in its own detail view. */ }
         const timestamp = String(detail?.content || '').match(/^\s*\[([^\]]+)\]/m)?.[1];
-        metadata[source.source_id] = {name: source.name, version: source.source_version, date: timestamp || detail?.meeting_time || null};
+        metadata[source.source_id] = {name: source.name, version: source.source_version, meetingDate: source.meeting_date || null,
+          date: source.meeting_date || timestamp || detail?.meeting_time || null};
       }));
       if (viewToken !== state.agentViewToken || workspace !== state.workspace?.workspace_id) return;
     }
@@ -302,11 +308,14 @@
     page.innerHTML = `${heading(copy('Meetings', '会议'), `<div class="actions"><button class="button quiet" data-action="back-review">${copy('Records to confirm', '会议待确认')}</button><button class="button" data-action="focus-import">${copy('Import meeting notes', '导入会议记录')}</button></div>`)}
       <p class="hint">${copy('Import meeting notes, then check the extracted records.', '导入会议记录，系统抽出待办，交给你确认。')}</p><section class="grid meetings-grid">${list}</section>
       <section id="meeting-import" class="panel import-panel"><h2>${copy('Import meeting notes', '导入会议记录')}</h2><p class="drop-zone" id="source-drop-zone">${copy('Drop a Markdown or text file here, or choose a file below.', '把会议记录文件拖到这里，或在下方选择文件。')}</p>
-      <p class="hint">${copy('One message per line:', '每条消息独占一行：')} <code>[2026-10-08T10:00:00Z] ${copy('Speaker: message', '发言人：内容')}</code></p>
+      <p class="hint">${copy('Plain notes or Markdown work as-is; speakers and times are optional and stay unknown when absent. Transcripts with', '普通纪要或 Markdown 可直接导入；发言人和发言时间可以没有，缺失时保持未知。带')} <code>[2026-10-08T10:00:00Z] ${copy('Speaker: message', '发言人：内容')}</code> ${copy('lines keep per-message evidence.', '格式的发言记录会按条保留证据。')}</p>
       ${providerReady ? `<p class="review-guidance">${copy('Importing sends source text to the configured external AI provider and may incur model costs.', '导入会将来源文本发送给已配置的外部 AI，可能产生模型费用。')}</p>` : `<div class="notice"><p>${copy('Save sources locally. Enable AI extraction to generate review candidates.', '可先在本地保存来源，启用 AI 提取后生成待审核候选。')}</p><details><summary>${copy('Extraction setup', '提取设置')}</summary><p>${escapeHtml(state.provider?.message || copy('Enable a provider to extract source text.', '请启用 AI 服务以提取来源内容。'))}</p></details></div>`}
       <form id="source-create" class="form-stack"><div class="field"><label for="source-file">${copy('Choose a Markdown or text artifact', '选择 Markdown 或文本文件')}</label><input id="source-file" type="file" accept=".md,.txt,text/markdown,text/plain"><span class="hint">${copy('Markdown or text, up to 256 KB.', '支持 Markdown 或文本，最大 256 KB。')}</span></div>
-      <div class="field"><label for="source-name">${copy('Meeting name', '会议名称')}</label><input id="source-name" name="name" maxlength="180" required placeholder="meeting-2026-10-08.md"></div>
-      <div class="field"><label for="source-content">${copy('Meeting text with timestamps', '会议原文与时间')}</label><textarea class="source-input" id="source-content" name="content" required></textarea></div>
+      <div class="field"><label for="source-name">${copy('Meeting title', '会议标题')}</label><input id="source-name" name="name" maxlength="180" required placeholder="${copy('Weekly sync', '周会')}"></div>
+      ${meetingDateField('source', null, null)}
+      <input type="hidden" id="source-input-kind" name="input_kind" value="paste">
+      <div class="field"><label for="source-content">${copy('Meeting text', '会议正文')}</label><textarea class="source-input" id="source-content" name="content" required></textarea></div>
+      <div id="source-create-status" role="status"></div>
       <button class="button" type="submit">${providerReady ? copy('Import and organize', '导入并整理') : copy('Save meeting locally', '仅保存会议')}</button></form></section>`;
   }
 
@@ -395,14 +404,18 @@
     const providerReady = Boolean(state.provider?.ready);
     state.sourceId = sourceId;
     const extractionUnavailable = source.error?.startsWith("PROVIDER_UNAVAILABLE:");
-    const evidence = source.evidence.length ? source.evidence.map((item) => `<div class="card"><div class="metadata"><span>${copy("Lines", "行号")} ${item.line_start}–${item.line_end}</span><span>${badge("VERIFIED")}</span></div><blockquote class="quote">${escapeHtml(item.quote)}</blockquote></div>`).join("") : `<p class="empty">${copy("No timestamped evidence spans were parsed.", "暂未解析到带时间戳的证据。")}</p>`;
+    const evidence = source.evidence.length ? source.evidence.map((item) => `<div class="card"><div class="metadata"><span>${copy("Lines", "行号")} ${item.line_start}–${item.line_end}</span><span>${badge("VERIFIED")}</span></div><blockquote class="quote">${escapeHtml(item.quote)}</blockquote></div>`).join("") : `<p class="empty">${copy("No evidence spans were parsed.", "暂未解析到原文证据。")}</p>`;
     page.innerHTML = `${heading(source.name)}
+      <p class="metadata">${copy("Meeting date:", "会议日期：")} ${source.meeting_date ? `${escapeHtml(source.meeting_date)} · ${source.meeting_date_basis === "USER_TODAY" ? copy("filled with today by you", "由你填入当天") : copy("chosen by you", "由你选择")}` : copy("Not provided", "未提供")} · ${copy("Revision", "修订")} ${escapeHtml(source.revision)}</p>
       <div class="detail-layout"><section class="panel"><div class="card-head"><h2>${copy("Ingestion", "处理状态")}</h2>${badge(source.ingestion_status, source.error?.startsWith("PROVIDER_UNAVAILABLE:") ? "SAVED" : source.ingestion_status)}</div>${extractionUnavailable ? `<p class="review-guidance">${copy("Source saved locally. Enable AI extraction, then import the original source again to extract candidates.", "来源已在本地保存。启用 AI 提取后，重新导入原始来源以提取候选。")}</p>` : ""}<p>${source.candidate_count} ${copy("candidates", "个候选")} · ${source.review_required_count} ${copy("need review", "个待审核")} · ${source.segment_summary.failed} ${copy("extraction failures", "个提取失败片段")}</p>${source.error ? `<details class="source-diagnostics"><summary>${copy("Extraction details", "提取详情")}</summary><p>${escapeHtml(source.error)}</p></details>` : ""}${source.segments.length ? `<details><summary>${copy("Processing details", "处理详情")}</summary>${source.segments.map((segment) => `<p class="metadata">${copy("Segment", "片段")} ${segment.ordinal + 1}: ${escapeHtml(segment.state)} · ${segment.attempt_count} ${copy("attempt(s)", "次尝试")}</p>`).join("")}</details>` : ""}${source.segment_summary.retryable ? `<button class="button quiet" data-action="retry-source" data-id="${escapeHtml(source.source_id)}">${copy("Retry failed segment", "重试失败片段")}</button>` : ""}
         <h3>${copy("Exact evidence spans", "原文证据")}</h3>${evidence}<details><summary>${copy("Verification details", "校验信息")}</summary><p class="metadata">${copy("Version:", "版本：")} ${escapeHtml(source.source_version)} · ${copy("Content SHA-256:", "内容 SHA-256：")} ${escapeHtml(source.content_sha256)}</p></details></section>
-      <section class="panel"><h2>${copy("Update source", "更新来源")}</h2><p class="hint">${copy("Changes create a new version and recheck affected decisions.", "修改将保存为新版本，并重新核查受影响的决策。")}${providerReady ? copy(" New text is sent to the configured external AI provider and may incur costs.", " 新文本将发送至已配置的外部 AI，可能产生费用。") : copy(" AI extraction is off.", " AI 提取未启用。")}</p>
-        <form id="source-update" class="form-stack" data-id="${escapeHtml(sourceId)}"><div class="field"><label for="update-name">${copy("Artifact name", "来源名称")}</label><input id="update-name" name="name" value="${escapeHtml(source.name)}" required></div>
-        <div class="field"><label for="update-content">${copy("Timestamped source text", "带时间戳的来源文本")}</label><textarea class="source-input" id="update-content" name="content" required>${escapeHtml(source.content)}</textarea></div>
-        <button class="button" type="submit">${copy("Save new source version", "保存新版本")}</button><button class="button danger" type="button" data-action="delete-source" data-id="${escapeHtml(sourceId)}">${copy("Remove from workspace", "从工作区移除")}</button></form></section></div>
+      <section class="panel"><h2>${copy("Update source", "更新来源")}</h2><p class="hint">${copy("Title and date edits keep the same source version and are not re-extracted. Text changes create a new version and recheck affected decisions.", "只改标题或日期不会生成新版本，也不会重新提取；修改正文会保存为新版本，并重新核查受影响的决策。")}${providerReady ? copy(" New text is sent to the configured external AI provider and may incur costs.", " 新文本将发送至已配置的外部 AI，可能产生费用。") : copy(" AI extraction is off.", " AI 提取未启用。")}</p>
+        <form id="source-update" class="form-stack" data-id="${escapeHtml(sourceId)}"><div class="field"><label for="update-name">${copy("Meeting title", "会议标题")}</label><input id="update-name" name="name" maxlength="180" value="${escapeHtml(source.name)}" required></div>
+        ${meetingDateField('update', source.meeting_date, source.meeting_date_basis)}
+        <input type="hidden" name="expected_revision" value="${escapeHtml(source.revision)}">
+        <div class="field"><label for="update-content">${copy("Meeting text", "会议正文")}</label><textarea class="source-input" id="update-content" name="content" required>${escapeHtml(source.content)}</textarea></div>
+        <div id="source-update-status" role="status"></div>
+        <button class="button" type="submit">${copy("Save changes", "保存修改")}</button><button class="button danger" type="button" data-action="delete-source" data-id="${escapeHtml(sourceId)}">${copy("Remove from workspace", "从工作区移除")}</button></form></section></div>
       <p><button class="button quiet" data-action="back-sources">${copy("Back to sources", "返回来源")}</button></p>`;
     if (source.ingestion_status === "INGESTING") pollSource(sourceId, true);
   }
@@ -1198,7 +1211,58 @@
     if (["ask-query", "ask-slot", "ask-domain"].includes(event.target?.id)) state.askClarification = null;
     if (["ask-query", "ask-date", "ask-slot", "ask-external", "ask-domain"].includes(event.target?.id)) { invalidateAsk(); return; }
     if (event.target?.id === "source-file") await loadMeetingFile(event.target.files);
+    if (event.target?.dataset?.meetingDate !== undefined) setMeetingDate(event.target.dataset.meetingDate, event.target.value, "USER_SELECTED");
   });
+
+  function meetingDateField(prefix, value, basis) {
+    return `<div class="field"><label for="${prefix}-meeting-date">${copy('Meeting date (optional)', '会议日期（可选）')}</label>
+      <input id="${prefix}-meeting-date" type="date" name="meeting_date" data-meeting-date="${prefix}" value="${escapeHtml(value || '')}">
+      <input type="hidden" id="${prefix}-meeting-date-basis" name="meeting_date_basis" value="${escapeHtml(value ? (basis || 'USER_SELECTED') : '')}">
+      <span class="actions"><button class="button quiet" type="button" data-action="meeting-date-today" data-target="${prefix}">${copy('Fill today', '填入今天')}</button><button class="button quiet" type="button" data-action="meeting-date-clear" data-target="${prefix}">${copy('Clear', '清空')}</button></span>
+      <span class="hint">${copy('Leave empty if unknown. LinkLoom never fills it in for you, and it is not used as an effective date.', '不知道可以留空。系统不会自动填写，也不会把它当作决议生效日期。')}</span></div>`;
+  }
+
+  function localToday() {
+    const now = new Date();
+    return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+  }
+
+  function setMeetingDate(prefix, value, basis) {
+    const input = document.getElementById(`${prefix}-meeting-date`), hidden = document.getElementById(`${prefix}-meeting-date-basis`);
+    if (!input || !hidden) return;
+    input.value = value;
+    hidden.value = value ? basis : '';
+  }
+
+  function showFormStatus(id, error, extra = '') {
+    const box = document.getElementById(id);
+    const message = userError(error);
+    announce(message);
+    if (!box) { renderError(error); return; }
+    box.innerHTML = `<div class="notice" role="alert"><p>${escapeHtml(message)}</p>${extra}</div>`;
+  }
+
+  async function submitImport(form, allowDuplicate) {
+    const data = Object.fromEntries(new FormData(form));
+    if (!data.meeting_date) { delete data.meeting_date; delete data.meeting_date_basis; }
+    // One request_id per distinct draft: a network replay reuses it, an edited draft gets a new one.
+    const draft = JSON.stringify(data);
+    if (!state.importRequest || state.importRequest.draft !== draft) {
+      const random = globalThis.crypto?.randomUUID?.() || `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 12)}`;
+      state.importRequest = {draft, id: `import-${random}`};
+    }
+    try {
+      const result = await send("POST", "/api/sources/import", {...data, request_id: state.importRequest.id, ...(allowDuplicate ? {allow_duplicate: true} : {})});
+      state.importRequest = null;
+      return result;
+    } catch (error) {
+      if (error.code === "SOURCE_DUPLICATE") {
+        const existing = (error.details?.duplicates || []).map(item => `<li>${escapeHtml(item.name)} · ${item.meeting_date ? escapeHtml(item.meeting_date) : copy('date not provided', '日期未提供')} <button class="button quiet" type="button" data-action="inspect-source" data-id="${escapeHtml(item.source_id)}">${copy('View existing meeting', '查看已有会议')}</button></li>`).join('');
+        showFormStatus("source-create-status", error, `<ul>${existing}</ul><button class="button" type="button" data-action="import-duplicate">${copy('Import as a separate meeting', '仍作为独立会议导入')}</button>`);
+      } else showFormStatus("source-create-status", error);
+      return null;
+    }
+  }
 
   async function loadMeetingFile(files) {
     const file = files?.[0];
@@ -1209,11 +1273,12 @@
       return;
     }
     try {
-      document.getElementById("source-name").value = file.name;
+      document.getElementById("source-name").value = file.name.replace(/\.(md|markdown|txt)$/i, "") || file.name;
       document.getElementById("source-content").value = await file.text();
+      const kind = document.getElementById("source-input-kind"); if (kind) kind.value = "file";
       announce(`Loaded ${file.name} locally. Review the text before importing.`);
     } catch {
-      announce(copy("LinkLoom could not read this file. Paste the timestamped text instead.", "文件读取失败，请粘贴带时间戳的文本。"));
+      announce(copy("LinkLoom could not read this file. Paste the meeting text instead.", "文件读取失败，请直接粘贴会议正文。"));
     }
   }
   page.addEventListener('dragover', event => { if (event.target?.closest?.('#meeting-import')) event.preventDefault(); });
@@ -1232,7 +1297,8 @@
       } else if (form.id === "workspace-create") {
         await createWorkspace(new FormData(form).get("name"));
       } else if (form.id === "source-create") {
-        const result = await send("POST", "/api/sources/import", Object.fromEntries(new FormData(form)));
+        const result = await submitImport(form, false);
+        if (!result) return;
         state.sourceId = result.source.source_id;
         announce(state.provider?.ready
           ? copy("Source ingestion started.", "已开始处理来源。")
@@ -1240,8 +1306,15 @@
         await inspectSource(result.source.source_id);
         pollSource(result.source.source_id, true);
       } else if (form.id === "source-update") {
-        const result = await send("PUT", `/api/sources/${encodeURIComponent(form.dataset.id)}`, Object.fromEntries(new FormData(form)));
-        announce(result.changed ? copy("A new source version is ingesting.", "正在处理来源新版本。") : copy("No source text changes. Existing decision evidence remains unchanged.", "来源文本没有变化。"));
+        const data = Object.fromEntries(new FormData(form));
+        data.expected_revision = Number(data.expected_revision);
+        if (!data.meeting_date) { data.meeting_date = null; data.meeting_date_basis = null; }
+        let result;
+        try { result = await send("PUT", `/api/sources/${encodeURIComponent(form.dataset.id)}`, data); }
+        catch (error) { showFormStatus("source-update-status", error); return; }
+        announce(result.changed ? copy("A new source version is ingesting.", "正在处理来源新版本。")
+          : result.changed_fields?.length ? copy("Title or date saved. The source version and its evidence are unchanged; nothing was re-extracted.", "标题或日期已保存。来源版本和证据未变，未重新提取。")
+          : copy("No changes to save.", "没有需要保存的修改。"));
         await inspectSource(result.source.source_id);
         if (result.changed) pollSource(result.source.source_id, true);
       } else if (form.id === "candidate-review") {
@@ -1292,6 +1365,17 @@
     closeEvidenceJump();
     if (button.tagName === 'A') event.preventDefault?.();
     try {
+      if (action === 'meeting-date-today') { setMeetingDate(button.dataset.target, localToday(), 'USER_TODAY'); return; }
+      if (action === 'meeting-date-clear') { setMeetingDate(button.dataset.target, '', ''); return; }
+      if (action === 'import-duplicate') {
+        const form = document.getElementById('source-create');
+        const result = form && await submitImport(form, true);
+        if (!result) return;
+        state.sourceId = result.source.source_id;
+        await inspectSource(result.source.source_id);
+        pollSource(result.source.source_id, true);
+        return;
+      }
       if (action === 'focus-import') { document.getElementById('meeting-import')?.scrollIntoView?.({block: 'start'}); document.getElementById('source-file')?.focus?.(); return; }
       if (action === 'ask-example') { const input = document.getElementById('ask-query'); input.value = button.dataset.query; invalidateAsk(); localizeAsk(input.value); input.focus?.(); return; }
       if (action === "inspect-source") await inspectSource(id);

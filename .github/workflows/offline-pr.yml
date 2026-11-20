@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [master]
+    branches: [master, feat/multi-agent]
   pull_request:
-    branches: [master]
+    branches: [master, feat/multi-agent]
   workflow_dispatch:
 
 permissions:
@@ -79,4 +79,5 @@ jobs:
           node tests/ui/tasks_dom_test.cjs
           node tests/ui/meeting_v3_dom_test.cjs
           node tests/ui/ux_product_dom_test.cjs
+          node tests/ui/text_source_import_dom_test.cjs
           node tests/ui/pending_source_conflict_dom_test.cjs
