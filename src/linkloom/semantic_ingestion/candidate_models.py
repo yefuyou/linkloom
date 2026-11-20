@@ -90,6 +90,8 @@ class TemporalBasis(StrEnum):
     EXPLICIT = "EXPLICIT"
     DETERMINISTIC_RULE = "DETERMINISTIC_RULE"
     UNRESOLVED = "UNRESOLVED"
+    # A reviewer chose the effective time; it is not claimed to be written in the source.
+    HUMAN_REVIEW = "HUMAN_REVIEW"
 
 
 class CandidateOutcome(StrEnum):
@@ -752,6 +754,11 @@ class CandidateDecisionFact:
             or self.valid_from is None
         ):
             raise ValueError("explicit temporal basis requires a resolved explicit valid_from")
+        if self.temporal_basis is TemporalBasis.HUMAN_REVIEW and (
+            self.temporal_resolution is not TemporalResolution.EXPLICIT
+            or self.valid_from is None
+        ):
+            raise ValueError("reviewed temporal basis requires a reviewer-supplied valid_from")
         if self.temporal_basis is TemporalBasis.DETERMINISTIC_RULE and (
             self.temporal_resolution is not TemporalResolution.SOURCE_EVENT_TIME
             or self.valid_from is None
