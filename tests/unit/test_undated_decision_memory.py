@@ -260,6 +260,95 @@ class TestUndatedDecisionMemory(unittest.TestCase):
             finally:
                 store.close()
 
+    def test_promotion_closes_predecessor_like_the_regular_supersede_path(self) -> None:
+        with TemporaryDirectory() as tmp:
+            store, _ = _make_store(Path(tmp) / "decisions.sqlite")
+            try:
+                dated = _seed_dated_decision(store, valid_from=datetime(2026, 10, 1, tzinfo=UTC))
+                undated, _ = store.confirm_undated_decision(
+                    workspace_id="ws-alpha", subject="Payment Vendor", relation="uses vendor", value="Wrenwell",
+                    source_episode_id="ep-2", source_evidence_refs=("src-2#L1-L2",), provenance_run_id="run-2",
+                    authorization_id="reviewer-1", authorization_reason="Confirmed, date pending",
+                )
+                promoted, _, _ = store.promote_undated_decision_to_dated(
+                    workspace_id="ws-alpha", undated_decision_id=undated.undated_decision_id,
+                    valid_from=datetime(2026, 10, 8, tzinfo=UTC), time_basis=DecisionTimeBasis.USER_SELECTED,
+                    authorization_id="reviewer-1", authorization_reason="Date confirmed",
+                )
+                predecessor = store.get_decision("ws-alpha", dated.decision_id)
+                assert predecessor is not None
+                self.assertEqual(predecessor.memory_state, DecisionMemoryState.SUPERSEDED)
+                self.assertEqual(predecessor.valid_to, promoted.valid_from)
+                candidate_status = store._connection.execute(
+                    "SELECT status FROM decision_candidate WHERE decision_id = ?", (dated.decision_id,)
+                ).fetchone()["status"]
+                self.assertEqual(candidate_status, DecisionMemoryState.SUPERSEDED.value)
+                self.assertEqual(store.get_decision("ws-alpha", promoted.decision_id).source_evidence_refs, ("src-2#L1-L2",))
+                report = DecisionReconciler(store).reconcile(
+                    {"ws-alpha": {"src-1#L1-L2": "hash-v1", "src-2#L1-L2": "hash-v2"}}
+                )
+                self.assertNotIn("broken_supersession_chain", report.issue_codes)
+                self.assertNotIn("duplicate_current_truth", report.issue_codes)
+            finally:
+                store.close()
+
+    def test_v2_database_upgrades_to_v3_and_keeps_existing_records(self) -> None:
+        with TemporaryDirectory() as tmp:
+            path = Path(tmp) / "decisions.sqlite"
+            store, registry = _make_store(path)
+            dated = _seed_dated_decision(store)
+            store.close()
+            # Turn the file back into a schema-v2 database: drop exactly the migration-3 objects.
+            connection = sqlite3.connect(path)
+            for name in ("undated_decision_receipt", "undated_decision_evidence", "undated_decision"):
+                connection.execute(f"DROP TABLE {name}")
+            connection.execute("PRAGMA user_version = 2")
+            connection.commit()
+            before = {
+                table: connection.execute(f"SELECT * FROM {table} ORDER BY 1").fetchall()
+                for table in ("decision", "decision_evidence", "decision_candidate")
+            }
+            connection.close()
+
+            with self.assertRaises(RuntimeError):
+                TemporalDecisionStore(path, read_only=True)
+
+            upgraded = TemporalDecisionStore(path, source_registry=registry)
+            try:
+                self.assertEqual(upgraded.schema_version, 3)
+                self.assertEqual(upgraded.get_decision("ws-alpha", dated.decision_id), dated)
+                undated, _ = upgraded.confirm_undated_decision(
+                    workspace_id="ws-alpha", subject="Payment Vendor", relation="uses vendor", value="Wrenwell",
+                    source_episode_id="ep-2", source_evidence_refs=("src-2#L1-L2",), provenance_run_id="run-2",
+                    authorization_id="reviewer-1", authorization_reason="Confirmed, date pending",
+                )
+            finally:
+                upgraded.close()
+            connection = sqlite3.connect(path)
+            try:
+                for table, rows in before.items():
+                    self.assertEqual(connection.execute(f"SELECT * FROM {table} ORDER BY 1").fetchall(), rows)
+            finally:
+                connection.close()
+
+            reopened = TemporalDecisionStore(path, source_registry=registry)
+            reopened.close()
+            read_only = TemporalDecisionStore(path, read_only=True)
+            try:
+                self.assertEqual(read_only.schema_version, 3)
+                self.assertEqual(read_only.get_decision("ws-alpha", dated.decision_id), dated)
+                self.assertEqual(
+                    [r.undated_decision_id for r in read_only.list_undated_decisions("ws-alpha")],
+                    [undated.undated_decision_id],
+                )
+                view = read_only.lookup_decision_state(
+                    "ws-alpha", "Payment Vendor", "uses vendor", as_of=datetime(2026, 10, 20, tzinfo=UTC)
+                )
+                self.assertEqual(view.temporal_result.records[0].value, "Birchline")
+                self.assertTrue(view.current_uncertain_due_to_undated)
+            finally:
+                read_only.close()
+
 
 if __name__ == "__main__":
     unittest.main()

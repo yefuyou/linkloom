@@ -2759,24 +2759,9 @@ class TemporalDecisionStore:
             )
             predecessor_id: str | None = None
             if active_predecessors:
-                predecessor = active_predecessors[-1]
-                predecessor_id = str(predecessor["decision_id"])
+                predecessor_id = str(active_predecessors[-1]["decision_id"])
                 if requested_supersedes is not None and requested_supersedes != predecessor_id:
                     raise ValueError("supersedes_decision_id does not match the active predecessor")
-                self._connection.execute(
-                    """
-                    UPDATE decision
-                    SET status = ?, valid_to = ?, memory_state = ?
-                    WHERE decision_id = ? AND workspace_id = ?
-                    """,
-                    (
-                        DecisionStatus.SUPERSEDED.value,
-                        effective_storage,
-                        DecisionMemoryState.SUPERSEDED.value,
-                        predecessor_id,
-                        workspace_id,
-                    ),
-                )
             elif requested_supersedes is not None:
                 raise ValueError("supersedes_decision_id specified but no active predecessor exists")
 
@@ -2796,40 +2781,9 @@ class TemporalDecisionStore:
                 provenance_run_id=current_undated.provenance_run_id,
                 memory_state=DecisionMemoryState.ACTIVE,
             )
-            self._connection.execute(
-                """
-                INSERT INTO decision (
-                    decision_id, workspace_id, subject_key, subject, relation,
-                    subject_normalized, relation_normalized, value, status,
-                    memory_state, valid_from, valid_to, supersedes_id,
-                    source_episode_id, provenance_run_id
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                """,
-                (
-                    new_decision.decision_id,
-                    new_decision.workspace_id,
-                    new_decision.subject_key,
-                    new_decision.subject,
-                    new_decision.relation,
-                    normalize_temporal_component(new_decision.subject) if new_decision.subject else None,
-                    normalize_temporal_component(new_decision.relation) if new_decision.relation else None,
-                    new_decision.value,
-                    new_decision.status.value,
-                    new_decision.memory_state.value,
-                    _to_storage_time(new_decision.valid_from),
-                    None,
-                    new_decision.supersedes_id,
-                    new_decision.source_episode_id,
-                    new_decision.provenance_run_id,
-                ),
-            )
-            self._insert_evidence(
-                "decision_evidence",
-                "decision_id",
-                new_decision.decision_id,
-                new_decision.source_evidence_refs,
-                workspace_id=workspace_id,
-            )
+            # Same lifecycle path as other materializers: closes the predecessor
+            # decision and its candidate row, then writes the record and evidence.
+            self._write_decision_locked(new_decision)
             self._connection.execute(
                 """
                 UPDATE undated_decision
