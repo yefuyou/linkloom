@@ -1680,6 +1680,7 @@ class ProductApplication:
                 context = SemanticExtractionContext(
                     expected_workspace_id=workspace_id,
                     relation_resolver=self.relation_resolver,
+                    document_quote_evidence=True,
                 )
                 pipeline = SemanticIngestionPipeline(self.extractor, CandidateValidator())
                 version_id = artifact.artifact_version_id
@@ -1714,7 +1715,7 @@ class ProductApplication:
                                     current['source_version'] == artifact.artifact_version_id)
                         request_context = (SemanticExtractionContext(workspace_id, self.relation_resolver,
                             product_task_fields=ProductTaskFieldContext(artifact,
-                                current_source=current_source_admitted))
+                                current_source=current_source_admitted), document_quote_evidence=True)
                             if isinstance(self.extractor, ProviderNeutralSemanticExtractor) else context)
                         trace = pipeline.process_segment_with_trace(segment, artifact, request_context)
                         failure = trace.extraction.failure_code
@@ -1757,6 +1758,15 @@ class ProductApplication:
                 results = CandidateValidator().flag_conflicts(tuple(results))
             with self._store_lock:
                 errors: list[str] = []
+                # Plain notes (#137): publish each verified exact quote in the existing
+                # SourceVersion evidence catalogue before candidates reference it.
+                quote_spans = [result.candidate.provenance for result in results
+                               if result.candidate is not None and result.candidate.segment_id in new_segment_ids]
+                if quote_spans:
+                    from linkloom.semantic_ingestion.document_text import persist_document_quote_evidence
+                    with self.repository._lock:
+                        persist_document_quote_evidence(self.repository._connection, self.store.source_registry,
+                                                        artifact, quote_spans)
                 for result in results:
                     if result.candidate is None:
                         errors.extend(code.value for code in result.reason_codes)
@@ -2254,8 +2264,8 @@ class ProductApplication:
         if source is None:
             return {"evidence_ref": evidence_ref, "verified": False, "source_name": "Source unavailable"}
         artifact = self._artifact_from_version(source)
-        parsed = parse_source_text(artifact)
-        span = next((item.evidence_span for item in parsed.segments if item.evidence_span.evidence_ref == evidence_ref), None)
+        from linkloom.semantic_ingestion.document_text import resolve_source_evidence
+        span = resolve_source_evidence(artifact, source)
         if span is None or not span.verify(artifact):
             return {"evidence_ref": evidence_ref, "verified": False, "source_name": str(source["source_name"])}
         return {
@@ -2538,12 +2548,21 @@ def _evidence_jump_projection(source: dict[str, Any], evidence, registry: Source
         if (not source["active"] or artifact.artifact_version_id != source["source_version"]
                 or artifact.content_hash != source["content_sha256"]):
             raise ValueError("source version mismatch")
+        from linkloom.semantic_ingestion.document_text import resolve_source_evidence
         parsed = parse_source_text(artifact)
         spans = tuple(segment.evidence_span for segment in parsed.segments)
         rows = {row["evidence_ref"]: row for row in evidence}
         if (parsed.issues or not spans or len(rows) != len(evidence)
-                or set(rows) != {span.evidence_ref for span in spans}):
+                or not {span.evidence_ref for span in spans} <= set(rows)):
             raise ValueError("source evidence catalog mismatch")
+        base = {span.evidence_ref for span in spans}
+        for ref, row in rows.items():
+            if ref not in base:
+                # Exact plain-notes quotes (#137): every extra catalogue row must resolve to one exact range.
+                extra = resolve_source_evidence(artifact, row)
+                if extra is None:
+                    raise ValueError("source evidence catalog mismatch")
+                spans += (extra,)
         projected = []
         for span in spans:
             row = rows[span.evidence_ref]

@@ -23,12 +23,14 @@ from linkloom.semantic_ingestion.candidate_models import (
     candidate_subject_key_for,
     extraction_fingerprint_for,
 )
-from linkloom.semantic_ingestion.extraction import SemanticExtractionContext, is_product_task_field_receipt
+from linkloom.semantic_ingestion.extraction import (
+    SemanticExtractionContext, is_document_quote_schema, is_product_task_field_receipt,
+)
 from linkloom.semantic_ingestion.relations import FrozenRelationResolver
 from linkloom.semantic_ingestion.task_observation import build_task_observation, PRODUCT_TASK_FIELDS_VERSION, PRODUCT_TASK_FIELD_POLICIES, PRODUCT_TASK_FIELDS_V2
 from linkloom.semantic_ingestion.document_text import (
     DocumentTextSegment, SourceSegment, SOURCE_SEGMENT_TYPES, document_valid_time_is_grounded,
-    parse_source_time,
+    document_quote_span, parse_source_time, source_segment_for_span,
 )
 
 
@@ -219,9 +221,12 @@ class CandidateValidator:
             return (CandidateValidationResult(outcome=CandidateOutcome.REJECTED, candidate=None,
                 reason_codes=(CandidateReasonCode.VALIDATION_REJECTED,),
                 extraction_receipt=receipt, provenance_valid=False),)
+        document_quotes = isinstance(segment, DocumentTextSegment) and (
+            is_document_quote_schema(receipt.schema_sha256) or is_document_quote_schema(receipt.schema_sha256, fact_profile=True)
+        )
         return tuple(
             self._validate_claim(claim, extraction, segment, artifact, context.relation_resolver,
-                                 product_profile=context.product_task_fields is not None)
+                                 product_profile=product_profile, document_quotes=document_quotes)
             for claim in extraction.claims
         )
 
@@ -309,12 +314,29 @@ class CandidateValidator:
         segment: SourceSegment,
         artifact: RawArtifact,
         relation_resolver: FrozenRelationResolver,
-        *, product_profile: bool = False,
+        *, product_profile: bool = False, document_quotes: bool = False,
     ) -> CandidateValidationResult:
+        reason_codes: list[CandidateReasonCode] = []
+        task_claim = claim.claim_type.value in {"PLAN", "ACTION"}
+        provenance = segment.evidence_span
+        task_segment = segment
+        if document_quotes and (task_claim or claim.claim_type.value == "DECISION"):
+            quote = (claim.task.text if claim.task else None) if task_claim else claim.evidence_quote
+            span = document_quote_span(segment, quote)
+            if span is None or (not task_claim and not (
+                _is_grounded_mention(claim.value, span.quote)
+                and (claim.subject is None or _is_grounded_mention(claim.subject, span.quote))
+            )):
+                reason_codes.append(CandidateReasonCode.EVIDENCE_UNRESOLVED)
+            else:
+                provenance = span
+                if task_claim:
+                    task_segment = source_segment_for_span(artifact, span)
+        evidence_text = provenance.quote
         task_observation = None
         product_task = claim.task is not None and claim.task.grounding_policy_version in PRODUCT_TASK_FIELD_POLICIES
         two_stage = extraction.task_stages is not None
-        if product_task or (product_profile and claim.claim_type.value in {'PLAN', 'ACTION'} and not (two_stage and claim.task is None)):
+        if not reason_codes and (product_task or (product_profile and task_claim and not (two_stage and claim.task is None))):
             task = claim.task
             valid = (product_profile and product_task and task.work_state == 'ASSERTED'
                      and task.text in segment.evidence_span.quote
@@ -323,7 +345,7 @@ class CandidateValidator:
                      and all(task.text.count(part) == 1 for part in task.description_parts))
             if valid:
                 try:
-                    task_observation = build_task_observation(task, segment, artifact)
+                    task_observation = build_task_observation(task, task_segment, artifact)
                     valid = task_observation.validation_status != 'INVALID' and task_observation.verify(artifact)
                 except (ValueError, StopIteration):
                     valid = False
@@ -331,10 +353,9 @@ class CandidateValidator:
                 return CandidateValidationResult(outcome=CandidateOutcome.REJECTED, candidate=None,
                     reason_codes=(CandidateReasonCode.VALIDATION_REJECTED,),
                     extraction_receipt=extraction.receipt, provenance_valid=False)
-        reason_codes: list[CandidateReasonCode] = []
         if claim.subject is None or claim.value is None or not (
-            _is_grounded_mention(claim.subject, segment.body_text)
-            and _is_grounded_mention(claim.value, segment.body_text)
+            _is_grounded_mention(claim.subject, evidence_text)
+            and _is_grounded_mention(claim.value, evidence_text)
         ):
             reason_codes.append(CandidateReasonCode.ENTITY_UNRESOLVED)
             entity_resolution = EntityResolution.UNRESOLVED
@@ -345,7 +366,7 @@ class CandidateValidator:
         relation_resolution = relation_result.status
         if (
             relation_resolution is RelationResolution.NEW_RELATION_CANDIDATE
-            and not _is_grounded_mention(claim.relation_phrase, segment.body_text)
+            and not _is_grounded_mention(claim.relation_phrase, evidence_text)
         ):
             relation_resolution = RelationResolution.UNRESOLVED_RELATION
         if relation_resolution is not RelationResolution.CANONICAL_RELATION:
@@ -363,7 +384,7 @@ class CandidateValidator:
             if (
                 claim.claim_type.value == "DECISION"
                 and segment.event_time is not None
-                and _SOURCE_EVENT_EFFECTIVE_CUE.search(segment.body_text)
+                and _SOURCE_EVENT_EFFECTIVE_CUE.search(evidence_text)
             ):
                 valid_from = segment.event_time
                 temporal_basis = TemporalBasis.DETERMINISTIC_RULE
@@ -377,15 +398,15 @@ class CandidateValidator:
                 if valid_from is None:
                     raise ValueError("valid_from is required")
                 if isinstance(segment, DocumentTextSegment) and (
-                    not document_valid_time_is_grounded(segment.body_text, valid_from)
-                    or (valid_to is not None and not document_valid_time_is_grounded(segment.body_text, valid_to, end=True))
+                    not document_valid_time_is_grounded(evidence_text, valid_from)
+                    or (valid_to is not None and not document_valid_time_is_grounded(evidence_text, valid_to, end=True))
                 ):
                     raise ValueError("valid time lacks an explicit effective-time role")
                 if not isinstance(segment, DocumentTextSegment) and (
-                    (claim.valid_from_raw not in segment.body_text
-                     and not document_valid_time_is_grounded(segment.body_text, valid_from))
-                    or (claim.valid_to_raw is not None and claim.valid_to_raw not in segment.body_text
-                        and not document_valid_time_is_grounded(segment.body_text, valid_to, end=True))
+                    (claim.valid_from_raw not in evidence_text
+                     and not document_valid_time_is_grounded(evidence_text, valid_from))
+                    or (claim.valid_to_raw is not None and claim.valid_to_raw not in evidence_text
+                        and not document_valid_time_is_grounded(evidence_text, valid_to, end=True))
                 ):
                     raise ValueError("valid time is not present in the source span")
                 if valid_to is not None and _as_utc_midnight(valid_to) <= _as_utc_midnight(valid_from):
@@ -405,7 +426,7 @@ class CandidateValidator:
             "artifact_id": artifact.artifact_id,
             "artifact_version_id": artifact.artifact_version_id,
             "source_episode_id": source_episode_id,
-            "evidence_ref": segment.evidence_span.evidence_ref,
+            "evidence_ref": provenance.evidence_ref,
             "claim_type": claim.claim_type.value,
             "subject": _normalized_mention(claim.subject) if claim.subject else None,
             "subject_key": candidate_subject_key_for(
@@ -436,8 +457,8 @@ class CandidateValidator:
             content_sha256=artifact.content_hash,
             segment_id=segment.segment_id,
             message_id=segment.message_id,
-            evidence_ref=segment.evidence_span.evidence_ref,
-            provenance=segment.evidence_span,
+            evidence_ref=provenance.evidence_ref,
+            provenance=provenance,
             claim_type=claim.claim_type,
             subject=claim.subject,
             subject_key=candidate_subject_key_for(
@@ -463,8 +484,9 @@ class CandidateValidator:
             extraction_receipt=extraction.receipt,
             review_reasons=tuple(reason_codes),
             fact_details=claim.fact_details,
-            task_observation=(task_observation or build_task_observation(claim.task, segment, artifact)
-                              if claim.claim_type.value in {"PLAN", "ACTION"} and not (two_stage and claim.task is None) else None),
+            task_observation=(task_observation or build_task_observation(claim.task, task_segment, artifact)
+                              if task_claim and CandidateReasonCode.EVIDENCE_UNRESOLVED not in reason_codes
+                              and not (two_stage and claim.task is None) else None),
         )
         return CandidateValidationResult(
             outcome=CandidateOutcome.UNRESOLVED if reason_codes else CandidateOutcome.ACCEPTED,
