@@ -1332,7 +1332,7 @@ def _apply_review_resolution(
         else candidate.temporal_resolution
     )
     temporal_basis = (
-        TemporalBasis.EXPLICIT
+        TemporalBasis.HUMAN_REVIEW
         if resolution.valid_from is not None
         else candidate.temporal_basis
     )
