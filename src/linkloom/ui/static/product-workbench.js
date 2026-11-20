@@ -1,0 +1,447 @@
+/* LinkLoom v2 · B1-4 Progressive UX & Visual Workbench Layer
+ * Independent module: enhances navigation hierarchy, side-by-side review,
+ * undated-decision zone, Ask trace drawer, and global settings drawer without
+ * modifying product.js or fabricating backend data.
+ */
+(() => {
+  const page = document.getElementById("page");
+  const contextBar = document.getElementById("workbench-context-bar");
+  const settingsTrigger = document.getElementById("settings-trigger");
+  const settingsDialog = document.getElementById("settings-drawer");
+  const settingsBody = document.getElementById("settings-drawer-body");
+  const settingsClose = document.getElementById("settings-close");
+  const workspacePicker = document.getElementById("workspace-picker");
+  const reviewCountEl = document.getElementById("review-count");
+  const providerStateEl = document.getElementById("provider-state");
+
+  if (!page || !contextBar) return;
+
+  const isZh = () => String(document.documentElement.lang || "zh").toLowerCase().startsWith("zh");
+  const t = (en, zh) => (isZh() ? zh : en);
+
+  function escapeHtml(value) {
+    return String(value ?? "")
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#39;");
+  }
+
+  function currentWorkspace() {
+    const id = workspacePicker?.value || "";
+    const label = workspacePicker?.selectedOptions?.[0]?.textContent?.trim() || id || t("None selected", "未选择");
+    return { id, label };
+  }
+
+  function currentHash() {
+    return String(window.location?.hash || "#meetings").replace(/^#/, "") || "meetings";
+  }
+
+  function primaryViewForHash(hash) {
+    if (hash === "decisions") return "evolution";
+    if (hash === "ask") return "ask";
+    return "meetings";
+  }
+
+  function renderContextBar() {
+    const ws = currentWorkspace();
+    const hash = currentHash();
+    const view = primaryViewForHash(hash);
+    const pendingCount = Number(reviewCountEl?.textContent || 0) || 0;
+
+    if (settingsTrigger) {
+      settingsTrigger.textContent = t("Settings", "设置");
+      settingsTrigger.setAttribute("aria-label", t("Open workspace settings and glossary", "打开工作区设置与术语表"));
+    }
+
+    const countBadge = pendingCount > 0
+      ? `<span class="workbench-pill-count">${pendingCount}</span>`
+      : "";
+
+    let subnav = "";
+    if (view === "meetings") {
+      subnav = `
+        <div class="workbench-subtabs" role="navigation" aria-label="${escapeHtml(t("Meetings and review views", "会议与审核子视图"))}">
+          <a class="workbench-subtab" href="/#meetings" ${hash === "meetings" ? 'aria-current="page"' : ""}>${escapeHtml(t("Meetings & Import", "会议列表与导入"))}</a>
+          <a class="workbench-subtab" href="/#review" ${hash === "review" ? 'aria-current="page"' : ""}>${escapeHtml(t("Review Queue", "待确认队列"))}${countBadge}</a>
+        </div>`;
+    } else if (view === "evolution") {
+      subnav = `
+        <div class="workbench-subtabs" role="navigation" aria-label="${escapeHtml(t("Evolution views", "演变看板子视图"))}">
+          <a class="workbench-subtab" href="/#decisions" aria-current="page">${escapeHtml(t("Decisions & History", "决议演变"))}</a>
+          <a class="workbench-subtab" href="/tasks">${escapeHtml(t("Tasks & Events", "待办任务看板"))}</a>
+        </div>`;
+    } else {
+      subnav = `
+        <div class="workbench-subtabs" aria-label="${escapeHtml(t("Ask workbench", "Ask 工作台"))}">
+          <span class="workbench-subtab is-static">${escapeHtml(t("Ask · Evidence · Trace", "提问 · 原文证据 · 运行调用链"))}</span>
+        </div>`;
+    }
+
+    const viewTitle = view === "meetings"
+      ? t("① Meetings & Review", "① 会议与审核")
+      : view === "evolution"
+        ? t("② Decisions & Tasks Evolution", "② 决议与任务演变")
+        : t("③ Ask Workbench", "③ Ask 工作台");
+
+    contextBar.hidden = false;
+    contextBar.innerHTML = `
+      <div class="workbench-context-meta">
+        <span class="workbench-view-label">${escapeHtml(viewTitle)}</span>
+        <span class="workbench-ws-chip" title="${escapeHtml(ws.id)}">${escapeHtml(t("Workspace", "工作区"))}: <strong>${escapeHtml(ws.label)}</strong></span>
+      </div>
+      ${subnav}
+    `;
+  }
+
+  /* ── 1. Side-by-side review enhancement (left source reader + right review form) ── */
+  const sourceCache = new Map();
+
+  async function enhanceCandidateReviewSplit() {
+    const form = page.querySelector("#candidate-review");
+    const layout = page.querySelector(".detail-layout");
+    if (!form || !layout || layout.dataset.workbenchEnhanced === "true") return;
+    layout.dataset.workbenchEnhanced = "true";
+    layout.classList.add("review-split");
+
+    const evidenceWrap = layout.querySelector("[data-evidence-source]");
+    const sourceId = evidenceWrap?.dataset?.evidenceSource;
+    const quoteText = evidenceWrap?.querySelector("blockquote.quote")?.textContent?.trim() || "";
+    if (!sourceId || !evidenceWrap) return;
+
+    const readerSlot = document.createElement("div");
+    readerSlot.className = "review-source-reader";
+    readerSlot.innerHTML = `<p class="hint">${escapeHtml(t("Loading source context…", "正在加载来源原文上下文…"))}</p>`;
+    evidenceWrap.appendChild(readerSlot);
+
+    try {
+      let source = sourceCache.get(sourceId);
+      if (!source) {
+        const res = await fetch(`/api/sources/${encodeURIComponent(sourceId)}`);
+        if (!res.ok) throw new Error("SOURCE_UNAVAILABLE");
+        const data = await res.json();
+        source = data.source;
+        if (source) sourceCache.set(sourceId, source);
+      }
+      if (!readerSlot.isConnected || typeof source?.content !== "string") {
+        readerSlot.remove();
+        return;
+      }
+      const lines = source.content.split(/\r?\n/);
+      const renderedLines = lines.slice(0, 250).map((line, idx) => {
+        const lineNo = idx + 1;
+        const hit = quoteText && line.includes(quoteText.slice(0, Math.min(24, quoteText.length)));
+        return `<div class="source-line ${hit ? "is-highlighted" : ""}"><span class="source-lineno">${lineNo}</span><span class="source-linetext">${escapeHtml(line || " ")}</span></div>`;
+      }).join("");
+      const truncated = lines.length > 250
+        ? `<p class="hint">${escapeHtml(t(`Showing first 250 of ${lines.length} lines. Use "View original quote" for exact span jump.`, `仅展示前 250 行（共 ${lines.length} 行），精确定位请点击上方“查看原文”。`))}</p>`
+        : "";
+      readerSlot.innerHTML = `
+        <details class="review-source-context" open>
+          <summary>${escapeHtml(t("Source transcript context", "来源原文上下文"))} (${lines.length} ${escapeHtml(t("lines", "行"))})</summary>
+          <div class="source-lines-box" role="region" aria-label="${escapeHtml(t("Source transcript", "来源原文"))}">${renderedLines}</div>
+          ${truncated}
+        </details>
+      `;
+    } catch {
+      if (readerSlot.isConnected) {
+        readerSlot.innerHTML = `<p class="hint">${escapeHtml(t("Full source transcript could not be loaded here; verified quote above remains authoritative.", "此处暂无法展开全文上下文，以上方核验原文为准。"))}</p>`;
+      }
+    }
+  }
+
+  /* ── 2. Decisions Evolution: Undated Decisions Zone ("时间未知 / 待核验") ── */
+  function enhanceDecisionsEvolution() {
+    const filterForm = page.querySelector("#decisions-date-filter");
+    if (!filterForm || page.querySelector(".undated-zone")) return;
+
+    const zone = document.createElement("section");
+    zone.className = "panel undated-zone";
+    zone.setAttribute("aria-labelledby", "undated-zone-title");
+    zone.innerHTML = `
+      <div class="card-head">
+        <div>
+          <p class="record-kind">${escapeHtml(t("Confirmed · Effective date unknown", "内容已确认 · 生效时间未知"))}</p>
+          <h2 id="undated-zone-title">${escapeHtml(t("Time unknown / Pending date verification", "时间未知 / 待核验区域"))}</h2>
+        </div>
+        <span class="badge warning">${escapeHtml(t("API pending", "列表接口待接入"))}</span>
+      </div>
+      <p class="hint">
+        ${escapeHtml(t(
+          "Undated confirmed decisions are stored separately in DecisionMemory (PR #123) and are never mixed into time-ordered CURRENT / AS_OF answers. Once the undated list endpoint is wired in the integration branch, those records will appear here.",
+          "无生效日期的正式决议由后端 DecisionMemory 独立存储（PR #123），不会混入按时间排序的 CURRENT / AS_OF 结果中。待集成分支接入未定时列表查询接口后，此类记录将展示在此独立区域。"
+        ))}
+      </p>
+    `;
+    page.appendChild(zone);
+  }
+
+  /* ── 3. Ask Workbench: Truthful Trace Drawer ── */
+  function enhanceAskTraceDrawer() {
+    const askResult = page.querySelector("#ask-result");
+    const answerCard = askResult?.querySelector(".ask-answer");
+    if (!answerCard || answerCard.querySelector(".trace-drawer")) return;
+
+    const rawPre = answerCard.querySelector(".ask-technical pre");
+    let parsed = null;
+    if (rawPre?.textContent) {
+      try { parsed = JSON.parse(rawPre.textContent); } catch { parsed = null; }
+    }
+    if (!parsed) return;
+
+    const path = String(parsed.path || "UNKNOWN");
+    const status = String(parsed.status || "UNKNOWN");
+    const runId = parsed.agent_run_id || null;
+    const isModelPath = path === "AGENT" || path === "TASK_INVESTIGATION" || path === "SOURCE_RELATION_INVESTIGATION";
+    const metrics = parsed.metrics || {};
+    const llmCalls = metrics.llm_calls ?? metrics.provider_calls?.attempted ?? (isModelPath ? t("Unknown", "未报告") : 0);
+    const inputTokens = metrics.reported_input_tokens ?? metrics.input_tokens ?? null;
+    const outputTokens = metrics.reported_output_tokens ?? metrics.output_tokens ?? null;
+    const costUsd = metrics.estimated_actual_usage_usd ?? metrics.cost_usd ?? null;
+    const reviewerDecision = parsed.reviewer?.decision || (parsed.reviewer?.accepted === true ? "ACCEPTED" : parsed.reviewer?.accepted === false ? "REJECTED" : t("Not invoked", "未触发"));
+
+    const nodes = [];
+    if (parsed.route) nodes.push({ name: "Router", detail: `${parsed.route.route || "—"}` });
+    nodes.push({ name: "Host Gate", detail: parsed.scope?.subject ? `${parsed.scope.subject} · ${parsed.scope.relation || ""}` : t("Workspace scope checked", "已校验工作区范围") });
+    if (isModelPath) nodes.push({ name: "Investigation Worker", detail: runId ? `run_id: ${runId}` : t("Bounded execution", "受限执行") });
+    if (parsed.reviewer) nodes.push({ name: "Reviewer", detail: String(reviewerDecision) });
+
+    const drawer = document.createElement("details");
+    drawer.className = "trace-drawer";
+    drawer.innerHTML = `
+      <summary>${escapeHtml(t("Run Trace & Cost Ledger", "运行调用链与费用台账"))} · <span class="badge neutral">${escapeHtml(isModelPath ? t("Investigation", "调查链路") : t("0 model calls", "零模型调用"))}</span></summary>
+      <div class="trace-drawer-body">
+        <div class="trace-summary-grid">
+          <div class="trace-stat"><span class="trace-stat-label">${escapeHtml(t("Execution path", "执行路径"))}</span><strong>${escapeHtml(path)}</strong></div>
+          <div class="trace-stat"><span class="trace-stat-label">${escapeHtml(t("Outcome", "终态"))}</span><strong>${escapeHtml(status)}</strong></div>
+          <div class="trace-stat"><span class="trace-stat-label">${escapeHtml(t("Provider calls", "模型调用"))}</span><strong>${escapeHtml(llmCalls)}</strong></div>
+          <div class="trace-stat"><span class="trace-stat-label">${escapeHtml(t("Reported tokens", "报告 Token"))}</span><strong>${inputTokens !== null || outputTokens !== null ? escapeHtml(`${inputTokens ?? "?"} / ${outputTokens ?? "?"}`) : escapeHtml(t("Not reported", "未报告 / 未知"))}</strong></div>
+          <div class="trace-stat"><span class="trace-stat-label">${escapeHtml(t("Estimated cost", "估算费用"))}</span><strong>${costUsd !== null ? escapeHtml(`$${costUsd}`) : escapeHtml(t("Unknown", "未知"))}</strong></div>
+        </div>
+        <ol class="trace-nodes">
+          ${nodes.map(n => `<li><strong>${escapeHtml(n.name)}</strong><span>${escapeHtml(n.detail)}</span></li>`).join("")}
+        </ol>
+        ${runId ? `<p class="hint">${escapeHtml(t("Detailed multi-agent trace endpoint (/api/product/ask/runs/{id}/trace) is pending B1-6 integration on this branch.", "完整多 Agent 调用链接口（/api/product/ask/runs/{id}/trace）将在 B1-6 集成分支接入。"))}</p>` : `<p class="hint">${escapeHtml(t("No external Provider was called for this deterministic lookup.", "本次为确定性直查，未调用外部模型 Provider。"))}</p>`}
+      </div>
+    `;
+    const technicalEl = answerCard.querySelector(".ask-technical");
+    if (technicalEl) answerCard.insertBefore(drawer, technicalEl);
+    else answerCard.appendChild(drawer);
+  }
+
+  /* ── 4. Global Settings Drawer (Workspace, Glossary, Provider) ── */
+  let lastFocused = null;
+
+  async function renderSettingsDrawer() {
+    if (!settingsBody) return;
+    const ws = currentWorkspace();
+    const providerText = providerStateEl?.textContent?.trim() || t("Unknown", "未知");
+    const providerReady = providerStateEl?.dataset?.ready === "true";
+
+    settingsBody.innerHTML = `
+      <section class="settings-section">
+        <h3>${escapeHtml(t("Current Workspace", "当前工作区"))}</h3>
+        <p class="hint">${escapeHtml(t("All meetings, decisions, tasks and glossary terms are strictly isolated per workspace.", "所有会议、决议、任务与术语均按工作区严格隔离。"))}</p>
+        <div class="settings-kv"><span>${escapeHtml(t("Active", "当前工作区"))}</span><strong>${escapeHtml(ws.label)}</strong></div>
+        <div class="actions">
+          <button type="button" class="button quiet" data-settings-action="new-workspace">${escapeHtml(t("Create new workspace", "新建工作区"))}</button>
+        </div>
+      </section>
+
+      <section class="settings-section">
+        <div class="card-head">
+          <h3>${escapeHtml(t("Workspace Glossary", "工作区术语表 (Glossary)"))}</h3>
+          <span class="badge ${ws.id ? "" : "neutral"}">${escapeHtml(ws.id ? t("Live API", "已连接") : t("No workspace", "未选择工作区"))}</span>
+        </div>
+        <p class="hint">${escapeHtml(t("Approved terms help retrieval and Ask disambiguation. They never alter formal decisions.", "经人工确认的术语用于辅助检索与 Ask 消歧，不会修改正式业务决议。"))}</p>
+        <div id="settings-glossary-list"><p class="loading">${escapeHtml(t("Loading glossary…", "正在加载术语表…"))}</p></div>
+        <form id="settings-glossary-form" class="form-stack settings-glossary-form">
+          <div class="field">
+            <label for="settings-glossary-term">${escapeHtml(t("New term (2–40 chars)", "新增术语（2–40 字符）"))}</label>
+            <input id="settings-glossary-term" name="term" required minlength="2" maxlength="40" placeholder="${escapeHtml(t("e.g. Vendor / 供方", "例如：供方"))}">
+          </div>
+          <div class="field">
+            <label for="settings-glossary-relation">${escapeHtml(t("Maps to relation", "映射关系"))}</label>
+            <input id="settings-glossary-relation" name="relation" required value="uses supplier" placeholder="uses supplier">
+          </div>
+          <div class="field">
+            <label for="settings-glossary-actor">${escapeHtml(t("Reviewer name", "操作人姓名"))}</label>
+            <input id="settings-glossary-actor" name="actor" required maxlength="128" value="${escapeHtml(localReviewer())}">
+          </div>
+          <button type="submit" class="button quiet" ${ws.id ? "" : "disabled"}>${escapeHtml(t("Submit term for review", "提交术语待确认"))}</button>
+          <p id="settings-glossary-status" class="hint" role="status" aria-live="polite"></p>
+        </form>
+      </section>
+
+      <section class="settings-section">
+        <div class="card-head">
+          <h3>${escapeHtml(t("AI Provider Status", "AI 模型连接状态"))}</h3>
+          <span class="badge ${providerReady ? "" : "warning"}">${escapeHtml(providerReady ? t("Ready", "已就绪") : t("Read-only / Off", "未配置"))}</span>
+        </div>
+        <p class="hint">${escapeHtml(providerText)}</p>
+      </section>
+    `;
+
+    await loadSettingsGlossary(ws.id);
+  }
+
+  function localReviewer() {
+    try { return String(window.localStorage.getItem("linkloom.tasks.reviewer") || "").trim(); } catch { return ""; }
+  }
+
+  async function loadSettingsGlossary(workspaceId) {
+    const listEl = document.getElementById("settings-glossary-list");
+    if (!listEl) return;
+    if (!workspaceId) {
+      listEl.innerHTML = `<p class="hint">${escapeHtml(t("Select or create a workspace first.", "请先选择或新建一个工作区。"))}</p>`;
+      return;
+    }
+    try {
+      const res = await fetch(`/api/product/feedback?workspace_id=${encodeURIComponent(workspaceId)}`);
+      if (!res.ok) throw new Error("LOAD_FAILED");
+      const data = await res.json();
+      const entries = data.entries || [];
+      if (!entries.length) {
+        listEl.innerHTML = `<p class="empty-inline">${escapeHtml(t("No approved or pending glossary terms yet.", "当前工作区暂无术语记录。"))}</p>`;
+        return;
+      }
+      const statusMap = {
+        pending: t("Pending", "待确认"),
+        active: t("Approved", "已批准"),
+        revoked: t("Revoked", "已撤销"),
+        rejected: t("Rejected", "已拒绝"),
+        expired: t("Expired", "已过期"),
+      };
+      listEl.innerHTML = entries.map(entry => `
+        <article class="settings-glossary-item">
+          <div class="card-head">
+            <strong>${escapeHtml(entry.term)} → ${escapeHtml(entry.relation)}</strong>
+            <span class="badge ${entry.status === "active" ? "" : entry.status === "pending" ? "warning" : "neutral"}">${escapeHtml(statusMap[entry.status] || entry.status)}</span>
+          </div>
+          <p class="hint">${escapeHtml(t("Actor", "操作人"))}: ${escapeHtml(entry.actor || "—")}</p>
+          <div class="actions">
+            ${entry.status === "pending" ? `<button type="button" class="button quiet" data-glossary-op="approve" data-id="${escapeHtml(entry.id)}">${escapeHtml(t("Confirm", "确认"))}</button><button type="button" class="button quiet" data-glossary-op="reject" data-id="${escapeHtml(entry.id)}">${escapeHtml(t("Reject", "拒绝"))}</button>` : ""}
+            ${entry.status === "active" ? `<button type="button" class="button danger" data-glossary-op="revoke" data-id="${escapeHtml(entry.id)}">${escapeHtml(t("Revoke", "撤销"))}</button>` : ""}
+          </div>
+        </article>
+      `).join("");
+    } catch {
+      listEl.innerHTML = `<p class="error-inline">${escapeHtml(t("Could not load glossary entries from local service.", "无法从本地服务读取术语表。"))}</p>`;
+    }
+  }
+
+  function openSettings() {
+    if (!settingsDialog) return;
+    lastFocused = document.activeElement;
+    if (typeof settingsDialog.showModal === "function") settingsDialog.showModal();
+    else settingsDialog.setAttribute("open", "");
+    settingsTrigger?.setAttribute("aria-expanded", "true");
+    renderSettingsDrawer();
+    settingsClose?.focus?.();
+  }
+
+  function closeSettings() {
+    if (!settingsDialog) return;
+    if (typeof settingsDialog.close === "function" && settingsDialog.open) settingsDialog.close();
+    else settingsDialog.removeAttribute("open");
+    settingsTrigger?.setAttribute("aria-expanded", "false");
+    lastFocused?.focus?.();
+  }
+
+  settingsTrigger?.addEventListener("click", openSettings);
+  settingsClose?.addEventListener("click", closeSettings);
+  settingsDialog?.addEventListener("click", (event) => {
+    if (event.target === settingsDialog) closeSettings();
+  });
+  settingsDialog?.addEventListener("close", () => {
+    settingsTrigger?.setAttribute("aria-expanded", "false");
+  });
+
+  settingsBody?.addEventListener("click", async (event) => {
+    const newWsBtn = event.target.closest('[data-settings-action="new-workspace"]');
+    if (newWsBtn) {
+      closeSettings();
+      document.getElementById("new-workspace")?.click();
+      return;
+    }
+    const opBtn = event.target.closest("[data-glossary-op]");
+    if (!opBtn) return;
+    const op = opBtn.dataset.glossaryOp;
+    const id = opBtn.dataset.id;
+    const ws = currentWorkspace();
+    const actorInput = document.getElementById("settings-glossary-actor");
+    const actor = String(actorInput?.value || localReviewer()).trim();
+    const statusEl = document.getElementById("settings-glossary-status");
+    if (!actor) {
+      if (statusEl) statusEl.textContent = t("Enter your reviewer name first.", "请先填写操作人姓名。");
+      actorInput?.focus?.();
+      return;
+    }
+    try { window.localStorage.setItem("linkloom.tasks.reviewer", actor); } catch { /* Optional */ }
+    opBtn.disabled = true;
+    try {
+      const res = await fetch(`/api/product/feedback/${encodeURIComponent(op)}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, actor, workspace_id: ws.id, human_confirmed: true }),
+      });
+      if (!res.ok) throw new Error("OP_FAILED");
+      if (statusEl) statusEl.textContent = t("Updated.", "已更新。");
+      await loadSettingsGlossary(ws.id);
+    } catch {
+      if (statusEl) statusEl.textContent = t("Operation failed.", "操作失败，请检查输入或服务状态。");
+    } finally {
+      opBtn.disabled = false;
+    }
+  });
+
+  settingsBody?.addEventListener("submit", async (event) => {
+    if (event.target?.id !== "settings-glossary-form") return;
+    event.preventDefault();
+    const ws = currentWorkspace();
+    const statusEl = document.getElementById("settings-glossary-status");
+    const data = Object.fromEntries(new FormData(event.target));
+    try { window.localStorage.setItem("linkloom.tasks.reviewer", String(data.actor || "").trim()); } catch { /* Optional */ }
+    try {
+      const res = await fetch("/api/product/feedback/propose", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...data, workspace_id: ws.id }),
+      });
+      if (!res.ok) throw new Error("PROPOSE_FAILED");
+      event.target.querySelector("#settings-glossary-term").value = "";
+      if (statusEl) statusEl.textContent = t("Submitted as pending term.", "已提交为待确认术语。");
+      await loadSettingsGlossary(ws.id);
+    } catch {
+      if (statusEl) statusEl.textContent = t("Could not submit term.", "术语提交失败，请检查长度与格式。");
+    }
+  });
+
+  /* ── Reactive observers ── */
+  function syncEnhancements() {
+    renderContextBar();
+    enhanceCandidateReviewSplit();
+    enhanceDecisionsEvolution();
+    enhanceAskTraceDrawer();
+  }
+
+  let scheduled = false;
+  function scheduleSync() {
+    if (scheduled) return;
+    scheduled = true;
+    queueMicrotask(() => {
+      scheduled = false;
+      syncEnhancements();
+    });
+  }
+
+  const observer = new MutationObserver(scheduleSync);
+  observer.observe(page, { childList: true, subtree: true });
+  if (reviewCountEl) observer.observe(reviewCountEl, { childList: true, characterData: true });
+  if (workspacePicker) observer.observe(workspacePicker, { childList: true, attributes: true });
+  window.addEventListener("hashchange", scheduleSync);
+  document.getElementById("interface-language")?.addEventListener("change", () => setTimeout(scheduleSync, 50));
+
+  syncEnhancements();
+})();

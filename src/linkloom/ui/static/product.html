@@ -24,15 +24,30 @@
         <button class="button quiet" id="new-workspace" type="button">New workspace</button>
       </div>
       <div class="interface-language"><label id="interface-language-label" for="interface-language">Language</label><select id="interface-language"><option value="en">English</option><option value="zh">中文</option></select></div>
+      <button class="button quiet settings-trigger" id="settings-trigger" type="button" aria-haspopup="dialog" aria-controls="settings-drawer" aria-expanded="false">设置</button>
       <div id="provider-state" class="provider-state" role="status">Checking AI availability…</div>
       <span id="review-count" class="sr-only"></span>
     </header>
     <main id="main-content" class="page-shell" tabindex="-1">
+      <div id="workbench-context-bar" class="workbench-context-bar" hidden></div>
       <div id="page" aria-live="polite"><section class="state-card"><p>Opening LinkLoom…</p></section></div>
     </main>
+    <dialog id="settings-drawer" class="settings-drawer" aria-labelledby="settings-drawer-title">
+      <div class="settings-drawer-panel">
+        <header class="settings-drawer-head">
+          <div>
+            <p class="record-kind" id="settings-drawer-kicker">工作区设置</p>
+            <h2 id="settings-drawer-title">Workspace · 术语与连接</h2>
+          </div>
+          <button class="button quiet" id="settings-close" type="button" aria-label="关闭设置">关闭</button>
+        </header>
+        <div id="settings-drawer-body" class="settings-drawer-body"></div>
+      </div>
+    </dialog>
     <div class="sr-only" id="status-live" aria-live="polite" aria-atomic="true"></div>
     <script src="/product-task-result.js" defer></script>
     <script src="/product-task-review.js" defer></script>
     <script src="/product.js" defer></script>
+    <script src="/product-workbench.js" defer></script>
   </body>
 </html>
