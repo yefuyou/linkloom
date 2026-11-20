@@ -136,7 +136,10 @@ def _decision_candidates(query, snapshot, view, point, embedder, default_subject
             int(current["status"] == "FOUND"), int(dated["status"] == "FOUND") if dated else None,
             # A slot that has records, just none yet at the asked date, is confirmed: admission then
             # reports NO_VALID_RECORD_AT_TIME instead of NO_CONFIRMED_RECORD.
-            len(effective["history"]) or len(current["history"]), "CONFLICT" in effective["status"], (subject, relation),
+            # A confirmed, time-unknown decision is a confirmed record too; it never counts as current.
+            len(effective["history"]) or len(current["history"])
+            or (len(row.get("decision_ids", ())) if row.get("effective_time_unknown") else 0),
+            "CONFLICT" in effective["status"], (subject, relation),
             tuple(sorted(a for a in anchors if _mentions(query.casefold(), a))[:8]),
             references if subject == default_subject else ())
 
@@ -463,7 +466,7 @@ def admit_route(context, route, *, leads_allowed=False):
         return RouterAdmission(None, 'TIME_SCOPE_UNRESOLVED')
     graph_intents = {'TASK': {'CURRENT', 'AS_OF', 'LIST', 'HISTORY'},
                      'RELATION': {'RELATION_MULTIHOP', 'LIST', 'HISTORY', 'COMPARE'}}
-    decision = route.domain == 'DECISION' and route.intent in {'CURRENT', 'AS_OF', 'INVESTIGATION'}
+    decision = route.domain == 'DECISION' and route.intent in {'CURRENT', 'AS_OF', 'INVESTIGATION', 'HISTORY'}
     graph = route.intent in graph_intents.get(route.domain, ()) and context.graph_available
     if not decision and not graph or decision and route.time_role == 'MEETING_DATE':
         return RouterAdmission(None, 'UNSUPPORTED_QUERY')
