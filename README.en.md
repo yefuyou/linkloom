@@ -49,7 +49,7 @@ As projects evolve and owners rotate, LinkLoom never silently overwrites history
 
 - **One shared team truth**: Know what is effective today, what was effective on Oct 7, and which decision replaced an earlier one.
 - **Full handoff context**: See how an action item moved across owners and deadlines, with every update tied to its source meeting—and undo accidental merges anytime.
-- **Automatic staleness alerts**: If a meeting note is edited later, LinkLoom compares content hashes and flags affected records for re-review so nobody works off outdated notes.
+- **Staleness flags**: If a meeting note is edited later, LinkLoom compares content hashes and marks affected records as "source changed" for re-review, so you don't keep working off outdated notes.
 
 <p align="center">
   <img src="docs/assets/screenshots/after-decisions-zh.png" width="680" alt="Cross-meeting decision timeline">
@@ -61,13 +61,15 @@ As projects evolve and owners rotate, LinkLoom never silently overwrites history
 
 ### Ask: instant answers for facts, bounded Agents for "why"
 
-Questions like *"Who owns the payment redesign now?"* or *"What was the target date on Oct 7?"* hit the local temporal store directly—no LLM cost, no date confusion, and sub-millisecond median lookup (`0.73 ms` at 100k records).
+Questions like *"Who owns the payment redesign now?"* or *"What was the target date on Oct 7?"* hit the local temporal store directly—no LLM cost, no date confusion, and sub-millisecond median lookup (`0.73 ms` at 100k offline synthetic records, see the [scale benchmark](benchmarks/scale/2026-10-29/results.md)).
 
 Questions like *"Why did the deadline slip, and was it tied to last week's API risk?"* go to a read-only Agent backed by incremental BM25, local embeddings, and optional reranking. Step and budget limits keep it bounded, and missing evidence is reported honestly instead of guessed.
 
 ## Compared to standard RAG
 
-Evaluated on the same cross-meeting test set with the same model (DeepSeek): standard hybrid RAG produced **13 temporal attribution errors** across 120 answers (blending later changes into earlier dates), while LinkLoom produced **0**. After refining query planning and result assembly, offline replay strict accuracy on the dev set rose from **60.0% to 81.7%** (PR #66 / #67 dev-set replay, not held-out score; held-out D3 mean remains **63.89%**, range `[58.33%, 66.67%]`).
+Evaluated on the same cross-meeting test set with the same model (DeepSeek, [PR #64](https://github.com/yefuyou/linkloom/pull/64)): standard hybrid RAG produced **13 temporal attribution errors** across 120 answers (blending later changes into earlier dates), while LinkLoom produced **0**. This is a post-hoc metric, defined after seeing the results and used only for explanation, not as a score. In the same comparison, standard RAG had a slightly higher D3 content score (77.8% vs 72.2%), and LinkLoom returned more empty answers (53 vs 24).
+
+After refining query planning and result assembly, offline replay strict accuracy on the dev set rose from **60.0% to 81.7%** ([PR #66](https://github.com/yefuyou/linkloom/pull/66) / [#67](https://github.com/yefuyou/linkloom/pull/67), dev-set replay, not a held-out score). On the held-out D3 set, the graph retrieval path run on its own scored a mean of **63.89%**, range `[58.33%, 66.67%]` over three runs ([PR #55](https://github.com/yefuyou/linkloom/pull/55)); this is not an end-to-end score with fallback.
 
 ## Privacy & models
 
@@ -78,7 +80,9 @@ LinkLoom runs locally on a single SQLite file by default:
 | Offline review & browsing | No API key required | Never leaves your machine |
 | Lookup confirmed state / dates | Local SQLite query | Never leaves your machine |
 | AI draft extraction & investigation | Set `GEMINI_API_KEY` (or optional DeepSeek) | Sends relevant meeting text to your configured provider |
-| Lexical search / local rerank | Built-in incremental BM25 + optional local embeddings | Runs 100% locally |
+| Lexical search / local rerank | Built-in incremental BM25 + optional local embeddings | Computed locally; optional models are downloaded to a local cache on first use |
+
+Local review stores the reviewer's self-reported name; it does not authenticate people.
 
 ## Quickstart
 
@@ -111,16 +115,18 @@ LinkLoom ships a read-only MCP server so you can query confirmed team decisions 
 
 ```bash
 python -m pip install -e ".[mcp]"
-claude mcp add linkloom -- python -m linkloom.mcp_server --database /path/to/product.sqlite
+claude mcp add linkloom -- "<venv-python>" -m linkloom.mcp_server --database /path/to/product.sqlite
 ```
+
+Replace `<venv-python>` with the absolute path of the virtual-environment Python that has `.[mcp]` installed. Every tool requires the currently selected `workspace`; questions are not sent to external models by default.
 
 ## Roadmap (v2)
 
-The local text-meeting loop is solid; upcoming work in progress (not yet merged to `master`):
+The local text-meeting loop is solid. The following work is in development and none of it is merged to `master` yet:
 
 - **Parallel investigation & unified routing**: Merging LangGraph Supervisor-Worker orchestration and converged semantic routing.
 - **Cleaner team workspace & glossary memory**: Unified review/timeline workspace, team jargon glossary, and confirming decisions before an effective date is known.
-- **Audio & team collaboration**: Offline meeting audio transcription with timestamp jumps, member-scoped permissions, and opt-in task dispatch.
+- **Audio & team collaboration**: Uploaded meeting audio transcription aligned to speaker timestamps, member-scoped permissions, and opt-in task dispatch.
 
 ---
 
