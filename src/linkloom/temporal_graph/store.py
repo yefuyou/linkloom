@@ -40,7 +40,7 @@ class SQLiteGraphStore:
         """Count matching pending proposals locally; never turn them into graph nodes."""
         if workspace!=self.workspace:raise PermissionError('WORKSPACE_NOT_AUTHORIZED')
         from linkloom.temporal_graph.grounding import folded
-        from linkloom.temporal_graph.projection import _evidence
+        from linkloom.temporal_graph.projection import read_source_evidence
         from linkloom.semantic_ingestion.materialization import _candidate_view_from_row
         if not isinstance(entity_text,str) or not entity_text.strip():raise ValueError('ENTITY_TEXT_REQUIRED')
         refs=[];evidence={}
@@ -52,7 +52,7 @@ class SQLiteGraphStore:
                     _,view,encoded,fingerprint=_candidate_view_from_row(dict(row))
                     if encoded!=row['payload_json'] or fingerprint!=row['candidate_fingerprint']:continue
                     if getattr(view.claim_type,'value',None)!='PROPOSAL' or not view.value or folded(entity_text) not in folded(view.value):continue
-                    proofs=[_evidence(db,workspace,e.evidence_ref,self.authorize_source) for e in view.evidence]
+                    proofs=[read_source_evidence(db,workspace,e.evidence_ref,self.authorize_source) for e in view.evidence]
                     if not proofs or set(view.decision_evidence_refs)!={p.evidence_id for p in proofs}:continue
                     valid=True
                     for proof,binding in zip(proofs,view.evidence):

@@ -86,6 +86,8 @@ class ReviewStorage:
 
     def __init__(self, store: TaskStore):
         self.store = store
+        if store.read_only:
+            return
         with store._transaction():
             connection = store._connection
             tables = {row[0] for row in connection.execute("SELECT name FROM sqlite_master WHERE type='table'")}

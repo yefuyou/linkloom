@@ -2090,6 +2090,34 @@ class TemporalDecisionStore:
         ).fetchall()
         return tuple(self._row_to_decision(row) for row in rows)
 
+    def lookup_history(
+        self, workspace_id: str, subject: str, relation: str
+    ) -> tuple[DecisionRecord, ...]:
+        """Read all lifecycle states for the exact slot used by structured lookup."""
+        rows = self._connection.execute(
+            """
+            SELECT * FROM decision
+            WHERE workspace_id = ? AND subject_normalized = ? AND relation_normalized = ?
+            ORDER BY valid_from, decision_id
+            """,
+            (workspace_id, normalize_temporal_component(subject), normalize_temporal_component(relation)),
+        ).fetchall()
+        return tuple(self._row_to_decision(row) for row in rows)
+
+    def lookup_undated_history(
+        self, workspace_id: str, subject: str, relation: str
+    ) -> tuple[UndatedDecisionRecord, ...]:
+        """Read undated records for the exact slot, ordered by audit time only."""
+        rows = self._connection.execute(
+            """
+            SELECT * FROM undated_decision
+            WHERE workspace_id = ? AND subject_normalized = ? AND relation_normalized = ?
+            ORDER BY confirmed_at, undated_decision_id
+            """,
+            (workspace_id, normalize_temporal_component(subject), normalize_temporal_component(relation)),
+        ).fetchall()
+        return tuple(self._row_to_undated_decision(row) for row in rows)
+
     def get_as_of(
         self,
         workspace_id: str,
@@ -2673,20 +2701,10 @@ class TemporalDecisionStore:
         if mode not in {"CURRENT", "AS_OF"}:
             raise ValueError("mode must be 'CURRENT' or 'AS_OF'")
         temporal = self.lookup(workspace_id, subject, relation, as_of=as_of)
-        normalized_subject = normalize_temporal_component(subject)
-        normalized_relation = normalize_temporal_component(relation)
-        rows = self._connection.execute(
-            """
-            SELECT * FROM undated_decision
-            WHERE workspace_id = ?
-              AND subject_normalized = ?
-              AND relation_normalized = ?
-              AND memory_state = 'ACTIVE'
-            ORDER BY confirmed_at, undated_decision_id
-            """,
-            (workspace_id, normalized_subject, normalized_relation),
-        ).fetchall()
-        undated = tuple(self._row_to_undated_decision(row) for row in rows)
+        undated = tuple(
+            record for record in self.lookup_undated_history(workspace_id, subject, relation)
+            if record.memory_state is UndatedDecisionState.ACTIVE
+        )
         return DecisionStateLookupResult(
             temporal_result=temporal,
             undated_decisions=undated,
