@@ -26,4 +26,5 @@ from .metrics import (
 )
 from .isolation import check_inference_payload, check_inference_module, snapshot_tree, compare_snapshots
 from .bad_cases import BadCaseCategory, BadCaseSeverity, create_bad_case, classify_link_case, classify_relation_detail
+from .result_adapter import EvalResultAdapter, EvalRunComparison, EvalRunSummary
 from .runner import FormalEvaluationRunner, evaluate

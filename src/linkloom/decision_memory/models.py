@@ -31,6 +31,22 @@ class TemporalLookupStatus(StrEnum):
     NO_VALID_RECORD_AT_TIME = "NO_VALID_RECORD_AT_TIME"
 
 
+class UndatedDecisionState(StrEnum):
+    ACTIVE = "ACTIVE"
+    PROMOTED_TO_DATED = "PROMOTED_TO_DATED"
+    STALE = "STALE"
+    INVALIDATED = "INVALIDATED"
+    NEEDS_REVALIDATION = "NEEDS_REVALIDATION"
+    REVOKED = "REVOKED"
+
+
+class DecisionTimeBasis(StrEnum):
+    UNKNOWN = "UNKNOWN"
+    SOURCE_EXPLICIT = "SOURCE_EXPLICIT"
+    USER_SELECTED = "USER_SELECTED"
+    USER_TODAY = "USER_TODAY"
+
+
 def normalize_temporal_component(value: str) -> str:
     """Normalize one subject or relation component without semantic aliases."""
     return " ".join(value.casefold().split()).strip(" .!?\t\r\n")
@@ -144,6 +160,85 @@ class DecisionRecord:
 class TemporalLookupResult:
     status: TemporalLookupStatus
     records: tuple[DecisionRecord, ...] = ()
+
+
+@dataclass(frozen=True, slots=True)
+class UndatedDecisionRecord:
+    undated_decision_id: str
+    decision_ref: str
+    workspace_id: str
+    subject_key: str
+    value: str
+    memory_state: UndatedDecisionState
+    time_basis: DecisionTimeBasis
+    source_episode_id: str
+    source_evidence_refs: tuple[str, ...]
+    provenance_run_id: str
+    confirmed_at: datetime
+    updated_at: datetime
+    subject: str | None = None
+    relation: str | None = None
+    supersedes_decision_id: str | None = None
+    promoted_decision_id: str | None = None
+
+    def __post_init__(self) -> None:
+        for field_name in (
+            "undated_decision_id",
+            "decision_ref",
+            "workspace_id",
+            "subject_key",
+            "value",
+            "source_episode_id",
+            "provenance_run_id",
+        ):
+            object.__setattr__(self, field_name, _required_text(getattr(self, field_name), field_name))
+        for field_name in ("subject", "relation"):
+            value = getattr(self, field_name)
+            if value is not None:
+                object.__setattr__(self, field_name, _required_text(value, field_name))
+                if not normalize_temporal_component(value):
+                    raise ValueError(f"{field_name} must not be empty after normalization")
+        if (self.subject is None) != (self.relation is None):
+            raise ValueError("subject and relation must be provided together")
+        if not isinstance(self.memory_state, UndatedDecisionState):
+            object.__setattr__(self, "memory_state", UndatedDecisionState(self.memory_state))
+        if not isinstance(self.time_basis, DecisionTimeBasis):
+            object.__setattr__(self, "time_basis", DecisionTimeBasis(self.time_basis))
+        if self.time_basis is not DecisionTimeBasis.UNKNOWN:
+            raise ValueError("UndatedDecisionRecord must have time_basis=UNKNOWN")
+        object.__setattr__(self, "confirmed_at", _utc(self.confirmed_at, "confirmed_at"))
+        object.__setattr__(self, "updated_at", _utc(self.updated_at, "updated_at"))
+        object.__setattr__(
+            self,
+            "source_evidence_refs",
+            _evidence_refs(self.source_evidence_refs, "source_evidence_refs"),
+        )
+        for field_name in ("supersedes_decision_id", "promoted_decision_id"):
+            value = getattr(self, field_name)
+            if value is not None:
+                object.__setattr__(self, field_name, _required_text(value, field_name))
+
+
+@dataclass(frozen=True, slots=True)
+class UndatedDecisionReceipt:
+    receipt_id: str
+    workspace_id: str
+    undated_decision_id: str
+    decision_ref: str
+    candidate_id: str | None
+    candidate_fingerprint: str
+    authorization_type: str
+    authorization_id: str
+    authorization_reason: str
+    authorized_at: datetime
+    receipt_fingerprint: str
+
+
+@dataclass(frozen=True, slots=True)
+class DecisionStateLookupResult:
+    temporal_result: TemporalLookupResult
+    undated_decisions: tuple[UndatedDecisionRecord, ...] = ()
+    current_uncertain_due_to_undated: bool = False
 
 
 @dataclass(frozen=True, slots=True)

@@ -94,6 +94,7 @@ class RuntimeAgentAdapter:
         workspace_id: str | None = None,
         embedder: EmbeddingProvider | None = None,
         index_update_coordinator: IndexUpdateCoordinator | None = None,
+        lexical_indexes=None,
         context_assembler: ContextAssembler | None = None,
         temporal_decision_lookup: Callable[[str | None, str | None, str | None], dict[str, Any]] | None = None,
         temporal_claim_validator: Callable[..., dict[str, Any]] | None = None,
@@ -121,6 +122,7 @@ class RuntimeAgentAdapter:
             mode=selected_mode,
             embedder=embedder,
             index_update_coordinator=index_update_coordinator,
+            lexical_indexes=lexical_indexes,
             index_version=2,
         )
         if not isinstance(decision_memory_enabled, bool):

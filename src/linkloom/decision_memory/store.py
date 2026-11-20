@@ -18,9 +18,14 @@ from linkloom.decision_memory.models import (
     DecisionEvolution,
     DecisionMemoryState,
     DecisionRecord,
+    DecisionStateLookupResult,
     DecisionStatus,
+    DecisionTimeBasis,
     TemporalLookupResult,
     TemporalLookupStatus,
+    UndatedDecisionReceipt,
+    UndatedDecisionRecord,
+    UndatedDecisionState,
     decision_slot_key_for,
     normalize_temporal_component,
 )
@@ -274,7 +279,82 @@ _MIGRATION_2_SQL = (
     """,
 )
 
-_LATEST_SCHEMA_VERSION = 2
+_MIGRATION_3_SQL = (
+    """
+    CREATE TABLE IF NOT EXISTS undated_decision (
+        undated_decision_id TEXT PRIMARY KEY,
+        decision_ref TEXT NOT NULL,
+        workspace_id TEXT NOT NULL,
+        subject_key TEXT NOT NULL,
+        subject TEXT,
+        relation TEXT,
+        subject_normalized TEXT,
+        relation_normalized TEXT,
+        value TEXT NOT NULL,
+        memory_state TEXT NOT NULL DEFAULT 'ACTIVE'
+            CHECK (memory_state IN (
+                'ACTIVE', 'PROMOTED_TO_DATED', 'STALE',
+                'INVALIDATED', 'NEEDS_REVALIDATION', 'REVOKED'
+            )),
+        time_basis TEXT NOT NULL DEFAULT 'UNKNOWN'
+            CHECK (time_basis IN ('UNKNOWN')),
+        supersedes_decision_id TEXT REFERENCES decision(decision_id) ON DELETE RESTRICT,
+        promoted_decision_id TEXT REFERENCES decision(decision_id) ON DELETE RESTRICT,
+        source_episode_id TEXT NOT NULL,
+        provenance_run_id TEXT NOT NULL,
+        confirmed_at TEXT NOT NULL,
+        updated_at TEXT NOT NULL,
+        UNIQUE (workspace_id, decision_ref)
+    )
+    """,
+    "CREATE INDEX IF NOT EXISTS idx_undated_decision_workspace_slot "
+    "ON undated_decision(workspace_id, subject_key, memory_state)",
+    "CREATE INDEX IF NOT EXISTS idx_undated_decision_workspace_subject_relation "
+    "ON undated_decision(workspace_id, subject_normalized, relation_normalized, memory_state)",
+    """
+    CREATE TABLE IF NOT EXISTS undated_decision_evidence (
+        undated_decision_id TEXT NOT NULL REFERENCES undated_decision(undated_decision_id) ON DELETE CASCADE,
+        ordinal INTEGER NOT NULL,
+        evidence_ref TEXT NOT NULL,
+        source_hash TEXT,
+        PRIMARY KEY (undated_decision_id, evidence_ref)
+    )
+    """,
+    """
+    CREATE TABLE IF NOT EXISTS undated_decision_receipt (
+        receipt_id TEXT PRIMARY KEY,
+        workspace_id TEXT NOT NULL,
+        undated_decision_id TEXT NOT NULL REFERENCES undated_decision(undated_decision_id) ON DELETE RESTRICT,
+        decision_ref TEXT NOT NULL,
+        candidate_id TEXT,
+        candidate_fingerprint TEXT NOT NULL,
+        authorization_type TEXT NOT NULL
+            CHECK (authorization_type IN ('HUMAN_APPROVAL', 'POLICY_AUTHORIZATION')),
+        authorization_id TEXT NOT NULL,
+        authorization_reason TEXT NOT NULL,
+        authorized_at TEXT NOT NULL,
+        receipt_fingerprint TEXT NOT NULL
+    )
+    """,
+    "CREATE INDEX IF NOT EXISTS idx_undated_receipt_decision "
+    "ON undated_decision_receipt(workspace_id, undated_decision_id)",
+    """
+    CREATE TRIGGER IF NOT EXISTS undated_decision_receipt_immutable_update
+    BEFORE UPDATE ON undated_decision_receipt
+    BEGIN
+        SELECT RAISE(ABORT, 'undated decision receipts are immutable');
+    END
+    """,
+    """
+    CREATE TRIGGER IF NOT EXISTS undated_decision_receipt_immutable_delete
+    BEFORE DELETE ON undated_decision_receipt
+    BEGIN
+        SELECT RAISE(ABORT, 'undated decision receipts are immutable');
+    END
+    """,
+)
+
+_LATEST_SCHEMA_VERSION = 3
 
 
 class TemporalDecisionStore:
@@ -355,6 +435,9 @@ class TemporalDecisionStore:
             if self.schema_version == 1:
                 self._migrate_v2()
                 continue
+            if self.schema_version == 2:
+                self._migrate_v3()
+                continue
             raise RuntimeError(f"no migration path from schema version {self.schema_version}")
 
     def _migrate_v1(self) -> None:
@@ -432,6 +515,18 @@ class TemporalDecisionStore:
         self._connection.execute("BEGIN IMMEDIATE")
         try:
             for statement in _MIGRATION_2_SQL:
+                self._connection.execute(statement)
+            self._connection.execute("PRAGMA user_version = 2")
+            self._connection.commit()
+        except Exception:
+            self._connection.rollback()
+            raise
+
+    def _migrate_v3(self) -> None:
+        """Add confirmed undated-decision tables within the DecisionMemory aggregate."""
+        self._connection.execute("BEGIN IMMEDIATE")
+        try:
+            for statement in _MIGRATION_3_SQL:
                 self._connection.execute(statement)
             self._connection.execute(f"PRAGMA user_version = {_LATEST_SCHEMA_VERSION}")
             self._connection.commit()
@@ -2270,6 +2365,23 @@ class TemporalDecisionStore:
                 ),
             )
             return
+        if table == "undated_decision_evidence":
+            if workspace_id is None:
+                raise ValueError("workspace_id is required for undated decision evidence")
+            self._connection.executemany(
+                "INSERT INTO undated_decision_evidence "
+                "(undated_decision_id, ordinal, evidence_ref, source_hash) VALUES (?, ?, ?, ?)",
+                (
+                    (
+                        record_id,
+                        ordinal,
+                        evidence_ref,
+                        self._source_registry.evidence_hash(workspace_id, evidence_ref),
+                    )
+                    for ordinal, evidence_ref in enumerate(evidence_refs)
+                ),
+            )
+            return
         self._connection.executemany(
             f"INSERT INTO {table} ({id_column}, ordinal, evidence_ref) VALUES (?, ?, ?)",
             (
@@ -2300,6 +2412,547 @@ class TemporalDecisionStore:
             (workspace_id, record_id),
         ).fetchall()
         return tuple(str(row["evidence_ref"]) for row in rows)
+
+    def confirm_undated_decision(
+        self,
+        *,
+        workspace_id: str,
+        subject: str,
+        relation: str,
+        value: str,
+        source_episode_id: str,
+        source_evidence_refs: tuple[str, ...],
+        provenance_run_id: str,
+        authorization_id: str,
+        authorization_reason: str,
+        authorization_type: str = "HUMAN_APPROVAL",
+        decision_ref: str | None = None,
+        candidate_id: str | None = None,
+        candidate_fingerprint: str | None = None,
+        supersedes_decision_id: str | None = None,
+        confirmed_at: datetime | None = None,
+    ) -> tuple[UndatedDecisionRecord, UndatedDecisionReceipt]:
+        """Persist a human/policy-confirmed decision whose effective date is UNKNOWN."""
+        if authorization_type not in {"HUMAN_APPROVAL", "POLICY_AUTHORIZATION"}:
+            raise ValueError("unsupported authorization_type")
+        slot_key = decision_slot_key_for(subject, relation)
+        if slot_key is None:
+            raise ValueError("subject and relation must be non-empty")
+        now = _as_utc(confirmed_at) if confirmed_at is not None else datetime.now(UTC)
+        undated_id = f"udec_{uuid4().hex}"
+        ref = (decision_ref or f"dref_{uuid4().hex}").strip()
+        record = UndatedDecisionRecord(
+            undated_decision_id=undated_id,
+            decision_ref=ref,
+            workspace_id=workspace_id,
+            subject_key=slot_key,
+            subject=subject,
+            relation=relation,
+            value=value,
+            memory_state=UndatedDecisionState.ACTIVE,
+            time_basis=DecisionTimeBasis.UNKNOWN,
+            supersedes_decision_id=supersedes_decision_id,
+            promoted_decision_id=None,
+            source_episode_id=source_episode_id,
+            source_evidence_refs=source_evidence_refs,
+            provenance_run_id=provenance_run_id,
+            confirmed_at=now,
+            updated_at=now,
+        )
+        if not self._source_registry.has_episode(record.workspace_id, record.source_episode_id):
+            raise ValueError("source_episode_id is not registered for this workspace")
+        for evidence_ref in record.source_evidence_refs:
+            if not self._source_registry.has_evidence(record.workspace_id, evidence_ref):
+                raise ValueError(f"evidence_ref is not registered for this workspace: {evidence_ref}")
+
+        cand_fp = (
+            candidate_fingerprint.strip()
+            if isinstance(candidate_fingerprint, str) and candidate_fingerprint.strip()
+            else hashlib.sha256(
+                json.dumps(
+                    [
+                        record.workspace_id,
+                        record.subject_key,
+                        record.value,
+                        list(record.source_evidence_refs),
+                    ],
+                    ensure_ascii=False,
+                    separators=(",", ":"),
+                ).encode("utf-8")
+            ).hexdigest()
+        )
+        receipt_id = f"urcpt_{uuid4().hex}"
+        auth_id = authorization_id.strip()
+        auth_reason = authorization_reason.strip()
+        if not auth_id or not auth_reason:
+            raise ValueError("authorization_id and authorization_reason are required")
+        receipt_fp = hashlib.sha256(
+            json.dumps(
+                [
+                    receipt_id,
+                    record.workspace_id,
+                    record.undated_decision_id,
+                    record.decision_ref,
+                    cand_fp,
+                    authorization_type,
+                    auth_id,
+                    auth_reason,
+                    _to_storage_time(now),
+                ],
+                ensure_ascii=False,
+                separators=(",", ":"),
+            ).encode("utf-8")
+        ).hexdigest()
+
+        with self._immediate_transaction():
+            if record.supersedes_decision_id is not None:
+                target = self._connection.execute(
+                    "SELECT workspace_id, subject_key FROM decision WHERE decision_id = ?",
+                    (record.supersedes_decision_id,),
+                ).fetchone()
+                if (
+                    target is None
+                    or str(target["workspace_id"]) != record.workspace_id
+                    or str(target["subject_key"]) != record.subject_key
+                ):
+                    raise ValueError("supersedes_decision_id does not belong to this workspace and slot")
+            self._connection.execute(
+                """
+                INSERT INTO undated_decision (
+                    undated_decision_id, decision_ref, workspace_id, subject_key,
+                    subject, relation, subject_normalized, relation_normalized,
+                    value, memory_state, time_basis, supersedes_decision_id,
+                    promoted_decision_id, source_episode_id, provenance_run_id,
+                    confirmed_at, updated_at
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """,
+                (
+                    record.undated_decision_id,
+                    record.decision_ref,
+                    record.workspace_id,
+                    record.subject_key,
+                    record.subject,
+                    record.relation,
+                    normalize_temporal_component(record.subject) if record.subject else None,
+                    normalize_temporal_component(record.relation) if record.relation else None,
+                    record.value,
+                    record.memory_state.value,
+                    record.time_basis.value,
+                    record.supersedes_decision_id,
+                    None,
+                    record.source_episode_id,
+                    record.provenance_run_id,
+                    _to_storage_time(record.confirmed_at),
+                    _to_storage_time(record.updated_at),
+                ),
+            )
+            self._insert_evidence(
+                "undated_decision_evidence",
+                "undated_decision_id",
+                record.undated_decision_id,
+                record.source_evidence_refs,
+                workspace_id=record.workspace_id,
+            )
+            self._connection.execute(
+                """
+                INSERT INTO undated_decision_receipt (
+                    receipt_id, workspace_id, undated_decision_id, decision_ref,
+                    candidate_id, candidate_fingerprint, authorization_type,
+                    authorization_id, authorization_reason, authorized_at,
+                    receipt_fingerprint
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """,
+                (
+                    receipt_id,
+                    record.workspace_id,
+                    record.undated_decision_id,
+                    record.decision_ref,
+                    candidate_id,
+                    cand_fp,
+                    authorization_type,
+                    auth_id,
+                    auth_reason,
+                    _to_storage_time(now),
+                    receipt_fp,
+                ),
+            )
+        receipt = UndatedDecisionReceipt(
+            receipt_id=receipt_id,
+            workspace_id=record.workspace_id,
+            undated_decision_id=record.undated_decision_id,
+            decision_ref=record.decision_ref,
+            candidate_id=candidate_id,
+            candidate_fingerprint=cand_fp,
+            authorization_type=authorization_type,
+            authorization_id=auth_id,
+            authorization_reason=auth_reason,
+            authorized_at=now,
+            receipt_fingerprint=receipt_fp,
+        )
+        return record, receipt
+
+    def get_undated_decision(
+        self, workspace_id: str, undated_decision_id: str
+    ) -> UndatedDecisionRecord | None:
+        row = self._connection.execute(
+            "SELECT * FROM undated_decision WHERE workspace_id = ? AND undated_decision_id = ?",
+            (workspace_id, undated_decision_id),
+        ).fetchone()
+        return self._row_to_undated_decision(row) if row is not None else None
+
+    def list_undated_decisions(
+        self,
+        workspace_id: str,
+        *,
+        active_only: bool = False,
+    ) -> tuple[UndatedDecisionRecord, ...]:
+        if active_only:
+            rows = self._connection.execute(
+                """
+                SELECT * FROM undated_decision
+                WHERE workspace_id = ? AND memory_state = 'ACTIVE'
+                ORDER BY confirmed_at, undated_decision_id
+                """,
+                (workspace_id,),
+            ).fetchall()
+        else:
+            rows = self._connection.execute(
+                """
+                SELECT * FROM undated_decision
+                WHERE workspace_id = ?
+                ORDER BY confirmed_at, undated_decision_id
+                """,
+                (workspace_id,),
+            ).fetchall()
+        return tuple(self._row_to_undated_decision(row) for row in rows)
+
+    def get_undated_decision_receipts(
+        self, workspace_id: str, undated_decision_id: str
+    ) -> tuple[UndatedDecisionReceipt, ...]:
+        rows = self._connection.execute(
+            """
+            SELECT * FROM undated_decision_receipt
+            WHERE workspace_id = ? AND undated_decision_id = ?
+            ORDER BY authorized_at, receipt_id
+            """,
+            (workspace_id, undated_decision_id),
+        ).fetchall()
+        return tuple(
+            UndatedDecisionReceipt(
+                receipt_id=str(row["receipt_id"]),
+                workspace_id=str(row["workspace_id"]),
+                undated_decision_id=str(row["undated_decision_id"]),
+                decision_ref=str(row["decision_ref"]),
+                candidate_id=str(row["candidate_id"]) if row["candidate_id"] is not None else None,
+                candidate_fingerprint=str(row["candidate_fingerprint"]),
+                authorization_type=str(row["authorization_type"]),
+                authorization_id=str(row["authorization_id"]),
+                authorization_reason=str(row["authorization_reason"]),
+                authorized_at=_from_storage_time(str(row["authorized_at"])),
+                receipt_fingerprint=str(row["receipt_fingerprint"]),
+            )
+            for row in rows
+        )
+
+    def lookup_decision_state(
+        self,
+        workspace_id: str,
+        subject: str,
+        relation: str,
+        *,
+        as_of: datetime | None = None,
+        mode: str = "CURRENT",
+    ) -> DecisionStateLookupResult:
+        """Return dated temporal lookup alongside active confirmed undated notes.
+
+        Undated records never impersonate dated AS_OF or CURRENT records.
+        In CURRENT mode, any active undated decision on the same slot sets
+        ``current_uncertain_due_to_undated=True`` so callers surface review
+        attention instead of guessing ordering from ingestion time.
+        """
+        if mode not in {"CURRENT", "AS_OF"}:
+            raise ValueError("mode must be 'CURRENT' or 'AS_OF'")
+        temporal = self.lookup(workspace_id, subject, relation, as_of=as_of)
+        normalized_subject = normalize_temporal_component(subject)
+        normalized_relation = normalize_temporal_component(relation)
+        rows = self._connection.execute(
+            """
+            SELECT * FROM undated_decision
+            WHERE workspace_id = ?
+              AND subject_normalized = ?
+              AND relation_normalized = ?
+              AND memory_state = 'ACTIVE'
+            ORDER BY confirmed_at, undated_decision_id
+            """,
+            (workspace_id, normalized_subject, normalized_relation),
+        ).fetchall()
+        undated = tuple(self._row_to_undated_decision(row) for row in rows)
+        return DecisionStateLookupResult(
+            temporal_result=temporal,
+            undated_decisions=undated,
+            current_uncertain_due_to_undated=(mode == "CURRENT" and bool(undated)),
+        )
+
+    def promote_undated_decision_to_dated(
+        self,
+        *,
+        workspace_id: str,
+        undated_decision_id: str,
+        valid_from: datetime,
+        time_basis: DecisionTimeBasis,
+        authorization_id: str,
+        authorization_reason: str,
+        authorization_type: str = "HUMAN_APPROVAL",
+        supersedes_decision_id: str | None = None,
+        promoted_at: datetime | None = None,
+    ) -> tuple[DecisionRecord, UndatedDecisionRecord, UndatedDecisionReceipt]:
+        """Atomically promote an ACTIVE undated decision into the temporal decision table."""
+        if not isinstance(time_basis, DecisionTimeBasis):
+            time_basis = DecisionTimeBasis(time_basis)
+        if time_basis is DecisionTimeBasis.UNKNOWN:
+            raise ValueError("promoting to dated requires an explicit time_basis")
+        if authorization_type not in {"HUMAN_APPROVAL", "POLICY_AUTHORIZATION"}:
+            raise ValueError("unsupported authorization_type")
+        auth_id = authorization_id.strip()
+        auth_reason = authorization_reason.strip()
+        if not auth_id or not auth_reason:
+            raise ValueError("authorization_id and authorization_reason are required")
+        effective_from = _as_utc(valid_from)
+        now = _as_utc(promoted_at) if promoted_at is not None else datetime.now(UTC)
+
+        with self._immediate_transaction():
+            row = self._connection.execute(
+                "SELECT * FROM undated_decision WHERE workspace_id = ? AND undated_decision_id = ?",
+                (workspace_id, undated_decision_id),
+            ).fetchone()
+            if row is None:
+                raise ValueError("undated decision not found")
+            current_undated = self._row_to_undated_decision(row)
+            if current_undated.memory_state is not UndatedDecisionState.ACTIVE:
+                raise ValueError(
+                    f"undated decision in state {current_undated.memory_state.value} cannot be promoted"
+                )
+            existing_rows = self._connection.execute(
+                """
+                SELECT * FROM decision
+                WHERE workspace_id = ? AND subject_key = ?
+                  AND memory_state IN ('ACTIVE', 'SUPERSEDED')
+                ORDER BY valid_from, decision_id
+                """,
+                (workspace_id, current_undated.subject_key),
+            ).fetchall()
+            effective_storage = _to_storage_time(effective_from)
+            for existing in existing_rows:
+                if str(existing["valid_from"]) >= effective_storage:
+                    raise ValueError(
+                        "valid_from must be later than all existing temporal decisions on this slot"
+                    )
+            active_predecessors = [
+                existing
+                for existing in existing_rows
+                if existing["valid_to"] is None and str(existing["memory_state"]) == "ACTIVE"
+            ]
+            requested_supersedes = (
+                supersedes_decision_id
+                if supersedes_decision_id is not None
+                else current_undated.supersedes_decision_id
+            )
+            predecessor_id: str | None = None
+            if active_predecessors:
+                predecessor_id = str(active_predecessors[-1]["decision_id"])
+                if requested_supersedes is not None and requested_supersedes != predecessor_id:
+                    raise ValueError("supersedes_decision_id does not match the active predecessor")
+            elif requested_supersedes is not None:
+                raise ValueError("supersedes_decision_id specified but no active predecessor exists")
+
+            new_decision = DecisionRecord(
+                decision_id=f"dec_{uuid4().hex}",
+                workspace_id=workspace_id,
+                subject_key=current_undated.subject_key,
+                subject=current_undated.subject,
+                relation=current_undated.relation,
+                value=current_undated.value,
+                status=DecisionStatus.CURRENT,
+                valid_from=effective_from,
+                valid_to=None,
+                supersedes_id=predecessor_id,
+                source_episode_id=current_undated.source_episode_id,
+                source_evidence_refs=current_undated.source_evidence_refs,
+                provenance_run_id=current_undated.provenance_run_id,
+                memory_state=DecisionMemoryState.ACTIVE,
+            )
+            # Same lifecycle path as other materializers: closes the predecessor
+            # decision and its candidate row, then writes the record and evidence.
+            self._write_decision_locked(new_decision)
+            self._connection.execute(
+                """
+                UPDATE undated_decision
+                SET memory_state = ?, promoted_decision_id = ?, updated_at = ?
+                WHERE workspace_id = ? AND undated_decision_id = ?
+                """,
+                (
+                    UndatedDecisionState.PROMOTED_TO_DATED.value,
+                    new_decision.decision_id,
+                    _to_storage_time(now),
+                    workspace_id,
+                    undated_decision_id,
+                ),
+            )
+            promo_receipt_id = f"urcpt_{uuid4().hex}"
+            promo_reason = f"{auth_reason} [time_basis={time_basis.value};promoted_decision_id={new_decision.decision_id}]"
+            promo_fp = hashlib.sha256(
+                json.dumps(
+                    [
+                        promo_receipt_id,
+                        workspace_id,
+                        undated_decision_id,
+                        current_undated.decision_ref,
+                        new_decision.decision_id,
+                        time_basis.value,
+                        effective_storage,
+                        auth_id,
+                        _to_storage_time(now),
+                    ],
+                    ensure_ascii=False,
+                    separators=(",", ":"),
+                ).encode("utf-8")
+            ).hexdigest()
+            self._connection.execute(
+                """
+                INSERT INTO undated_decision_receipt (
+                    receipt_id, workspace_id, undated_decision_id, decision_ref,
+                    candidate_id, candidate_fingerprint, authorization_type,
+                    authorization_id, authorization_reason, authorized_at,
+                    receipt_fingerprint
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """,
+                (
+                    promo_receipt_id,
+                    workspace_id,
+                    undated_decision_id,
+                    current_undated.decision_ref,
+                    None,
+                    promo_fp,
+                    authorization_type,
+                    auth_id,
+                    promo_reason,
+                    _to_storage_time(now),
+                    promo_fp,
+                ),
+            )
+            updated_undated = self._row_to_undated_decision(
+                self._connection.execute(
+                    "SELECT * FROM undated_decision WHERE workspace_id = ? AND undated_decision_id = ?",
+                    (workspace_id, undated_decision_id),
+                ).fetchone()
+            )
+        promo_receipt = UndatedDecisionReceipt(
+            receipt_id=promo_receipt_id,
+            workspace_id=workspace_id,
+            undated_decision_id=undated_decision_id,
+            decision_ref=current_undated.decision_ref,
+            candidate_id=None,
+            candidate_fingerprint=promo_fp,
+            authorization_type=authorization_type,
+            authorization_id=auth_id,
+            authorization_reason=promo_reason,
+            authorized_at=now,
+            receipt_fingerprint=promo_fp,
+        )
+        return new_decision, updated_undated, promo_receipt
+
+    def revoke_undated_decision(
+        self,
+        workspace_id: str,
+        undated_decision_id: str,
+        *,
+        revoked_at: datetime | None = None,
+    ) -> UndatedDecisionRecord:
+        """Revoke an undated decision without silently resurrecting any dated CURRENT."""
+        now = _as_utc(revoked_at) if revoked_at is not None else datetime.now(UTC)
+        with self._immediate_transaction():
+            row = self._connection.execute(
+                "SELECT * FROM undated_decision WHERE workspace_id = ? AND undated_decision_id = ?",
+                (workspace_id, undated_decision_id),
+            ).fetchone()
+            if row is None:
+                raise ValueError("undated decision not found")
+            current = self._row_to_undated_decision(row)
+            if current.memory_state is UndatedDecisionState.PROMOTED_TO_DATED:
+                raise ValueError("promoted undated decision cannot be revoked directly")
+            self._connection.execute(
+                """
+                UPDATE undated_decision
+                SET memory_state = ?, updated_at = ?
+                WHERE workspace_id = ? AND undated_decision_id = ?
+                """,
+                (
+                    UndatedDecisionState.REVOKED.value,
+                    _to_storage_time(now),
+                    workspace_id,
+                    undated_decision_id,
+                ),
+            )
+            updated = self._connection.execute(
+                "SELECT * FROM undated_decision WHERE workspace_id = ? AND undated_decision_id = ?",
+                (workspace_id, undated_decision_id),
+            ).fetchone()
+            return self._row_to_undated_decision(updated)
+
+    def _set_undated_decision_memory_state(
+        self,
+        workspace_id: str,
+        undated_decision_id: str,
+        state: UndatedDecisionState,
+    ) -> None:
+        self._connection.execute(
+            """
+            UPDATE undated_decision
+            SET memory_state = ?, updated_at = ?
+            WHERE workspace_id = ? AND undated_decision_id = ?
+            """,
+            (
+                state.value,
+                _to_storage_time(datetime.now(UTC)),
+                workspace_id,
+                undated_decision_id,
+            ),
+        )
+
+    def _row_to_undated_decision(self, row: sqlite3.Row) -> UndatedDecisionRecord:
+        evidence_refs = self._get_evidence(
+            "undated_decision_evidence",
+            "undated_decision_id",
+            str(row["workspace_id"]),
+            str(row["undated_decision_id"]),
+            "undated_decision",
+        )
+        return UndatedDecisionRecord(
+            undated_decision_id=str(row["undated_decision_id"]),
+            decision_ref=str(row["decision_ref"]),
+            workspace_id=str(row["workspace_id"]),
+            subject_key=str(row["subject_key"]),
+            subject=str(row["subject"]) if row["subject"] is not None else None,
+            relation=str(row["relation"]) if row["relation"] is not None else None,
+            value=str(row["value"]),
+            memory_state=UndatedDecisionState(str(row["memory_state"])),
+            time_basis=DecisionTimeBasis(str(row["time_basis"])),
+            supersedes_decision_id=(
+                str(row["supersedes_decision_id"])
+                if row["supersedes_decision_id"] is not None
+                else None
+            ),
+            promoted_decision_id=(
+                str(row["promoted_decision_id"])
+                if row["promoted_decision_id"] is not None
+                else None
+            ),
+            source_episode_id=str(row["source_episode_id"]),
+            source_evidence_refs=evidence_refs,
+            provenance_run_id=str(row["provenance_run_id"]),
+            confirmed_at=_from_storage_time(str(row["confirmed_at"])),
+            updated_at=_from_storage_time(str(row["updated_at"])),
+        )
 
 
 def _to_storage_time(value: datetime) -> str:

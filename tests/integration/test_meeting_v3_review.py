@@ -43,7 +43,12 @@ def test_low_candidates_survive_cold_restart_and_need_explicit_review(tmp_path):
             app.handle_post('/api/review/meeting-tasks/'+item['candidate_id'],{'action':'CONFIRM'})
         response,_=app.handle_post('/api/review/meeting-tasks/'+item['candidate_id'],{
             'action':'CONFIRM','reviewer':'human','note':'Checked source.', 'source_version':item['source_version']})
-        assert response=={'status':'CONFIRMED_BY_HUMAN','authority':'UNCONFIRMED'}
+        # B1-2: human confirmation now creates a formal TaskStore task with a receipt.
+        assert response['status']=='CONFIRMED_BY_HUMAN' and response['authority']=='CONFIRMED'
+        task,=app.meeting_tasks.list_formal_tasks(app._workspace_id())
+        assert response['task_id']==task['id']
+        link=app.meeting_tasks.task_store.get_link(app._workspace_id(),item['candidate_id'])
+        assert (link.task_id,link.reviewer,link.reason)==(task['id'],'human','Checked source.')
         assert not app.handle_get('/api/review/candidates')['meeting_tasks']
         assert app.handle_get('/api/sources')['sources'][0]['review_required_count']==0
         assert not app.store.list_decisions(app._workspace_id())

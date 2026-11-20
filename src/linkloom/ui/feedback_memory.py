@@ -87,7 +87,7 @@ class FeedbackMemory:
                 entry = self.lifecycle.propose_candidate(MemoryScope.PROJECT, KEY, value,
                     ["feedback:" + uuid4().hex], {"scope_key": workspace_id, "proposed_by": actor})
                 return {"entry": self._entry(entry)}, 201
-            if action not in {"approve", "reject", "revoke", "expire"}:
+            if action not in {"approve", "reject", "revoke", "expire", "edit"}:
                 raise ValueError("Unknown feedback action.")
             if payload.get("human_confirmed") is not True:
                 raise ValueError("Explicit human confirmation is required for this lifecycle action.")
@@ -99,12 +99,44 @@ class FeedbackMemory:
             if entry is None or not self._scoped(entry, workspace_id):
                 raise ProductApplicationError("FEEDBACK_NOT_FOUND", "Feedback is unavailable in this workspace/state.", status=404)
             if action == "approve":
-                term, _ = self._mapping(entry.value, resolver, slots)
+                edited_value = None
+                if "term" in payload or "relation" in payload:
+                    candidate_value = {
+                        "schema_version": SCHEMA,
+                        "term": payload.get("term", entry.value.get("term")),
+                        "relation": payload.get("relation", entry.value.get("relation")),
+                    }
+                    term, relation = self._mapping(candidate_value, resolver, slots)
+                    edited_value = {"schema_version": SCHEMA, "term": term, "relation": relation}
+                else:
+                    term, _ = self._mapping(entry.value, resolver, slots)
                 if any(self._scoped(item, workspace_id) and isinstance(item.value.get("term"), str)
                        and " ".join(item.value["term"].casefold().split()) == term
                        for item in self.store.list_active()):
                     raise ProductApplicationError("FEEDBACK_CONFLICT", "An active mapping already uses this term. Revoke it before replacing it.", status=409)
-                entry = self.lifecycle.confirm_candidate(identifier, actor)
+                entry = self.lifecycle.confirm_candidate(identifier, actor, edited_value=edited_value)
+            elif action == "edit":
+                new_value = {
+                    "schema_version": SCHEMA,
+                    "term": payload.get("term", entry.value.get("term")),
+                    "relation": payload.get("relation", entry.value.get("relation")),
+                }
+                term, relation = self._mapping(new_value, resolver, slots)
+                if any(item.id != identifier and self._scoped(item, workspace_id)
+                       and isinstance(item.value.get("term"), str)
+                       and " ".join(item.value["term"].casefold().split()) == term
+                       for item in self.store.list_active()):
+                    raise ProductApplicationError("FEEDBACK_CONFLICT", "An active mapping already uses this term. Revoke it before replacing it.", status=409)
+                # Store-level validation runs on propose; do it before superseding the old term.
+                new_candidate = self.lifecycle.propose_candidate(
+                    MemoryScope.PROJECT,
+                    KEY,
+                    {"schema_version": SCHEMA, "term": term, "relation": relation},
+                    ["feedback:edit:" + identifier + ":" + uuid4().hex[:8]],
+                    {"scope_key": workspace_id, "proposed_by": actor, "edited_from": identifier},
+                )
+                self.lifecycle.supersede_item(identifier, actor)
+                entry = self.lifecycle.confirm_candidate(new_candidate.id, actor)
             elif action == "reject":
                 entry = self.lifecycle.reject_candidate(identifier, actor)
             elif action == "revoke":

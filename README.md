@@ -1,351 +1,133 @@
-[简体中文](README.md) · [English](README.en.md)
-
 <p align="center">
-  <img src="docs/assets/banner.svg" width="100%" alt="LinkLoom：会议里的决定和待办一直在变，团队的答案也要跟得上">
+  <img src="docs/assets/banner.svg" width="100%" alt="LinkLoom">
 </p>
 
-[![CI](https://github.com/yefuyou/linkloom/actions/workflows/offline-pr.yml/badge.svg?branch=master)](https://github.com/yefuyou/linkloom/actions/workflows/offline-pr.yml)
-[![License](https://img.shields.io/github/license/yefuyou/linkloom?color=2550c8)](LICENSE)
-[![Python 3.11+](https://img.shields.io/badge/Python-3.11%2B-2550c8)](pyproject.toml)
+<h1 align="center">LinkLoom</h1>
 
-![LinkLoom 演示：导入会议、审核批准、多跳图检索和原话高亮](docs/assets/demo.gif)
+<p align="center">
+  别再在聊天记录里翻“上次到底怎么定的”。<br/>
+  让团队每一场会的拍板、改期和任务交接都有一条共同的时间线——谁接的、什么时候改的、依据哪句话，全组对齐不再扯皮。
+</p>
 
-演示使用合成数据与离线预设响应；等待回答片段已加速。
+<p align="center">
+  <a href="https://github.com/yefuyou/linkloom/actions/workflows/offline-pr.yml"><img src="https://github.com/yefuyou/linkloom/actions/workflows/offline-pr.yml/badge.svg?branch=master" alt="CI"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/github/license/yefuyou/linkloom?color=2550c8" alt="License"></a>
+  <a href="pyproject.toml"><img src="https://img.shields.io/badge/Python-3.11%2B-2550c8" alt="Python 3.11+"></a>
+</p>
 
-## 1. 它解决什么
+<p align="center">⭐ 觉得有用请点个 Star，方便随时找回</p>
 
-会议开完了，负责人、截止时间和决定还会在下一场会议里改变，翻聊天记录很难知道现在该按哪一版做。
-LinkLoom 从会议记录中抽取候选，经原文逐字校验和人工确认后保存正式任务与决定，再把跨会议的变化和出处连起来，方便团队查现在、查过去、问原因。
+<p align="center"><strong>简体中文</strong> · <a href="README.en.md">English</a></p>
 
-## 2. 和普通 RAG 有什么不同
+---
 
-这里的普通 RAG 指只检索文档片段再生成回答的只读基线，表格说明本项目的对比口径。
-例如，两次会议留下了不同的安排：
+周一需求会定下支付改版下周五上线，小李负责；周三跨组评审评估风险后改口，上线延到下个月初，联调转给小王；周五站会又有人顺嘴提了一句要不要把老入口顺便下掉。
 
-- 10/08 周会：“联调报告由李明负责，10/12 前完成”。
-- 10/10 评审：“联调报告改由王芳负责，延期到 10/16”。
+等一周后，请假回来的同事、新接手的开发、或者准备复盘的负责人去翻会议记录：“这事现在到底归谁管？定在什么时候上？为什么改期的？”——普通的会议纪要和搜索工具只会把三场会的话一起捞出来，团队里每个人看到的口径都不一样。
 
-问“联调报告现在谁负责？”，普通 RAG 会同时检索到两段，可能答李明或把两人混在一起。
-在人工确认并合并更新后，LinkLoom 记录 10/10 的决定替代了 10/08，回答王芳，同时给出两段原文，并标明哪段已被替代。
+LinkLoom 帮团队把每次会议的记录、决议和待办串成同一条可追溯的时间线。AI 负责读懂会议、抽草稿、跨会议找线索；团队确认后才成为正式共识。不管是全组日常对齐、任务交接，还是复盘某次为什么改期，每条结论都能直接跳回当时的会议原话。数据默认存在本地 SQLite 文件里，不配模型也能查历史、审待办。
 
-| 对比项 | 普通 RAG（片段检索基线） | LinkLoom |
-| --- | --- | --- |
-| 回答什么 | 文档怎么说 | 现在有效的是哪个 |
-| 引用 | 参考片段 | 逐字与哈希校验，验证不了就拒答 |
-| 读写 | 只读 | 人工确认后写入正式任务，可撤销 |
-| 评测 | 单次运行 | 保留集只用一次，报告重复运行区间 |
+<p align="center">
+  <img src="docs/assets/demo.gif" width="800" alt="LinkLoom 演示：导入会议、审核批准、跨会议追踪与原话高亮">
+</p>
 
-### 对比实验结果
+## 主要功能
 
-实验设置：同一模型（DeepSeek-V4.1-Flash）、同一批题（D / D2 / D3）、同一评分器；普通 RAG 使用 LinkLoom 自己的检索栈（hybrid + 本地重排），只是去掉时态图。
+### 抽草稿，对照原话一键确认
 
-| 指标 | 普通 RAG | LinkLoom |
-| --- | ---: | ---: |
-| D3 严格分 | 0.0% | 63.9% |
-| D3 内容分 | 77.8% | 72.2% |
-| 时间归属错误（事后指标，每边 120 次） | 13 次 | 0 次 |
-| 空答复或未找到（事后指标，每边 120 次） | 24 次 | 53 次 |
+导入会议纪要后，LinkLoom 自动把里面拍板的决定、派发的待办、负责人和截止日期抽出来摆在右侧，左侧就是会议原文。
 
-来源：[PR #64 报告](https://github.com/yefuyou/linkloom/pull/64)。
+点一下任意一条卡片，左侧直接滚到对应的那几行原话。AI 抽出来的内容只是草稿——觉得对就点确认，不对直接改，随口提的建议可以忽略，不会悄悄混进正式记录里。
 
-这说明了什么：
+<p align="center">
+  <img src="docs/assets/screenshots/after-review-zh.png" width="680" alt="对照原文审核候选决定与待办">
+</p>
 
-- 小语料上，普通 RAG 的内容正确率接近或略高于 LinkLoom。
-- 普通 RAG 出错时，会把后续会议里的变化归到错误的时点；LinkLoom 没有出现这种情况。
-- LinkLoom 当时的短板是空答复偏多，之后已修复一部分：开发集离线重放中，空答复 53 → 30（[PR #66](https://github.com/yefuyou/linkloom/pull/66)），另有 15 次转为列出候选让用户澄清（[PR #67](https://github.com/yefuyou/linkloom/pull/67)）；严格分 60.0% → 76.7%（#66）→ 81.7%（#67），原本答对的题没有变错。这是开发集结果，不是保留集成绩。
+### 跨会议追踪议题与任务交接
 
-注意：
+项目推进中人来人往、排期常变，LinkLoom 不拿新决定直接抹掉旧记录，而是把全组每次调整按时间接起来，新人接手或复盘时一分钟看清全貌：
 
-- 两项事后指标是看完结果后才提出的，只用于解释，不作为成绩。
-- PR #66、#67 的数字是开发集离线重放结果，不是保留集成绩；图检索的保留集成绩仍为 63.89%（见下文“时态图检索”）。
-- 语料规模小；大语料下的过期问题计划用 LongMemEval 验证。
+- **统一团队口径**：今天有效的是哪版、上周三那天有效的是哪版、新决定替代了哪条旧决定，全组查到的是同一份答案。
+- **交接有来龙去脉**：一个任务从谁手里转给了谁、截止日期推迟过几次，每次变动都挂着那场会的原文出处；合错了还能随时撤销。
+- **纪要改了会提示复核**：哪份会议记录事后被编辑过，系统比对指纹后会把受影响的旧结论标为“来源已变化”，提醒重新复核，避免还在按过期纪要干活。
 
-## 3. 演示
+<p align="center">
+  <img src="docs/assets/screenshots/after-decisions-zh.png" width="680" alt="跨会议决策时间线">
+</p>
 
-**演示 GIF 待补。** 以下两张图重新截取自当前 master 界面，使用仓库已有的合成页面流程夹具；句子经改写以适配旧抽取器，只展示操作流程，不代表真实会议抽取效果。
+<p align="center">
+  <img src="docs/assets/screenshots/after-task-zh.png" width="680" alt="跨会议任务负责人与截止日期演变">
+</p>
 
-看板：展开一张候选卡片，对照原文，再选择创建、合并或拒绝。
+### 提问：能直接查的秒回，要追原因的派 Agent 去翻
 
-![待办看板，展开候选卡片并显示原文引用和人工处理入口](docs/assets/tasks-board.png)
+问“支付改版现在谁负责”“10 月 7 号定的是哪天”，LinkLoom 直接查本地时序记录，不花模型费用也不怕时间串台——离线合成的 10 万条数据下按日期查询中位耗时 0.73 毫秒（[规模评测](benchmarks/scale/2026-10-29/results.md)）。
 
-按负责人：查看同一任务的变化历史，对照负责人和截止时间的变更，以及各次会议的原文。
+问“为什么突然延期了”“和上次会聊的接口风险有没有关系”，再交给只读 Agent 去多步翻原文：用增量 BM25 关键词加本地向量混合检索，步数和预算都有上限，找不到的缺口也会直说，不拿常识乱编。
 
-![按负责人页，任务详情展示跨会议合并后的负责人、截止时间和变化历史](docs/assets/tasks-history.png)
+## 对比普通 RAG 的实测表现
 
-## 4. 核心流程
+在跨会议测试集上用同一模型（DeepSeek）做过对照（[PR #64](https://github.com/yefuyou/linkloom/pull/64)）：普通混合检索 RAG 在 120 次回答里出现了 **13 次时间归属错误**（把后来会议的变更安到早期时间点上），LinkLoom 为 **0 次**。这是看完结果后才提出的事后指标，只用于解释，不作为成绩；同一对照中普通 RAG 的 D3 内容分（77.8%）略高于 LinkLoom（72.2%），LinkLoom 的空答复也更多（53 次 vs 24 次）。
 
-```mermaid
-flowchart TD
-    A["会议记录"] --> B["抽取候选"]
-    B --> C["原文逐字校验"]
-    C --> D["人工确认"]
-    D --> E["正式任务"]
-    E --> F["跨会议合并/撤销"]
-    F --> G["提问带出处"]
-    classDef default fill:#ffffff,stroke:#2550c8,color:#1c2330;
-```
+之后优化查询规划与结果组装，开发集离线重放严格正确率从 **60.0% 提升到了 81.7%**（[PR #66](https://github.com/yefuyou/linkloom/pull/66) / [#67](https://github.com/yefuyou/linkloom/pull/67)，开发集结果，非保留集成绩）。独立保留集 D3 上图检索路径单独运行的正确率均值为 **63.89%**，三次区间 `[58.33%, 66.67%]`（[PR #55](https://github.com/yefuyou/linkloom/pull/55)），不是带回退的端到端成绩。
 
-合并与撤销都需要人工确认；模型提出的“可能是同一件事”不会自动变成正式变更。
+## 隐私与模型配置
 
-## 5. 关键设计
+LinkLoom 默认本地单机运行，所有会议原文、审核记录和历史版本都存在本地 SQLite 文件里。
 
-### 理解交给模型，证明交给规则
+| 场景 | 怎么跑 | 数据去向 |
+|---|---|---|
+| 离线查看与审核 | 不填任何 API Key | 全程不出本机 |
+| 按日期/状态查询已确认记录 | 本地 SQLite 查询 | 全程不出本机 |
+| AI 抽取草稿与跨会议调查 | 需配置 `GEMINI_API_KEY`（及可选 DeepSeek） | 仅发送相关会议文本给配置的模型服务 |
+| 关键词检索 / 本地重排 | 内置增量 BM25，可选本地向量与重排模型 | 本机计算；可选模型首次使用时需下载到本地缓存 |
 
-会议里的说法不固定，模型负责理解语义、提出候选和调查步骤。
-规则负责核对原文、来源版本、工作区、权限与预算，避免把“模型说得像”当成“已经有证据”。
+本地审核只保存审核人自报的姓名，不认证人员身份。
 
-### 人工确认才生效，而且可撤销
+## 快速开始
 
-抽取结果和关系建议先留在候选区，人工确认后才进入正式任务或已审核决定。
-跨会议合并可以撤销，撤销会追加历史并保留原记录，方便复查误操作。
+需要 **Git** 和 **Python 3.11+**。
 
-### 时序决策存储
-
-新决定不应抹掉旧决定，因为“现在用什么”和“当时用什么”是两个问题。
-系统保留生效时间、替代关系和来源证据，支持查询当前或指定日期有效的决定；来源变更后，相关记录可能需要复核。
-
-### 有界多跳
-
-原因和变更往往分散在多份记录里，调查需要沿关联逐步补找证据。
-步数、工具、上下文和预算都有边界，证据不足时列出缺口，避免无限搜索后给出过度确定的答案。
-
-### 可恢复运行时
-
-运行时先把调用意图记入账本再执行，并保存结果与检查点，让恢复过程知道哪些步骤已经发生、哪些结果仍不确定。
-底层支持受控恢复，当前网页调查会话仍需保持服务运行。
-
-### 检索与本地重排
-
-BM25 找关键词，向量检索补语义，再用 RRF 融合，并由本地量化 cross-encoder 重排候选，减少只看单一路径造成的遗漏。
-重排缺依赖或执行失败时自动保留 RRF 原顺序；`auto` 默认只用本地模型，不会自动切到远端服务。
-
-### 配置缺失时的降级
-
-没有 API Key 也能启动服务、创建工作区、保存来源、审核已有候选，以及查询已审核决定和历史。
-AI 抽取与外部调查需要配置并显式启用；显式启用后若缺少密钥或依赖，启动器会提示修正，不会悄悄改用另一家远端服务。
-
-## 6. 评测与数字
-
-这些结果分别衡量路由、查询速度、检索和抽取，不是端到端产品正确率；不同数据集的成绩不能互相替代。
-
-### 路由
-
-按“路由与目标同时正确”的联合准确率计分，错绑单独列出。开发集一行的 98.3% 只列既有离线口径；H、F 的箭头表示离线 → 接 LLM，不是模型单独回答的准确率。保留集 H、F 各只使用一次。
-
-| 数据集 | 条数 | 离线 → 接 LLM | 错绑 |
-| --- | ---: | ---: | ---: |
-| 开发集 | 60 | 98.3% | 0 |
-| 保留集 H | 13 | 46.2%→76.9% | 1 |
-| 保留集 F | 16 | 56.2%→87.5% | 0 |
-
-这说明了什么：开发集表现很好，但换一批问法仍会错，H 里还出现了错绑。
-
-评测入口：[路由评测脚本](scripts/eval_routing.py)与[路由用例](tests/routing)。
-
-### LLM 路由（Beta 开关）
-
-要解决的问题：规则路由对没见过的问法正确率很低。
-
-做法：规则优先；规则无法处理、且宿主有相关候选时，才交给 LLM 做结构化判断。宿主负责候选、时间、权限和安全检查，模型只做语义选择；输出不合格就作废，退回规则。
-
-```mermaid
-flowchart LR
-    Q[问题] --> R{规则能处理?}
-    R -- 能 --> A[规则结果]
-    R -- 不能 --> C{宿主有相关候选?}
-    C -- 没有 --> A
-    C -- 有 --> L[LLM：结构化语义选择]
-    L --> V{宿主检查候选/时间/权限/安全}
-    V -- 合格 --> B[采用 LLM 结果]
-    V -- 不合格，作废 --> A
-```
-
-| 独立保留集 | 规则 | cascade | 错绑 |
-| --- | ---: | ---: | ---: |
-| v1.1 | 20.00% | 57.78% | 0 |
-| v2 | 12.90% | 61.29% | 0 |
-| v3 | 14.71% | 64.71% | 0 |
-
-v2、v3 坏输出为 0%；新增延迟 p95 约 1.6 秒。来源：[PR #63](https://github.com/yefuyou/linkloom/pull/63) 正文最终总结。
-
-为什么默认关闭：事先定的 5 条上线标准中，最后一套保留集有一条安全标准没过——一种“自称管理员”的注入说法被判为“未找到”，没有泄露数据，但原因码不对。
-
-开启方式：设置 `LINKLOOM_LLM_ROUTER=cascade`。
-
-后续：识别权限声明类注入，再用新的独立保留集验收。
-
-### 时态图检索（Beta）
-
-多跳关系问题要沿着几条关系找答案，例如“X 的负责人的直属领导是谁？”。旧模板只能覆盖固定问法；在下述 D3 同批题上，旧模板路径正确率为 **0%**，这不是所有旧模板问题的总体成绩。
-
-模型只圈出问题原文中的对象词，不直接选根实体或决定权限。宿主从已授权、人工确认的记录即时投影时态图，负责混合检索和本地重排、实体落地、授权与有效时间过滤，再做有界遍历并回检每一步证据。
-
-```mermaid
-flowchart LR
-    Q[问题] --> A[宿主：已授权候选目录]
-    A --> M[模型：只圈原文对象词]
-    M --> H[宿主：检索落地与时间过滤]
-    H --> G[有界图遍历]
-    G --> E[证据回检与回答]
-```
-
-| D3 保留集，graph_only | 结果 |
-| --- | --- |
-| 正确率均值［三次最小—最大］ | 63.89%［58.33%, 66.67%］ |
-| 错误关系 / 编造 | 0 / 0 |
-| 拒答率 | 44.44%（约 44%） |
-| 平均延迟 | 10.39 秒/次（约 10 秒） |
-
-来源：[PR #55 的冻结评测结果](https://github.com/yefuyou/linkloom/pull/55)。这是图路径单独运行的成绩，不是带回退的端到端成绩；“错误关系、编造为零”也不等于答案完整。
-
-开发中曾出现过拟合：D 开发集达到 **87.5%**，随后 D2 当时的一次保留验收原始成绩降到 **41.67%（约 41.7%）**。保存来源分别是开发工作区的 `work/graph-opt/results-r2/scored/report.json`（D、graph_only、accuracy.mean）和 `work/graph-holdout-D2/report.json`（D2、graph_only、accuracy.mean）。D2 的评分器修正后成绩为 50%（见 PR #55），后来转为开发集；这两项是暴露过拟合的历史成绩，不是最终成绩。被保留集识破后，后续设计改为“模型圈词 + 宿主检索”；开发集曾多轮迭代，最终 D3 仅验收一次（三次重复）。本节引用已有结果，没有重跑评测。
-
-默认开启；设置 `LINKLOOM_GRAPH_QUERY=off` 并重启可恢复旧路径。图结果为 `UNKNOWN`、`AMBIGUOUS` 或 `NOT_FOUND` 时尝试旧路径；旧路径答出就标明 `legacy`，答不出则保留原图结果。规划失败或图未就绪也降级；`PARTIAL` 和 `REFUSED` / `BLOCKED` / `UNAUTHORIZED` 不回退。
-
-局限：拒答仍较多，部分答案不完整。拒答原因仍是自由文本，因此当前全部 `REFUSED` 都终止，包括无法区分出的能力不足；方案 B 计划改为结构化原因码，区分安全类与能力不足类，尚未实施。日期圈词只防截断，不能防模型省略日期限定。本次图评测使用 DeepSeek，不能与历史 Gemini 路由/抽取数字直接横比。
-
-### 规模
-
-离线合成数据的查询耗时；按日期查询使用已落库的时序决定，和全文检索是不同路径。
-
-| 规模 | BM25 p50 | 按日期查询 p50 |
-| --- | ---: | ---: |
-| 1千条 | 6 ms | — |
-| 1万条 | 80 ms | — |
-| 10万条 | 958 ms | 0.73 ms |
-
-这说明了什么：这次测试里，关键词检索随数据增多而变慢，按日期查已存决定仍很快。
-
-来源：[规模评测](benchmarks/scale/2026-10-29/results.md)。
-
-### 检索重排（开发集）
-
-下表均为开发集 Recall@5，包含合成规模数据；冻结 30 题也用于开发，不是保留集验收。
-`+base INT8 重排`和`+m3 重排`都接在同一 RRF 结果之后。
-
-| 数据集 | BM25 | RRF | +base INT8 重排 | +m3 重排 |
-| --- | ---: | ---: | ---: | ---: |
-| 1千篇 | 1 | 0.83 | 1 | 1 |
-| 1万篇 | 1 | 0.94 | 1 | 1 |
-| 冻结 30 题 | 0.9239 | 0.9361 | 0.9322 | 0.9433 |
-
-这说明了什么：规模集上，等权 RRF 把干扰文档带进了前 5，重排把召回补回到 BM25 水平（0.83/0.94 → 1）；冻结 30 题上小模型略低于 RRF，大模型最高，但规模集的重排 p95 耗时超过小模型的 6 倍，所以默认选小模型。
-
-base INT8 重排 p95 约 2 秒（非独占机器）；`drm-002` 的 Recall@5 在两种重排后仍为 **0.75**。
-来源：[2026-11-02 重排开发集报告](benchmarks/rerank/2026-11-02/results.md)。
-
-### 会议待办抽取
-
-两组保留集的召回合计如下，分母是 15 条标准答案。
-
-| 系统 | 召回 |
-| --- | ---: |
-| 基线 | 10/15 |
-| v2 | 7/15 |
-| legacy | 5/15 |
-
-这说明了什么：v2 在保留集上仍比基线漏得更多，开发集的好成绩没有延续过来。
-以当前模型能力，整场读取召回最强；LinkLoom 的价值在抽取之后的校验、人工确认、风险分级和跨会议追踪。
-
-来源：[两组保留集汇总](benchmarks/ami_tasks/results_es2004_final.md)。这项独立抽取评测不等于产品入库后的字段完整率。
-产品入库已随 [PR #47](https://github.com/yefuyou/linkloom/pull/47) 合并为两阶段：先找待办，再逐字校验字段。A/B 原句的负责人与截止原文可正确入库；月日保留原文，不擅自补年份。
-
-ES2002 开发集抽样在同一配置重复运行下，待办发现的召回范围为 **5–8/11**；首轮完整字段评测的负责人正确为 **4/11**，固定负样本的误报下降。重复运行只测了待办发现阶段，没有重测字段正确率，也不是保留集成绩；正例发言仍有误收，不能把负样本误报下降理解为整场没有误报。
-
-## 7. 快速开始
-
-需要 Git 和 **Python 3.11+**。
+### 1. 先离线体验（不用 API Key）
 
 ```bash
 git clone https://github.com/yefuyou/linkloom.git
 cd linkloom
-```
-
-macOS / Linux：
-
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-cp .env.example .env
-```
-
-PowerShell：
-
-```powershell
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-Copy-Item .env.example .env
-```
-
-安装带 Gemini 依赖的版本：
-
-```bash
-python -m pip install -e ".[smoke]"
-```
-
-在项目根目录的 `.env` 中只需填写 `GEMINI_API_KEY`，其他服务的密钥留空即可；启动器自动加载此文件，已有环境变量优先，修改后需重启。
-然后启动 AI 抽取与本地人工审核：
-
-```bash
-python -m linkloom.ui --database work/product.sqlite --port 8765 --allow-external-provider --allow-local-task-review
-```
-
-打开[本地界面](http://127.0.0.1:8765/)，在会议页导入记录，再到[待办页](http://127.0.0.1:8765/tasks)核对候选。
-启用 AI 后，来源文本会发送给配置的 Gemini 服务，可能产生 API 费用；本地审核保存自报姓名，不认证人员身份。
-
-### 可选检索依赖
-
-```bash
-python -m pip install -e ".[rerank]"
-```
-
-此扩展安装向量检索与本地重排所需的依赖，模型首次使用时按需下载到用户缓存。
-`LINKLOOM_RERANK=auto` 是默认值，重排不可用时自动保留 RRF 顺序；设为 `off` 可禁用。
-如果不安装向量依赖，可在 `.env` 中取消 `LINKLOOM_RETRIEVAL_MODE=bm25` 的注释，使用纯关键词检索。
-要启用原因和来源关系调查，启动时另加 `--allow-temporal-agent`，并在提问时逐次授权。
-`jev` 是实验性选项，未经真实 API 验证，只有显式选择该模式才会外发查询与候选原文。
-
-### 离线使用
-
-仅使用离线功能可安装基础包：`python -m pip install -e .`，不需要 API Key。
-无需密钥的预设演示使用独立数据库：
-
-```bash
+python -m pip install -e .
 python -m linkloom.ui --database work/task-demo.sqlite --port 8765 --offline-task-demo --allow-local-task-review
 ```
 
-普通离线启动时去掉 `--offline-task-demo`，并使用 `work/product.sqlite`。
-离线可创建工作区、保存来源、审核已有候选、查询已审核决定及其历史；新来源的 AI 抽取和外部调查需要配置与授权。
-预设演示不调用外部模型，和真实会议抽取效果无关；切换启动命令前先停止占用同一端口的服务。
+浏览器打开 **[http://127.0.0.1:8765/](http://127.0.0.1:8765/)**，就能体验跨会议任务追问与原文对照。
 
-### 作为 MCP server 使用（只读）
-
-在仓库外创建虚拟环境 `python -m venv <venv>`，从仓库运行 `"<venv-python>" -m pip install -e ".[mcp]"`（固定 `mcp==2.3.0`）。
-将 `<venv-python>` 替换为该环境 Python 的绝对路径（Windows 为 `Scripts/python.exe`，macOS / Linux 为 `bin/python`）。
-工具：`ask`、`list_decisions`、`get_decision_history`、`list_tasks`，全部只读，结果带证据（会话、原句、时间）。
-每个工具都要传 `workspace`（工作区 ID），且只能是产品当前选中的工作区；拒绝或追问时返回 `reason_code`。
-
-Claude Code：
+### 2. 接上 Gemini 跑完整流程
 
 ```bash
-claude mcp add linkloom -- "<venv-python>" -m linkloom.mcp_server --database "<product-db>"
+python -m pip install -e ".[smoke]"
+cp .env.example .env   # 填入 GEMINI_API_KEY（Windows PowerShell 用 Copy-Item）
+python -m linkloom.ui --database work/product.sqlite --port 8765 --allow-external-provider --allow-temporal-agent --allow-local-task-review
 ```
 
-Claude Desktop 在 `claude_desktop_config.json` 的 `mcpServers` 下加入（路径用绝对路径）：
+想开启本地向量检索和重排，再装一下可选依赖：`python -m pip install -e ".[rerank]"`；如果只用关键词检索，在 `.env` 里加一行 `LINKLOOM_RETRIEVAL_MODE=bm25` 就行。
 
-```json
-{"linkloom": {"command": "<venv-python>", "args": ["-m", "linkloom.mcp_server", "--database", "/path/to/product.sqlite"]}}
+## 接进 Claude（只读 MCP Server）
+
+如果你平时用 Claude Code 或 Claude Desktop，可以直接把 LinkLoom 挂成只读 MCP 工具，在聊天里直接查你本地的会议决议和待办（提供 `ask`、`list_decisions`、`get_decision_history`、`list_tasks` 四个工具）：
+
+```bash
+python -m pip install -e ".[mcp]"
+claude mcp add linkloom -- "<venv-python>" -m linkloom.mcp_server --database /path/to/product.sqlite
 ```
 
-默认不向外部模型发送问题；加 `--allow-external-provider` 才允许 `ask` 调用已配置的路由/安全模型。
+`<venv-python>` 换成装了 `.[mcp]` 的虚拟环境 Python 的绝对路径。每个工具都要传当前选中的 `workspace`；默认不向外部模型发送问题。
 
-## 8. 边界与后续
+## 路线图
 
-- **不用 GraphRAG。** 当前围绕检索、时序记录与有界调查组织证据，不构建全库 GraphRAG。
-- **不自动合并同一件事。** 候选关系由人工确认；目前也不支持两条正式任务互相合并。
-- **抽取仍会漏。** 保留集上尚未超过基线，逐字校验也只能验证已有候选，不能证明所有待办都已找到。
-- **部分操作接口待补。** 审计查询、字段修改、来源重新绑定与失效的后续 HTTP 接口见 [#37](https://github.com/yefuyou/linkloom/issues/37)。
-- **人员身份仍有限。** 负责人保留原文，人员目录关联与登录身份尚属设计预留，见 [#38](https://github.com/yefuyou/linkloom/issues/38)。
-- **存在已知测试波动。** macOS 上一项本地 HTTP 连接测试间歇失败，原因尚未确认，见 [#45](https://github.com/yefuyou/linkloom/issues/45)。
+目前单机文本会议闭环已经稳定，接下来正在推进的方向如下，均在开发中，尚未合入主干：
 
-许可证：[MIT](LICENSE)。
+- **多分支并行调查与路由收敛**：合入 LangGraph 并行调查编排与统一语义路由；
+- **更顺滑的工作台与团队记忆**：把会议原文、草稿审核和演变时间线整合进同一套流畅交互，沉淀团队黑话术语库，并支持先确认内容、后补生效日期；
+- **会议录音与团队协同**：支持上传录音转写并对齐发言人时间戳，以及成员权限隔离和任务确认后的可控外部派发。
+
+---
+
+[产品架构](docs/architecture/PRODUCT_ARCHITECTURE.md) · [运行时设计](docs/architecture/RUNTIME_ARCHITECTURE.md) · [源码导航](docs/README.md) · [贡献指南](CONTRIBUTING.md) · [MIT License](LICENSE)
