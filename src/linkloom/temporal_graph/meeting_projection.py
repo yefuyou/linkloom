@@ -2,7 +2,7 @@
 from datetime import datetime,date
 import hashlib,json
 from linkloom.temporal_graph.models import Node,Edge,Evidence,digest,parse_time,interval
-from linkloom.temporal_graph.projection import _rows,_evidence,task_review_is_current,verified_task_rebind
+from linkloom.temporal_graph.projection import _rows,read_source_evidence,task_review_is_current,verified_task_rebind
 
 
 def _node(workspace,kind,key,label):return Node(workspace,kind,key,label)
@@ -26,7 +26,7 @@ def _reference(db,workspace,reference,authorize):
         AND artifact_version_id=? AND quote_sha256=? AND line_start=? AND line_end=?""",
         (workspace,reference.source_id,reference.source_version_id,reference.quote_sha256,reference.line_start,reference.line_end)).fetchall()
     if len(rows)!=1:raise ValueError('UNIQUE_VERIFIED_TASK_EVIDENCE_REQUIRED')
-    proof=_evidence(db,workspace,rows[0][0],authorize)
+    proof=read_source_evidence(db,workspace,rows[0][0],authorize)
     if proof.quote!=reference.quote or proof.content_sha256!=reference.source_sha256:raise ValueError('TASK_REFERENCE_MISMATCH')
     if reference.char_start is not None:
         content=db.execute('SELECT content FROM ll_source_version WHERE workspace_id=? AND source_id=? AND artifact_version_id=?',
@@ -69,7 +69,7 @@ def project_meetings(db,workspace,tables,authorize,limits,confirmed,excluded,cur
             days={_date(s.event_time.isoformat()) if s.event_time else s.event_date.isoformat()
                 for s in segments if s.event_time is not None or getattr(s,'event_date',None) is not None}
             if len(days)==1 and segments:
-                proof=_evidence(db,workspace,segments[0].evidence_span.evidence_ref,authorize)
+                proof=read_source_evidence(db,workspace,segments[0].evidence_span.evidence_ref,authorize)
                 register(source['source_id'],row['artifact_version_id'],next(iter(days)),proof)
         except (ValueError,TypeError,KeyError,PermissionError):continue
 
