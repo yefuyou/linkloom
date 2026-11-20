@@ -72,3 +72,59 @@ class TestEvalResultAdapter(unittest.TestCase):
             self.assertEqual(cmp.metric_deltas["cost.avg_usd"], -0.004)
             self.assertEqual(cmp.bad_case_delta, -1)
             self.assertFalse(cmp.safety_regressed)
+
+    def test_legacy_manifest_without_status_is_not_reported_as_passed(self) -> None:
+        from linkloom.evaluation.models import EvaluationRunManifest, MetricResult, SafetyReport
+        from linkloom.evaluation.reporting import write_report
+
+        with TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            write_report(
+                EvaluationRunManifest(
+                    dataset_version="v1",
+                    run_timestamp="2026-11-20T00:00:00Z",
+                    metrics=[MetricResult(name="f1", value=0.5)],
+                    safety_report=SafetyReport(is_safe=True, violations=[]),
+                    run_id="legacy-1",
+                ),
+                root / "legacy",
+            )
+            # Unrelated manifest.json files (e.g. fixture manifests) are not evaluation runs.
+            (root / "fixture").mkdir()
+            (root / "fixture" / "manifest.json").write_text('{"schema_version": 1, "results": []}', encoding="utf-8")
+            before = {p: p.read_bytes() for p in root.rglob("*") if p.is_file()}
+
+            runs = EvalResultAdapter.scan_runs(root)
+
+            self.assertEqual([r.run_id for r in runs], ["legacy-1"])
+            self.assertEqual(runs[0].status, "unknown")
+            self.assertTrue(runs[0].safety_passed)
+            self.assertEqual(runs[0].metrics, {"f1": 0.5})
+            self.assertEqual({p: p.read_bytes() for p in root.rglob("*") if p.is_file()}, before)
+            with self.assertRaises(ValueError):
+                EvalResultAdapter.load_run_summary(root / "fixture")
+
+    def test_compare_rejects_different_datasets_and_reports_missing_metrics(self) -> None:
+        with TemporaryDirectory() as tmp:
+            root = Path(tmp)
+
+            def write(name: str, dataset: str, metrics: dict) -> Path:
+                return write_run_artifacts(
+                    root / name,
+                    manifest={"run_id": name, "dataset_version": dataset, "status": "completed"},
+                    predictions=[],
+                    metrics=metrics,
+                    bad_cases=[],
+                    trace_quality={},
+                    safety_report={"passed": True},
+                ).parent
+
+            base = write("base", "v2.0", {"topic": {"f1": 0.8, "recall": 0.7}})
+            cand = write("cand", "v2.0", {"topic": {"f1": 0.9}})
+            other = write("other", "v3.0", {"topic": {"f1": 0.9}})
+
+            cmp = EvalResultAdapter.compare_runs(base, cand)
+            self.assertEqual(cmp.metric_deltas, {"topic.f1": 0.1})
+            self.assertEqual(cmp.missing_metrics, ["topic.recall"])
+            with self.assertRaises(ValueError):
+                EvalResultAdapter.compare_runs(base, other)
