@@ -2459,8 +2459,14 @@ class TemporalDecisionStore:
         candidate_fingerprint: str | None = None,
         supersedes_decision_id: str | None = None,
         confirmed_at: datetime | None = None,
+        semantic_review: dict[str, object] | None = None,
     ) -> tuple[UndatedDecisionRecord, UndatedDecisionReceipt]:
-        """Persist a human/policy-confirmed decision whose effective date is UNKNOWN."""
+        """Persist an undated decision and, for a semantic review, consume its candidate."""
+        if semantic_review is not None and (
+            not candidate_id or not candidate_fingerprint or not decision_ref
+            or authorization_type != "HUMAN_APPROVAL"
+        ):
+            raise ValueError("semantic review requires a candidate, fingerprint and human approval")
         if authorization_type not in {"HUMAN_APPROVAL", "POLICY_AUTHORIZATION"}:
             raise ValueError("unsupported authorization_type")
         slot_key = decision_slot_key_for(subject, relation)
@@ -2533,6 +2539,30 @@ class TemporalDecisionStore:
         ).hexdigest()
 
         with self._immediate_transaction():
+            if semantic_review is not None:
+                candidate = self.get_semantic_candidate_row(workspace_id, candidate_id)
+                if candidate is None or candidate["candidate_fingerprint"] != cand_fp:
+                    raise ValueError("semantic candidate approval is stale")
+                prior = self._connection.execute(
+                    "SELECT * FROM undated_decision WHERE workspace_id = ? AND decision_ref = ?",
+                    (workspace_id, ref),
+                ).fetchone()
+                if prior is not None:
+                    existing = self._row_to_undated_decision(prior)
+                    for receipt in self.get_undated_decision_receipts(workspace_id, existing.undated_decision_id):
+                        if (
+                            receipt.candidate_id == candidate_id
+                            and receipt.candidate_fingerprint == cand_fp
+                            and receipt.authorization_id == auth_id
+                            and receipt.authorization_reason == auth_reason
+                            and existing.subject == record.subject
+                            and existing.relation == record.relation
+                            and existing.supersedes_decision_id == record.supersedes_decision_id
+                        ):
+                            return existing, receipt
+                    raise ValueError("candidate already has a different undated approval")
+                if candidate["workflow_state"] not in {"PENDING_REVIEW", "CONFLICT"}:
+                    raise ValueError("semantic candidate is no longer reviewable")
             if record.supersedes_decision_id is not None:
                 target = self._connection.execute(
                     "SELECT workspace_id, subject_key FROM decision WHERE decision_id = ?",
@@ -2604,6 +2634,20 @@ class TemporalDecisionStore:
                     receipt_fp,
                 ),
             )
+            if semantic_review is not None:
+                self._connection.execute(
+                    "UPDATE semantic_candidate SET workflow_state = 'MATERIALIZED', updated_at = ? "
+                    "WHERE workspace_id = ? AND candidate_id = ?",
+                    (_to_storage_time(now), workspace_id, candidate_id),
+                )
+                self._append_semantic_event_locked(
+                    workspace_id=workspace_id, candidate_id=candidate_id,
+                    event_type="HUMAN_APPROVAL", actor_type="HUMAN", actor_id=auth_id,
+                    event_at=now, candidate_fingerprint=cand_fp, reason_code="EFFECTIVE_TIME_UNKNOWN",
+                    reason=auth_reason,
+                    metadata={**semantic_review, "time_basis": DecisionTimeBasis.UNKNOWN.value,
+                              "undated_decision_id": undated_id, "receipt_id": receipt_id},
+                )
         receipt = UndatedDecisionReceipt(
             receipt_id=receipt_id,
             workspace_id=record.workspace_id,

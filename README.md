@@ -2,8 +2,6 @@
   <img src="docs/assets/banner.svg" width="100%" alt="LinkLoom">
 </p>
 
-<h1 align="center">LinkLoom</h1>
-
 <p align="center">
   别再在聊天记录里翻“上次到底怎么定的”。<br/>
   让团队每一场会的拍板、改期和任务交接都有一条共同的时间线——谁接的、什么时候改的、依据哪句话，全组对齐不再扯皮。
