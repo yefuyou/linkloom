@@ -45,7 +45,10 @@ _DEFAULT_EXPOSURE = {
 
 
 class Tier2MemoryService:
-    """Manages workspace-scoped Tier 2 memory with human confirmation and exposure gates."""
+    """Manages workspace-scoped Tier 2 memory with human confirmation and exposure gates.
+
+    Backend capability only: no HTTP route or Ask path calls this service yet.
+    """
 
     def __init__(self, log_path: str) -> None:
         self.store = MemoryStore(log_path)
@@ -135,7 +138,9 @@ class Tier2MemoryService:
         item = self.store.get_item(item_id)
         if item is None or not self._scoped(item, workspace_id) or item.status is not MemoryStatus.ACTIVE:
             raise KeyError(f"Active Tier 2 item not found in workspace: {item_id}")
-        self.lifecycle.supersede_item(item_id, actor)
+        # Persist and validate the replacement first, so a rejected value leaves the
+        # current item active. If confirmation then fails, the replacement remains a
+        # pending candidate that can still be confirmed.
         new_candidate = self.lifecycle.propose_candidate(
             item.scope,
             item.key,
@@ -143,6 +148,7 @@ class Tier2MemoryService:
             [f"edit:{item_id}:{uuid4().hex[:8]}"],
             metadata={**dict(item.metadata), "edited_from": item_id, "edited_by": actor},
         )
+        self.lifecycle.supersede_item(item_id, actor)
         return self.lifecycle.confirm_candidate(new_candidate.id, actor)
 
     def reject(
@@ -225,7 +231,13 @@ class Tier2MemoryService:
         category: Tier2Category | str | None = None,
         allow_restricted: bool = False,
     ) -> list[MemoryItem]:
-        """Authorized-read boundary: never returns pending/revoked or un-authorized restricted items."""
+        """Workspace-scoped read filter: never returns pending/revoked items or STORE_ONLY items by default.
+
+        This is a storage filter, not an authorization check. ``workspace_id`` and
+        ``allow_restricted`` must come from a caller that has already verified the
+        user's identity and workspace membership; ``actor`` strings elsewhere in
+        this service are only format-checked audit labels.
+        """
         self.store.reload()
         cat_val = Tier2Category(category).value if category is not None else None
         results: list[MemoryItem] = []

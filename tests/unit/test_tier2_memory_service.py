@@ -180,3 +180,40 @@ class TestTier2MemoryService(unittest.TestCase):
             combined, meta = restarted.snapshot("ws-1", "we switched to Wrenwell", resolver, slots)
             self.assertEqual(combined.aliases.get("switched"), "uses_vendor")
             self.assertEqual(len(meta["used"]), 1)
+
+    def test_rejected_edit_keeps_the_previous_item_active(self) -> None:
+        with TemporaryDirectory() as tmp:
+            log_path = str(Path(tmp) / "memory.jsonl")
+            svc = Tier2MemoryService(log_path)
+            cand = svc.propose("ws-1", category=Tier2Category.GLOSSARY, value={"term": "paygw", "meaning": "Payment Gateway"},
+                               source_refs=["glossary:1"], actor="pm-1")
+            item = svc.confirm("ws-1", cand.id, actor="pm-1")
+
+            # The redaction policy rejects secret-shaped values when the new version is created.
+            with self.assertRaises(MemoryPolicyViolation):
+                svc.edit_active("ws-1", item.id, actor="pm-1", edited_value={"term": "paygw", "meaning": "sk-live12345"})
+
+            restarted = Tier2MemoryService(log_path)
+            self.assertEqual([x.id for x in restarted.read_authorized("ws-1")], [item.id])
+            self.assertEqual(restarted.read_authorized("ws-1")[0].value["meaning"], "Payment Gateway")
+
+    def test_feedback_edit_rejected_by_memory_policy_keeps_previous_term(self) -> None:
+        with TemporaryDirectory() as tmp:
+            log_path = str(Path(tmp) / "feedback.jsonl")
+            fb = FeedbackMemory(log_path)
+            resolver = FrozenRelationResolver(canonical_relations=("uses_vendor",), aliases={"uses vendor": "uses_vendor"},
+                                              schema_version="v1")
+            slots = [{"relation": "uses_vendor", "subject": "Platform", "values": ["Birchline"]}]
+            created, _ = fb.action("propose", {"actor": "pm-1", "term": "adopts", "relation": "uses_vendor"}, "ws-1", resolver, slots)
+            approved, _ = fb.action("approve", {"actor": "pm-1", "id": created["entry"]["id"], "human_confirmed": True},
+                                    "ws-1", resolver, slots)
+
+            # "sk-abcde1" passes the term format check but the MemoryStore redaction policy rejects it.
+            from linkloom.ui.product import ProductApplicationError
+            with self.assertRaises(ProductApplicationError):
+                fb.action("edit", {"actor": "pm-1", "id": approved["entry"]["id"], "human_confirmed": True, "term": "sk-abcde1"},
+                          "ws-1", resolver, slots)
+
+            combined, meta = FeedbackMemory(log_path).snapshot("ws-1", "we adopts Wrenwell", resolver, slots)
+            self.assertEqual(combined.aliases.get("adopts"), "uses_vendor")
+            self.assertEqual([e["id"] for e in meta["used"]], [approved["entry"]["id"]])

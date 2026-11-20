@@ -127,7 +127,7 @@ class FeedbackMemory:
                        and " ".join(item.value["term"].casefold().split()) == term
                        for item in self.store.list_active()):
                     raise ProductApplicationError("FEEDBACK_CONFLICT", "An active mapping already uses this term. Revoke it before replacing it.", status=409)
-                self.lifecycle.supersede_item(identifier, actor)
+                # Store-level validation runs on propose; do it before superseding the old term.
                 new_candidate = self.lifecycle.propose_candidate(
                     MemoryScope.PROJECT,
                     KEY,
@@ -135,6 +135,7 @@ class FeedbackMemory:
                     ["feedback:edit:" + identifier + ":" + uuid4().hex[:8]],
                     {"scope_key": workspace_id, "proposed_by": actor, "edited_from": identifier},
                 )
+                self.lifecycle.supersede_item(identifier, actor)
                 entry = self.lifecycle.confirm_candidate(new_candidate.id, actor)
             elif action == "reject":
                 entry = self.lifecycle.reject_candidate(identifier, actor)
