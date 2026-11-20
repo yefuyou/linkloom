@@ -8,7 +8,11 @@ from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
 from datetime import UTC, datetime
 
-from linkloom.decision_memory.models import DecisionMemoryState, DecisionStatus
+from linkloom.decision_memory.models import (
+    DecisionMemoryState,
+    DecisionStatus,
+    UndatedDecisionState,
+)
 from linkloom.decision_memory.store import TemporalDecisionStore
 
 
@@ -36,6 +40,7 @@ class DecisionReconciliationReport:
     actions_scanned: int
     issues: tuple[DecisionReconciliationIssue, ...]
     state_transitions: tuple[DecisionStateTransition, ...]
+    undated_decisions_scanned: int = 0
 
     @property
     def issue_codes(self) -> tuple[str, ...]:
@@ -64,6 +69,9 @@ class DecisionReconciler:
         ).fetchall()
         action_rows = connection.execute(
             "SELECT * FROM action ORDER BY workspace_id, action_id"
+        ).fetchall()
+        undated_rows = connection.execute(
+            "SELECT * FROM undated_decision ORDER BY workspace_id, subject_key, confirmed_at, undated_decision_id"
         ).fetchall()
         revalidated_ids = {
             decision_id
@@ -319,6 +327,54 @@ class DecisionReconciler:
                     for item in action_source_issues
                 )
 
+            for row in undated_rows:
+                current_undated_state = UndatedDecisionState(str(row["memory_state"]))
+                if current_undated_state in {
+                    UndatedDecisionState.PROMOTED_TO_DATED,
+                    UndatedDecisionState.INVALIDATED,
+                    UndatedDecisionState.REVOKED,
+                }:
+                    continue
+                refs = connection.execute(
+                    "SELECT evidence_ref, source_hash FROM undated_decision_evidence "
+                    "WHERE undated_decision_id = ? ORDER BY ordinal, evidence_ref",
+                    (row["undated_decision_id"],),
+                ).fetchall()
+                source_state, source_issues = _source_state(
+                    workspace_id=str(row["workspace_id"]),
+                    resource_id=str(row["undated_decision_id"]),
+                    refs=refs,
+                    inventory=inventory,
+                )
+                issues.extend(source_issues)
+                desired_undated = UndatedDecisionState(source_state.value)
+                if not self.store._source_registry.has_episode(
+                    str(row["workspace_id"]), str(row["source_episode_id"])
+                ):
+                    issues.append(
+                        DecisionReconciliationIssue(
+                            code="invalid_provenance",
+                            workspace_id=str(row["workspace_id"]),
+                            resource_id=str(row["undated_decision_id"]),
+                            detail="source episode is not registered for this workspace",
+                        )
+                    )
+                    desired_undated = UndatedDecisionState.INVALIDATED
+                if desired_undated is not current_undated_state:
+                    self.store._set_undated_decision_memory_state(
+                        str(row["workspace_id"]),
+                        str(row["undated_decision_id"]),
+                        desired_undated,
+                    )
+                    transitions.append(
+                        DecisionStateTransition(
+                            entity_type="undated_decision",
+                            entity_id=str(row["undated_decision_id"]),
+                            from_state=current_undated_state.value,
+                            to_state=desired_undated.value,
+                        )
+                    )
+
         issues.sort(
             key=lambda issue: (
                 issue.code,
@@ -334,6 +390,7 @@ class DecisionReconciler:
             actions_scanned=len(action_rows),
             issues=tuple(issues),
             state_transitions=tuple(transitions),
+            undated_decisions_scanned=len(undated_rows),
         )
 
 

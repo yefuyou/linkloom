@@ -74,7 +74,7 @@ def test_unversioned_store_migrates_relation_slots_and_preserves_legacy_lookups(
     )
 
     with TemporalDecisionStore(path) as store:
-        assert store.schema_version == 2
+        assert store.schema_version == 3
         assert store.get_current("ws-alpha", "launch").decision_id == "decision-vendor"
         assert store.get_current("ws-alpha", "launch owner").decision_id == "decision-owner"
         vendor = store.get_decision("ws-alpha", "decision-vendor")
@@ -90,7 +90,7 @@ def test_unversioned_store_migrates_relation_slots_and_preserves_legacy_lookups(
         )]  # the additive workflow schema exists
 
     with TemporalDecisionStore(path) as reopened:
-        assert reopened.schema_version == 2
+        assert reopened.schema_version == 3
         assert reopened.get_current("ws-alpha", "launch").decision_id == "decision-vendor"
 
 
@@ -163,7 +163,7 @@ def test_v1_candidate_rows_default_to_source_ingestion_when_origin_column_is_add
     with TemporalDecisionStore(path) as migrated:
         row = migrated.get_semantic_candidate_row("ws-alpha", "candidate-legacy")
         events = migrated.get_semantic_candidate_events("ws-alpha", "candidate-legacy")
-        assert migrated.schema_version == 2
+        assert migrated.schema_version == 3
         assert row is not None
         assert row["candidate_source_kind"] == "SOURCE_INGESTION"
         assert events[0]["candidate_source_kind"] == "SOURCE_INGESTION"
