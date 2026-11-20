@@ -346,12 +346,13 @@
       const statusMap = {
         pending: t("Pending", "待确认"),
         active: t("Approved", "已批准"),
+        superseded: t("Superseded", "已替代"),
         revoked: t("Revoked", "已撤销"),
         rejected: t("Rejected", "已拒绝"),
         expired: t("Expired", "已过期"),
       };
       listEl.innerHTML = entries.map(entry => `
-        <article class="settings-glossary-item">
+        <article class="settings-glossary-item" data-glossary-id="${escapeHtml(entry.id)}">
           <div class="card-head">
             <strong>${escapeHtml(entry.term)} → ${escapeHtml(entry.relation)}</strong>
             <span class="badge ${entry.status === "active" ? "" : entry.status === "pending" ? "warning" : "neutral"}">${escapeHtml(statusMap[entry.status] || entry.status)}</span>
@@ -359,7 +360,7 @@
           <p class="hint">${escapeHtml(t("Actor", "操作人"))}: ${escapeHtml(entry.actor || "—")}</p>
           <div class="actions">
             ${entry.status === "pending" ? `<button type="button" class="button quiet" data-glossary-op="approve" data-id="${escapeHtml(entry.id)}">${escapeHtml(t("Confirm", "确认"))}</button><button type="button" class="button quiet" data-glossary-op="reject" data-id="${escapeHtml(entry.id)}">${escapeHtml(t("Reject", "拒绝"))}</button>` : ""}
-            ${entry.status === "active" ? `<button type="button" class="button danger" data-glossary-op="revoke" data-id="${escapeHtml(entry.id)}">${escapeHtml(t("Revoke", "撤销"))}</button>` : ""}
+            ${entry.status === "active" ? `<button type="button" class="button quiet" data-glossary-op="open-edit" data-id="${escapeHtml(entry.id)}" data-term="${escapeHtml(entry.term)}" data-relation="${escapeHtml(entry.relation)}">${escapeHtml(t("Edit", "编辑"))}</button><button type="button" class="button danger" data-glossary-op="revoke" data-id="${escapeHtml(entry.id)}">${escapeHtml(t("Revoke", "撤销"))}</button>` : ""}
           </div>
         </article>
       `).join("");
@@ -406,6 +407,43 @@
     if (!opBtn) return;
     const op = opBtn.dataset.glossaryOp;
     const id = opBtn.dataset.id;
+
+    if (op === "open-edit") {
+      const card = opBtn.closest(".settings-glossary-item");
+      if (!card || card.querySelector(".settings-glossary-edit-form")) return;
+      const origTerm = opBtn.dataset.term || "";
+      const origRelation = opBtn.dataset.relation || "";
+      const form = document.createElement("form");
+      form.className = "form-stack settings-glossary-edit-form";
+      form.dataset.id = id;
+      form.dataset.origTerm = origTerm;
+      form.dataset.origRelation = origRelation;
+      form.innerHTML = `
+        <p class="hint">${escapeHtml(t("Original:", "原值："))} <strong>${escapeHtml(origTerm)} → ${escapeHtml(origRelation)}</strong></p>
+        <div class="field">
+          <label>${escapeHtml(t("New term (2–40 chars)", "新术语名称（2–40 字符）"))}</label>
+          <input name="term" required minlength="2" maxlength="40" value="${escapeHtml(origTerm)}">
+        </div>
+        <div class="field">
+          <label>${escapeHtml(t("New relation", "新映射关系"))}</label>
+          <input name="relation" required value="${escapeHtml(origRelation)}">
+        </div>
+        <p class="error-inline settings-edit-error" role="alert" hidden></p>
+        <div class="actions">
+          <button type="submit" class="button">${escapeHtml(t("Save edit", "保存修改"))}</button>
+          <button type="button" class="button quiet" data-glossary-op="cancel-edit">${escapeHtml(t("Cancel", "取消"))}</button>
+        </div>
+      `;
+      card.appendChild(form);
+      form.querySelector('input[name="term"]')?.focus?.();
+      return;
+    }
+
+    if (op === "cancel-edit") {
+      opBtn.closest(".settings-glossary-edit-form")?.remove();
+      return;
+    }
+
     const ws = currentWorkspace();
     const actorInput = document.getElementById("settings-glossary-actor");
     const actor = String(actorInput?.value || localReviewer()).trim();
@@ -434,11 +472,65 @@
   });
 
   settingsBody?.addEventListener("submit", async (event) => {
-    if (event.target?.id !== "settings-glossary-form") return;
+    const form = event.target;
+    if (form?.classList?.contains("settings-glossary-edit-form")) {
+      event.preventDefault();
+      const ws = currentWorkspace();
+      const actorInput = document.getElementById("settings-glossary-actor");
+      const actor = String(actorInput?.value || localReviewer()).trim();
+      const statusEl = document.getElementById("settings-glossary-status");
+      const errEl = form.querySelector(".settings-edit-error");
+      if (!actor) {
+        if (errEl) { errEl.textContent = t("Enter your reviewer name above first.", "请先在上方填写操作人姓名。"); errEl.hidden = false; }
+        actorInput?.focus?.();
+        return;
+      }
+      try { window.localStorage.setItem("linkloom.tasks.reviewer", actor); } catch { /* Optional */ }
+      const data = Object.fromEntries(new FormData(form));
+      const submitBtn = form.querySelector('button[type="submit"]');
+      if (submitBtn) submitBtn.disabled = true;
+      if (errEl) { errEl.textContent = ""; errEl.hidden = true; }
+      try {
+        const res = await fetch("/api/product/feedback/edit", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            id: form.dataset.id,
+            actor,
+            workspace_id: ws.id,
+            human_confirmed: true,
+            term: data.term,
+            relation: data.relation,
+          }),
+        });
+        const payload = await res.json().catch(() => ({}));
+        if (!res.ok) {
+          throw new Error(payload?.error?.message || t("Could not save glossary edit.", "术语编辑保存失败，请检查输入。"));
+        }
+        const saved = payload.entry || {};
+        if (statusEl) {
+          statusEl.textContent = t(
+            `Edited "${form.dataset.origTerm} → ${form.dataset.origRelation}" to "${saved.term || data.term} → ${saved.relation || data.relation}".`,
+            `已将「${form.dataset.origTerm} → ${form.dataset.origRelation}」修改为「${saved.term || data.term} → ${saved.relation || data.relation}」。`
+          );
+        }
+        await loadSettingsGlossary(ws.id);
+      } catch (err) {
+        if (errEl) {
+          errEl.textContent = err.message || t("Could not save glossary edit.", "术语编辑保存失败。");
+          errEl.hidden = false;
+        }
+      } finally {
+        if (submitBtn) submitBtn.disabled = false;
+      }
+      return;
+    }
+
+    if (form?.id !== "settings-glossary-form") return;
     event.preventDefault();
     const ws = currentWorkspace();
     const statusEl = document.getElementById("settings-glossary-status");
-    const data = Object.fromEntries(new FormData(event.target));
+    const data = Object.fromEntries(new FormData(form));
     try { window.localStorage.setItem("linkloom.tasks.reviewer", String(data.actor || "").trim()); } catch { /* Optional */ }
     try {
       const res = await fetch("/api/product/feedback/propose", {
@@ -447,7 +539,7 @@
         body: JSON.stringify({ ...data, workspace_id: ws.id }),
       });
       if (!res.ok) throw new Error("PROPOSE_FAILED");
-      event.target.querySelector("#settings-glossary-term").value = "";
+      form.querySelector("#settings-glossary-term").value = "";
       if (statusEl) statusEl.textContent = t("Submitted as pending term.", "已提交为待确认术语。");
       await loadSettingsGlossary(ws.id);
     } catch {
@@ -455,10 +547,210 @@
     }
   });
 
+  /* ── 5. Meeting Task Merge UI (CREATE vs MERGE into formal TaskStore task) ── */
+  async function fetchWorkspaceFormalTasks(workspaceId) {
+    if (!workspaceId) return [];
+    const tasks = [];
+    let offset = 0;
+    for (let i = 0; i < 10; i += 1) {
+      const res = await fetch(`/api/product/tasks?workspace_id=${encodeURIComponent(workspaceId)}&limit=100&offset=${offset}`);
+      if (!res.ok) throw new Error("TASKS_LOAD_FAILED");
+      const data = await res.json();
+      for (const item of data.items || []) {
+        tasks.push(item.task || item);
+      }
+      if (!data.page?.has_more || data.page?.next_offset == null) break;
+      offset = data.page.next_offset;
+    }
+    return tasks;
+  }
+
+  function extractCandidateFields(card) {
+    const title = card.querySelector("h3")?.textContent?.trim() || "";
+    const metaText = card.querySelector(".metadata")?.textContent || "";
+    const parts = metaText.split("·").map(s => s.trim());
+    const owner = parts[0] || "";
+    const rawDeadline = parts[1] || "";
+    const deadline = /Unspecified deadline|截止时间未说明/i.test(rawDeadline) ? "" : rawDeadline;
+    return { title, owner, deadline };
+  }
+
+  function enhanceMeetingTaskMerge() {
+    const cards = page.querySelectorAll?.("[data-meeting-task]") || [];
+    for (const card of cards) {
+      if (card.dataset.mergeEnhanced === "true") continue;
+      const form = card.querySelector("[data-meeting-task-review]");
+      const actionsEl = form?.querySelector(".actions");
+      if (!form || !actionsEl) continue;
+      card.dataset.mergeEnhanced = "true";
+
+      const candidateId = card.dataset.meetingTask;
+      const candidateFields = extractCandidateFields(card);
+      const panel = document.createElement("div");
+      panel.className = "mt-merge-panel";
+      panel.innerHTML = `
+        <fieldset class="mt-mode-fieldset">
+          <legend>${escapeHtml(t("Target action", "确认去向（需人工明确选择）"))}</legend>
+          <label class="mt-mode-option"><input type="radio" name="mt_mode_${escapeHtml(candidateId)}" value="CREATE" checked> ${escapeHtml(t("Create new formal task", "新建正式任务"))}</label>
+          <label class="mt-mode-option"><input type="radio" name="mt_mode_${escapeHtml(candidateId)}" value="MERGE"> ${escapeHtml(t("Merge into existing formal task", "合并入已有正式任务"))}</label>
+        </fieldset>
+        <div class="mt-merge-details" hidden>
+          <div class="field">
+            <label for="mt-target-${escapeHtml(candidateId)}">${escapeHtml(t("Existing formal task", "选择已有正式任务"))}</label>
+            <select id="mt-target-${escapeHtml(candidateId)}" name="target_task_id"><option value="">${escapeHtml(t("Loading formal tasks…", "正在加载工作区正式任务…"))}</option></select>
+          </div>
+          <div class="mt-compare-slot"></div>
+        </div>
+        <div class="mt-review-feedback" role="alert" hidden></div>
+      `;
+      form.insertBefore(panel, actionsEl);
+
+      const detailsEl = panel.querySelector(".mt-merge-details");
+      const selectEl = panel.querySelector("select[name='target_task_id']");
+      const compareSlot = panel.querySelector(".mt-compare-slot");
+      const feedbackEl = panel.querySelector(".mt-review-feedback");
+      const confirmBtn = actionsEl.querySelector('button[value="CONFIRM"]');
+      let loadedTasks = null;
+
+      function renderCompare(task) {
+        if (!task) {
+          compareSlot.innerHTML = "";
+          return;
+        }
+        const rows = [
+          { key: "title", label: t("Title", "任务标题"), cand: candidateFields.title || "—", cur: task.title || "—" },
+          { key: "owner", label: t("Owner", "负责人"), cand: candidateFields.owner || "—", cur: task.owner || t("Unassigned", "未指定") },
+          { key: "deadline", label: t("Deadline", "截止时间"), cand: candidateFields.deadline || "—", cur: task.deadline_text || task.deadline || t("Unspecified", "未指定") },
+        ];
+        compareSlot.innerHTML = `
+          <table class="mt-compare-table">
+            <thead><tr><th>${escapeHtml(t("Apply", "应用"))}</th><th>${escapeHtml(t("Field", "字段"))}</th><th>${escapeHtml(t("Meeting candidate", "会议候选值"))}</th><th>${escapeHtml(t("Existing task", "已有任务值"))}</th></tr></thead>
+            <tbody>
+              ${rows.map(r => `<tr>
+                <td><input type="checkbox" name="apply_fields" value="${r.key}" ${r.key === "owner" || r.key === "deadline" ? "checked" : ""}></td>
+                <td><strong>${escapeHtml(r.label)}</strong></td>
+                <td>${escapeHtml(r.cand)}</td>
+                <td>${escapeHtml(r.cur)}</td>
+              </tr>`).join("")}
+            </tbody>
+          </table>
+        `;
+      }
+
+      panel.addEventListener("change", async (event) => {
+        if (event.target?.name === `mt_mode_${candidateId}`) {
+          const isMerge = event.target.value === "MERGE";
+          detailsEl.hidden = !isMerge;
+          if (confirmBtn) confirmBtn.textContent = isMerge ? t("Confirm merge", "确认合并入已有任务") : t("Confirm candidate", "确认候选");
+          feedbackEl.hidden = true;
+          if (isMerge && loadedTasks === null) {
+            const ws = currentWorkspace();
+            try {
+              loadedTasks = await fetchWorkspaceFormalTasks(ws.id);
+              if (!loadedTasks.length) {
+                selectEl.innerHTML = `<option value="">${escapeHtml(t("No existing formal tasks in this workspace", "当前工作区暂无已有正式任务"))}</option>`;
+              } else {
+                selectEl.innerHTML = `<option value="">${escapeHtml(t("Choose an existing task…", "请选择已有正式任务…"))}</option>`
+                  + loadedTasks.map(task => `<option value="${escapeHtml(task.id)}">${escapeHtml(task.title)} · ${escapeHtml(task.owner || t("Unassigned", "未指定"))} · ${escapeHtml(task.status || "")}</option>`).join("");
+              }
+            } catch {
+              loadedTasks = null;
+              selectEl.innerHTML = `<option value="">${escapeHtml(t("Failed to load formal tasks", "无法读取工作区正式任务列表"))}</option>`;
+            }
+          }
+        } else if (event.target === selectEl) {
+          const selected = (loadedTasks || []).find(item => item.id === selectEl.value);
+          renderCompare(selected || null);
+        }
+      });
+
+      form.addEventListener("submit", async (event) => {
+        const mode = form.querySelector(`input[name="mt_mode_${candidateId}"]:checked`)?.value || "CREATE";
+        const submitAction = event.submitter?.value;
+        if (mode !== "MERGE" || submitAction === "REJECT") return;
+        event.preventDefault();
+        event.stopImmediatePropagation();
+
+        feedbackEl.hidden = true;
+        const targetTaskId = selectEl.value;
+        if (!targetTaskId) {
+          feedbackEl.textContent = t("Select an existing formal task to merge into.", "请先选择要合并的目标正式任务。");
+          feedbackEl.hidden = false;
+          selectEl.focus();
+          return;
+        }
+        const applyFields = [...form.querySelectorAll('input[name="apply_fields"]:checked')].map(cb => cb.value);
+        if (!applyFields.length) {
+          feedbackEl.textContent = t("Select at least one field to apply.", "请至少勾选一个要应用的字段。");
+          feedbackEl.hidden = false;
+          return;
+        }
+        const formData = new FormData(form);
+        const reviewer = String(formData.get("reviewer") || "").trim();
+        const note = String(formData.get("note") || "").trim();
+        if (!reviewer || !note) {
+          form.reportValidity?.();
+          return;
+        }
+        if (confirmBtn) confirmBtn.disabled = true;
+        try {
+          const res = await fetch(`/api/review/meeting-tasks/${encodeURIComponent(candidateId)}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              action: "MERGE",
+              source_version: form.dataset.version,
+              reviewer,
+              note,
+              target_task_id: targetTaskId,
+              apply_fields: applyFields,
+            }),
+          });
+          const payload = await res.json().catch(() => ({}));
+          if (!res.ok) {
+            const errCode = payload?.error?.code || "";
+            const isStale = res.status === 409 || ["MEETING_TASK_STALE", "MEETING_TASK_ALREADY_REVIEWED"].includes(errCode);
+            feedbackEl.innerHTML = `<p>${escapeHtml(payload?.error?.message || t("Merge failed.", "合并失败。"))}</p>`
+              + (isStale ? `<button type="button" class="button quiet" data-mt-reload>${escapeHtml(t("Reload review queue", "重新读取审核队列"))}</button>` : "");
+            feedbackEl.hidden = false;
+            return;
+          }
+          const ws = currentWorkspace();
+          const task = payload.task || {};
+          const taskHref = `/tasks?workspace_id=${encodeURIComponent(ws.id)}&task=${encodeURIComponent(payload.task_id || task.id || targetTaskId)}`;
+          card.innerHTML = `
+            <div class="card-head">
+              <div><p class="record-kind">${escapeHtml(t("Merged into formal task", "已合并入正式任务"))}</p><h3>${escapeHtml(task.title || candidateFields.title)}</h3></div>
+              <span class="badge">${escapeHtml(task.status || "CONFIRMED")}</span>
+            </div>
+            <p class="metadata">${escapeHtml(t("Task ID", "任务编号"))}: <code>${escapeHtml(payload.task_id || task.id || targetTaskId)}</code> · ${escapeHtml(t("Owner", "负责人"))}: <strong>${escapeHtml(task.owner || t("Unassigned", "未指定"))}</strong> · ${escapeHtml(t("Deadline", "截止时间"))}: <strong>${escapeHtml(task.deadline_text || task.deadline || t("Unspecified", "未指定"))}</strong></p>
+            <div class="actions">
+              <a class="button" href="${taskHref}">${escapeHtml(t("View formal task & TaskEvent history", "查看正式任务与 TaskEvent 历史"))}</a>
+              <button type="button" class="button quiet" data-mt-reload>${escapeHtml(t("Refresh review queue", "刷新审核队列"))}</button>
+            </div>
+          `;
+        } catch {
+          feedbackEl.textContent = t("Local service unavailable. No merge was saved.", "无法连接本地服务，未执行合并。");
+          feedbackEl.hidden = false;
+        } finally {
+          if (confirmBtn) confirmBtn.disabled = false;
+        }
+      }, true);
+
+      card.addEventListener("click", (event) => {
+        if (event.target.closest("[data-mt-reload]")) {
+          document.querySelector('.primary-nav [data-screen="sources"]')?.click();
+          window.location.hash = "#review";
+        }
+      });
+    }
+  }
+
   /* ── Reactive observers ── */
   function syncEnhancements() {
     renderContextBar();
     enhanceCandidateReviewSplit();
+    enhanceMeetingTaskMerge();
     enhanceDecisionsEvolution();
   }
 
