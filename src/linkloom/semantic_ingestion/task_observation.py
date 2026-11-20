@@ -8,7 +8,7 @@ import json
 import re
 
 from linkloom.semantic_ingestion.artifacts import EvidenceSpan, RawArtifact
-from linkloom.semantic_ingestion.document_text import SourceSegment, parse_source_text
+from linkloom.semantic_ingestion.document_text import SourceSegment, source_segment_for_span
 from linkloom.semantic_ingestion.timestamped_text import _HEADER_PATTERN, _source_lines
 from linkloom.semantic_ingestion.task_field_binding import TaskFieldBinding, FIELD_ROLES, STATES, validate_bindings
 
@@ -345,8 +345,7 @@ class TaskObservation:
             return False
         if any(artifact.content[e.char_start:e.char_end] != e.quote for e in self.field_evidence):
             return False
-        segment = next((s for s in parse_source_text(artifact).segments
-                        if s.evidence_span == self.provenance), None)
+        segment = source_segment_for_span(artifact, self.provenance)
         if segment is None:
             return False
         proposed = ({b.field: b.value for b in self.field_bindings} if self.field_bindings is not None else
@@ -466,7 +465,9 @@ def _model_fields(proposal, raw, segment, artifact, bind, issues):
     """
     values = dict(owner=None, deadline=None, deadline_text=None, project=None, vendor=None)
     precision = role = 'UNKNOWN'
-    canonical = next(s for s in parse_source_text(artifact).segments if s.evidence_span == segment.evidence_span)
+    canonical = source_segment_for_span(artifact, segment.evidence_span)
+    if canonical is None:
+        raise ValueError("task provenance is not a canonical source span")
     speaker_proofs = []
     for declaration in proposal.field_bindings:
         field, value = declaration.field, declaration.value
@@ -553,7 +554,7 @@ def build_task_observation(proposal: TaskProposal | None, segment: SourceSegment
             cue = next((match for match in _FIRST_PERSON.finditer(span.quote)
                         if start <= span.char_start + match.start("cue") < start + len(raw)
                         and _affirmative_clause(span.quote, match.start("cue"))), None)
-            canonical = next((s for s in parse_source_text(artifact).segments if s.evidence_span == span), None)
+            canonical = source_segment_for_span(artifact, span)
             speaker = getattr(canonical, "speaker", None)
             if named:
                 owner = proposal.owner
@@ -599,7 +600,7 @@ def build_task_observation(proposal: TaskProposal | None, segment: SourceSegment
         deadline, deadline_text, precision, role, project, vendor,
         "EXTRACTED" if proposal_supplied else "NOT_PROVIDED", "INVALID" if description is None else "PARTIAL" if unknown or issues else "VALID",
         unknown, tuple(issues), tuple(evidence), artifact.ingestion_time,
-        getattr(next((s for s in parse_source_text(artifact).segments if s.evidence_span == span), None), "event_time", None),
+        getattr(source_segment_for_span(artifact, span), "event_time", None),
         field_bindings=proposal.field_bindings if proposal else None,
         work_state=proposal.work_state if proposal else None,
         grounding_policy_version=proposal.grounding_policy_version if proposal else None,

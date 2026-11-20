@@ -1153,6 +1153,8 @@ class ProductApplication:
             return {"candidate": self._candidate_detail(candidate_id)}
         if path == "/api/decisions":
             return {"decisions": self._current_decisions()}
+        if path == "/api/decisions/undated":
+            return {"undated": self._undated_decisions()}
         if path.startswith("/api/decisions/") and path.endswith("/history"):
             decision_id = path.removeprefix("/api/decisions/").removesuffix("/history")
             return {"history": self._decision_history(decision_id)}
@@ -1178,6 +1180,9 @@ class ProductApplication:
             return {"workspace": self.repository.select_workspace(workspace_id)}, 200
         if path == "/api/ask":
             return {"answer": self.ask(_required_payload_text(payload, "query", 4000), payload.get("as_of"))}, 200
+        promote_match = re.fullmatch(r"/api/decisions/undated/([^/]+)/promote", path)
+        if promote_match:
+            return self._promote_undated(promote_match.group(1), payload), 200
         if path == "/api/decisions/recover":
             return {"recovery": self.recover_decision(
                 _required_payload_text(payload, "subject", 512),
@@ -1371,10 +1376,41 @@ class ProductApplication:
             and record.memory_state in {DecisionMemoryState.ACTIVE, DecisionMemoryState.SUPERSEDED}
         )
 
+        def promoted(record: DecisionRecord) -> dict[str, Any] | None:
+            # A decision confirmed first with unknown time and later given a reviewed
+            # date: content and date authority come from its undated receipts.
+            origin = next((item for item in self.store.list_undated_decisions(workspace_id)
+                           if item.promoted_decision_id == record.decision_id), None)
+            if origin is None:
+                return None
+            receipts = sorted(self.store.get_undated_decision_receipts(workspace_id, origin.undated_decision_id),
+                              key=lambda item: item.authorized_at)
+            confirmation = next((item for item in receipts if item.candidate_id), None)
+            if confirmation is None or len(receipts) < 2:
+                return None
+            payload = self._decision_payload(record)
+            if not payload["evidence"] or not all(item["verified"] for item in payload["evidence"]):
+                return None
+            candidate = self.materializer.get_candidate(workspace_id, str(confirmation.candidate_id))
+            if (not isinstance(candidate, CandidateDecisionFact) or candidate.workspace_id != workspace_id
+                    or candidate.value != record.value or candidate.source_episode_id != record.source_episode_id
+                    or candidate.evidence_ref not in {item["evidence_ref"] for item in payload["evidence"]}):
+                return None
+            dating = receipts[-1]
+            payload["authorization"] = {
+                "receipt_id": dating.receipt_id, "authorization_type": dating.authorization_type,
+                "authorized_at": dating.authorized_at.isoformat(), "materialized_at": dating.authorized_at.isoformat(),
+                "effective_at": record.valid_from.isoformat(),
+                "content_confirmation_receipt_id": confirmation.receipt_id, "decision_ref": origin.decision_ref,
+            }
+            payload["source_event_at"] = candidate.event_time.isoformat() if candidate.event_time else None
+            payload["source_ingested_at"] = candidate.ingestion_time.isoformat()
+            return payload
+
         def reviewed(record: DecisionRecord) -> dict[str, Any] | None:
             receipts = self.store.get_decision_receipt_rows(workspace_id, record.decision_id)
             if not receipts:
-                return None
+                return promoted(record)
             payload = self._decision_payload(record)
             if not payload["evidence"] or not all(item["verified"] for item in payload["evidence"]):
                 return None
@@ -1398,7 +1434,7 @@ class ProductApplication:
                 "materialized_at": receipt["materialized_at"],
                 "effective_at": receipt["effective_at"],
             }
-            payload["source_event_at"] = candidate.event_time.isoformat()
+            payload["source_event_at"] = candidate.event_time.isoformat() if candidate.event_time else None
             payload["source_ingested_at"] = candidate.ingestion_time.isoformat()
             return payload
 
@@ -1423,7 +1459,7 @@ class ProductApplication:
             proposals.append({
                 "candidate_id": candidate.candidate_id,
                 "value": candidate.value,
-                "event_time": candidate.event_time.isoformat(),
+                "event_time": candidate.event_time.isoformat() if candidate.event_time else None,
                 "ingestion_time": candidate.ingestion_time.isoformat(),
                 "status": "PROPOSED_NOT_APPROVED",
                 "evidence": {**detail["evidence"], "verified": True,
@@ -1458,7 +1494,7 @@ class ProductApplication:
                 "candidate_id": candidate.candidate_id,
                 "value": candidate.value,
                 "effective_from": effective_from.isoformat(),
-                "event_time": candidate.event_time.isoformat(),
+                "event_time": candidate.event_time.isoformat() if candidate.event_time else None,
                 "authority": "NON_AUTHORITATIVE",
                 "review_status": str(row["workflow_state"]),
                 "evidence": {**detail["evidence"], "verified": True,
@@ -1644,6 +1680,7 @@ class ProductApplication:
                 context = SemanticExtractionContext(
                     expected_workspace_id=workspace_id,
                     relation_resolver=self.relation_resolver,
+                    document_quote_evidence=True,
                 )
                 pipeline = SemanticIngestionPipeline(self.extractor, CandidateValidator())
                 version_id = artifact.artifact_version_id
@@ -1678,7 +1715,7 @@ class ProductApplication:
                                     current['source_version'] == artifact.artifact_version_id)
                         request_context = (SemanticExtractionContext(workspace_id, self.relation_resolver,
                             product_task_fields=ProductTaskFieldContext(artifact,
-                                current_source=current_source_admitted))
+                                current_source=current_source_admitted), document_quote_evidence=True)
                             if isinstance(self.extractor, ProviderNeutralSemanticExtractor) else context)
                         trace = pipeline.process_segment_with_trace(segment, artifact, request_context)
                         failure = trace.extraction.failure_code
@@ -1721,6 +1758,15 @@ class ProductApplication:
                 results = CandidateValidator().flag_conflicts(tuple(results))
             with self._store_lock:
                 errors: list[str] = []
+                # Plain notes (#137): publish each verified exact quote in the existing
+                # SourceVersion evidence catalogue before candidates reference it.
+                quote_spans = [result.candidate.provenance for result in results
+                               if result.candidate is not None and result.candidate.segment_id in new_segment_ids]
+                if quote_spans:
+                    from linkloom.semantic_ingestion.document_text import persist_document_quote_evidence
+                    with self.repository._lock:
+                        persist_document_quote_evidence(self.repository._connection, self.store.source_registry,
+                                                        artifact, quote_spans)
                 for result in results:
                     if result.candidate is None:
                         errors.extend(code.value for code in result.reason_codes)
@@ -1877,6 +1923,10 @@ class ProductApplication:
         candidate = self.materializer.get_candidate(workspace_id, candidate_id)
         if not isinstance(candidate, CandidateDecisionFact):
             raise ProductApplicationError("CANDIDATE_NOT_FOUND", "The candidate is unavailable in this workspace.", status=404)
+        if payload.get("time_basis") == "UNKNOWN" and revalidation_of is None and not resume_approved:
+            # Explicit "content confirmed, effective time unknown". Omitting a date
+            # on the regular path never selects this operation.
+            return self._approve_undated(workspace_id, candidate, payload)
         resolution = self._review_resolution(payload)
         fingerprint = self.materializer.candidate_fingerprint(workspace_id, candidate_id)
         if fingerprint is None:
@@ -1914,6 +1964,98 @@ class ProductApplication:
             "memory_state": decision.memory_state.value if decision else None,
             "receipt_id": materialized.receipt.receipt_id,
         }
+
+    def _current_candidate_artifact(self, workspace_id: str, candidate: Any) -> RawArtifact:
+        source = self.repository.get_source(workspace_id, candidate.artifact_id)
+        if source is None or source["source_version"] != candidate.artifact_version_id:
+            raise ProductApplicationError("PROVENANCE_INVALID", "The candidate's source changed or was removed. Review the current version.", status=409)
+        return self._source_artifact(source)
+
+    @staticmethod
+    def _undated_error(error: MaterializationBlockedError) -> ProductApplicationError:
+        status = 400 if error.reason_code == "INVALID_VALID_TIME" else 404 if error.reason_code == "UNDATED_NOT_FOUND" else 409
+        return ProductApplicationError(error.reason_code, str(error), status=status,
+                                       reason_codes=tuple(error.reason_codes) or None)
+
+    def _approve_undated(self, workspace_id: str, candidate: Any, payload: dict[str, Any]) -> dict[str, Any]:
+        from linkloom.decision_memory.models import DecisionTimeBasis
+        if payload.get("valid_from"):
+            raise ProductApplicationError("INVALID_VALID_TIME", "Leave the effective date empty to confirm it as unknown.")
+        resolution = self._review_resolution(payload)
+        fingerprint = self.materializer.candidate_fingerprint(workspace_id, candidate.candidate_id)
+        expected = payload.get("expected_candidate_fingerprint") or fingerprint
+        if fingerprint is None:
+            raise ProductApplicationError("CANDIDATE_NOT_FOUND", "The candidate is unavailable in this workspace.", status=404)
+        artifact = self._current_candidate_artifact(workspace_id, candidate)
+        try:
+            record, receipt = self.materializer.approve_undated(
+                workspace_id, candidate.candidate_id, current_source=artifact,
+                time_basis=DecisionTimeBasis.UNKNOWN,
+                reviewer_id=_required_payload_text(payload, "reviewer_id", 120),
+                expected_candidate_fingerprint=expected,
+                reason=_required_payload_text(payload, "reason", 1000),
+                resolution=resolution,
+                supersedes_decision_id=_optional_text(payload.get("supersedes_decision_id"), "supersedes_decision_id", 200),
+            )
+        except MaterializationBlockedError as error:
+            raise self._undated_error(error) from error
+        self._sync_review_required_count(candidate)
+        return {"candidate_id": candidate.candidate_id, "workflow_state": CandidateWorkflowState.MATERIALIZED.value,
+                "undated_decision_id": record.undated_decision_id, "decision_ref": record.decision_ref,
+                "memory_state": record.memory_state.value, "time_basis": record.time_basis.value,
+                "receipt_id": receipt.receipt_id}
+
+    def _promote_undated(self, undated_decision_id: str, payload: dict[str, Any]) -> dict[str, Any]:
+        from linkloom.decision_memory.models import DecisionTimeBasis
+        workspace_id = self._workspace_id()
+        record = self.store.get_undated_decision(workspace_id, undated_decision_id)
+        if record is None:
+            raise ProductApplicationError("UNDATED_NOT_FOUND", "The undated decision is unavailable in this workspace.", status=404)
+        basis = payload.get("time_basis")
+        if basis not in {"USER_SELECTED", "USER_TODAY"}:
+            raise ProductApplicationError("INVALID_VALID_TIME", "time_basis must be USER_SELECTED or USER_TODAY.")
+        resolution = self._review_resolution({"valid_from": payload.get("valid_from")})
+        if resolution is None or resolution.valid_from is None:
+            raise ProductApplicationError("INVALID_VALID_TIME", "Choose the effective date to apply.")
+        receipt = next((item for item in self.store.get_undated_decision_receipts(workspace_id, undated_decision_id)
+                        if item.candidate_id is not None), None)
+        candidate = self.materializer.get_candidate(workspace_id, receipt.candidate_id) if receipt else None
+        if not isinstance(candidate, CandidateDecisionFact):
+            raise ProductApplicationError("UNDATED_REVIEW_CONFLICT", "This decision has no reviewable source candidate.", status=409)
+        artifact = self._current_candidate_artifact(workspace_id, candidate)
+        try:
+            decision, updated, promotion = self.materializer.promote_undated(
+                workspace_id, undated_decision_id, current_source=artifact,
+                valid_from=resolution.valid_from, time_basis=DecisionTimeBasis(basis),
+                reviewer_id=_required_payload_text(payload, "reviewer_id", 120),
+                reason=_required_payload_text(payload, "reason", 1000),
+                supersedes_decision_id=_optional_text(payload.get("supersedes_decision_id"), "supersedes_decision_id", 200),
+            )
+        except MaterializationBlockedError as error:
+            raise self._undated_error(error) from error
+        return {"decision_id": decision.decision_id, "decision_ref": updated.decision_ref,
+                "undated_decision_id": updated.undated_decision_id, "memory_state": updated.memory_state.value,
+                "valid_from": decision.valid_from.isoformat(), "time_basis": basis, "receipt_id": promotion.receipt_id}
+
+    def _undated_decisions(self) -> list[dict[str, Any]]:
+        """Active confirmed decisions whose effective time is unknown, with verified evidence state."""
+        from linkloom.evolution import decision_evolution
+        workspace_id = self._workspace_id()
+        slots = dict.fromkeys((record.subject, record.relation)
+                              for record in self.store.list_undated_decisions(workspace_id, active_only=True))
+        if not slots or self.repository.database_path == ":memory:":
+            return []
+
+        def authorize_source(ws, source_id, _version):
+            source = self.repository.get_source(ws, source_id) if ws == workspace_id else None
+            return source is not None and bool(source["active"])
+
+        items = []
+        for subject, relation in slots:
+            items.extend(decision_evolution(self.repository.database_path, workspace_id=workspace_id,
+                                            authorize_source=authorize_source, subject=subject,
+                                            relation=relation, mode="UNDATED")["undated"])
+        return items
 
     @property
     def fact_store(self) -> Any:
@@ -2122,8 +2264,8 @@ class ProductApplication:
         if source is None:
             return {"evidence_ref": evidence_ref, "verified": False, "source_name": "Source unavailable"}
         artifact = self._artifact_from_version(source)
-        parsed = parse_source_text(artifact)
-        span = next((item.evidence_span for item in parsed.segments if item.evidence_span.evidence_ref == evidence_ref), None)
+        from linkloom.semantic_ingestion.document_text import resolve_source_evidence
+        span = resolve_source_evidence(artifact, source)
         if span is None or not span.verify(artifact):
             return {"evidence_ref": evidence_ref, "verified": False, "source_name": str(source["source_name"])}
         return {
@@ -2406,12 +2548,21 @@ def _evidence_jump_projection(source: dict[str, Any], evidence, registry: Source
         if (not source["active"] or artifact.artifact_version_id != source["source_version"]
                 or artifact.content_hash != source["content_sha256"]):
             raise ValueError("source version mismatch")
+        from linkloom.semantic_ingestion.document_text import resolve_source_evidence
         parsed = parse_source_text(artifact)
         spans = tuple(segment.evidence_span for segment in parsed.segments)
         rows = {row["evidence_ref"]: row for row in evidence}
         if (parsed.issues or not spans or len(rows) != len(evidence)
-                or set(rows) != {span.evidence_ref for span in spans}):
+                or not {span.evidence_ref for span in spans} <= set(rows)):
             raise ValueError("source evidence catalog mismatch")
+        base = {span.evidence_ref for span in spans}
+        for ref, row in rows.items():
+            if ref not in base:
+                # Exact plain-notes quotes (#137): every extra catalogue row must resolve to one exact range.
+                extra = resolve_source_evidence(artifact, row)
+                if extra is None:
+                    raise ValueError("source evidence catalog mismatch")
+                spans += (extra,)
         projected = []
         for span in spans:
             row = rows[span.evidence_ref]

@@ -25,6 +25,14 @@ def _not_stated_claim(value: str) -> dict[str, object]:
     }
 
 
+def _quoted_claim(value: str, quote: str, subject: str = "银杏项目") -> dict[str, object]:
+    """A plain-notes decision as a model should return it: grounded subject and exact quote (#137)."""
+    return dict(_not_stated_claim(value), subject=subject, evidence_quote=quote)
+
+
+DECISION_LINE = "决定：银杏项目改用 Wrenwell 作为支付网关供应商。"
+
+
 def _workspace(base: str, name: str = "Ginkgo") -> str:
     status, payload = _client(base, "/api/workspaces", method="POST", data={"name": name})
     assert status == 201
@@ -178,7 +186,7 @@ def test_existing_database_gains_source_metadata_columns(tmp_path):
 
 def test_plain_notes_decision_can_be_approved_with_reviewer_chosen_effective_date(tmp_path):
     """The reviewer supplies the effective date; it need not be written in plain notes."""
-    base, server, worker, app = _start_product_server(tmp_path, [_not_stated_claim("Wrenwell")])
+    base, server, worker, app = _start_product_server(tmp_path, [_quoted_claim("Wrenwell", DECISION_LINE)])
     try:
         _workspace(base)
         status, payload = _client(base, "/api/sources/import", method="POST",
@@ -187,17 +195,59 @@ def test_plain_notes_decision_can_be_approved_with_reviewer_chosen_effective_dat
         _wait_source(base, payload["source"]["source_id"])
         (candidate,) = _client(base, "/api/review/candidates")[1]["candidates"]
         path = f"/api/review/candidates/{candidate['candidate_id']}/approve"
-        status, result = _client(base, path, method="POST", data={
-            "reviewer_id": "local-user", "reason": "Confirmed in review", "subject": "银杏项目"})
+        review = {"reviewer_id": "local-user", "reason": "Confirmed in review"}
+        status, result = _client(base, path, method="POST", data=review)
         assert status == 409, "content approval still needs an effective date in the dated path"
-        status, result = _client(base, path, method="POST", data={
-            "reviewer_id": "local-user", "reason": "Confirmed in review", "subject": "银杏项目",
-            "valid_from": "2026-11-01"})
+        status, result = _client(base, path, method="POST", data={**review, "valid_from": "2026-11-01"})
         assert status == 200 and result["workflow_state"] == "MATERIALIZED", result
         (decision,) = _client(base, "/api/decisions")[1]["decisions"]
         assert (decision["subject"], decision["value"]) == ("银杏项目", "Wrenwell")
         assert decision["valid_from"].startswith("2026-11-01")
         assert decision["evidence"][0]["verified"] is True
-        assert decision["evidence"][0]["quote"] == PLAIN_NOTES
+    finally:
+        _stop_product_server(server, worker, app)
+
+
+def test_plain_notes_decision_without_an_exact_quote_cannot_become_formal(tmp_path):
+    """Whole-document context is not evidence for a formal decision; it stays reviewable only."""
+    claim = dict(_not_stated_claim("Wrenwell"), subject="银杏项目")
+    base, server, worker, app = _start_product_server(tmp_path, [claim])
+    try:
+        _workspace(base)
+        status, payload = _client(base, "/api/sources/import", method="POST",
+                                  data={"name": "weekly.md", "content": PLAIN_NOTES})
+        _wait_source(base, payload["source"]["source_id"])
+        (candidate,) = _client(base, "/api/review/candidates")[1]["candidates"]
+        assert "EVIDENCE_UNRESOLVED" in candidate["review_reasons"]
+        status, result = _client(base, f"/api/review/candidates/{candidate['candidate_id']}/approve", method="POST",
+                                 data={"reviewer_id": "local-user", "reason": "ok", "valid_from": "2026-11-01"})
+        assert status == 409 and result["error"]["code"] == "EVIDENCE_UNRESOLVED"
+        assert _client(base, "/api/decisions")[1]["decisions"] == []
+    finally:
+        _stop_product_server(server, worker, app)
+
+
+def test_plain_notes_decision_cites_the_exact_quote_and_jumps_to_it(tmp_path):
+    """#137 wiring: a verbatim evidence_quote becomes an exact, clickable SourceVersion span."""
+    line = DECISION_LINE
+    base, server, worker, app = _start_product_server(tmp_path, [_quoted_claim("Wrenwell", line)])
+    try:
+        _workspace(base)
+        status, payload = _client(base, "/api/sources/import", method="POST",
+                                  data={"name": "weekly.md", "content": PLAIN_NOTES})
+        assert status == 202
+        source = _wait_source(base, payload["source"]["source_id"])
+        assert source["ingestion_status"] == "COMPLETE", source
+        (candidate,) = _client(base, "/api/review/candidates")[1]["candidates"]
+        status, result = _client(base, f"/api/review/candidates/{candidate['candidate_id']}/approve", method="POST",
+                                 data={"reviewer_id": "local-user", "reason": "ok", "valid_from": "2026-11-01"})
+        assert status == 200, result
+        (decision,) = _client(base, "/api/decisions")[1]["decisions"]
+        (evidence,) = decision["evidence"]
+        assert evidence["verified"] is True and evidence["quote"] == line
+        assert (evidence["line_start"], evidence["line_end"]) == (4, 4)
+        jump = _client(base, f"/api/sources/{source['source_id']}")[1]["source"]["evidence_jump"]
+        (span,) = [item for item in jump["spans"] if item["evidence_ref"] == evidence["evidence_ref"]]
+        assert PLAIN_NOTES[span["char_start"]:span["char_end"]] == line
     finally:
         _stop_product_server(server, worker, app)
