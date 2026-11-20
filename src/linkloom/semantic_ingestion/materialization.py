@@ -14,6 +14,10 @@ from linkloom.decision_memory.models import (
     DecisionMemoryState,
     DecisionRecord,
     DecisionStatus,
+    DecisionTimeBasis,
+    UndatedDecisionRecord,
+    UndatedDecisionReceipt,
+    UndatedDecisionState,
     decision_slot_key_for,
     normalize_temporal_component,
 )
@@ -43,6 +47,7 @@ from linkloom.semantic_ingestion.materializable import (
 if TYPE_CHECKING:
     from linkloom.decision_memory.store import TemporalDecisionStore
     from linkloom.agents.memory_candidate import AgentMemoryCandidate
+    from linkloom.semantic_ingestion.artifacts import RawArtifact
 
 
 class MaterializationOutcome(StrEnum):
@@ -271,6 +276,7 @@ class MaterializationPolicy:
         existing: DecisionRecord | None,
         now: datetime,
         write_policy: DecisionMaterializer,
+        confirm_time_unknown: bool = False,
     ) -> MaterializationPolicyDecision:
         if candidate is None:
             return self._decision(
@@ -317,6 +323,8 @@ class MaterializationPolicy:
             )
 
         structural_reasons = self._structural_reasons(candidate)
+        if confirm_time_unknown:
+            structural_reasons = tuple(code for code in structural_reasons if code != "TEMPORAL_UNRESOLVED")
         if structural_reasons:
             return self._decision(
                 MaterializationOutcome.REQUIRE_REVIEW,
@@ -349,6 +357,7 @@ class MaterializationPolicy:
             code
             for code in candidate.validation_reasons
             if code != CandidateReasonCode.CONFLICT_REQUIRES_REVIEW.value
+            and not (confirm_time_unknown and code == CandidateReasonCode.TEMPORAL_UNRESOLVED.value)
         )
         if (
             candidate.source_kind is CandidateSourceKind.SOURCE_INGESTION
@@ -360,6 +369,15 @@ class MaterializationPolicy:
                 "HIGH",
                 "HUMAN_APPROVAL",
                 False,
+            )
+
+        if confirm_time_unknown:
+            return self._decision(
+                MaterializationOutcome.REQUIRE_REVIEW,
+                ("EFFECTIVE_TIME_UNKNOWN",),
+                "HIGH",
+                "HUMAN_APPROVAL",
+                True,
             )
 
         if existing is not None and _same_value(existing.value, candidate.value or ""):
@@ -837,6 +855,114 @@ class SemanticDecisionMaterializer:
             CandidateWorkflowState.APPROVED,
             candidate_source_kind=candidate.source_kind,
         )
+
+    def approve_undated(
+        self,
+        workspace_id: str,
+        candidate_id: str,
+        *,
+        current_source: RawArtifact,
+        time_basis: DecisionTimeBasis,
+        reviewer_id: str,
+        expected_candidate_fingerprint: str,
+        reason: str,
+        resolution: CandidateReviewResolution | None = None,
+        supersedes_decision_id: str | None = None,
+        now: datetime | None = None,
+    ) -> tuple[UndatedDecisionRecord, UndatedDecisionReceipt]:
+        """Confirm a source decision without selecting an effective date.
+
+        The Host supplies its authorized current artifact under the same lock
+        used for source edits and review. Omission of a date on the regular
+        approval path never selects this operation.
+        """
+        if time_basis != DecisionTimeBasis.UNKNOWN or (resolution and resolution.valid_from is not None):
+            raise MaterializationBlockedError("INVALID_VALID_TIME", "undated review requires UNKNOWN and no date")
+        reviewer_id = _required_text(reviewer_id, "reviewer_id")
+        reason = _required_text(reason, "review reason")
+        candidate, fingerprint = self._load_candidate(workspace_id, candidate_id)
+        if fingerprint != expected_candidate_fingerprint:
+            raise MaterializationBlockedError("APPROVAL_STALE", "approval fingerprint does not match")
+        if candidate.source_candidate is None or candidate.claim_type is not ClaimType.DECISION:
+            raise MaterializationBlockedError("SEMANTIC_CLASS_NOT_AUTHORITATIVE", "only source decision candidates can be confirmed undated")
+        self._verify_undated_source(candidate, current_source)
+        reviewed = _apply_view_review_resolution(candidate, resolution)
+        at = (now or datetime.now(UTC)).astimezone(UTC)
+        policy = self.policy.evaluate(
+            reviewed, expected_workspace_id=workspace_id, source_verified=True,
+            existing=None, now=at, write_policy=self.decision_materializer, confirm_time_unknown=True,
+        )
+        if not policy.materializable_after_review:
+            raise MaterializationBlockedError(
+                policy.reason_codes[0], "candidate is not eligible for undated review", reason_codes=policy.reason_codes,
+            )
+        binding = reviewed.primary_evidence
+        try:
+            return self.store.confirm_undated_decision(
+                workspace_id=workspace_id, subject=reviewed.subject, relation=reviewed.relation,
+                value=reviewed.value, source_episode_id=binding.source_episode_id,
+                source_evidence_refs=reviewed.decision_evidence_refs,
+                provenance_run_id=reviewed.provenance_run_id,
+                decision_ref="dref_semantic_" + _sha256_json([workspace_id, candidate_id]),
+                candidate_id=candidate_id, candidate_fingerprint=fingerprint,
+                authorization_id=reviewer_id, authorization_reason=reason,
+                supersedes_decision_id=supersedes_decision_id, confirmed_at=at,
+                semantic_review={
+                    **_policy_event_metadata(policy),
+                    "review_resolution": resolution.to_dict() if resolution else None,
+                },
+            )
+        except ValueError as error:
+            raise MaterializationBlockedError("UNDATED_REVIEW_CONFLICT", str(error)) from error
+
+    def promote_undated(
+        self,
+        workspace_id: str,
+        undated_decision_id: str,
+        *,
+        current_source: RawArtifact,
+        valid_from: date | datetime,
+        time_basis: DecisionTimeBasis,
+        reviewer_id: str,
+        reason: str,
+        supersedes_decision_id: str | None = None,
+        now: datetime | None = None,
+    ) -> tuple[DecisionRecord, UndatedDecisionRecord, UndatedDecisionReceipt]:
+        """Apply a separately reviewed effective date to a confirmed source decision."""
+        if time_basis not in (DecisionTimeBasis.USER_SELECTED, DecisionTimeBasis.USER_TODAY) or (
+            not isinstance(valid_from, date)
+            or (isinstance(valid_from, datetime) and valid_from.utcoffset() is None)
+        ):
+            raise MaterializationBlockedError("INVALID_VALID_TIME", "promotion requires an explicit date or timezone-aware instant")
+        reviewer_id = _required_text(reviewer_id, "reviewer_id")
+        reason = _required_text(reason, "review reason")
+        record = self.store.get_undated_decision(workspace_id, undated_decision_id)
+        if record is None:
+            raise MaterializationBlockedError("UNDATED_NOT_FOUND", "undated decision is unavailable in this workspace")
+        if record.memory_state is not UndatedDecisionState.ACTIVE:
+            raise MaterializationBlockedError("UNDATED_NOT_ACTIVE", "only an active undated decision can be promoted")
+        receipt = next((item for item in self.store.get_undated_decision_receipts(workspace_id, undated_decision_id)
+                        if item.candidate_id is not None), None)
+        if receipt is None:
+            raise MaterializationBlockedError("UNDATED_REVIEW_CONFLICT", "undated decision has no original candidate approval")
+        candidate, fingerprint = self._load_candidate(workspace_id, receipt.candidate_id)
+        if fingerprint != receipt.candidate_fingerprint:
+            raise MaterializationBlockedError("APPROVAL_STALE", "original approval fingerprint does not match")
+        self._verify_undated_source(candidate, current_source)
+        try:
+            return self.store.promote_undated_decision_to_dated(
+                workspace_id=workspace_id, undated_decision_id=undated_decision_id,
+                valid_from=_as_utc(valid_from), time_basis=time_basis, promoted_at=now,
+                authorization_id=reviewer_id, authorization_reason=reason,
+                supersedes_decision_id=supersedes_decision_id,
+            )
+        except ValueError as error:
+            raise MaterializationBlockedError("UNDATED_PROMOTION_CONFLICT", str(error)) from error
+
+    def _verify_undated_source(self, candidate: MaterializableDecisionCandidate, current_source: RawArtifact) -> None:
+        source = candidate.source_candidate
+        if not source or not source.provenance.verify(current_source) or not self._source_verified(candidate):
+            raise MaterializationBlockedError("PROVENANCE_INVALID", "current source version or original quote failed verification")
 
     def reject(
         self,
