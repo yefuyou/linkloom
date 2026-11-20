@@ -124,6 +124,25 @@ class UnifiedAskService:
                                 if item.get("evidence", {}).get("verified") is True)),
                             "decision_ids": [item["decision_id"] for item in history],
                             "current_value": (view.get("effective") or {}).get("value")})
+        # Confirmed decisions whose effective time is unknown are trusted slot
+        # identities too; answers about them stay explicitly time-unknown.
+        known = {(normalize_temporal_component(slot["subject"]), normalize_temporal_component(slot["relation"]))
+                 for slot in trusted}
+        registry = self.app.store.source_registry
+        undated: dict[tuple[str, str], list[Any]] = {}
+        for record in self.app.store.list_undated_decisions(workspace_id, active_only=True):
+            key = (normalize_temporal_component(record.subject), normalize_temporal_component(record.relation))
+            if key in known or not record.source_evidence_refs or not all(
+                    registry.has_evidence(workspace_id, ref) for ref in record.source_evidence_refs):
+                continue
+            undated.setdefault(key, []).append(record)
+        for records in undated.values():
+            trusted.append({"workspace_id": workspace_id, "reviewed": True,
+                            "slot_id": decision_slot_id(records[-1].subject, records[-1].relation),
+                            "subject": records[-1].subject, "relation": records[-1].relation,
+                            "values": list(dict.fromkeys(record.value for record in records)),
+                            "reference_values": [], "decision_ids": [record.undated_decision_id for record in records],
+                            "current_value": None, "effective_time_unknown": True})
         return trusted
 
     @staticmethod
@@ -131,7 +150,7 @@ class UnifiedAskService:
         result = {"schema_version": "product-ask/v1", "query": run.query,
                 "workspace_id": run.workspace_id, "scope": deepcopy(run.scope),
                 "path": {"DECISION": "DETERMINISTIC", "CURRENT": "DETERMINISTIC",
-                         "AS_OF": "DETERMINISTIC", "INVESTIGATION": "AGENT",
+                         "AS_OF": "DETERMINISTIC", "HISTORY": "DETERMINISTIC", "INVESTIGATION": "AGENT",
                          "SOURCE_RELATION": "SOURCE_RELATION_INVESTIGATION"}.get(run.route["intent"]),
                 "route": dict(run.route, decided_by=run.route.get("decided_by", "rule")),
                 "decided_by": run.route.get("decided_by", "rule"),
@@ -468,6 +487,8 @@ class UnifiedAskService:
         if result["path"] == "DETERMINISTIC":
             result["status"] = "COMPLETED"
             self._verified_view(result, view)
+            self._apply_decision_evolution(result, run, values, as_of)
+            result["execution"] = self._deterministic_execution(result)
             return result, 200
         service = self.investigation()
         if service is None or not service.config()["available"]:
@@ -670,6 +691,12 @@ class UnifiedAskService:
         service = self.investigation()
         admission = admit_route(context, route, leads_allowed=service is not None and service.orchestration_enabled())
         candidate, as_of = admission.candidate, admission.as_of
+        if (admission.executor is None and admission.reason == "NO_VALID_RECORD_AT_TIME" and candidate is not None
+                and route.domain == "DECISION" and route.intent in {"CURRENT", "AS_OF"}
+                and self._has_undated(run.workspace_id, *candidate.identity)):
+            # The slot's only confirmed content has an unknown effective time: answer
+            # deterministically as "confirmed, time unknown" instead of "no record".
+            admission = replace(admission, executor="decision", reason="NONE")
         if admission.executor is None:
             result, status = self._router_stop(run, route, admission.reason)
             result['router']['candidate_ids'] = list(route.candidate_ids) if candidate else []
@@ -861,6 +888,97 @@ class UnifiedAskService:
         with self._lock:
             self._runs[snapshot["run"]["id"]] = (pinned, service)
         return self._from_snapshot(pinned, snapshot), 202
+
+    @staticmethod
+    def _deterministic_execution(result) -> dict[str, Any]:
+        """What actually ran for a deterministic answer; nothing is estimated or filled in."""
+        router = result.get("router") or {}
+        attempted = router.get("source") == "llm" or bool(router.get("attempted"))
+        reply = router.get("provider_reply")
+        return {
+            "schema_version": "ask-execution/v1",
+            "answer_path": "VERIFIED_STORE_LOOKUP",
+            "answer_provider_calls": 0,
+            "router_provider_calls": 1 if attempted else 0,
+            # Provider-reported router usage only; absent means not reported, never zero.
+            "router_reported_usage": deepcopy(reply) if reply else None,
+            "agent_run_id": None,
+        }
+
+    def _has_undated(self, workspace_id, subject, relation) -> bool:
+        return any(
+            normalize_temporal_component(record.subject) == normalize_temporal_component(subject)
+            and normalize_temporal_component(record.relation) == normalize_temporal_component(relation)
+            for record in self.app.store.list_undated_decisions(workspace_id, active_only=True)
+        )
+
+    def _apply_decision_evolution(self, result, run, values, as_of) -> None:
+        """Overlay the shared read-only evolution query on a deterministic decision answer.
+
+        Confirmed decisions with an unknown effective time are never ordered into
+        CURRENT/AS_OF: when one could change the answer, the answer becomes
+        "needs verification" with both sides' evidence. HISTORY lists dated and
+        undated records separately. No model call happens on this path.
+        """
+        from linkloom.evolution import decision_evolution
+        database = self.app.repository.database_path
+        if database == ":memory:":
+            return
+        history = run.route.get("intent") == "HISTORY"
+        mode = "HISTORY" if history else "AS_OF" if as_of else "CURRENT"
+        workspace_id = run.workspace_id
+
+        def authorize_source(ws, source_id, _version):
+            # Access only: the query itself rejects stale versions and hashes.
+            if ws != workspace_id:
+                return False
+            source = self.app.repository.get_source(ws, source_id)
+            return source is not None and bool(source["active"])
+
+        evolution = decision_evolution(
+            database, workspace_id=workspace_id, authorize_source=authorize_source,
+            subject=values["subject"], relation=values["relation"], mode=mode,
+            as_of=result["scope"].get("as_of") if mode == "AS_OF" else None,
+        )
+        undated = [item for item in evolution["undated"] if item["memory_state"] == "ACTIVE"]
+        result["evolution"] = {
+            "mode": mode, "status": evolution["status"], "reasons": list(evolution["reasons"]),
+            "dated": deepcopy(evolution["dated"]), "undated": deepcopy(evolution["undated"]),
+        }
+        if history:
+            result["conclusions"] = [
+                {"kind": "DECISION_HISTORY_ENTRY", "value": item["value"], "decision_id": item["decision_id"],
+                 "valid_from": item["valid_from"], "valid_to": item["valid_to"],
+                 "memory_state": item["memory_state"], "evidence_status": item["evidence_status"]}
+                for item in evolution["dated"]
+            ] + [
+                {"kind": "UNDATED_DECISION", "value": item["value"], "decision_id": item["decision_id"],
+                 "valid_from": None, "memory_state": item["memory_state"],
+                 "evidence_status": item["evidence_status"]}
+                for item in evolution["undated"]
+            ]
+            result["status"] = "COMPLETED" if evolution["status"] == "FOUND" else "INSUFFICIENT"
+            if evolution["undated"]:
+                result["uncertainty"] = {"unknown_fields": ["effective_time"],
+                    "statement": "Some confirmed decisions have no known effective time; they are listed "
+                                 "separately and not placed in the time order."}
+            return
+        if not undated:
+            return  # dated-only slots keep the existing verified answer unchanged
+        blocking = "EFFECTIVE_TIME_UNKNOWN" in evolution["reasons"] or evolution["status"] == "CONFLICT"
+        if blocking:
+            result["status"] = "INSUFFICIENT"
+            result["conclusions"] = []
+            result["uncertainty"] = {
+                "unknown_fields": ["effective_time"], "reasons": list(evolution["reasons"]),
+                "statement": "A confirmed decision for this slot has no known effective time, so the "
+                             f"{'current' if mode == 'CURRENT' else 'historical'} value cannot be stated "
+                             "with certainty. Both records and their evidence are shown.",
+            }
+        else:
+            result["uncertainty"] = dict(result.get("uncertainty") or {}, undated_note=(
+                "Confirmed decisions with an unknown effective time exist for this slot; "
+                "they are not used to assert the value at this time."))
 
     @staticmethod
     def _verified_view(result: dict[str, Any], view: dict[str, Any]) -> None:

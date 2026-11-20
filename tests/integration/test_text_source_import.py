@@ -174,3 +174,30 @@ def test_existing_database_gains_source_metadata_columns(tmp_path):
         assert tuple(row) == (None, None, 1)
     finally:
         repository.close()
+
+
+def test_plain_notes_decision_can_be_approved_with_reviewer_chosen_effective_date(tmp_path):
+    """The reviewer supplies the effective date; it need not be written in plain notes."""
+    base, server, worker, app = _start_product_server(tmp_path, [_not_stated_claim("Wrenwell")])
+    try:
+        _workspace(base)
+        status, payload = _client(base, "/api/sources/import", method="POST",
+                                  data={"name": "weekly.md", "content": PLAIN_NOTES})
+        assert status == 202
+        _wait_source(base, payload["source"]["source_id"])
+        (candidate,) = _client(base, "/api/review/candidates")[1]["candidates"]
+        path = f"/api/review/candidates/{candidate['candidate_id']}/approve"
+        status, result = _client(base, path, method="POST", data={
+            "reviewer_id": "local-user", "reason": "Confirmed in review", "subject": "银杏项目"})
+        assert status == 409, "content approval still needs an effective date in the dated path"
+        status, result = _client(base, path, method="POST", data={
+            "reviewer_id": "local-user", "reason": "Confirmed in review", "subject": "银杏项目",
+            "valid_from": "2026-11-01"})
+        assert status == 200 and result["workflow_state"] == "MATERIALIZED", result
+        (decision,) = _client(base, "/api/decisions")[1]["decisions"]
+        assert (decision["subject"], decision["value"]) == ("银杏项目", "Wrenwell")
+        assert decision["valid_from"].startswith("2026-11-01")
+        assert decision["evidence"][0]["verified"] is True
+        assert decision["evidence"][0]["quote"] == PLAIN_NOTES
+    finally:
+        _stop_product_server(server, worker, app)
