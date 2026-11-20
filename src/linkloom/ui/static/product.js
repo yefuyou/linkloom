@@ -850,6 +850,13 @@
   }
 
   function renderAskResult(result, viewToken) {
+    _renderAskResult(result, viewToken);
+    if (viewToken === state.agentViewToken) {
+      window.onLinkLoomAskResult?.(result, document.getElementById("ask-result"), askLocale(result?.query));
+    }
+  }
+
+  function _renderAskResult(result, viewToken) {
     if (viewToken !== state.agentViewToken) return;
     const target = document.getElementById("ask-result");
     if (!target) return;

@@ -32,6 +32,7 @@ STATIC_FILES = {
     "/product.js": ("product.js", "text/javascript; charset=utf-8"),
     "/product-task-result.js": ("product-task-result.js", "text/javascript; charset=utf-8"),
     "/product-task-review.js": ("product-task-review.js", "text/javascript; charset=utf-8"),
+    "/product-workbench.js": ("product-workbench.js", "text/javascript; charset=utf-8"),
 }
 
 
