@@ -25,10 +25,13 @@
       dialog.showModal();
     });
     switcher.addEventListener("click", () => {
+      dialog.addEventListener("close", () => picker.focus(), {once: true});
       dialog.close();
-      picker.focus();
     });
-    dialog.querySelector("#new-workspace")?.addEventListener("click", () => dialog.close());
+    dialog.querySelector("#new-workspace")?.addEventListener("click", () => {
+      dialog.addEventListener("close", () => document.getElementById("workspace-name")?.focus(), {once: true});
+      dialog.close();
+    });
   }
 
   function selectedCitation(source, reference) {
@@ -219,9 +222,10 @@
         const summary = glossary.querySelector("summary");
         summary.textContent = language("Workspace terminology", "工作区术语");
         const relation = glossary.querySelector("#feedback-relation");
-        if (relation && !relation.options.length) {
-          glossary.querySelector("#feedback-form").hidden = true;
-          glossary.querySelector("#feedback-form").after(element("p",
+        const form = glossary.querySelector("#feedback-form");
+        if (form && !form.hidden && relation && !relation.options.length) {
+          form.hidden = true;
+          form.after(element("p",
             language("Approve a decision with a relation before proposing new terms.", "批准含决议关系的记录后，可为该关系提交新术语。"),
             "workbench-subtle"));
         }

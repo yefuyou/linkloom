@@ -101,13 +101,13 @@
   flex-wrap: nowrap;
   justify-content: flex-end;
   min-width: 0;
-  max-width: 250px;
+  max-width: 300px;
   width: auto;
   margin: 0;
 }
 .workbench-header .workspace-label { gap: .45rem; white-space: nowrap; }
 .workbench-header #workspace-picker, .workbench-header #workspace {
-  width: clamp(100px, 12vw, 180px);
+  width: clamp(120px, 17vw, 235px);
   max-width: 100%;
   min-width: 0;
   padding: 8px;
@@ -280,7 +280,7 @@
   .workbench-header .primary-nav { grid-row: 2; grid-column: 1 / -1; width: 100%; }
   .workbench-header .primary-nav a { flex: 1; }
   .workbench-header .workspace-control, .workbench-header .header-controls { order: 0; }
-  .workbench-header #workspace-picker, .workbench-header #workspace { width: clamp(95px, 22vw, 180px); }
+  .workbench-header #workspace-picker, .workbench-header #workspace { width: clamp(95px, 32vw, 220px); }
 }
 @media (max-width: 680px) {
   .workbench-header { gap: 8px 10px; }
