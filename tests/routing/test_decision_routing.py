@@ -193,17 +193,15 @@ def test_explicit_subject_relation_does_not_call_optional_model():
     assert provider.requests == []
 
 
-def test_model_intent_overrides_the_regex_intent_clue_on_a_rule_bound_question():
-    # "changed" makes the rule intent INVESTIGATION; the model reads the negation and says CURRENT.
+def test_a_rule_bound_question_makes_no_selector_call_and_a_broken_selector_cannot_degrade_it():
+    # The rules already bind the single slot, so no semantic disambiguation is needed: no model call,
+    # and an invalid or failing selector can never turn the answerable question into CLARIFY.
     question = "Which platform is Juniper using now, not the one that changed?"
     assert classify_task(question)["intent"] == "INVESTIGATION"
-    provider = Selector(json.dumps(dict(intent="CURRENT", slot_id=slot()["slot_id"], as_of=None, entity_mentions=[])))
-    result = route_question(question, [slot()], RESOLVER, workspace_id="one", provider_factory=lambda: provider)
-    assert result["route"] == "CURRENT" and result["decided_by"] == "llm" and provider.requests
-    # A failed model reply is never read as "the rules were right" when the wording reads as an investigation.
-    broken = Selector(RuntimeError("down"))
-    result = route_question(question, [slot()], RESOLVER, workspace_id="one", provider_factory=lambda: broken)
-    assert result["route"] == "CLARIFY" and result["scope"] is None and result["llm_error"] == "SELECTION_UNAVAILABLE"
+    for provider in (Selector(RuntimeError("down")), Selector("not json")):
+        result = route_question(question, [slot()], RESOLVER, workspace_id="one", provider_factory=lambda: provider)
+        assert provider.requests == [] and result["llm_attempted"] is False and result["llm_error"] is None
+        assert result["route"] == "INVESTIGATION" and result["scope"]["subject"] == "Juniper"
 
 
 def test_llm_cannot_invent_a_date():

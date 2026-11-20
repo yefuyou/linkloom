@@ -177,24 +177,17 @@ def route_question(query: str, slots: list[dict[str, Any]], resolver: Any, *,
     # which _mention_verdict checks instead, so the rule guess never overrides a valid model choice.
     safety, explicit = discovery["entity_check"], bool(subject or relation)
     conflicting = bool(candidates and candidates[0].get("conflicting_mentions"))
-    # Only an explicit (user-authorised) scope with no INVESTIGATION wording stays model-free. Any other
-    # question with a selector goes to the model, which alone decides intent and slot. An explicit scope
-    # is never changed by the model; a failed or abstaining reply keeps it and the rule intent.
-    settled = explicit and task["intent"] != "INVESTIGATION"
+    # Router off: the selector runs only when the rules left the scope unresolved (real semantic
+    # disambiguation). A scope the deterministic path already bound (explicit or discovered) is answered
+    # without a model call, so an invalid selector reply can never degrade an answerable question. An
+    # explicit unknown name (hard_veto) is already a deterministic NO_MATCH and needs no model either.
     guarded, verdict = True, None
-    if candidates and provider_factory is not None and not settled:
+    if selected is None and candidates and provider_factory is not None and not safety["hard_veto"]:
         llm_attempted = True
-        keep = selected if explicit else None
-        selected = keep
         try:
             choice = _select(provider_factory(), query, candidates, task, date, date_unresolved=bool(date_error))
             if choice is None:
                 llm_error = "NO_VALID_SINGLE_SELECTION"
-            elif explicit:
-                # The user-authorised scope is never changed. The model decides only the intent, and an
-                # abstaining reply (slot_id null) leaves the rule intent in place.
-                if choice["slot_id"] is not None:
-                    route, task["supported"] = choice["intent"], True
             elif choice["slot_id"] is None:  # the model's own abstention
                 llm_error = "NO_VALID_SINGLE_SELECTION"
             else:

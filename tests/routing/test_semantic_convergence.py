@@ -33,13 +33,15 @@ def test_supplier_change_reason_routes_investigation():
     assert result["route"] == "INVESTIGATION" and result["scope"]["subject"] == "Juniper"
     model = reply(slot()["slot_id"], intent="INVESTIGATION")
     result = route(question, [slot()], model)
-    assert result["route"] == "INVESTIGATION" and result["decided_by"] == "llm"
+    # Rule-bound: the deterministic path answers and the selector is not called.
+    assert result["route"] == "INVESTIGATION" and result["decided_by"] != "llm" and model.requests == []
 
 
 def test_negated_current_question_follows_the_model_not_the_regex_clue():
-    question = "Which platform is Juniper using now, not the one it changed from?"
+    # Ambiguous candidates: the selector is genuinely needed, and its intent beats the regex clue.
+    question = "Which platform are we using now, not the one it changed from?"
     assert classify_task(question)["intent"] == "INVESTIGATION"
-    result = route(question, [slot()], reply(slot()["slot_id"]))
+    result = route(question, ambiguous_slots(), reply(slot()["slot_id"]))
     assert result["route"] == "CURRENT" and result["decided_by"] == "llm"
 
 
@@ -93,16 +95,18 @@ def test_explicit_subject_and_relation_skip_the_model():
 
 def test_model_slot_outside_candidates_is_rejected_and_never_rebound_by_rules():
     provider = reply("not-a-candidate")
-    result = route("Which platform is Juniper using now?", [slot()], provider)
+    result = route("Which platform are we using now?", ambiguous_slots(), provider)
     assert provider.requests and result["route"] == "CLARIFY" and result["scope"] is None
     assert result["decided_by"] == "fallback" and result["llm_error"] == "NO_VALID_SINGLE_SELECTION"
 
 
-def test_an_ordinary_question_is_decided_by_the_model_even_when_rules_bind_one_slot():
-    provider = reply(slot()["slot_id"], intent="INVESTIGATION")
-    result = route("How has Juniper's platform evolved over time?", [slot()], provider)
-    assert provider.requests and result["route"] == "INVESTIGATION" and result["decided_by"] == "llm"
-    assert result["scope"]["subject"] == "Juniper"
+def test_an_ordinary_question_the_rules_bind_makes_no_selector_call():
+    # Router off: an evolution question the deterministic path can answer is answered directly.
+    question = "How has Juniper's platform evolved over time?"
+    for provider in (reply(slot()["slot_id"], intent="INVESTIGATION"), Selector("not json")):
+        result = route(question, [slot()], provider)
+        assert provider.requests == [] and result["decided_by"] != "llm"
+        assert result["route"] == classify_task(question)["intent"] and result["scope"]["subject"] == "Juniper"
 
 
 def test_an_explicit_scope_with_a_plain_lookup_needs_no_model():
@@ -112,27 +116,33 @@ def test_an_explicit_scope_with_a_plain_lookup_needs_no_model():
     assert provider.requests == [] and result["route"] == "CURRENT" and result["scope"]["subject"] == "Juniper"
 
 
-def test_a_failed_or_abstaining_selector_keeps_the_explicit_scope_and_the_rule_intent():
+def test_an_explicit_scope_with_investigation_wording_keeps_the_scope_and_the_rule_intent():
+    # The explicit scope needs no disambiguation, so a failing or abstaining selector is never called.
     for provider in (reply(None), Selector("not json")):
         result = route("Why did Juniper change its platform?", [slot()], provider,
                        subject=slot()["subject"], relation=slot()["relation"])
-        assert provider.requests and result["route"] == "INVESTIGATION"
+        assert provider.requests == [] and result["route"] == "INVESTIGATION"
         assert result["scope"] == {"subject": slot()["subject"], "relation": slot()["relation"]}
 
 
-def test_model_abstention_on_a_rule_bound_investigation_wording_clarifies():
+def test_an_abstaining_selector_cannot_degrade_a_rule_bound_investigation_wording():
     question = "Which platform is Juniper using now, not the one that changed?"
     assert route(question, [slot()])["route"] == "INVESTIGATION"
     provider = reply(None)
     result = route(question, [slot()], provider)
+    assert provider.requests == [] and result["route"] == "INVESTIGATION" and result["scope"]["subject"] == "Juniper"
+    assert result["llm_error"] is None
+    # With ambiguous candidates the selector runs, and its abstention clarifies.
+    provider = reply(None)
+    result = route("Which platform are we using now, not the one that changed?", ambiguous_slots(), provider)
     assert provider.requests and result["route"] == "CLARIFY" and result["scope"] is None
     assert result["decided_by"] == "fallback" and result["llm_error"] == "NO_VALID_SINGLE_SELECTION"
 
 
 def test_model_as_of_mismatch_is_rejected_and_never_changes_the_date():
-    question = "Which platform was Juniper using on 2024-03-01, not the one that changed?"
+    question = "Which platform were we using on 2024-03-01, not the one that changed?"
     provider = reply(slot()["slot_id"], intent="AS_OF", as_of="2024-03-02")
-    result = route(question, [slot()], provider)
+    result = route(question, ambiguous_slots(), provider)
     assert provider.requests and result["route"] == "CLARIFY" and result["scope"] is None and result["as_of"] is None
     assert result["decided_by"] != "llm" and result["llm_error"] == "NO_VALID_SINGLE_SELECTION"
     settled = reply(slot()["slot_id"], intent="AS_OF", as_of="2024-03-02")
@@ -143,7 +153,7 @@ def test_model_as_of_mismatch_is_rejected_and_never_changes_the_date():
 
 def test_a_reply_without_entity_mentions_is_invalid_and_never_binds():
     provider = Selector(json.dumps(dict(intent="CURRENT", slot_id=slot()["slot_id"], as_of=None)))
-    result = route("Which platform is Juniper using now?", [slot()], provider)
+    result = route("Which platform are we using now?", ambiguous_slots(), provider)
     assert provider.requests and result["route"] == "CLARIFY" and result["scope"] is None
     assert result["decided_by"] == "fallback" and result["llm_error"] == "NO_VALID_SINGLE_SELECTION"
 

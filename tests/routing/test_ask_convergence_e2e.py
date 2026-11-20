@@ -9,7 +9,8 @@ from pathlib import Path
 
 import pytest
 
-from linkloom.agents.model_adapter import ModelAction, ModelResponse
+from linkloom.agents.model_adapter import ModelAction, ModelProviderError, ModelResponse
+from linkloom.ui.investigation import ProductInvestigationService
 from linkloom.ui.router_provider import RouterProvider
 from linkloom.ui.structured_router import PROMPT
 from linkloom.ui.unified_ask import UnifiedAskService
@@ -258,6 +259,43 @@ def test_router_off_keeps_the_rule_answer_and_unavailable_model_is_not_off(demo)
 
 def model_free_answer(result):
     return result["status"] == "COMPLETED"
+
+
+class Selector:
+    """Scripted investigation-service model: counts slot-selector calls and replies with an invalid selection."""
+
+    def __init__(self):
+        self.selector, self.other = 0, 0
+
+    def complete(self, request):
+        if request.agent_id != "slot-selector":
+            self.other += 1
+            return ModelResponse(error=ModelProviderError("MODEL_UNAVAILABLE", "unavailable_model", "scripted",
+                                                          outcome="known_failure"))
+        self.selector += 1
+        return ModelResponse(action=ModelAction.final("not json"))
+
+
+@pytest.mark.parametrize("query,status,code,answer_values", [
+    ("Which supplier is Launch using now?", "COMPLETED", None, ["Wrenwell"]),
+    ("What supplier did Launch use on 2026-10-04?", "COMPLETED", None, ["Birchline"]),
+    ("How has Launch's supplier evolved?", "COMPLETED", None, ["Wrenwell"]),
+    ("Why did Launch switch suppliers?", "INVESTIGATING", None, []),
+    ("Which supplier is Zebra using now?", "NEEDS_SCOPE", "DECISION_SCOPE_NO_MATCH", []),
+])
+def test_router_off_answers_rule_resolved_questions_without_the_selector(demo, query, status, code, answer_values):
+    # Router off with a selector-capable investigation service: a question the deterministic path already
+    # resolves makes no selector call, so an invalid selector reply can never degrade it to NEEDS_SCOPE.
+    model = Selector()
+    investigation = ProductInvestigationService(demo.app, model_factory=lambda _query: model, external_provider=False)
+    service = UnifiedAskService(demo.app, lambda: investigation, graph_service=False, slot_embedder=None)
+    try:
+        result, _ = service.ask(dict(query=query, workspace_id=demo.app._workspace_id()))
+    finally:
+        investigation.close(timeout=5)
+    assert model.selector == 0, result
+    assert result["status"] == status and values(result) == answer_values, result
+    assert (result.get("error") or {}).get("code") == code
 
 
 @pytest.mark.parametrize("mode", MODES)
