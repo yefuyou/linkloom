@@ -102,6 +102,25 @@ def test_checkpoint_resume_run_pays_accepted_tasks_once(make_env):
         counts[worker.description] = counts.get(worker.description, 0) + worker.calls
     assert counts == {Q_SUCC: 3, Q_OWNER: 3, Q_LEADER: 3} and len(world.supervisor_requests) == 1
     assert final["status"] == "COMPLETED"
+    # E2E #12: the trace read path projects the run's own Provider journals (#135). Resumed branches
+    # are REUSED, never re-billed; reservations, reported usage, estimate and bill stay separate.
+    status, traced = env.run_trace(run_id)
+    assert status == 200
+    telemetry = traced["result"]["telemetry"]
+    assert telemetry["schema_version"] == "ask-telemetry/v1" and telemetry["run_id"] == run_id
+    calls = telemetry["provider_calls"]
+    paid = sum(counts.values()) + len(world.supervisor_requests) + 1  # + the synthesis comparison
+    assert calls["journal_coverage"] == "COMPLETE" and calls["attempted"] == calls["completed"] == paid
+    assert calls["uncertain"] == calls["failed"] == 0 and calls["pending"] == 0
+    assert traced["result"]["totals"]["requests_reserved"] == paid
+    recovery = {node["id"]: node["recovery_state"] for node in telemetry["nodes"] if node.get("event") == "checkpoint_state"}
+    assert recovery == {"succ": "REUSED", "owner": "REUSED", "leader": "REUSED"}
+    usage, cost = telemetry["usage"], telemetry["cost"]
+    assert usage["reported_input_tokens"] and usage["reserved_input_upper_bound"] == traced["result"]["totals"]["input_tokens_reserved"]
+    assert usage["reported_input_tokens"] < usage["reserved_input_upper_bound"]
+    assert cost["billing_status"] == "KNOWN_ESTIMATE" and cost["actual_billed_usd"] is None
+    assert 0 < cost["estimated_actual_usage_usd"] < cost["reserved_upper_bound_usd"]
+    assert usage["reported_cached_input_tokens"] is None and telemetry["total_duration_ms"] is None
     emit("resume-2-completed", dict(status=final["status"], run=final["parallel_investigation"]["status"],
          waves=waves(final), worker_calls_total=counts, supervisor_calls=len(world.supervisor_requests),
          checkpoint_rows=checkpoints(env, run_id), answer=final["parallel_investigation"]["answer"]["text"]))
@@ -113,6 +132,12 @@ def test_original_q3_and_counterexample_end_to_end_report(make_env):
     started_run, final = drive(env, ask_service(env, ScriptedRouter(), "llm_first"), Q3)
     state = trace_of(env, final["agent_run_id"])
     assert final["status"] == "COMPLETED" and state["entity_leads"] == [LEAD]
+    # The Router's journal is not linked to this run: totals are never presented as complete.
+    telemetry = state["telemetry"]
+    assert [node["kind"] for node in telemetry["nodes"]][0] == "router"
+    assert telemetry["provider_calls"]["journal_coverage"] == "PARTIAL"
+    assert telemetry["provider_calls"]["attempted"] is None and telemetry["provider_calls"]["observed_attempted"] > 0
+    assert telemetry["cost"]["estimated_actual_usage_usd"] is None and telemetry["cost"]["billing_status"] == "PARTIAL"
     answer, _ = assert_cited(final)
     emit("q3", dict(query=Q3, router=started_run["router"], status=final["status"], confirmed_scope=state["confirmed_scope"],
                     entity_leads=state["entity_leads"], answer=answer["text"]))
