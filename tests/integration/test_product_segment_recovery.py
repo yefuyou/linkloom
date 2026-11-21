@@ -268,3 +268,30 @@ def test_version_change_does_not_retry_or_attach_old_failed_attempt(tmp_path):
         assert all(item["source_version"] == current["source_version"] for item in current_attempts)
     finally:
         app.close()
+
+
+def test_decision_approved_during_partial_ingestion_survives_retry(tmp_path):
+    """E2E #5: a reviewed result from a successful segment is not overwritten or re-extracted by retry."""
+    provider = ScriptedProvider(malformed_replacement=1)
+    app = app_for(tmp_path, provider)
+    try:
+        source = import_fixture(app)
+        assert source["ingestion_status"] == "PARTIAL"
+        inbox = app.handle_get("/api/review/candidates")
+        candidate = next(item for item in inbox["candidates"] if item["proposed_value"] == "Birchline")
+        approved, status = app.handle_post(
+            f"/api/review/candidates/{candidate['candidate_id']}/approve",
+            {"reviewer_id": "release-reviewer", "reason": "Reviewed before recovery", "valid_from": "2026-10-06"})
+        assert status == 200 and approved["workflow_state"] == "MATERIALIZED"
+        before = app.handle_get(f"/api/decisions/{approved['decision_id']}")["decision"]
+
+        source = retry(app, source["source_id"])
+        assert source["ingestion_status"] == "COMPLETE"
+        assert provider.calls == Counter(initial=1, proposal=1, replacement=2)  # only the failed segment ran again
+        after = app.handle_get(f"/api/decisions/{approved['decision_id']}")["decision"]
+        assert after["authorization"]["receipt_id"] == before["authorization"]["receipt_id"]
+        assert (after["value"], after["valid_from"]) == ("Birchline", before["valid_from"])
+        pending = app.handle_get("/api/review/candidates")["candidates"]
+        assert [item["proposed_value"] for item in pending] == ["Wrenwell"]  # the recovered segment's Draft
+    finally:
+        app.close()
