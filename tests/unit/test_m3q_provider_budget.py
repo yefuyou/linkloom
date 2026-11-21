@@ -94,6 +94,21 @@ def test_original_task2_journal_final_no_longer_charges_unsent_internal_history(
         def complete(self, r):
             return ModelResponse(action=ModelAction.final('{}'), usage=ModelUsage(input_tokens=10, output_tokens=2))
     adapter = OfflineGemini(SimpleNamespace(generate_content=lambda **_: pytest.fail('no transport permitted')))
+    # The original three successful reservations stay spent. Request 4's mapped estimate
+    # (22983) and immutable user size (8792 JSON bytes) come from its durable Q3 artifact.
+    preflight = TaskProviderSession(tmp_path / 'preflight', TaskProviderLimits(**before['limits']), lambda: None)
+    prefix = before['attempts'][:3]
+    preflight.requests = len(prefix)
+    preflight.input_tokens = sum(row['input_reserved'] for row in prefix)
+    preflight.output_tokens = sum(row['output_reserved'] for row in prefix)
+    preflight.cost = sum(row['cost_reserved_usd'] for row in prefix)
+    preflight.attempts = deepcopy(prefix)
+    recorded = SimpleNamespace(estimate_input_tokens=lambda r: 22983,
+                               final_input_upper_bound=adapter.final_input_upper_bound)
+    fourth = replace(request(), sequence=4, user_input='u' * 8790,
+        generation_options=replace(request().generation_options, max_output_tokens=1027))
+    assert not preflight.prepare_request(recorded, fourth, 135168, 1027).final_only
+    assert preflight.attempts == prefix and preflight.cost == sum(row['cost_reserved_usd'] for row in prefix)
     session = TaskProviderSession(tmp_path, TaskProviderLimits(**before['limits']), lambda: None)
     session.requests = before['requests_reserved']
     session.input_tokens = before['input_tokens_reserved']
