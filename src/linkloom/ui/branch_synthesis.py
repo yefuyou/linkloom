@@ -190,6 +190,8 @@ def _compose(rows, gaps, unstarted, evidence_index, questions, comparison=None):
         for item in conclusion.get('unresolved_items', ()):
             unknowns.append(_unknown('BRANCH_UNRESOLVED_ITEM', question, name, item))
         uncertainty = conclusion.get('uncertainty') or {}
+        for field in uncertainty.get('unknown_fields', ()):
+            unknowns.append(_unknown('BRANCH_UNKNOWN_FIELD', question, name, field))
         if uncertainty.get('status') == 'conflicting_evidence':
             unknowns.append(_unknown('BRANCH_REPORTS_CONFLICTING_EVIDENCE', question, name))
     for name in sorted(gaps):
@@ -220,7 +222,7 @@ def _text(draft):
     if check['status'] in (UNAVAILABLE, UNCERTAIN):
         lines.append(f"Conflict check {check['status']}: answers were not verified against each other")
     for u in draft['unknowns']:
-        lines.append(f"Unknown: {u['question'] or u['branch'] or 'unassigned question'} ({u['reason']})")
+        lines.append(f"Unknown: {u.get('detail') or u['question'] or u['branch'] or 'unassigned question'} ({u['reason']})")
     return '\n'.join(lines)
 
 
@@ -277,7 +279,7 @@ def validate_aggregate_schema(rows, evidence_index):
     return check
 
 
-def _review(draft, rows, evidence_index, source_check, review_id):
+def _review(draft, rows, evidence_index, source_check, review_id, record=None):
     refs = sorted({c for a in draft['answers'] for c in a['citations']})
     payloads = [{k: v for k, v in a.items() if k not in ('claim_key', 'claim_value')}
                 for a in draft['answers']]
@@ -289,6 +291,8 @@ def _review(draft, rows, evidence_index, source_check, review_id):
         review_id, sorted(a['branch'] for a in draft['answers']), payloads, refs, ToolPolicyEnforcer(policy),
         validate_aggregate_evidence(rows, evidence_index, source_check),
         validate_aggregate_schema(rows, evidence_index))
+    if record is not None:
+        record.update(performed=True, **decision.to_dict())
     if decision.decision == 'evidence_sufficient':
         return None
     failed = [c.get('reason_code') for c in decision.checks if c.get('status') != 'pass']
@@ -313,16 +317,17 @@ def synthesize_reviewed(rows, gaps, unstarted, evidence_index, questions=None, s
                         review_id='aggregate-review', comparison=None):
     """Synthesize, review the aggregate, and fall back instead of ever raising."""
     draft = None
+    review = dict(performed=False, decision=None)
     try:
         draft = synthesize(rows, gaps, unstarted, evidence_index, questions, comparison)
-        reason = _review(draft, rows, evidence_index, source_check, review_id) if draft['answers'] else None
+        reason = _review(draft, rows, evidence_index, source_check, review_id, review) if draft['answers'] else None
     except Exception:
         reason = 'AGGREGATE_SYNTHESIS_FAILED'
     try:
         if reason is None:
-            return dict(draft, published=True, fallback_reason=None,
+            return dict(draft, published=True, fallback_reason=None, reviewer=review,
                         reviewed_at=datetime.now(timezone.utc).isoformat())
-        return _fallback(draft['status'] if draft else 'UNKNOWN', draft, evidence_index, reason)
+        return dict(_fallback(draft['status'] if draft else 'UNKNOWN', draft, evidence_index, reason), reviewer=review)
     except Exception:
         return dict(status='UNKNOWN', answers=[], conflicts=[], unknowns=[], evidence=[], text='',
                     published=False, fallback_reason='AGGREGATE_SYNTHESIS_FAILED')

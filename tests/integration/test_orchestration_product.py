@@ -169,6 +169,22 @@ def test_single_question_needs_no_extra_worker(make_env):
     answer, evidence = assert_cited(result)
     assert SOURCE_REASON in json.dumps(answer) and {item["source_id"] for item in evidence.values()} == {
         env.source_ids[SOURCE_REASON]}
+    assert result['reviewer']['scope'] == 'aggregate'
+    assert result['reviewer']['performed'] is True and result['reviewer']['accepted'] is True
+    assert result['reviews']['workers']['task-1']['decision'] == 'evidence_sufficient'
+    assert result['reviews']['aggregate']['reviewer_agent_id'] == 'branch_synthesizer_review'
+
+
+def test_reviewed_partial_worker_preserves_cited_answer_and_exact_unknown_field(make_env):
+    world = World([delegation('answer_single')], {WHY: (SOURCE_REASON, 'Meridian A', 'gap')})
+    env = make_env(world)
+    _, result = started(env, WHY)
+    answer, _ = assert_cited(result)
+    assert result['status'] == 'PARTIAL' and SOURCE_REASON in answer['text']
+    assert 'rollout owner' in result['uncertainty']['unknown_fields']
+    assert 'Unknown: rollout owner' in answer['text']
+    assert result['reviewer']['performed'] is True and result['reviewer']['accepted'] is True
+    assert result['reviews']['workers']['task-1']['performed'] is True
 
 
 def test_independent_tasks_run_in_parallel_and_share_verified_evidence(make_env):
@@ -255,6 +271,8 @@ def test_every_task_failing_is_unknown_without_evidence(make_env):
     _, result = started(env)
     assert result["parallel_investigation"]["status"] == "UNKNOWN" and result["status"] == "UNKNOWN"
     assert not result["evidence"] and result["parallel_investigation"]["gaps"] == {"owner": "FAILED", "succ": "FAILED"}
+    assert result['reviewer']['scope'] == 'aggregate' and result['reviewer']['performed'] is False
+    assert result['reviews']['workers'] == {} and result['reviews']['aggregate']['performed'] is False
 
 
 def test_inspect_trace_and_cold_read_show_dag_evidence_and_answer(make_env):

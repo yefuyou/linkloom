@@ -100,7 +100,8 @@ def build_branch_row(name, question, status, checkpoint_dir, checkpointer, works
                           status=team['decision']['status']),
                       unresolved_items=[item['description'] for item in team['unresolved_items']],
                       uncertainty=dict(status=team['uncertainty']['status'],
-                                       statement=team['uncertainty']['statement']),
+                                       statement=team['uncertainty']['statement'],
+                                       unknown_fields=list(team['uncertainty']['unknown_fields'])),
                       # No claim_key: the Runtime result carries no verified subject/relation/time for a
                       # Worker, and the task text is not a fact identity. Same-meaning is judged by the
                       # bounded comparison in graph.synthesize, never by this row.
@@ -108,7 +109,7 @@ def build_branch_row(name, question, status, checkpoint_dir, checkpointer, works
                                                             'line_end', 'quote_sha256')}
                                 for item in evidence])
     return dict(run=dict(branch=name, run_id=status.run_id, thread_id=status.thread_id,
-                         review_id=review['review_id']), evidence=evidence, conclusion=conclusion)
+                         review_id=review['review_id'], reviewer=review), evidence=evidence, conclusion=conclusion)
 
 
 def render_query(task, upstream, context):
@@ -172,14 +173,12 @@ def _run(deps, task, query):
     session = TaskProviderSession(root, limits, deps.validate)
     status, error = None, None
     try:
-        turns = 3
-        if limits.max_requests < turns or limits.max_output_tokens < turns:
+        turns, output = OrchestrationLimits.worker_turn_budget(limits)
+        if not turns:
             session._error('TASK_PROVIDER_BUDGET_EXHAUSTED')
             raise ValueError('WORKER_BUDGET_INSUFFICIENT')
-        turns = min(turns + 1, limits.max_requests, limits.max_output_tokens)
         adapter = OutputBoundedAdapter(session.bind(deps.model_factory(task['description']), 'runtime'),
-                                        min(OrchestrationLimits.WORKER_MAX_OUTPUT_PER_REQUEST,
-                                            limits.max_output_tokens // turns))
+                                       output)
         engine = RuntimeEngine(vault_root=deps.vault, index_path=deps.index,
             checkpoint_dir=root / 'runtime', trace_dir=root / 'traces', model=adapter,
             memory_enabled=False, decision_memory_enabled=False,

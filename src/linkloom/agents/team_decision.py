@@ -285,7 +285,14 @@ def team_decision_final_instruction(final_protocol: str = SCHEMA_VERSION) -> str
             'uncertainty must always contain "unknown_fields"; when none are unknown, output '
             'exactly "unknown_fields":[] . '
             "Every material claim needs non-empty evidence_refs, and top-level evidence_refs must "
-            "be the ordered deduplicated union of all nested claim refs. For insufficient_evidence "
+            "be the ordered deduplicated union of all nested claim refs. If only part of the question "
+            "is supported by verified reads, use decision.status=partial, put only those supported "
+            "conclusions in decision.value with their evidence_refs, and set uncertainty.status=partial "
+            "with the exact unconfirmed fields in uncertainty.unknown_fields. Do not discard verified "
+            "partial conclusions into uncertainty.statement or set decision.value=null just because "
+            "another requested field is unknown. Search hits alone are not verified reads. "
+            "Use insufficient_evidence with decision.value=null only when no requested conclusion "
+            "can be supported. For insufficient_evidence "
             "with no verified passage supporting an uncertainty statement, set "
             "uncertainty.statement=null and uncertainty.evidence_refs=[]. Preserve a dated "
             "snapshot with an 'As of YYYY-MM-DD' qualifier.\n"

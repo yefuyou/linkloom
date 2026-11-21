@@ -513,6 +513,51 @@ def test_worker_session_is_closed_after_a_normal_run_and_leaves_no_provider_thre
     assert closed == [True] and _provider_threads() == []
 
 
+def test_worker_can_follow_three_search_read_pairs_then_use_its_reserved_final(tmp_path):
+    from linkloom.orchestration import worker as worker_module
+
+    class FollowLinks:
+        def __init__(self):
+            self.requests, self.refs = [], []
+
+        def complete(self, request):
+            self.requests.append(request)
+            number = len(self.requests)
+            if request.observation and request.observation.tool_id == 'read_verified_note':
+                self.refs.append(request.observation.value['evidence_id'])
+            if number % 2 == 1 and number < 7:
+                query = ['Meridian A', 'Cobalt B', 'Mira Chen'][number // 2]
+                action = ModelAction.tool(ToolCall(f'search-{number}', 'search_notes',
+                                                  dict(query=query, limit=5, source_context={})))
+            elif number < 7:
+                fact = [FACT['succ'], FACT['owner'], FACT['leader']][number // 2 - 1]
+                hit = next(item for item in request.observation.value if fact in item['quote'])
+                action = ModelAction.tool(ToolCall(f'read-{number}', 'read_verified_note', dict(note_ref=hit['evidence_id'])))
+            else:
+                assert request.final_only is True and request.available_tools == []
+                assert request.generation_options.thinking_level == 'low'
+                action = ModelAction.final(json.dumps(dict(
+                    schema_version='team-decision-result/v1',
+                    decision=dict(value='; '.join(FACT[key] for key in ('succ', 'owner', 'leader')),
+                                  status='approved', evidence_refs=self.refs),
+                    rationale=[], rejected_alternatives=[], actions=[], unresolved_items=[],
+                    uncertainty=dict(status='none', statement=None, unknown_fields=[], evidence_refs=[]),
+                    evidence_refs=self.refs)))
+            return ModelResponse(action=action, usage=ModelUsage(input_tokens=10, output_tokens=10))
+
+    model = FollowLinks()
+    world = World([], {})
+    limits = OrchestrationLimits.split(TOTAL, max_tasks=4, max_rounds=2)
+    limits = replace(limits, per_task=TaskProviderLimits(8, 1_000_000, 8192, .25, 120, 20, .02))
+    _, deps = build(tmp_path, world, limits=limits)
+    deps.model_factory = lambda _: model
+    task = dict(id='links', description=GOAL, epoch=0, attempt=1)
+    receipt = worker_module._run(deps, task, GOAL)
+    row, _, error = worker_module._gate(deps, task, receipt)
+    assert error is None and row['run']['reviewer']['decision'] == 'evidence_sufficient'
+    assert len(model.requests) == 7 and len(row['evidence']) == 3
+
+
 def test_a_timed_out_provider_call_is_uncertain_and_its_session_stops_accepting_work(tmp_path):
     from dataclasses import replace
     from linkloom.orchestration import worker as worker_module

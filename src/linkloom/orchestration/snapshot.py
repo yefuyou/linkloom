@@ -121,6 +121,13 @@ def render_snapshot(run_id, query, workspace, values, *, running, withheld=None,
         outcome['branches'] = [row['run'] for row in reviewed]
         merged = merge_evidence(reviewed)
         answer = values.get('answer')
+        worker_reviews = {task_id: deepcopy(row['run']['reviewer']) for task_id, row in rows.items()
+                          if isinstance(row['run'].get('reviewer'), dict)}
+        aggregate_review = deepcopy((answer or {}).get('reviewer') or dict(
+            performed=None, decision=None, reason='REVIEW_RECORD_UNAVAILABLE'))
+        outcome['reviews'] = dict(workers=worker_reviews, aggregate=aggregate_review,
+                                 unavailable_worker_reviews=[task_id for task_id in tasks if task_id not in worker_reviews])
+        snapshot['reviewer'] = aggregate_review
         snapshot.update(kind='success' if status == 'COMPLETE' else 'insufficient', error=None)
         snapshot['run'].update(status='completed', stage='ready')
         snapshot['evidence'] = [deepcopy(item) for item in merged.values()]
