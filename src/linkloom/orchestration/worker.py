@@ -58,14 +58,22 @@ class OutputBoundedAdapter:
         self.output_limit = output_limit
         self.capability = getattr(adapter, 'capability', None)
 
-    def complete(self, request):
+    def _bounded(self, request):
         options = request.generation_options
         output = min(options.max_output_tokens or self.output_limit, self.output_limit)
         thinking = options.thinking_level
         if request.final_only and thinking is None:
             thinking = "low"
         options = replace(options, max_output_tokens=output, thinking_level=thinking)
-        return self.adapter.complete(replace(request, generation_options=options))
+        return replace(request, generation_options=options)
+
+    def prepare_request(self, request):
+        request = self._bounded(request)
+        prepare = getattr(self.adapter, 'prepare_request', None)
+        return self._bounded(prepare(request) if prepare is not None else request)
+
+    def complete(self, request):
+        return self.adapter.complete(self._bounded(request))
 
 
 def build_branch_row(name, question, status, checkpoint_dir, checkpointer, workspace, source_versions, source_names):
@@ -121,9 +129,17 @@ def render_query(task, upstream, context):
         structured['entity_leads_unverified'] = context['entity_leads']
     if upstream:
         structured['verified_upstream_results'] = upstream
-    if not structured:
-        return task['description']
-    return task['description'] + '\n\ninvestigation_context=' + json.dumps(structured, ensure_ascii=False)
+    query = task['description']
+    query += (
+        '\nInvestigate the remaining requested objectives. Reuse verified upstream results. '
+        'Use existing multi-tool calls to batch independent searches and group reads of already known evidence IDs; '
+        'read a prerequisite before searching a dependent objective. Read passages relevant to an unresolved '
+        'objective, not incidental search hits. Search hits alone cannot support Final. '
+        'Stop once supported, or return a cited partial decision and exact unknown_fields when bounded '
+        'resources cannot complete the remaining objectives.')
+    if structured:
+        query += '\n\ninvestigation_context=' + json.dumps(structured, ensure_ascii=False)
+    return query
 
 
 def attempt_dir(deps, task):
@@ -177,7 +193,9 @@ def _run(deps, task, query):
         if not turns:
             session._error('TASK_PROVIDER_BUDGET_EXHAUSTED')
             raise ValueError('WORKER_BUDGET_INSUFFICIENT')
-        adapter = OutputBoundedAdapter(session.bind(deps.model_factory(task['description']), 'runtime'),
+        adapter = OutputBoundedAdapter(session.bind(deps.model_factory(task['description']), 'runtime',
+            final_input_upper_bound=OrchestrationLimits.WORKER_FINAL_INPUT_UPPER_BOUND,
+            final_output_upper_bound=output),
                                        output)
         engine = RuntimeEngine(vault_root=deps.vault, index_path=deps.index,
             checkpoint_dir=root / 'runtime', trace_dir=root / 'traces', model=adapter,

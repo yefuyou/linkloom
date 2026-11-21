@@ -187,6 +187,57 @@ def test_reviewed_partial_worker_preserves_cited_answer_and_exact_unknown_field(
     assert result['reviews']['workers']['task-1']['performed'] is True
 
 
+def test_captured_partial_final_with_null_unsupported_uncertainty_reaches_both_reviewers(make_env, monkeypatch):
+    from pathlib import Path
+    from copy import deepcopy
+    from linkloom.agents.team_decision import TeamDecisionResult
+    from linkloom.agents.model_adapter import ModelAction, ModelResponse
+    from linkloom.runtime.errors import ValidationError
+    from linkloom.tools.contracts import ToolCall
+    from tests.integration import test_orchestration_langgraph as lg
+
+    fixture = Path(__file__).resolve().parents[1] / 'fixtures/orchestration-final/partial-final.json'
+    captured = json.loads(fixture.read_text(encoding='utf8'))
+    with pytest.raises(ValidationError, match='uncertainty.evidence_refs is required'):
+        TeamDecisionResult.from_dict(captured)
+    corrected = deepcopy(captured)
+    corrected['uncertainty']['statement'] = None  # only the unsupported statement changes
+    assert TeamDecisionResult.from_dict(corrected).decision['status'] == 'partial'
+
+    class ReadThenPartial(lg.WorkerModel):
+        def complete(self, request):
+            self.calls += 1
+            if request.observation and request.observation.tool_id == 'read_verified_note':
+                self.refs.append(request.observation.value['evidence_id'])
+            if self.calls == 1:
+                action = ModelAction.tool(ToolCall('search', 'search_notes', dict(query='Cobalt B', limit=10, source_context={})))
+            elif self.calls == 2:
+                self.hits = request.observation.value
+                hit = next(item for item in self.hits if FACT['succ'] in item['quote'])
+                action = ModelAction.tool(ToolCall('read-succ', 'read_verified_note', dict(note_ref=hit['evidence_id'])))
+            elif self.calls == 3:
+                hit = next(item for item in self.hits if FACT['owner'] in item['quote'])
+                action = ModelAction.tool(ToolCall('read-owner', 'read_verified_note', dict(note_ref=hit['evidence_id'])))
+            else:
+                payload = deepcopy(corrected)
+                payload['decision']['evidence_refs'] = self.refs
+                payload['evidence_refs'] = self.refs
+                action = ModelAction.final(json.dumps(payload))
+            return ModelResponse(action=action)
+
+    monkeypatch.setattr(lg, 'WorkerModel', ReadThenPartial)
+    world = World([delegation('answer_single'), delegation('stop')], {GOAL: (FACT['succ'], 'Meridian A', 'ok')})
+    env = make_env(world)
+    _, result = started(env)
+    answer, evidence = assert_cited(result)
+    assert result['status'] == 'PARTIAL' and 'Mira Chen' in answer['text']
+    assert 'direct leader of Mira Chen' in result['uncertainty']['unknown_fields']
+    assert len(evidence) == 2 and result['reviewer']['accepted'] is True
+    assert result['reviews']['workers']['task-1']['decision'] == 'evidence_sufficient'
+    review_context = json.loads(world.supervisor_requests[1].user_input.split('context=', 1)[1])
+    assert 'direct leader of Mira Chen' in review_context['tasks'][0]['gaps']
+
+
 def test_independent_tasks_run_in_parallel_and_share_verified_evidence(make_env):
     world = World([delegation("delegate", [("succ", Q_SUCC, []), ("owner", Q_OWNER, [])]), delegation("stop")],
                   TASKS, barrier_for=(Q_SUCC, Q_OWNER), barrier=Barrier(2))
@@ -219,6 +270,9 @@ def test_dependent_task_receives_only_the_verified_upstream_results(make_env):
     upstream = json.loads(query.split("investigation_context=", 1)[1])["verified_upstream_results"]
     assert {item["task_id"] for item in upstream} == {"succ", "owner"}
     assert FACT["succ"] in query and FACT["owner"] in query
+    planning = json.loads(world.supervisor_requests[0].user_input.split('context=', 1)[1])['limits']
+    assert planning['worker_max_turns'] <= 12 and planning['worker_final_input_reserve'] == 135168
+    assert planning['worker_final_timeout'] <= planning['worker_seconds']
     tasks = {task["id"]: task for task in result["parallel_investigation"]["tasks"]}
     assert tasks["leader"]["depends_on"] == ["succ", "owner"] and tasks["leader"]["status"] == "accepted"
     assert_cited(result)
@@ -459,4 +513,7 @@ def test_a_result_the_reviewer_does_not_accept_is_a_gap_and_other_results_stay(m
     tasks = {task["id"]: task for task in result["parallel_investigation"]["tasks"]}
     assert tasks["owner"]["status"] == "failed" and tasks["owner"]["failure"] == "WORKER_REVIEW_FAILED"
     assert tasks["succ"]["status"] == "accepted" and FACT["owner"] not in json.dumps(result["evidence"])
+    context = json.loads(world.supervisor_requests[1].user_input.split('context=', 1)[1])
+    rejected = next(task for task in context['tasks'] if task['id'] == 'owner')
+    assert rejected['status'] == 'failed' and 'verified_decision' not in rejected
     assert_cited(result)

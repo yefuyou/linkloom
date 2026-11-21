@@ -11,6 +11,7 @@ import math
 
 from linkloom.agents.model_adapter import MAX_VERIFIED_EVIDENCE_CONTEXT_BYTES
 from linkloom.runtime.models import RunRequest
+from linkloom.runtime.model_loop import MAX_MODEL_REQUEST_CONTEXT_BYTES, MAX_PROVIDER_USER_INPUT_BYTES
 from linkloom.orchestration.supervisor import SUPERVISOR_OUTPUT_TOKENS
 from linkloom.ui.task_provider import TaskProviderLimits
 
@@ -98,6 +99,9 @@ class OrchestrationLimits:
     WORKER_MAX_STEPS = RunRequest.__dataclass_fields__['max_steps'].default
     WORKER_MAX_OUTPUT_PER_REQUEST = 4096
     WORKER_MIN_OUTPUT_PER_REQUEST = 1024  # keep space for a complete, cited Final when adding turns
+    # Bound retained history by the existing Runtime envelope, add the entire possible mapped initial
+    # input (including embedded evidence JSON), then framing. Do not assume today's prompt stays small.
+    WORKER_FINAL_INPUT_UPPER_BOUND = MAX_MODEL_REQUEST_CONTEXT_BYTES + MAX_PROVIDER_USER_INPUT_BYTES + 4096
     # A planning allowance per turn for an evidence-sized request plus framing.
     # Tool history and other fields can make the serialized request larger.
     WORKER_INPUT_ALLOWANCE = MAX_VERIFIED_EVIDENCE_CONTEXT_BYTES + 4096

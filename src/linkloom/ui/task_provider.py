@@ -107,8 +107,47 @@ class TaskProviderSession:
         self._workers.stop_accepting()
         self._workers.wait(deadline)
 
-    def bind(self, adapter, stage):
-        return _BudgetedTaskAdapter(self, adapter, stage)
+    def bind(self, adapter, stage, *, final_input_upper_bound=None, final_output_upper_bound=None):
+        return _BudgetedTaskAdapter(self, adapter, stage, final_input_upper_bound, final_output_upper_bound)
+
+    @staticmethod
+    def _input_reservation(adapter, request):
+        estimate = getattr(adapter, 'estimate_input_tokens', None)
+        size = (estimate(request) if estimate is not None else
+                len(json.dumps(request.to_dict(), ensure_ascii=False).encode('utf8')) + 4096)
+        if type(size) is not int or size < 1:
+            raise ValueError('INVALID_PROVIDER_INPUT_RESERVATION')
+        return size
+
+    def prepare_request(self, adapter, request, final_input_upper_bound, final_output_upper_bound=None):
+        """Keep capacity for a future bounded Final, without creating or releasing reservations.
+
+        The Runtime persists the returned Final-only request before sending it. Future input uses
+        the Runtime's hard context envelope, not today's smaller prompt: tool results can grow it.
+        Unknown/failed receipts remain spent, and a poisoned session never sends another call.
+        """
+        if request.final_only:
+            return request
+        with self.lock:
+            size = self._input_reservation(adapter, request)
+            output = request.generation_options.max_output_tokens
+            final_output = final_output_upper_bound or output
+            final_cost = self.limits.reservation_cost(final_input_upper_bound, final_output)
+            remaining = self.limits.max_seconds - (monotonic() - self.started)
+            can_continue = (not self.failure
+                and self.requests + 2 <= self.limits.max_requests
+                and self.input_tokens + size + final_input_upper_bound <= self.limits.max_input_tokens
+                and self.output_tokens + output + final_output <= self.limits.max_output_tokens
+                and self.cost + self.limits.reservation_cost(size, output) + final_cost <= self.limits.max_cost_usd + 1e-10
+                and remaining >= 2 * self.limits.request_timeout_seconds)
+        if can_continue:
+            return request
+        options = replace(request.generation_options, require_tool_call=False)
+        return replace(request, available_tools=[], final_only=True, generation_options=options,
+            recovery_guidance='Submit Final now within the remaining budget. Use only verified reads. '
+                'Return a cited partial decision for supported conclusions, or insufficient_evidence if none '
+                'are supported. Identify remaining unknown_fields. '
+                'An uncertainty statement without source support must be null with evidence_refs=[].')
 
     def record_validation(self, record):
         fields = {key: record[key] for key in ("provider_reply", "invalid_response_counts") if key in record}
@@ -154,8 +193,8 @@ class TaskProviderSession:
             except Exception:
                 return self._error('TASK_SOURCE_AUTHORIZATION_CHANGED')
             remaining = self.limits.max_seconds - (monotonic() - self.started)
-            # One byte per token plus conservative framing/schema allowance.
-            size = len(json.dumps(request.to_dict(), ensure_ascii=False).encode('utf8')) + 4096
+            # Same Provider mapping as complete(); count all sent history/schema plus framing.
+            size = self._input_reservation(adapter, request)
             output = request.generation_options.max_output_tokens
             cost = self.limits.reservation_cost(size, output)
             if (self.requests >= self.limits.max_requests
@@ -219,9 +258,17 @@ class TaskProviderSession:
 
 
 class _BudgetedTaskAdapter:
-    def __init__(self, session, adapter, stage):
+    def __init__(self, session, adapter, stage, final_input_upper_bound=None, final_output_upper_bound=None):
         self.session, self.adapter, self.stage = session, adapter, stage
         self.capability = getattr(adapter, 'capability', None)
+        self.final_input_upper_bound = final_input_upper_bound
+        self.final_output_upper_bound = final_output_upper_bound
+
+    def prepare_request(self, request):
+        if self.final_input_upper_bound is None:
+            return request
+        return self.session.prepare_request(self.adapter, request, self.final_input_upper_bound,
+                                            self.final_output_upper_bound)
 
     def complete(self, request):
         return self.session.complete(self.adapter, self.stage, request)

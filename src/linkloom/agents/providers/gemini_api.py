@@ -1617,6 +1617,16 @@ class GeminiProviderAdapter:
             raise ValidationError("Model plan response must be a JSON object.")
         return value
 
+    def estimate_input_tokens(self, request: ModelTurnRequest) -> int:
+        """Conservative bytes-as-tokens over exactly the mapped Provider input, plus framing.
+
+        Internal audit/history fields not sent by build_gemini_request are not charged twice.
+        This is a reservation upper bound, not a tokenizer or a billing estimate.
+        """
+        payload = build_gemini_request(request, configured_model_id=self.model_id,
+                                      max_input_bytes=self.max_input_bytes)
+        return len(json.dumps(payload, ensure_ascii=False, separators=(',', ':')).encode('utf8')) + 4096
+
     def complete(self, request: ModelTurnRequest) -> ModelResponse:
         try:
             payload = build_gemini_request(

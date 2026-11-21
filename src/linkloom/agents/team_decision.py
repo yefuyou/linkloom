@@ -292,9 +292,11 @@ def team_decision_final_instruction(final_protocol: str = SCHEMA_VERSION) -> str
             "partial conclusions into uncertainty.statement or set decision.value=null just because "
             "another requested field is unknown. Search hits alone are not verified reads. "
             "Use insufficient_evidence with decision.value=null only when no requested conclusion "
-            "can be supported. For insufficient_evidence "
+            "can be supported. For both partial and insufficient_evidence "
             "with no verified passage supporting an uncertainty statement, set "
-            "uncertainty.statement=null and uncertainty.evidence_refs=[]. Preserve a dated "
+            "uncertainty.statement=null and uncertainty.evidence_refs=[]; express the missing fields "
+            "only in uncertainty.unknown_fields. Never cite a passage merely to assert that an "
+            "unread or unrecorded fact is absent. Preserve a dated "
             "snapshot with an 'As of YYYY-MM-DD' qualifier.\n"
         )
     elif final_protocol == CLAIM_PROPOSAL_SCHEMA_VERSION:

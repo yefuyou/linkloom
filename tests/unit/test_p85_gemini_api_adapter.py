@@ -626,8 +626,12 @@ def test_gemini_final_only_wire_disables_tools_and_preserves_needed_context(keep
         adapter = OutputBoundedAdapter(GeminiProviderAdapter(GeminiSDKClientBridge(sdk)), 1248)
         adapter.complete(_request(available_tools=[read_note], generation_options=ModelGenerationOptions()))
         response = adapter.complete(request)
+        reserved_input = adapter.adapter.estimate_input_tokens(adapter._bounded(request))
 
     tool_round, body = captured
+    assert reserved_input >= len(json.dumps(body, ensure_ascii=False, separators=(',', ':')).encode('utf8'))
+    if keep_verified_read:
+        assert reserved_input < len(json.dumps(request.to_dict(), ensure_ascii=False).encode('utf8')) + 4096
     assert tool_round["generationConfig"]["maxOutputTokens"] == 1248
     assert "thinkingConfig" not in tool_round["generationConfig"]
     assert body["generationConfig"]["maxOutputTokens"] == 1248
@@ -646,6 +650,30 @@ def test_gemini_final_only_wire_disables_tools_and_preserves_needed_context(keep
     assert response.action is None and response.proposal is None
     assert response.error.code == "MODEL_RESPONSE_UNSUPPORTED"
     assert response.error.details["reason"] == "undeclared_tool"
+
+
+def test_future_final_envelope_covers_large_multi_tool_results_without_discarding_them():
+    from linkloom.agents.model_adapter import ModelToolCall
+    from linkloom.orchestration.limits import OrchestrationLimits
+    from linkloom.runtime.model_loop import MAX_MODEL_REQUEST_CONTEXT_BYTES, _bounded_model_request
+    calls, results = [], []
+    for number in range(16):
+        call = ModelToolCall(f'provider-{number}', ToolCall(f'rt-{number}', 'read_verified_note',
+            dict(note_ref=f'ev-{number}'), run_id='run_p85_1', task_id='task_p85_1',
+            agent_id='retrieval_agent', sequence=1))
+        calls.append(call)
+        results.append(ModelToolResult.for_call(run_id='run_p85_1', proposal_id='batch', ordinal=number,
+            model_call=call, result=ToolResult(call.runtime_call.call_id, 'read_verified_note', 'ok',
+                                             value=dict(quote='证' * 1400))))
+    turn = ModelToolTurn(proposal_id='batch', source_turn_id='run_p85_1:turn:1', source_sequence=1,
+                         tool_calls=calls, tool_results=results)
+    request, audit = _bounded_model_request(_request(turn_id='run_p85_1:turn:2', sequence=2,
+        available_tools=[], final_only=True, tool_turns=[turn]))
+    assert 60000 < audit['actual_bytes'] <= MAX_MODEL_REQUEST_CONTEXT_BYTES
+    adapter = GeminiProviderAdapter(FakeGeminiClient())
+    payload = build_gemini_request(request)
+    assert len(payload['contents'][2]['parts']) == 16  # non-redundant results still sent
+    assert adapter.estimate_input_tokens(request) <= OrchestrationLimits.WORKER_FINAL_INPUT_UPPER_BOUND
 
 
 def test_sdk_like_function_call_response_is_parsed_without_importing_sdk_types():

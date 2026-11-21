@@ -2410,6 +2410,11 @@ class SingleAgentModelLoop:
                             request = replace(request, recovery_guidance=guidance)
                     request, request_budget_audit = _bounded_model_request(request)
                     context_audit.update(request_budget_audit)
+                    prepare_request = getattr(self.model, 'prepare_request', None)
+                    if self.reserve_final_turn and prepare_request is not None:
+                        request = prepare_request(request)
+                        request, final_budget_audit = _bounded_model_request(request)
+                        context_audit['final_budget'] = final_budget_audit
                     tools_artifact = tool_definitions_artifact(turn.turn_id)
                     request_ref_artifact = request_artifact(
                         turn,

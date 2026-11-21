@@ -35,11 +35,16 @@ _PROMPT = (
     "Context fields: confirmed_scope is what the Host authorized and confirmed. entity_leads are names from the "
     "question that the Host could not confirm; they are leads, not facts. Do not assume a lead is in scope. "
     "Write a task that asks a Worker to resolve a lead through source evidence when the answer depends on it.\n"
-    "Actions: answer_single = one Worker answers the whole goal, no extra tasks (use this when the goal is one "
-    "question). delegate = create tasks, each self-contained, with depends_on listing task ids whose verified "
-    "result it needs; independent tasks run in parallel. stop = enough has been established or more work "
+    "Actions: answer_single = one Worker can independently complete the investigation within the supplied "
+    "Worker turn, input/output, cost and time limits. A single user question can contain separable objectives; "
+    "its sentence count is not a reason to choose one Worker. delegate = create self-contained tasks for "
+    "separable objectives. Use depends_on when a task needs an upstream verified entity or relationship; "
+    "independent tasks may run in parallel. Reuse the Blackboard's reviewed results and "
+    "verified_upstream_results instead of repeating completed work. Never reuse failed or unreviewed facts. "
+    "stop = enough has been established or more work "
     "cannot help; only valid when tasks already exist. In a review, delegate adds follow-up tasks for the "
-    "listed gaps and may depend on earlier tasks. Limits: at most {max_tasks} tasks in total, depth at most "
+    "specific remaining gaps, rather than repeating the entire failed investigation, and may depend on "
+    "earlier accepted tasks. Limits: at most {max_tasks} tasks in total, depth at most "
     "{max_depth}. Reply only by calling submit_delegation.\ncontext=")
 
 
