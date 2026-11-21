@@ -571,8 +571,12 @@ class ProductInvestigationService:
                 if cold:
                     run.close()
 
-    def parallel_trace(self, run_id, workspace_id):
-        """Read-only trace of an orchestrated run as (source, trace), or None. Never calls a model or writes."""
+    def parallel_trace(self, run_id, workspace_id, *, provider_calls_outside_run=True):
+        """Read-only trace of an orchestrated run as (source, trace), or None. Never calls a model or writes.
+
+        ``provider_calls_outside_run``: whether this Ask may have used a Provider whose journal is not
+        under the run directory (Router / security gate). Telemetry then never claims complete coverage.
+        """
         from linkloom.orchestration.trace import build_trace
         if not self.parallel_limits or re.fullmatch(r'ui-parallel-[0-9a-f]{12}', str(run_id)) is None:
             return None
@@ -590,7 +594,12 @@ class ProductInvestigationService:
                 source = 'LIVE' if not cold else 'SAVED'
             try:
                 snapshot = self._orch_snapshot(run)
-                return source, build_trace(run.root, run_id, run.state(), snapshot['parallel_investigation'])
+                outcome = snapshot['parallel_investigation']
+                trace = build_trace(run.root, run_id, run.state(), outcome)
+                trace['telemetry'] = _ask_telemetry(run.root, run_id, workspace_id, outcome, trace, snapshot,
+                                                    (found[1].get('ask') or {}).get('route') or {},
+                                                    provider_calls_outside_run)
+                return source, trace
             except Exception:
                 raise ProductApplicationError('TRACE_UNREADABLE', 'The saved call chain cannot be read.', status=409)
             finally:
@@ -974,3 +983,36 @@ class ProductInvestigationService:
 
 
 __all__ = ["ProductInvestigationService"]
+
+
+def _ask_telemetry(root, run_id, workspace_id, outcome, trace, snapshot, route, provider_calls_outside_run):
+    """Project #135's read-only telemetry from the run's own Provider journals (budget.json).
+
+    Reservations, Provider-reported usage, rate-based estimates and the (unknown) bill stay separate;
+    nothing is read outside the run directory and no model is called.
+    """
+    from linkloom.observability.ask_telemetry import build_ask_telemetry
+    from linkloom.orchestration.files import read_json
+    root = Path(root).resolve()
+    journals = {}
+    scopes = [('comparison', root / 'comparison')]
+    scopes += [(f'supervisor/{path.name}', path) for path in sorted((root / 'supervisor').glob('round-*'))]
+    scopes += [(f'tasks/{path.parent.name}/{path.name}', path) for path in sorted((root / 'tasks').glob('*/attempt-*'))]
+    for scope, directory in scopes:
+        directory = directory.resolve()
+        if not directory.is_relative_to(root) or not (directory / 'budget.json').exists():
+            continue
+        journal = read_json(directory / 'budget.json')
+        journals[scope] = journal if isinstance(journal, dict) else None
+    withheld = outcome.get('status') in {'ABORTED', 'CANCELLED'} or snapshot.get('kind') == 'error'
+    authorized = set() if withheld else {
+        item[key] for item in snapshot.get('evidence') or () for key in ('evidence_id', 'evidence_ref') if item.get(key)}
+    router = route.get('router') if isinstance(route.get('router'), dict) else None
+    return build_ask_telemetry(
+        run_id=run_id, workspace_id=workspace_id, status=str(outcome.get('status') or trace.get('status')),
+        orchestration_trace=trace, router=router, provider_journals=journals,
+        # The Router/security journals are not linked to this run, so coverage is complete only
+        # when the Host had no such Provider for this Ask.
+        provider_journals_complete=not provider_calls_outside_run and router is None,
+        branch_states=outcome.get('branch_states') or (), authorized_evidence_refs=authorized,
+    )

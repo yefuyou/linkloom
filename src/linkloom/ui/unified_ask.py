@@ -1123,7 +1123,9 @@ class UnifiedAskService:
         with self.app._store_lock:
             self._check_workspace(workspace_id)
         service = self.investigation()
-        found = service.parallel_trace(run_id, workspace_id) if service is not None else None
+        found = (service.parallel_trace(run_id, workspace_id,
+                                        provider_calls_outside_run=self.router_provider is not None)
+                 if service is not None else None)
         if found is None:
             raise ProductApplicationError("TRACE_NOT_FOUND", "No call chain is available for this run.", status=404)
         source, trace = found
