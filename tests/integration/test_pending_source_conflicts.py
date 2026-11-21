@@ -86,6 +86,12 @@ def test_scenario_a_approved_b_with_different_pending_c(server):
     assert _decisions(base) == before
     assert [d["value"] for d in _decisions(base)] == ["Birchline"]
     assert _client(base, f"/api/review/candidates/{pending['candidate_id']}")[1]["candidate"]["status"] == pending["review_status"]
+    status, answer = _client(base, "/api/product/ask", method="POST", data={
+        "query": "Which supplier is used for Launch?", "workspace_id": recovery["workspace_id"], "as_of": AS_OF})
+    assert status == 200
+    assert answer["result"]["conclusions"][0]["value"] == "Birchline"
+    assert answer["result"]["timeline"]["pending_conflicts"][0]["candidate_id"] == pending["candidate_id"]
+    assert _decisions(base) == before
 
 
 def test_scenario_b_two_unreviewed_sources_expose_both_sides(server):
@@ -129,9 +135,33 @@ def test_same_value_pending_claim_is_not_a_difference(server):
     assert recovery["pending_conflicts"] == []
 
 
+def test_same_value_unreviewed_sources_are_not_a_conflict(server):
+    base, *_ = server([_claim("Birchline"), _claim("birchline")])
+    _import(base, "b.md", "01", "Alice", "Birchline")
+    _import(base, "c.md", "01", "Bob", "birchline")
+    before = _decisions(base)
+    recovery = _recover(base)
+    assert recovery["status"] != "SOURCE_CONFLICT_UNREVIEWED"
+    assert recovery["effective"] is None
+    assert recovery["pending_conflicts"] == recovery["source_conflicts"] == []
+    assert _decisions(base) == before == []
+
+
+def test_unreviewed_sources_at_different_effective_times_are_not_a_conflict(server):
+    base, *_ = server([_claim("Birchline"), _claim("Cedar")])
+    _import(base, "b.md", "01", "Alice", "Birchline")
+    _import(base, "c.md", "05", "Bob", "Cedar")
+    recovery = _recover(base)
+    assert recovery["effective"] is None
+    assert recovery["status"] != "SOURCE_CONFLICT_UNREVIEWED"
+    assert recovery["pending_conflicts"] == recovery["source_conflicts"] == []
+    assert _decisions(base) == []
+
+
 def test_pending_claim_in_other_workspace_is_not_reported(server):
     base, *_ = server([_claim("Cedar"), _claim("Birchline")])
     _import(base, "c.md", "05", "Bob", "Cedar")
+    foreign_candidate = _candidate_id(base, "Cedar")
     assert len(_recover(base)["pending_conflicts"]) == 0 and _recover(base)["status"] != "FOUND"
     _client(base, "/api/workspaces", method="POST", data={"name": "Other"})
     _import(base, "b.md", "01", "Alice", "Birchline")
@@ -139,6 +169,7 @@ def test_pending_claim_in_other_workspace_is_not_reported(server):
     recovery = _recover(base)
     assert recovery["status"] == "FOUND"
     assert recovery["pending_conflicts"] == []
+    assert _client(base, f"/api/review/candidates/{foreign_candidate}")[0] == 404
 
 
 def test_deleted_source_is_not_reported(server):
@@ -151,7 +182,10 @@ def test_deleted_source_is_not_reported(server):
 
 
 def test_replaced_source_version_is_not_reported(server):
-    base = _approved_b_and_pending_c(server, [_claim("Birchline"), _claim("Cedar"), _claim("Birchline")])
+    base, _, _, app = server([_claim("Birchline"), _claim("Cedar"), _claim("Birchline")])
+    _import(base, "b.md", "01", "Alice", "Birchline")
+    _review(base, _candidate_id(base, "Birchline"), "approve")
+    _import(base, "c.md", "01", "Bob", "Cedar")
     _, sources = _client(base, "/api/sources")
     c_source = next(s["source_id"] for s in sources["sources"] if s["name"] == "c.md")
     old_candidate = _recover(base)["pending_conflicts"][0]["candidate_id"]
@@ -164,6 +198,16 @@ def test_replaced_source_version_is_not_reported(server):
     recovery = _recover(base)
     assert old_candidate not in {item["candidate_id"] for item in recovery["pending_conflicts"]}
     assert recovery["pending_conflicts"] == []
+    detail = _client(base, f"/api/review/candidates/{old_candidate}")[1]["candidate"]
+    assert detail["source"]["source_version"] != detail["source"]["current_source_version"]
+    # An old workflow flag is not source authority. Even with a stale PENDING_REVIEW
+    # flag, a captured old version must not reappear in the read-only projection.
+    with app._store_lock, app.store._connection:
+        app.store._connection.execute("UPDATE semantic_candidate SET workflow_state = ? WHERE candidate_id = ?",
+                                      ("PENDING_REVIEW", old_candidate))
+    before = _decisions(base)
+    assert _recover(base)["pending_conflicts"] == []
+    assert _decisions(base) == before
 
 
 def test_different_slot_is_not_reported(server):
@@ -215,10 +259,9 @@ def test_pending_conflict_does_not_open_the_agent_gate_or_write_memory(server):
     assert _decisions(base) == []
 
 
-def test_scenario_b_is_not_reachable_from_ask_and_is_covered_by_recovery(server):
-    # Known limit (routing is out of scope for #104): Ask only indexes slots with an
-    # approved decision, so a pending-only slot yields no timeline in Ask. The
-    # recovery/timeline path (/api/decisions/recover) still exposes both sides.
+def test_pending_only_slots_stay_out_of_trusted_ask_routing(server):
+    # The separate read-only entry uses the existing candidate inbox and recovery,
+    # not the trusted Router catalog. Natural-language routing stays unchanged.
     base, *_ = server([_claim("Birchline"), _claim("Cedar")])
     _import(base, "a.md", "01", "Alice", "Birchline")
     _import(base, "c.md", "01", "Bob", "Cedar")
@@ -228,6 +271,7 @@ def test_scenario_b_is_not_reachable_from_ask_and_is_covered_by_recovery(server)
     assert status == 200
     assert payload["result"]["timeline"] is None and payload["result"]["conclusions"] == []
     assert len(recovery["pending_conflicts"]) == 2
+    assert _client(base, "/api/product/ask/config")[1]["scopes"] == []
 
 
 def test_real_recovery_payloads_render_in_the_dom(server, tmp_path):
@@ -245,7 +289,13 @@ def test_real_recovery_payloads_render_in_the_dom(server, tmp_path):
     b = _recover(b_base)
     assert a["pending_conflicts"] and b["status"] == "SOURCE_CONFLICT_UNREVIEWED"
     fixture = tmp_path / "recovery.json"
-    fixture.write_text(json.dumps({"A": a, "B": b}), encoding="utf-8")
+    _, inbox = _client(b_base, "/api/review/candidates")
+    _, ask = _client(b_base, "/api/product/ask", method="POST", data={
+        "query": "Which supplier is used for Launch?", "workspace_id": b["workspace_id"]})
+    details = {item["candidate_id"]: _client(b_base, f"/api/review/candidates/{item['candidate_id']}")[1]["candidate"]
+               for item in inbox["candidates"]}
+    fixture.write_text(json.dumps({"A": a, "B": b, "B_candidates": inbox["candidates"],
+                                   "B_details": details, "B_ask": ask["result"]}), encoding="utf-8")
     root = Path(__file__).resolve().parents[2]
     done = subprocess.run([node, "tests/ui/pending_source_conflict_dom_test.cjs"], cwd=root, capture_output=True,
                           text=True, encoding="utf-8", env={**os.environ, "PENDING_CONFLICT_RECOVERY_FIXTURE": str(fixture)})

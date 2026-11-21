@@ -14,10 +14,12 @@ const pendingItem = (id, value, extra = {}) => ({candidate_id: id, value, review
   evidence: {quote: `Someone said ${value}.`, line_start: 3, line_end: 4, source_name: "c.md", verified: true}, ...extra});
 const candidateDetail = id => ({candidate_id: id, claim_type: "DECISION", proposed_value: "Cedar", subject: "Launch",
   relation: "uses supplier", status: "PENDING_REVIEW", review_reasons: [], valid_from: "2026-10-05",
-  current_unresolved_fields: [], source: {name: "c.md", source_id: "src-c"},
+  current_unresolved_fields: [], source: {name: "c.md", source_id: "src-c", active: true,
+    source_version: "v-c", current_source_version: "v-c"},
   evidence: {quote: "Someone said Cedar.", line_start: 3, line_end: 4}});
 
-async function setup({timeline, workspaceId = "w", missing = new Set()}) {
+async function setup({timeline, workspaceId = "w", missing = new Set(), pendingCandidates = [], candidateDetails = {},
+                      askTimeline = timeline, askResult = {}, recoveryProvider = null}) {
   const elements = new Map(), requested = [], writes = [];
   const element = id => {
     if (!elements.has(id)) elements.set(id, {id, value: "", dataset: {}, innerHTML: "", textContent: "", listeners: {},
@@ -28,25 +30,27 @@ async function setup({timeline, workspaceId = "w", missing = new Set()}) {
   const nav = ["sources", "decisions", "ask"].map(id => Object.assign(element(id), {dataset: {screen: id}}));
   const response = (payload, status = 200) => ({ok: status < 400, status, json: async () => payload});
   async function fetch(path, options = {}) {
-    if (options.method && options.method !== "GET") writes.push({path, method: options.method});
+    if (options.method && options.method !== "GET") writes.push({path, method: options.method, body: JSON.parse(options.body || '{}')});
     requested.push(path);
     if (path.startsWith("/api/review/candidates/")) {
       const id = decodeURIComponent(path.split("/").pop());
       return missing.has(id) ? response({error: {code: "CANDIDATE_NOT_FOUND", message: "The candidate is unavailable in this workspace."}}, 404)
-        : response({candidate: candidateDetail(id)});
+        : response({candidate: candidateDetails[id] || candidateDetail(id)});
     }
+    if (path === "/api/review/candidates") return response({candidates: pendingCandidates});
     if (path === "/api/workspaces") return response({workspaces: [{workspace_id: workspaceId, name: "Synthetic"}]});
     if (path === "/api/workspaces/current") return response({workspace: {workspace_id: workspaceId, name: "Synthetic"}});
     if (path === "/api/status") return response({ready: false});
-    if (path === "/api/product/ask/config") return response({workspace_id: workspaceId, scopes: [{subject: "Launch", relation: "uses supplier"}],
+    if (path === "/api/product/ask/config") return response({workspace_id: workspaceId, scopes: timeline.effective ? [{subject: "Launch", relation: "uses supplier"}] : [],
       investigation_context: {source_count: 1, sources: []}, agent: {available: false}});
     if (path === "/api/product/ask") return response({result: {workspace_id: workspaceId, path: "DETERMINISTIC", status: "COMPLETED",
       query: "Which supplier?", scope: {subject: "Launch", relation: "uses supplier", as_of: "2026-10-10"},
       conclusions: timeline.effective ? [{decision_id: "decision-b", value: "Birchline", effective_at: approved.valid_from}] : [],
-      evidence: timeline.effective ? [evidence] : [], timeline}});
+      evidence: timeline.effective ? [evidence] : [], timeline: askTimeline, ...askResult}});
     if (path === "/api/decisions/decision-b") return response({decision: approved});
     if (path === "/api/decisions/decision-b/history") return response({history: [approved]});
-    if (path === "/api/decisions/recover") return response({recovery: timeline});
+    if (path === "/api/decisions/recover") return response({recovery: recoveryProvider ? await recoveryProvider(JSON.parse(options.body))
+      : {workspace_id: workspaceId, subject: "Launch", relation: "uses supplier", ...timeline}});
     return response({sources: [], candidates: [], decisions: [approved]});
   }
   vm.runInNewContext(code, {document: {documentElement: {lang: "en"}, getElementById: element, querySelectorAll: () => nav},
@@ -114,11 +118,58 @@ const base = {status: "FOUND", as_of: "2026-10-10T00:00:00+00:00", effective: ap
   await tick();
   assert.match(await zh.ask(), /待审核来源存在不同说法，当前无正式决定/);
 
+  // The real pending-only route has NO trusted Ask timeline. The separate read-only entry
+  // uses the existing inbox/recovery APIs, without making either candidate a Router slot.
+  const pendingTimeline = {...base, status: "SOURCE_CONFLICT_UNREVIEWED", effective: null, history: [],
+    pending_conflicts: [pendingItem("cand-b", "Birchline"), pendingItem("cand-c", "Cedar")]};
+  const inbox = ["cand-b", "cand-c"].map(id => ({...candidateDetail(id), claim_type: "DECISION"}));
+  const entry = await setup({timeline: pendingTimeline, askTimeline: null, pendingCandidates: inbox});
+  assert.doesNotMatch(await entry.ask(), /ask-answer-value|pending-source-conflicts/);
+  entry.element("ask-date").value = "2026-10-10";
+  await entry.click({action: "pending-source-conflicts"});
+  const entryHtml = entry.element("pending-source-differences").innerHTML;
+  assert.match(entryHtml, /Pending sources disagree; there is no formal decision yet/);
+  assert.match(entryHtml, /Birchline/); assert.match(entryHtml, /Cedar/);
+  assert.equal(entry.writes.filter(w => w.path === "/api/decisions/recover").length, 1, "same slot recovered once");
+  assert.equal(entry.writes.at(-1).body.as_of, "2026-10-10");
+  await entry.click({action: "inspect-candidate", id: "cand-c", pendingReview: "true"});
+  assert.match(entry.element("page").innerHTML, /id="candidate-review"/);
+  assert.ok(entry.writes.every(w => ["/api/product/ask", "/api/decisions/recover"].includes(w.path)));
+
+  // Date changes invalidate in-flight projection; foreign-workspace replies never render.
+  let release;
+  const held = new Promise(resolve => {release = resolve;});
+  const race = await setup({timeline: pendingTimeline, pendingCandidates: inbox, recoveryProvider: () => held});
+  const loading = race.click({action: "pending-source-conflicts"});
+  await tick();
+  await race.element("page").listeners.input({target: {id: "ask-date"}});
+  release({...pendingTimeline, workspace_id: "w"});
+  await loading;
+  assert.equal(race.element("pending-source-differences").innerHTML, "");
+  const foreign = await setup({timeline: pendingTimeline, pendingCandidates: inbox,
+    recoveryProvider: async () => ({...pendingTimeline, workspace_id: "other"})});
+  await foreign.click({action: "pending-source-conflicts"});
+  assert.doesNotMatch(foreign.element("pending-source-differences").innerHTML, /Birchline|Cedar/);
+  assert.match(foreign.element("pending-source-differences").innerHTML, /Workspace changed/);
+
+  const changed = await setup({timeline: pendingTimeline, candidateDetails: {
+    "cand-c": {...candidateDetail("cand-c"), status: "STALE"}}});
+  await changed.click({action: "inspect-candidate", id: "cand-c", pendingReview: "true"});
+  assert.doesNotMatch(changed.element("page").innerHTML, /id="candidate-review"/);
+  assert.match(changed.element("page").innerHTML, /no longer pending/);
+  const changedVersion = await setup({timeline: pendingTimeline, candidateDetails: {
+    "cand-c": {...candidateDetail("cand-c"), source: {active: true, source_version: "old", current_source_version: "new"}}}});
+  await changedVersion.click({action: "inspect-candidate", id: "cand-c", pendingReview: "true"});
+  assert.doesNotMatch(changedVersion.element("page").innerHTML, /id="candidate-review"/);
+  assert.match(changedVersion.element("page").innerHTML, /source changed/);
+
   // Scenario C and negatives arrive as an empty list: nothing is rendered.
   const c = await setup({timeline: {...base, pending_conflicts: []}});
   const askC = await c.ask();
   assert.doesNotMatch(askC, /pending-source-conflicts|inspect-candidate/);
   assert.match(askC, /ask-answer-value">Birchline/);
+  await c.click({action: "pending-source-conflicts"});
+  assert.doesNotMatch(c.element("pending-source-differences").innerHTML, /inspect-candidate/);
 
   // Stale/deleted/version-changed candidates never get a link; a stale click fails inside the workspace.
   const stale = await setup({timeline: {...base, pending_conflicts: [
@@ -142,6 +193,10 @@ const base = {status: "FOUND", as_of: "2026-10-10T00:00:00+00:00", effective: ap
   assert.doesNotMatch(askEscaped, /data-id="cand-"x"/);
   await escaped.click({action: "ask-timeline", id: "decision-b", asOf: ""});
   assert.doesNotMatch(escaped.element("page").innerHTML, /<img src=x/);
+  const escapedEntry = await setup({timeline: {...pendingTimeline, subject: xss, relation: xss, pending_conflicts: [evil]}, pendingCandidates: inbox});
+  await escapedEntry.click({action: "pending-source-conflicts"});
+  assert.doesNotMatch(escapedEntry.element("pending-source-differences").innerHTML, /<img src=x/);
+  assert.match(escapedEntry.element("pending-source-differences").innerHTML, /&lt;img/);
   // Real recover_decision payloads (generated by the integration test) drive the same rendering.
   if (process.env.PENDING_CONFLICT_RECOVERY_FIXTURE) {
     const real = JSON.parse(fs.readFileSync(process.env.PENDING_CONFLICT_RECOVERY_FIXTURE, "utf8"));
@@ -156,6 +211,15 @@ const base = {status: "FOUND", as_of: "2026-10-10T00:00:00+00:00", effective: ap
     const htmlB = await realB.ask();
     assert.equal((htmlB.match(/data-action="inspect-candidate"/g) || []).length, real.B.pending_conflicts.length);
     assert.match(htmlB, /Pending sources disagree/);
+    const realEntry = await setup({timeline: real.B, workspaceId: real.B.workspace_id, askTimeline: null,
+      pendingCandidates: real.B_candidates, candidateDetails: real.B_details, askResult: real.B_ask});
+    assert.doesNotMatch(await realEntry.ask(), /ask-answer-value/);
+    await realEntry.click({action: "pending-source-conflicts"});
+    assert.match(realEntry.element("pending-source-differences").innerHTML, /Pending sources disagree/);
+    const actualId = real.B.pending_conflicts[0].candidate_id;
+    await realEntry.click({action: "inspect-candidate", id: actualId, pendingReview: "true"});
+    assert.ok(realEntry.requested.includes(`/api/review/candidates/${actualId}`));
+    assert.match(realEntry.element("page").innerHTML, /id="candidate-review"/);
     console.log("PASS: real recover_decision payloads render and link to Review");
   }
   console.log("PASS: pending source claims in Ask and timeline, Review navigation, no link for stale candidates, escaping");
