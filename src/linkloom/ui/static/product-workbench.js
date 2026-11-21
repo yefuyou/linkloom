@@ -105,6 +105,38 @@
     layout.dataset.workbenchEnhanced = "true";
     layout.classList.add("review-split");
 
+    const validFromInput = form.querySelector("#review-valid-from");
+    const leaveUndatedCb = form.querySelector("#review-leave-undated");
+    const fillTodayBtn = form.querySelector('[data-action="fill-review-today"]');
+    const clearDateBtn = form.querySelector('[data-action="clear-review-date"]');
+    if (leaveUndatedCb && validFromInput) {
+      leaveUndatedCb.addEventListener("change", () => {
+        if (leaveUndatedCb.checked) {
+          validFromInput.value = "";
+          validFromInput.disabled = true;
+          validFromInput.removeAttribute("required");
+        } else {
+          validFromInput.disabled = false;
+          validFromInput.setAttribute("required", "");
+        }
+      });
+    }
+    fillTodayBtn?.addEventListener("click", () => {
+      if (!validFromInput) return;
+      if (leaveUndatedCb && leaveUndatedCb.checked) {
+        leaveUndatedCb.checked = false;
+        validFromInput.disabled = false;
+        validFromInput.setAttribute("required", "");
+      }
+      validFromInput.value = new Date().toISOString().slice(0, 10);
+      validFromInput.focus();
+    });
+    clearDateBtn?.addEventListener("click", () => {
+      if (!validFromInput) return;
+      validFromInput.value = "";
+      validFromInput.focus();
+    });
+
     const evidenceWrap = layout.querySelector("[data-evidence-source]");
     const sourceId = evidenceWrap?.dataset?.evidenceSource;
     const quoteText = evidenceWrap?.querySelector("blockquote.quote")?.textContent?.trim() || "";
@@ -152,7 +184,56 @@
   }
 
   /* ── 2. Decisions Evolution: Undated Decisions Zone ("时间未知 / 待核验") ── */
-  function enhanceDecisionsEvolution() {
+  function renderUndatedCards(items) {
+    if (!items.length) {
+      return `<p class="empty-inline">${escapeHtml(t("No confirmed undated decisions in this workspace.", "当前工作区暂无生效时间未知的已确认决议。"))}</p>`;
+    }
+    const reviewerDefault = localReviewer();
+    return items.map(item => {
+      const ev = item.evidence?.[0];
+      const evStatus = item.evidence_status || "UNKNOWN";
+      return `
+        <article class="card undated-card" data-undated-id="${escapeHtml(item.decision_id)}">
+          <div class="card-head">
+            <div>
+              <p class="record-kind">${escapeHtml(item.subject || "")} · ${escapeHtml(item.relation || "")}</p>
+              <h3>${escapeHtml(item.value)}</h3>
+            </div>
+            <div class="actions">
+              <span class="badge warning">${escapeHtml(t("Time unknown", "时间未知"))}</span>
+              <span class="badge ${evStatus === "VERIFIED" ? "" : "warning"}">${escapeHtml(evStatus)}</span>
+            </div>
+          </div>
+          ${ev ? `<blockquote class="quote">${escapeHtml(ev.quote)}</blockquote><p class="metadata">${escapeHtml(ev.source_name || ev.source_id || "")} · ${escapeHtml(t("lines", "行号"))} ${escapeHtml(ev.line_start ?? "?")}–${escapeHtml(ev.line_end ?? "?")}</p>` : ""}
+          <details class="undated-promote-details">
+            <summary>${escapeHtml(t("Fill effective date (promote to dated timeline)", "补充生效日期"))}</summary>
+            <form class="form-stack undated-promote-form" data-id="${escapeHtml(item.decision_id)}">
+              <input type="hidden" name="time_basis" value="USER_SELECTED">
+              <div class="field">
+                <label>${escapeHtml(t("Effective date", "生效日期"))}</label>
+                <input type="date" name="valid_from" required>
+                <div class="actions">
+                  <button type="button" class="button quiet" data-undated-today>${escapeHtml(t("Fill today", "填充今天"))}</button>
+                </div>
+              </div>
+              <div class="field">
+                <label>${escapeHtml(t("Reviewer", "审核人"))}</label>
+                <input name="reviewer_id" required maxlength="120" value="${escapeHtml(reviewerDefault)}">
+              </div>
+              <div class="field">
+                <label>${escapeHtml(t("Reason", "补日期依据"))}</label>
+                <input name="reason" required maxlength="1000" placeholder="${escapeHtml(t("Why is this effective date confirmed?", "请填写确认生效日期的依据"))}">
+              </div>
+              <p class="error-inline undated-promote-error" role="alert" hidden></p>
+              <button type="submit" class="button">${escapeHtml(t("Save effective date", "确认并保存生效日期"))}</button>
+            </form>
+          </details>
+        </article>
+      `;
+    }).join("");
+  }
+
+  async function enhanceDecisionsEvolution() {
     const filterForm = page.querySelector("#decisions-date-filter");
     if (!filterForm || page.querySelector(".undated-zone")) return;
 
@@ -165,16 +246,80 @@
           <p class="record-kind">${escapeHtml(t("Confirmed · Effective date unknown", "内容已确认 · 生效时间未知"))}</p>
           <h2 id="undated-zone-title">${escapeHtml(t("Time unknown / Pending date verification", "时间未知 / 待核验区域"))}</h2>
         </div>
-        <span class="badge warning">${escapeHtml(t("API pending", "列表接口待接入"))}</span>
+        <span class="badge neutral" id="undated-zone-count">…</span>
       </div>
-      <p class="hint">
-        ${escapeHtml(t(
-          "Undated confirmed decisions are stored separately in DecisionMemory (PR #123) and are never mixed into time-ordered CURRENT / AS_OF answers. Once the undated list endpoint is wired in the integration branch, those records will appear here.",
-          "无生效日期的正式决议由后端 DecisionMemory 独立存储（PR #123），不会混入按时间排序的 CURRENT / AS_OF 结果中。待集成分支接入未定时列表查询接口后，此类记录将展示在此独立区域。"
-        ))}
-      </p>
+      <p class="hint">${escapeHtml(t(
+        "These decisions have confirmed content but no effective date yet. They are excluded from time-ordered CURRENT / AS_OF conclusions until a date is explicitly confirmed.",
+        "以下决议的内容已人工确认，但生效日期尚未知；在明确补充生效日期前，不会混入按时间排序的 CURRENT / AS_OF 结论。"
+      ))}</p>
+      <div id="undated-zone-list"><p class="loading">${escapeHtml(t("Loading undated decisions…", "正在加载时间未知决议…"))}</p></div>
     `;
     page.appendChild(zone);
+
+    zone.addEventListener("click", (event) => {
+      const todayBtn = event.target.closest("[data-undated-today]");
+      if (!todayBtn) return;
+      const form = todayBtn.closest("form.undated-promote-form");
+      const dateInput = form?.querySelector('input[name="valid_from"]');
+      const basisInput = form?.querySelector('input[name="time_basis"]');
+      if (dateInput) dateInput.value = new Date().toISOString().slice(0, 10);
+      if (basisInput) basisInput.value = "USER_TODAY";
+    });
+
+    zone.addEventListener("input", (event) => {
+      if (event.target?.name === "valid_from") {
+        const basisInput = event.target.closest("form.undated-promote-form")?.querySelector('input[name="time_basis"]');
+        if (basisInput) basisInput.value = "USER_SELECTED";
+      }
+    });
+
+    zone.addEventListener("submit", async (event) => {
+      const form = event.target;
+      if (!form?.classList?.contains("undated-promote-form")) return;
+      event.preventDefault();
+      const errEl = form.querySelector(".undated-promote-error");
+      const submitBtn = form.querySelector('button[type="submit"]');
+      const data = Object.fromEntries(new FormData(form));
+      try { window.localStorage.setItem("linkloom.tasks.reviewer", String(data.reviewer_id || "").trim()); } catch { /* Optional */ }
+      if (errEl) { errEl.textContent = ""; errEl.hidden = true; }
+      if (submitBtn) submitBtn.disabled = true;
+      try {
+        const res = await fetch(`/api/decisions/undated/${encodeURIComponent(form.dataset.id)}/promote`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            valid_from: data.valid_from,
+            time_basis: data.time_basis || "USER_SELECTED",
+            reviewer_id: data.reviewer_id,
+            reason: data.reason,
+          }),
+        });
+        const payload = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(payload?.error?.message || t("Could not promote undated decision.", "补充生效日期失败，请检查输入。"));
+        document.querySelector('.primary-nav [data-screen="decisions"]')?.click();
+      } catch (err) {
+        if (errEl) { errEl.textContent = err.message; errEl.hidden = false; }
+      } finally {
+        if (submitBtn) submitBtn.disabled = false;
+      }
+    });
+
+    const listEl = zone.querySelector("#undated-zone-list");
+    const countEl = zone.querySelector("#undated-zone-count");
+    try {
+      const res = await fetch("/api/decisions/undated");
+      if (!res.ok) throw new Error("LOAD_FAILED");
+      const data = await res.json();
+      if (!zone.isConnected) return;
+      const items = data.undated || [];
+      if (countEl) countEl.textContent = String(items.length);
+      if (listEl) listEl.innerHTML = renderUndatedCards(items);
+    } catch {
+      if (zone.isConnected && listEl) {
+        if (countEl) countEl.textContent = "!";
+        listEl.innerHTML = `<p class="error-inline">${escapeHtml(t("Could not load undated decisions.", "无法读取时间未知决议列表。"))}</p>`;
+      }
+    }
   }
 
   /* ── 3. Ask Workbench: Truthful Execution & Trace Integration (no DOM JSON.parse) ── */
@@ -346,12 +491,13 @@
       const statusMap = {
         pending: t("Pending", "待确认"),
         active: t("Approved", "已批准"),
+        superseded: t("Superseded", "已替代"),
         revoked: t("Revoked", "已撤销"),
         rejected: t("Rejected", "已拒绝"),
         expired: t("Expired", "已过期"),
       };
       listEl.innerHTML = entries.map(entry => `
-        <article class="settings-glossary-item">
+        <article class="settings-glossary-item" data-glossary-id="${escapeHtml(entry.id)}">
           <div class="card-head">
             <strong>${escapeHtml(entry.term)} → ${escapeHtml(entry.relation)}</strong>
             <span class="badge ${entry.status === "active" ? "" : entry.status === "pending" ? "warning" : "neutral"}">${escapeHtml(statusMap[entry.status] || entry.status)}</span>
@@ -359,7 +505,7 @@
           <p class="hint">${escapeHtml(t("Actor", "操作人"))}: ${escapeHtml(entry.actor || "—")}</p>
           <div class="actions">
             ${entry.status === "pending" ? `<button type="button" class="button quiet" data-glossary-op="approve" data-id="${escapeHtml(entry.id)}">${escapeHtml(t("Confirm", "确认"))}</button><button type="button" class="button quiet" data-glossary-op="reject" data-id="${escapeHtml(entry.id)}">${escapeHtml(t("Reject", "拒绝"))}</button>` : ""}
-            ${entry.status === "active" ? `<button type="button" class="button danger" data-glossary-op="revoke" data-id="${escapeHtml(entry.id)}">${escapeHtml(t("Revoke", "撤销"))}</button>` : ""}
+            ${entry.status === "active" ? `<button type="button" class="button quiet" data-glossary-op="open-edit" data-id="${escapeHtml(entry.id)}" data-term="${escapeHtml(entry.term)}" data-relation="${escapeHtml(entry.relation)}">${escapeHtml(t("Edit", "编辑"))}</button><button type="button" class="button danger" data-glossary-op="revoke" data-id="${escapeHtml(entry.id)}">${escapeHtml(t("Revoke", "撤销"))}</button>` : ""}
           </div>
         </article>
       `).join("");
@@ -406,6 +552,43 @@
     if (!opBtn) return;
     const op = opBtn.dataset.glossaryOp;
     const id = opBtn.dataset.id;
+
+    if (op === "open-edit") {
+      const card = opBtn.closest(".settings-glossary-item");
+      if (!card || card.querySelector(".settings-glossary-edit-form")) return;
+      const origTerm = opBtn.dataset.term || "";
+      const origRelation = opBtn.dataset.relation || "";
+      const form = document.createElement("form");
+      form.className = "form-stack settings-glossary-edit-form";
+      form.dataset.id = id;
+      form.dataset.origTerm = origTerm;
+      form.dataset.origRelation = origRelation;
+      form.innerHTML = `
+        <p class="hint">${escapeHtml(t("Original:", "原值："))} <strong>${escapeHtml(origTerm)} → ${escapeHtml(origRelation)}</strong></p>
+        <div class="field">
+          <label>${escapeHtml(t("New term (2–40 chars)", "新术语名称（2–40 字符）"))}</label>
+          <input name="term" required minlength="2" maxlength="40" value="${escapeHtml(origTerm)}">
+        </div>
+        <div class="field">
+          <label>${escapeHtml(t("New relation", "新映射关系"))}</label>
+          <input name="relation" required value="${escapeHtml(origRelation)}">
+        </div>
+        <p class="error-inline settings-edit-error" role="alert" hidden></p>
+        <div class="actions">
+          <button type="submit" class="button">${escapeHtml(t("Save edit", "保存修改"))}</button>
+          <button type="button" class="button quiet" data-glossary-op="cancel-edit">${escapeHtml(t("Cancel", "取消"))}</button>
+        </div>
+      `;
+      card.appendChild(form);
+      form.querySelector('input[name="term"]')?.focus?.();
+      return;
+    }
+
+    if (op === "cancel-edit") {
+      opBtn.closest(".settings-glossary-edit-form")?.remove();
+      return;
+    }
+
     const ws = currentWorkspace();
     const actorInput = document.getElementById("settings-glossary-actor");
     const actor = String(actorInput?.value || localReviewer()).trim();
@@ -434,11 +617,65 @@
   });
 
   settingsBody?.addEventListener("submit", async (event) => {
-    if (event.target?.id !== "settings-glossary-form") return;
+    const form = event.target;
+    if (form?.classList?.contains("settings-glossary-edit-form")) {
+      event.preventDefault();
+      const ws = currentWorkspace();
+      const actorInput = document.getElementById("settings-glossary-actor");
+      const actor = String(actorInput?.value || localReviewer()).trim();
+      const statusEl = document.getElementById("settings-glossary-status");
+      const errEl = form.querySelector(".settings-edit-error");
+      if (!actor) {
+        if (errEl) { errEl.textContent = t("Enter your reviewer name above first.", "请先在上方填写操作人姓名。"); errEl.hidden = false; }
+        actorInput?.focus?.();
+        return;
+      }
+      try { window.localStorage.setItem("linkloom.tasks.reviewer", actor); } catch { /* Optional */ }
+      const data = Object.fromEntries(new FormData(form));
+      const submitBtn = form.querySelector('button[type="submit"]');
+      if (submitBtn) submitBtn.disabled = true;
+      if (errEl) { errEl.textContent = ""; errEl.hidden = true; }
+      try {
+        const res = await fetch("/api/product/feedback/edit", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            id: form.dataset.id,
+            actor,
+            workspace_id: ws.id,
+            human_confirmed: true,
+            term: data.term,
+            relation: data.relation,
+          }),
+        });
+        const payload = await res.json().catch(() => ({}));
+        if (!res.ok) {
+          throw new Error(payload?.error?.message || t("Could not save glossary edit.", "术语编辑保存失败，请检查输入。"));
+        }
+        const saved = payload.entry || {};
+        if (statusEl) {
+          statusEl.textContent = t(
+            `Edited "${form.dataset.origTerm} → ${form.dataset.origRelation}" to "${saved.term || data.term} → ${saved.relation || data.relation}".`,
+            `已将「${form.dataset.origTerm} → ${form.dataset.origRelation}」修改为「${saved.term || data.term} → ${saved.relation || data.relation}」。`
+          );
+        }
+        await loadSettingsGlossary(ws.id);
+      } catch (err) {
+        if (errEl) {
+          errEl.textContent = err.message || t("Could not save glossary edit.", "术语编辑保存失败。");
+          errEl.hidden = false;
+        }
+      } finally {
+        if (submitBtn) submitBtn.disabled = false;
+      }
+      return;
+    }
+
+    if (form?.id !== "settings-glossary-form") return;
     event.preventDefault();
     const ws = currentWorkspace();
     const statusEl = document.getElementById("settings-glossary-status");
-    const data = Object.fromEntries(new FormData(event.target));
+    const data = Object.fromEntries(new FormData(form));
     try { window.localStorage.setItem("linkloom.tasks.reviewer", String(data.actor || "").trim()); } catch { /* Optional */ }
     try {
       const res = await fetch("/api/product/feedback/propose", {
@@ -447,7 +684,7 @@
         body: JSON.stringify({ ...data, workspace_id: ws.id }),
       });
       if (!res.ok) throw new Error("PROPOSE_FAILED");
-      event.target.querySelector("#settings-glossary-term").value = "";
+      form.querySelector("#settings-glossary-term").value = "";
       if (statusEl) statusEl.textContent = t("Submitted as pending term.", "已提交为待确认术语。");
       await loadSettingsGlossary(ws.id);
     } catch {
@@ -455,10 +692,210 @@
     }
   });
 
+  /* ── 5. Meeting Task Merge UI (CREATE vs MERGE into formal TaskStore task) ── */
+  async function fetchWorkspaceFormalTasks(workspaceId) {
+    if (!workspaceId) return [];
+    const tasks = [];
+    let offset = 0;
+    for (let i = 0; i < 10; i += 1) {
+      const res = await fetch(`/api/product/tasks?workspace_id=${encodeURIComponent(workspaceId)}&limit=100&offset=${offset}`);
+      if (!res.ok) throw new Error("TASKS_LOAD_FAILED");
+      const data = await res.json();
+      for (const item of data.items || []) {
+        tasks.push(item.task || item);
+      }
+      if (!data.page?.has_more || data.page?.next_offset == null) break;
+      offset = data.page.next_offset;
+    }
+    return tasks;
+  }
+
+  function extractCandidateFields(card) {
+    const title = card.querySelector("h3")?.textContent?.trim() || "";
+    const metaText = card.querySelector(".metadata")?.textContent || "";
+    const parts = metaText.split("·").map(s => s.trim());
+    const owner = parts[0] || "";
+    const rawDeadline = parts[1] || "";
+    const deadline = /Unspecified deadline|截止时间未说明/i.test(rawDeadline) ? "" : rawDeadline;
+    return { title, owner, deadline };
+  }
+
+  function enhanceMeetingTaskMerge() {
+    const cards = page.querySelectorAll?.("[data-meeting-task]") || [];
+    for (const card of cards) {
+      if (card.dataset.mergeEnhanced === "true") continue;
+      const form = card.querySelector("[data-meeting-task-review]");
+      const actionsEl = form?.querySelector(".actions");
+      if (!form || !actionsEl) continue;
+      card.dataset.mergeEnhanced = "true";
+
+      const candidateId = card.dataset.meetingTask;
+      const candidateFields = extractCandidateFields(card);
+      const panel = document.createElement("div");
+      panel.className = "mt-merge-panel";
+      panel.innerHTML = `
+        <fieldset class="mt-mode-fieldset">
+          <legend>${escapeHtml(t("Target action", "确认去向（需人工明确选择）"))}</legend>
+          <label class="mt-mode-option"><input type="radio" name="mt_mode_${escapeHtml(candidateId)}" value="CREATE" checked> ${escapeHtml(t("Create new formal task", "新建正式任务"))}</label>
+          <label class="mt-mode-option"><input type="radio" name="mt_mode_${escapeHtml(candidateId)}" value="MERGE"> ${escapeHtml(t("Merge into existing formal task", "合并入已有正式任务"))}</label>
+        </fieldset>
+        <div class="mt-merge-details" hidden>
+          <div class="field">
+            <label for="mt-target-${escapeHtml(candidateId)}">${escapeHtml(t("Existing formal task", "选择已有正式任务"))}</label>
+            <select id="mt-target-${escapeHtml(candidateId)}" name="target_task_id"><option value="">${escapeHtml(t("Loading formal tasks…", "正在加载工作区正式任务…"))}</option></select>
+          </div>
+          <div class="mt-compare-slot"></div>
+        </div>
+        <div class="mt-review-feedback" role="alert" hidden></div>
+      `;
+      form.insertBefore(panel, actionsEl);
+
+      const detailsEl = panel.querySelector(".mt-merge-details");
+      const selectEl = panel.querySelector("select[name='target_task_id']");
+      const compareSlot = panel.querySelector(".mt-compare-slot");
+      const feedbackEl = panel.querySelector(".mt-review-feedback");
+      const confirmBtn = actionsEl.querySelector('button[value="CONFIRM"]');
+      let loadedTasks = null;
+
+      function renderCompare(task) {
+        if (!task) {
+          compareSlot.innerHTML = "";
+          return;
+        }
+        const rows = [
+          { key: "title", label: t("Title", "任务标题"), cand: candidateFields.title || "—", cur: task.title || "—" },
+          { key: "owner", label: t("Owner", "负责人"), cand: candidateFields.owner || "—", cur: task.owner || t("Unassigned", "未指定") },
+          { key: "deadline", label: t("Deadline", "截止时间"), cand: candidateFields.deadline || "—", cur: task.deadline_text || task.deadline || t("Unspecified", "未指定") },
+        ];
+        compareSlot.innerHTML = `
+          <table class="mt-compare-table">
+            <thead><tr><th>${escapeHtml(t("Apply", "应用"))}</th><th>${escapeHtml(t("Field", "字段"))}</th><th>${escapeHtml(t("Meeting candidate", "会议候选值"))}</th><th>${escapeHtml(t("Existing task", "已有任务值"))}</th></tr></thead>
+            <tbody>
+              ${rows.map(r => `<tr>
+                <td><input type="checkbox" name="apply_fields" value="${r.key}" ${r.key === "owner" || r.key === "deadline" ? "checked" : ""}></td>
+                <td><strong>${escapeHtml(r.label)}</strong></td>
+                <td>${escapeHtml(r.cand)}</td>
+                <td>${escapeHtml(r.cur)}</td>
+              </tr>`).join("")}
+            </tbody>
+          </table>
+        `;
+      }
+
+      panel.addEventListener("change", async (event) => {
+        if (event.target?.name === `mt_mode_${candidateId}`) {
+          const isMerge = event.target.value === "MERGE";
+          detailsEl.hidden = !isMerge;
+          if (confirmBtn) confirmBtn.textContent = isMerge ? t("Confirm merge", "确认合并入已有任务") : t("Confirm candidate", "确认候选");
+          feedbackEl.hidden = true;
+          if (isMerge && loadedTasks === null) {
+            const ws = currentWorkspace();
+            try {
+              loadedTasks = await fetchWorkspaceFormalTasks(ws.id);
+              if (!loadedTasks.length) {
+                selectEl.innerHTML = `<option value="">${escapeHtml(t("No existing formal tasks in this workspace", "当前工作区暂无已有正式任务"))}</option>`;
+              } else {
+                selectEl.innerHTML = `<option value="">${escapeHtml(t("Choose an existing task…", "请选择已有正式任务…"))}</option>`
+                  + loadedTasks.map(task => `<option value="${escapeHtml(task.id)}">${escapeHtml(task.title)} · ${escapeHtml(task.owner || t("Unassigned", "未指定"))} · ${escapeHtml(task.status || "")}</option>`).join("");
+              }
+            } catch {
+              loadedTasks = null;
+              selectEl.innerHTML = `<option value="">${escapeHtml(t("Failed to load formal tasks", "无法读取工作区正式任务列表"))}</option>`;
+            }
+          }
+        } else if (event.target === selectEl) {
+          const selected = (loadedTasks || []).find(item => item.id === selectEl.value);
+          renderCompare(selected || null);
+        }
+      });
+
+      form.addEventListener("submit", async (event) => {
+        const mode = form.querySelector(`input[name="mt_mode_${candidateId}"]:checked`)?.value || "CREATE";
+        const submitAction = event.submitter?.value;
+        if (mode !== "MERGE" || submitAction === "REJECT") return;
+        event.preventDefault();
+        event.stopImmediatePropagation();
+
+        feedbackEl.hidden = true;
+        const targetTaskId = selectEl.value;
+        if (!targetTaskId) {
+          feedbackEl.textContent = t("Select an existing formal task to merge into.", "请先选择要合并的目标正式任务。");
+          feedbackEl.hidden = false;
+          selectEl.focus();
+          return;
+        }
+        const applyFields = [...form.querySelectorAll('input[name="apply_fields"]:checked')].map(cb => cb.value);
+        if (!applyFields.length) {
+          feedbackEl.textContent = t("Select at least one field to apply.", "请至少勾选一个要应用的字段。");
+          feedbackEl.hidden = false;
+          return;
+        }
+        const formData = new FormData(form);
+        const reviewer = String(formData.get("reviewer") || "").trim();
+        const note = String(formData.get("note") || "").trim();
+        if (!reviewer || !note) {
+          form.reportValidity?.();
+          return;
+        }
+        if (confirmBtn) confirmBtn.disabled = true;
+        try {
+          const res = await fetch(`/api/review/meeting-tasks/${encodeURIComponent(candidateId)}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              action: "MERGE",
+              source_version: form.dataset.version,
+              reviewer,
+              note,
+              target_task_id: targetTaskId,
+              apply_fields: applyFields,
+            }),
+          });
+          const payload = await res.json().catch(() => ({}));
+          if (!res.ok) {
+            const errCode = payload?.error?.code || "";
+            const isStale = res.status === 409 || ["MEETING_TASK_STALE", "MEETING_TASK_ALREADY_REVIEWED"].includes(errCode);
+            feedbackEl.innerHTML = `<p>${escapeHtml(payload?.error?.message || t("Merge failed.", "合并失败。"))}</p>`
+              + (isStale ? `<button type="button" class="button quiet" data-mt-reload>${escapeHtml(t("Reload review queue", "重新读取审核队列"))}</button>` : "");
+            feedbackEl.hidden = false;
+            return;
+          }
+          const ws = currentWorkspace();
+          const task = payload.task || {};
+          const taskHref = `/tasks?workspace_id=${encodeURIComponent(ws.id)}&task=${encodeURIComponent(payload.task_id || task.id || targetTaskId)}`;
+          card.innerHTML = `
+            <div class="card-head">
+              <div><p class="record-kind">${escapeHtml(t("Merged into formal task", "已合并入正式任务"))}</p><h3>${escapeHtml(task.title || candidateFields.title)}</h3></div>
+              <span class="badge">${escapeHtml(task.status || "CONFIRMED")}</span>
+            </div>
+            <p class="metadata">${escapeHtml(t("Task ID", "任务编号"))}: <code>${escapeHtml(payload.task_id || task.id || targetTaskId)}</code> · ${escapeHtml(t("Owner", "负责人"))}: <strong>${escapeHtml(task.owner || t("Unassigned", "未指定"))}</strong> · ${escapeHtml(t("Deadline", "截止时间"))}: <strong>${escapeHtml(task.deadline_text || task.deadline || t("Unspecified", "未指定"))}</strong></p>
+            <div class="actions">
+              <a class="button" href="${taskHref}">${escapeHtml(t("View formal task & TaskEvent history", "查看正式任务与 TaskEvent 历史"))}</a>
+              <button type="button" class="button quiet" data-mt-reload>${escapeHtml(t("Refresh review queue", "刷新审核队列"))}</button>
+            </div>
+          `;
+        } catch {
+          feedbackEl.textContent = t("Local service unavailable. No merge was saved.", "无法连接本地服务，未执行合并。");
+          feedbackEl.hidden = false;
+        } finally {
+          if (confirmBtn) confirmBtn.disabled = false;
+        }
+      }, true);
+
+      card.addEventListener("click", (event) => {
+        if (event.target.closest("[data-mt-reload]")) {
+          document.querySelector('.primary-nav [data-screen="sources"]')?.click();
+          window.location.hash = "#review";
+        }
+      });
+    }
+  }
+
   /* ── Reactive observers ── */
   function syncEnhancements() {
     renderContextBar();
     enhanceCandidateReviewSplit();
+    enhanceMeetingTaskMerge();
     enhanceDecisionsEvolution();
   }
 

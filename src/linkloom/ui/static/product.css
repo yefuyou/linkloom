@@ -271,9 +271,14 @@ pre,code,.metadata{overflow-wrap:anywhere;max-width:100%;}pre{white-space:pre-wr
 
 /* Undated decisions zone */
 .undated-zone {
-  margin-top: 22px; border: 1px dashed #c8b896; background: #fffcf5;
+  margin-top: 22px; border: 1px dashed #c8b896; background: #fffcf5; display: grid; gap: 12px;
 }
 .undated-zone h2 { margin-bottom: 4px; font-size: 17px; }
+.undated-card { background: white; border: 1px solid var(--line); }
+.undated-promote-details { margin-top: 6px; padding-top: 8px; border-top: 1px dashed var(--line); }
+.undated-promote-details > summary { font-size: 13px; font-weight: 650; color: var(--green); }
+.undated-promote-form { margin-top: 10px; max-width: 420px; }
+.undated-promote-error[hidden] { display: none; }
 
 /* Ask Run Trace Drawer */
 .trace-drawer {
@@ -337,3 +342,39 @@ dialog.settings-drawer::backdrop { background: rgba(20, 30, 50, .35); }
   .review-split > section:first-child { position: static; }
   .workbench-context-bar { padding: 10px 12px; }
 }
+
+/* B1-4 Round 2: Glossary Inline Edit & Meeting Task Merge UI */
+.settings-glossary-edit-form {
+  margin-top: 8px; padding-top: 10px; border-top: 1px dashed var(--line);
+}
+.mt-merge-panel {
+  display: grid; gap: 10px; padding: 12px 14px;
+  border: 1px solid var(--line); border-radius: 10px; background: #fafbfd;
+}
+.mt-mode-fieldset {
+  margin: 0; padding: 0; border: 0; display: flex; flex-wrap: wrap; gap: 10px 18px;
+}
+.mt-mode-fieldset legend {
+  font-size: 12.5px; font-weight: 700; color: var(--muted); margin-bottom: 6px; padding: 0;
+}
+.mt-mode-option {
+  display: inline-flex; align-items: center; gap: 6px; font-size: 13.5px; color: var(--ink); cursor: pointer;
+}
+.mt-mode-option input[type="radio"] { width: auto; min-height: 0; margin: 0; }
+.mt-merge-details { display: grid; gap: 10px; }
+.mt-merge-details[hidden], .mt-review-feedback[hidden], .settings-edit-error[hidden] { display: none; }
+.mt-compare-table {
+  width: 100%; border-collapse: collapse; font-size: 13px; background: white;
+  border: 1px solid var(--line); border-radius: 8px; overflow: hidden;
+}
+.mt-compare-table th, .mt-compare-table td {
+  padding: 8px 10px; text-align: left; border-bottom: 1px solid var(--line); vertical-align: top;
+}
+.mt-compare-table th { background: #f3f5f9; font-size: 12px; color: var(--muted); font-weight: 700; }
+.mt-compare-table tr:last-child td { border-bottom: 0; }
+.mt-compare-table input[type="checkbox"] { width: auto; min-height: 0; margin: 2px 0 0; }
+.mt-review-feedback {
+  padding: 10px 12px; border-radius: 8px; background: var(--red-soft); color: var(--red);
+  font-size: 13px; display: grid; gap: 8px;
+}
+.mt-review-feedback p { margin: 0; }

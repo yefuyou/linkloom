@@ -118,6 +118,23 @@ function makeEl(id, extra = {}) {
   const calls = [];
   const fetch = async (url, opts = {}) => {
     calls.push({ url, method: opts.method || "GET", body: opts.body ? JSON.parse(opts.body) : null });
+    if (url === "/api/decisions/undated") {
+      return {
+        ok: true,
+        json: async () => ({
+          undated: [{
+            decision_id: "udec_1",
+            decision_ref: "dref_1",
+            subject: "银杏项目",
+            relation: "uses supplier",
+            value: "Wrenwell",
+            memory_state: "CONFIRMED_UNDATED",
+            evidence_status: "VERIFIED",
+            evidence: [{ quote: "启用时间待定", source_name: "b.md", line_start: 2, line_end: 2 }],
+          }],
+        }),
+      };
+    }
     if (url.startsWith("/api/sources/")) {
       return {
         ok: true,
@@ -190,7 +207,7 @@ function makeEl(id, extra = {}) {
   const undated = page.children.find((c) => c.className === "panel undated-zone");
   assert.ok(undated, "should render undated-decisions zone");
   assert.match(undated.innerHTML, /时间未知 \/ 待核验区域/);
-  assert.match(undated.innerHTML, /列表接口待接入/);
+  assert.ok(calls.some((c) => c.url === "/api/decisions/undated"), "should call GET /api/decisions/undated");
 
   // 3. Ask execution & trace drawer (direct data flow via onLinkLoomAskResult, no DOM JSON.parse)
   location.hash = "#ask";

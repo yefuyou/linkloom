@@ -161,6 +161,7 @@
       ENTITY_UNRESOLVED: copy("Subject needs clarification", "对象需澄清"),
       TEMPORAL_UNRESOLVED: copy("Effective date needs confirmation", "生效日期待确认"),
       VALUE_UNRESOLVED: copy("Value needs confirmation", "内容待确认"),
+      EVIDENCE_UNRESOLVED: copy("Quote needs confirmation", "引句待确认"),
       CONFLICT_REQUIRES_REVIEW: copy("Conflicting evidence needs review", "证据冲突需审核"),
     };
     return [...new Set((reasons || []).map(reason => labels[reason] || copy("Review the source evidence", "请审核来源证据")))].join(" · ") || copy("Human review required", "需人工审核");
@@ -482,7 +483,7 @@
     const resolutionFields = unresolved.length ? `<section class="panel"><h3>${copy("Resolve fields from the evidence", "根据原文补充字段")}</h3><p class="hint">${copy("Fill the subject or effective date only when the source supports it. Leave uncertain fields empty.", "仅根据原文补充对象或生效日期；不确定的字段请留空。")}</p>
       ${unresolved.includes("subject") ? `<div class="field"><label for="review-subject">${copy("Subject", "对象")}</label><input id="review-subject" name="subject" value="${escapeHtml(candidate.subject || "")}" required></div>` : ""}
       ${relationGuidance}
-      ${unresolved.includes("valid_from") ? `<div class="field"><label for="review-valid-from">${copy("Effective date or timestamp", "生效日期或时间")}</label><input id="review-valid-from" name="valid_from" placeholder="${copy("YYYY-MM-DD or ISO 8601 with timezone", "YYYY-MM-DD 或含时区的 ISO 8601 时间")}" required></div>` : ""}</section>` : `<p class="hint">${copy("Subject, relationship and effective date are available for review.", "请核对对象、关系和生效日期。")}</p>`;
+      ${unresolved.includes("valid_from") ? `<div class="field"><label for="review-valid-from">${copy("Effective date or timestamp", "生效日期或时间")}</label><input id="review-valid-from" name="valid_from" placeholder="${copy("YYYY-MM-DD or ISO 8601 with timezone", "YYYY-MM-DD 或含时区的 ISO 8601 时间")}" required>${!revalidation ? `<div class="actions"><button type="button" class="button quiet" data-action="fill-review-today">${copy("Fill today", "填充今天")}</button><button type="button" class="button quiet" data-action="clear-review-date">${copy("Clear", "清空")}</button></div><label class="ask-permission"><input id="review-leave-undated" name="leave_undated" type="checkbox" value="1"><span>${copy("Confirm content, leave effective date unknown", "确认内容、日期留空（时间未知）")}</span></label>` : ""}</div>` : ""}</section>` : `<p class="hint">${copy("Subject, relationship and effective date are available for review.", "请核对对象、关系和生效日期。")}</p>`;
     page.innerHTML = `${heading(candidate.proposed_value || copy("View and confirm", "查看并确认"), `<div class="actions"><span class="badge neutral">${escapeHtml(claimTypeLabel(candidate.claim_type))}</span>${badge(candidate.status)}</div>`)}
       <div class="detail-layout"><section class="panel"><div class="metadata"><span>${copy("Subject", "对象")} <strong>${escapeHtml(candidate.subject || copy("Needs review", "待审核"))}</strong></span><span>${copy("Relation", "关系")} <strong>${escapeHtml(relationLabel(candidate.relation) || copy("Needs review", "待审核"))}</strong></span><span>${copy("Valid from", "生效日期")} <strong>${askDate(candidate.valid_from, state.language.startsWith("zh") ? "zh" : "en") || copy("Not resolved", "待确认")}</strong></span></div>
         <p class="section-title"><strong>${copy("Review reasons", "审核原因")}</strong></p><p>${escapeHtml(reviewReasons(candidate.review_reasons))}</p>
@@ -1328,6 +1329,13 @@
         const data = Object.fromEntries(new FormData(form));
         const action = event.submitter?.dataset.reviewAction || "approve";
         if (action === "approve" && form.querySelector('[data-review-action="approve"]').disabled) return;
+        if (action === "approve" && data.leave_undated) {
+          delete data.leave_undated;
+          delete data.valid_from;
+          data.time_basis = "UNKNOWN";
+        } else {
+          delete data.leave_undated;
+        }
         if (action === "reject") {
           for (const id of ["reviewer-id", "review-reason"]) {
             const field = document.getElementById(id);
@@ -1350,6 +1358,7 @@
         await refreshWorkspaceState();
         await loadReview();
         if (action === "approve" && result.decision_id) await inspectDecision(result.decision_id);
+        else if (action === "approve" && result.undated_decision_id) await loadDecisions();
       } else if (form.id === "ask-form") {
         await submitAsk(form);
       } else if (form.id === "feedback-form") {
