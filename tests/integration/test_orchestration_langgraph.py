@@ -256,7 +256,8 @@ def test_failed_and_abstained_tasks_keep_other_results_as_partial(tmp_path):
     answer = result["answer"]
     assert [a["question"] for a in answer["answers"]] == [Q_SUCC]
     reasons = {(u["branch"], u["reason"]) for u in answer["unknowns"]}
-    assert reasons == {("owner", "BRANCH_FAILED"), ("leader", "BRANCH_NO_DECISION"), ("risk", "BRANCH_SKIPPED")}
+    assert reasons == {("owner", "BRANCH_FAILED"), ("leader", "BRANCH_NO_DECISION"),
+                       ("leader", "BRANCH_UNKNOWN_FIELD"), ("risk", "BRANCH_SKIPPED")}
     owners = {item["task_id"] for item in result["verified_evidence"].values()}
     assert "succ" in owners and not owners & {"owner", "risk"}
 

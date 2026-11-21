@@ -676,6 +676,76 @@ def test_future_final_envelope_covers_large_multi_tool_results_without_discardin
     assert adapter.estimate_input_tokens(request) <= OrchestrationLimits.WORKER_FINAL_INPUT_UPPER_BOUND
 
 
+@pytest.mark.parametrize('kind', ['user', 'evidence', 'history', 'prunable_history'])
+def test_final_bound_covers_runtime_and_gemini_mapping_boundaries(kind, record_property):
+    from linkloom.agents.model_adapter import ModelToolCall
+    from linkloom.runtime.model_loop import MAX_MODEL_REQUEST_CONTEXT_BYTES, _bounded_model_request
+    adapter = GeminiProviderAdapter(FakeGeminiClient())
+    base = _request(available_tools=[], final_only=True)
+    def evidence(call_id, quote):
+        return ToolResult(call_id, 'read_verified_note', 'ok', value=dict(status='verified',
+            evidence_id='ev-1', relative_path='meeting.md', quote=quote, quote_sha256='a' * 64,
+            content_sha256='a' * 64, line_start=1, line_end=1))
+    if kind == 'user':
+        base = replace(base, user_input='u' * (32768 - 2))  # JSON string quotes count toward the limit
+    elif kind == 'evidence':
+        sample = evidence('read', 'e')
+        overhead = len(json.dumps([sample.to_dict()], ensure_ascii=False).encode('utf8')) - 1
+        base = replace(base, evidence_context=[evidence('read', 'e' * (24576 - overhead))])
+    else:
+        calls, results = [], []
+        for number in range(16):
+            call = ModelToolCall(f'provider-{number}', ToolCall(f'rt-{number}', 'read_verified_note',
+                dict(note_ref=f'ev-{number}'), run_id=base.run_id, task_id=base.task_id,
+                agent_id=base.agent_id, sequence=1))
+            calls.append(call)
+            results.append(ModelToolResult.for_call(run_id=base.run_id, proposal_id='batch', ordinal=number,
+                model_call=call, result=evidence(call.runtime_call.call_id, 'x' * 4500)))
+        turn = ModelToolTurn(proposal_id='batch', source_turn_id='run_p85_1:turn:1', source_sequence=1,
+                             tool_calls=calls, tool_results=results)
+        # Escaping evidence JSON inside Gemini's text increases mapped size; this is not ordinary prose.
+        context = [evidence('other-read', '\\' * 5000)]
+        if kind == 'prunable_history':
+            context = [item.result for item in results[:1]]
+            turn = replace(turn, tool_calls=calls[:1], tool_results=results[:1])
+        base = replace(base, sequence=2, turn_id='run_p85_1:turn:2', tool_turns=[turn], evidence_context=context)
+        if kind == 'history':
+            base = replace(base, user_input='u' * 8790)  # same immutable text size as original Q3 task-2
+            quote_size = 4500
+            while len(json.dumps(base.to_dict(), ensure_ascii=False, separators=(',', ':')).encode('utf8')) > MAX_MODEL_REQUEST_CONTEXT_BYTES:
+                quote_size -= 100
+                assert quote_size > 1000
+                results = [replace(item, result=evidence(item.runtime_call_id, 'x' * quote_size)) for item in results]
+                base = replace(base, tool_turns=[replace(turn, tool_results=results)])
+    request, audit = _bounded_model_request(base)
+    assert audit['dropped_old_tool_turns'] == 0  # test actual preservation, not silent truncation
+    payload = build_gemini_request(request)
+    size = adapter.estimate_input_tokens(request)
+    bound = adapter.final_input_upper_bound(request, MAX_MODEL_REQUEST_CONTEXT_BYTES)
+    record_property('mapped_input', size)
+    record_property('future_bound', bound)
+    record_property('runtime_bytes', audit['actual_bytes'])
+    assert size <= bound
+    assert size == len(json.dumps(payload, ensure_ascii=False, separators=(',', ':')).encode('utf8')) + 4096
+    if kind == 'history':
+        assert len(payload['contents'][2]['parts']) == 16
+        # A valid non-prunable Final disproves a 70k bound, and the <=97819 headroom needed by Q3 turn 5.
+        assert size > 97819
+    elif kind == 'prunable_history':
+        assert len(payload['contents']) == 1
+
+
+def test_budgeted_gemini_invalid_mapping_preserves_structured_failure(tmp_path):
+    from linkloom.ui.task_provider import TaskProviderLimits, TaskProviderSession
+    client = FakeGeminiClient()
+    adapter = GeminiProviderAdapter(client)
+    session = TaskProviderSession(tmp_path, TaskProviderLimits(2, 200000, 2000, .3, 10, 2, .02), lambda: None)
+    invalid = replace(_request(), generation_options=ModelGenerationOptions(max_output_tokens=128, temperature=.1))
+    response = session.bind(adapter, 'runtime').complete(invalid)
+    assert response.error and session.attempts[0]['error']['code'] == 'MODEL_INVALID_REQUEST'
+    assert session.attempts[0]['outcome'] == 'FAILED' and not client.requests
+
+
 def test_sdk_like_function_call_response_is_parsed_without_importing_sdk_types():
     class SdkLikeResponse:
         function_calls = [

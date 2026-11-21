@@ -99,8 +99,8 @@ class OrchestrationLimits:
     WORKER_MAX_STEPS = RunRequest.__dataclass_fields__['max_steps'].default
     WORKER_MAX_OUTPUT_PER_REQUEST = 4096
     WORKER_MIN_OUTPUT_PER_REQUEST = 1024  # keep space for a complete, cited Final when adding turns
-    # Bound retained history by the existing Runtime envelope, add the entire possible mapped initial
-    # input (including embedded evidence JSON), then framing. Do not assume today's prompt stays small.
+    # Provider-neutral fallback. Gemini deducts immutable user text already counted by Runtime from
+    # the mapped initial-input allowance in final_input_upper_bound(); it keeps unprunable history.
     WORKER_FINAL_INPUT_UPPER_BOUND = MAX_MODEL_REQUEST_CONTEXT_BYTES + MAX_PROVIDER_USER_INPUT_BYTES + 4096
     # A planning allowance per turn for an evidence-sized request plus framing.
     # Tool history and other fields can make the serialized request larger.

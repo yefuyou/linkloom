@@ -513,7 +513,11 @@ def _requests(worker):
 def test_e12_the_reserved_final_turn_has_no_tools_and_earlier_turns_do(tmp_path, monkeypatch):
     monkeypatch.setattr(lg, "WorkerModel", LingeringModel)
     world = World([delegation("answer_single")], {GOAL: (FACT["succ"], "Meridian A", "ok")})
-    orchestrator, deps = build(tmp_path, world)
+    # Exactly four affordable requests: the boundary is the allocated slice, not a Worker constant.
+    limits = OrchestrationLimits.split(TOTAL, max_tasks=1, max_rounds=0)
+    limits = replace(limits, per_task=replace(limits.per_task, max_requests=4))
+    assert OrchestrationLimits.worker_turn_budget(limits.per_task)[0] == 4
+    orchestrator, deps = build(tmp_path, world, limits=limits)
     result = orchestrator.start(GOAL)
     (worker,) = world.workers
     turns = _requests(worker)

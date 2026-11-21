@@ -129,6 +129,10 @@ class TaskProviderSession:
         if request.final_only:
             return request
         with self.lock:
+            final_bound = getattr(adapter, 'final_input_upper_bound', None)
+            if final_bound is not None:
+                from linkloom.runtime.model_loop import MAX_MODEL_REQUEST_CONTEXT_BYTES
+                final_input_upper_bound = final_bound(request, MAX_MODEL_REQUEST_CONTEXT_BYTES)
             size = self._input_reservation(adapter, request)
             output = request.generation_options.max_output_tokens
             final_output = final_output_upper_bound or output
@@ -139,7 +143,7 @@ class TaskProviderSession:
                 and self.input_tokens + size + final_input_upper_bound <= self.limits.max_input_tokens
                 and self.output_tokens + output + final_output <= self.limits.max_output_tokens
                 and self.cost + self.limits.reservation_cost(size, output) + final_cost <= self.limits.max_cost_usd + 1e-10
-                and remaining >= 2 * self.limits.request_timeout_seconds)
+                and remaining > self.limits.request_timeout_seconds)
         if can_continue:
             return request
         options = replace(request.generation_options, require_tool_call=False)
@@ -180,11 +184,11 @@ class TaskProviderSession:
             outcome='unknown_provider_outcome' if uncertain else 'known_failure',
             details=dict(reason=reason)))
 
-    def complete(self, adapter, stage, request):
+    def complete(self, adapter, stage, request, *, reserve_final_seconds=0):
         with self._calls.operation("task-provider-call-" + uuid4().hex[:12]):
-            return self._complete(adapter, stage, request)
+            return self._complete(adapter, stage, request, reserve_final_seconds=reserve_final_seconds)
 
-    def _complete(self, adapter, stage, request):
+    def _complete(self, adapter, stage, request, *, reserve_final_seconds=0):
         with self.lock:
             if self.failure:
                 return self._error(self.failure)
@@ -193,6 +197,7 @@ class TaskProviderSession:
             except Exception:
                 return self._error('TASK_SOURCE_AUTHORIZATION_CHANGED')
             remaining = self.limits.max_seconds - (monotonic() - self.started)
+            timeout = min(self.limits.request_timeout_seconds, remaining - reserve_final_seconds)
             # Same Provider mapping as complete(); count all sent history/schema plus framing.
             size = self._input_reservation(adapter, request)
             output = request.generation_options.max_output_tokens
@@ -200,14 +205,15 @@ class TaskProviderSession:
             if (self.requests >= self.limits.max_requests
                     or self.input_tokens + size > self.limits.max_input_tokens
                     or self.output_tokens + output > self.limits.max_output_tokens
-                    or self.cost + cost > self.limits.max_cost_usd + 1e-10 or remaining <= 0):
+                    or self.cost + cost > self.limits.max_cost_usd + 1e-10 or timeout <= 0):
                 return self._error('TASK_PROVIDER_BUDGET_EXHAUSTED')
             self.requests += 1
             self.input_tokens += size
             self.output_tokens += output
             self.cost += cost
             row = dict(sequence=self.requests, stage=stage, request_sha256=canonical_hash(request.to_dict()),
-                input_reserved=size, output_reserved=output, cost_reserved_usd=cost, outcome='PENDING')
+                input_reserved=size, output_reserved=output, cost_reserved_usd=cost,
+                timeout_seconds=timeout, outcome='PENDING')
             self.attempts.append(row)
             self._save()
             done, result = Event(), []
@@ -221,7 +227,7 @@ class TaskProviderSession:
                     done.set()
 
             self._workers.start(f'task-provider-{self.root.parent.name}-{self.requests}', invoke)
-            if not done.wait(min(remaining, self.limits.request_timeout_seconds)):
+            if not done.wait(timeout):
                 row['outcome'] = 'UNCERTAIN'
                 return self._error('PROVIDER_TIMEOUT_UNCERTAIN', uncertain=True)
             response = result[0] if result else None
@@ -271,7 +277,9 @@ class _BudgetedTaskAdapter:
                                             self.final_output_upper_bound)
 
     def complete(self, request):
-        return self.session.complete(self.adapter, self.stage, request)
+        reserve = (self.session.limits.request_timeout_seconds
+                   if self.final_input_upper_bound is not None and not request.final_only else 0)
+        return self.session.complete(self.adapter, self.stage, request, reserve_final_seconds=reserve)
 
 
 def validate_task_provider_receipt(path, completed_at):

@@ -1623,9 +1623,25 @@ class GeminiProviderAdapter:
         Internal audit/history fields not sent by build_gemini_request are not charged twice.
         This is a reservation upper bound, not a tokenizer or a billing estimate.
         """
-        payload = build_gemini_request(request, configured_model_id=self.model_id,
-                                      max_input_bytes=self.max_input_bytes)
+        try:
+            payload = build_gemini_request(request, configured_model_id=self.model_id,
+                                          max_input_bytes=self.max_input_bytes)
+        except (_AdapterFailure, ValidationError, TypeError, ValueError):
+            # complete() returns the structured mapping error without crossing the transport.
+            # Retain a conservative reservation so preflight cannot turn it into an exception.
+            return len(json.dumps(request.to_dict(), ensure_ascii=False).encode('utf8')) + 4096
         return len(json.dumps(payload, ensure_ascii=False, separators=(',', ':')).encode('utf8')) + 4096
+
+    def final_input_upper_bound(self, request: ModelTurnRequest, runtime_upper_bound: int) -> int:
+        """Bound a future Final without counting its immutable user text twice.
+
+        Runtime's envelope already contains user_input. Gemini's bounded initial text contains
+        it again along with projected evidence and guidance. Only the remainder of that initial
+        text can grow beyond the Runtime envelope. Keep the full history allowance: a future
+        multi-tool result may make the text-only history shortcut unavailable.
+        """
+        user_bytes = len(json.dumps(request.user_input, ensure_ascii=False).encode('utf8'))
+        return runtime_upper_bound + max(0, self.max_input_bytes - user_bytes) + 4096
 
     def complete(self, request: ModelTurnRequest) -> ModelResponse:
         try:

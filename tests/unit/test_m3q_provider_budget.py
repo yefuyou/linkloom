@@ -74,7 +74,7 @@ def test_worker_preflight_keeps_final_capacity_even_when_future_context_grows(tm
         complete=lambda r: calls.append(r) or ModelResponse(action=ModelAction.final('{}')))
     bound = TaskProviderSession(tmp_path, policy, lambda: None).bind(adapter, 'runtime', final_input_upper_bound=106496)
     if resource == 'time':
-        monkeypatch.setattr(task_provider, 'monotonic', lambda: bound.session.started + 7)
+        monkeypatch.setattr(task_provider, 'monotonic', lambda: bound.session.started + 8)
     prepared = bound.prepare_request(request())
     assert prepared.final_only is True and prepared.available_tools == []
     assert bound.session.requests == 0 and bound.session.cost == 0 and not calls
@@ -121,6 +121,22 @@ def test_smaller_tool_turn_output_does_not_reduce_the_future_final_ceiling(tmp_p
     small = replace(request(), generation_options=replace(request().generation_options, max_output_tokens=128))
     assert bound.prepare_request(small).final_only is True
     assert bound.session.requests == 0
+
+
+def test_time_guard_uses_shortened_tool_timeout_and_keeps_full_final_timeout(tmp_path, monkeypatch):
+    from linkloom.ui import task_provider
+    policy = TaskProviderLimits(8, 200000, 8000, .4, 10, 2, .02)
+    adapter = SimpleNamespace(estimate_input_tokens=lambda r: 1000,
+        complete=lambda r: ModelResponse(action=ModelAction.final('{}')))
+    bound = TaskProviderSession(tmp_path, policy, lambda: None).bind(adapter, 'runtime', final_input_upper_bound=106496)
+    monkeypatch.setattr(task_provider, 'monotonic', lambda: bound.session.started + 7)
+    prepared = bound.prepare_request(request())
+    assert not prepared.final_only  # 3 seconds remaining: 1 second tool window + 2 seconds Final
+    assert not bound.complete(prepared).error
+    assert bound.session.attempts[-1]['timeout_seconds'] == 1
+    final = replace(prepared, final_only=True)
+    assert not bound.complete(final).error
+    assert bound.session.attempts[-1]['timeout_seconds'] == 2
 
 
 def test_timeout_is_uncertain_and_no_late_result_can_publish(tmp_path):
