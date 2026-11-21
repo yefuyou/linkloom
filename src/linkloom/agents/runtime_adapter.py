@@ -101,8 +101,10 @@ class RuntimeAgentAdapter:
         decision_memory_enabled: bool = True,
         task_relation_tools: Any = None,
         context_runtime_config: Any = None,
+        confirmed_fact_index: Callable[[], Any] | None = None,
     ) -> None:
         self.reader = VaultReader(vault_root=vault_root, index_path=index_path)
+        self._confirmed_fact_index = confirmed_fact_index
         self._task_relation_tools = task_relation_tools
         self._context_runtime_config = context_runtime_config
         if context_runtime_config is not None:
@@ -957,6 +959,7 @@ class RuntimeAgentAdapter:
                     self._verify_temporal_claim
                     if self._temporal_claim_validator is not None else None
                 ),
+                confirmed_fact_index=self._confirmed_fact_index,
             ),
             curator_agent=CuratorAgent(),
             reviewer_agent=ReviewerAgent(),

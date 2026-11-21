@@ -293,6 +293,9 @@ class ProductInvestigationService:
                         error=dict(code=preparation.manifest.get('provider_failure', 'TASK_PLAN_BLOCKED'), classification='validation',
                                    message='The investigation plan did not pass Host admission.'))
             vault, index, source_names, source_versions = self._materialize_sources(root, sources)
+            # TaskPlan/relation runs keep the legacy TaskPlan helpers end to end (#147).
+            confirmed_fact_index = (None if source_run else
+                                    self._confirmed_fact_index_factory(workspace_id, sources, source_versions))
             from linkloom.ui.task_provider import _ROUTER_RESERVATION, TaskProviderSession
             if self.external_provider and not task_investigation and graph_provider_session is None and _ROUTER_RESERVATION.get() is not None:
                 if task_models is None or task_models.provider_limits is None:
@@ -324,6 +327,7 @@ class ProductInvestigationService:
                 temporal_claim_validator=temporal_validator,
                 task_relation_tools=preparation.tools if preparation else None,
                 context_runtime_config=ContextRuntimeConfig() if preparation else None,
+                confirmed_fact_index=confirmed_fact_index,
             )
             backend = RuntimeRunBackend(
                 engine=engine,
@@ -451,6 +455,29 @@ class ProductInvestigationService:
         finally:
             with self._lock:
                 self._active.discard(run.run_id)
+
+    def _confirmed_fact_index_factory(self, workspace_id, sources, source_versions):
+        """Reload human-confirmed relation facts for this run's frozen sources on every check (#147)."""
+        from linkloom.agents.confirmed_facts import FrozenSource, load_confirmed_fact_index
+
+        content = {str(source["source_id"]): str(source["content"]) for source in sources}
+        frozen = tuple(FrozenSource(path, item["source_id"], item["source_version"], content[item["source_id"]])
+                       for path, item in source_versions.items())
+        frozen_ids = {(item.source_id, item.source_version) for item in frozen}
+        app = self.product_app
+
+        def load():
+            with app._store_lock:
+                if app._workspace_id() != workspace_id:
+                    return None
+                active = {(s["source_id"], s["source_version"]) for s in app.repository.list_sources(workspace_id)
+                          if s.get("active", True)}
+            allowed = frozen_ids & active
+            return load_confirmed_fact_index(
+                app.repository.database_path, workspace_id, frozen,
+                authorize_source=lambda ws, source, version: ws == workspace_id and (source, version) in allowed,
+            )
+        return load
 
     @staticmethod
     def _materialize_sources(root, sources):

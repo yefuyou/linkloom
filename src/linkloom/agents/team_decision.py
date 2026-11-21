@@ -210,7 +210,7 @@ def claim_proposal_schema() -> dict[str, Any]:
                     "properties": {
                         "subject": {"type": "string", "minLength": 1, "maxLength": 128},
                         "predicate": {
-                            "type": "string", "enum": sorted(CLAIM_PROPOSAL_PREDICATES),
+                            "type": "string", "enum": sorted(TYPED_CLAIM_RELATIONS),
                         },
                         "object": {"type": "string", "minLength": 1, "maxLength": 128},
                         "evidence_ids": {
@@ -466,7 +466,7 @@ def _parse_claim_proposal_shape(payload: object) -> tuple[_VerifiedClaim, ...]:
         if len(subject) > 128 or len(object_value) > 128:
             raise ValidationError("ClaimProposal entities exceed the supported length.")
         predicate = data["predicate"]
-        if not isinstance(predicate, str) or predicate not in CLAIM_PROPOSAL_PREDICATES:
+        if not isinstance(predicate, str) or predicate not in TYPED_CLAIM_RELATIONS:
             raise ValidationError("ClaimProposal predicate is unsupported.")
         evidence_ids = _require_refs(data["evidence_ids"], "ClaimProposal evidence_ids", required=True)
         if len(evidence_ids) > 4 or any(len(ref) > 128 for ref in evidence_ids):
@@ -671,8 +671,14 @@ class TeamDecisionResult:
         read_evidence_ids: Collection[str] = (),
         observed_temporal_decision_ids: Collection[str] = (),
         require_read_evidence: bool = False,
+        confirmed_facts: Any = None,
     ) -> "TeamDecisionResult":
-        """Parse the explicitly selected protocol and verify it against observed evidence."""
+        """Parse the explicitly selected protocol and verify it against observed evidence.
+
+        ``confirmed_facts`` is a Host-built ConfirmedFactIndex (or None). It
+        supplies structured source facts for typed claims; the model cannot
+        provide or alter it.
+        """
         if final_protocol not in {SCHEMA_VERSION, CLAIM_PROPOSAL_SCHEMA_VERSION}:
             raise ValidationError("Unsupported Team Decision Final protocol.")
         observed = _require_refs(
@@ -703,6 +709,7 @@ class TeamDecisionResult:
                 read_evidence_ids=read_evidence_ids,
                 observed_temporal_decision_ids=observed_temporal_decision_ids,
                 require_read_evidence=require_read_evidence,
+                confirmed_facts=confirmed_facts,
             )
         if (isinstance(payload, dict)
                 and payload.get("schema_version") == CLAIM_PROPOSAL_SCHEMA_VERSION):
@@ -752,7 +759,7 @@ class TeamDecisionResult:
         if require_claim_support:
             if evidence_by_ref is None:
                 raise ValidationError("Team Decision claim support requires verified evidence.")
-            result.validate_claim_support(evidence_by_ref)
+            result.validate_claim_support(evidence_by_ref, confirmed_facts=confirmed_facts)
         return result
 
     @classmethod
@@ -767,6 +774,7 @@ class TeamDecisionResult:
         read_evidence_ids: Collection[str],
         observed_temporal_decision_ids: Collection[str],
         require_read_evidence: bool,
+        confirmed_facts: Any = None,
     ) -> "TeamDecisionResult":
         if (not isinstance(expected_workspace_id, str)
                 or not expected_workspace_id.strip()
@@ -814,25 +822,16 @@ class TeamDecisionResult:
                 for evidence_id in temporal_claim["prior_evidence_ids"]:
                     _append_refs(refs, [evidence_id])
         for claim in claims:
-            if claim.predicate == "owner_of_project":
-                clause = (
-                    f"截至 {claim.valid_on}，{claim.subject}的负责人是{claim.object_value}"
-                    if claim.temporal_kind == "snapshot"
-                    else f"在 {claim.valid_on}，{claim.subject}的负责人是{claim.object_value}"
-                    if claim.temporal_kind == "event"
-                    else f"{claim.subject}的负责人是{claim.object_value}"
-                )
-            elif claim.predicate == "alias_of_project":
-                clause = f"{claim.subject}是{claim.object_value}的别名"
-            else:
-                relation = f"{claim.subject}直接向{claim.object_value}汇报"
-                clause = (
-                    f"截至 {claim.valid_on}，{relation}"
-                    if claim.temporal_kind == "snapshot"
-                    else f"在 {claim.valid_on}，{relation}"
-                    if claim.temporal_kind == "event"
-                    else relation
-                )
+            relation = TYPED_CLAIM_RELATIONS[claim.predicate]["clause"].format(
+                subject=claim.subject, object=claim.object_value,
+            )
+            clause = (
+                f"截至 {claim.valid_on}，{relation}"
+                if claim.temporal_kind == "snapshot"
+                else f"在 {claim.valid_on}，{relation}"
+                if claim.temporal_kind == "event"
+                else relation
+            )
             clauses.append(clause)
             for evidence_id in claim.evidence_ids:
                 if evidence_id not in observed:
@@ -865,6 +864,7 @@ class TeamDecisionResult:
                     object_value=claim.object_value,
                     valid_on=claim.valid_on,
                     temporal_kind=claim.temporal_kind,
+                    confirmed_facts=confirmed_facts,
                 ):
                     raise ValidationError(
                         "ClaimProposal relation or temporal scope is not supported by its quote."
@@ -911,8 +911,13 @@ class TeamDecisionResult:
         *,
         question: str | None = None,
         observed_evidence_by_ref: Mapping[str, Mapping[str, Any]] | None = None,
+        confirmed_facts: Any = None,
     ) -> None:
-        """Fail closed unless every supported product-slice assertion is grounded."""
+        """Fail closed unless every supported product-slice assertion is grounded.
+
+        Pass a freshly loaded ConfirmedFactIndex: a revoked approval or a
+        changed source version must stop supporting the claim at review.
+        """
         if self.verified_claims is not None:
             if _result_digest(self) != self.verified_claims.result_sha256:
                 raise ValidationError("Verified ClaimProposal result changed after validation.")
@@ -952,6 +957,7 @@ class TeamDecisionResult:
                         temporal_kind=claim.temporal_kind,
                         observed_evidence_by_ref=(observed_evidence_by_ref
                             if self.decision["status"] in {"approved", "partial"} else None),
+                        confirmed_facts=confirmed_facts,
                     ):
                         raise ValidationError(
                             "Verified ClaimProposal relation no longer matches its evidence."
@@ -974,6 +980,7 @@ class TeamDecisionResult:
             assessment = assess_claim_text(
                 text, refs, evidence_by_ref, question=claim_question,
                 observed_evidence_by_ref=observed_evidence_by_ref,
+                confirmed_facts=confirmed_facts,
             )
             if assessment.status is not ClaimSupportStatus.SUPPORTED:
                 raise ValidationError(
