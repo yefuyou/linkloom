@@ -154,6 +154,56 @@ def test_time_guard_uses_shortened_tool_timeout_and_keeps_full_final_timeout(tmp
     assert bound.session.attempts[-1]['timeout_seconds'] == 2
 
 
+@pytest.mark.parametrize('max_seconds,tools_allowed,tool_window', [
+    (48, False, None),      # 3 s would be left for a tool request: go straight to Final-only
+    (56.2, False, None),    # just under the quarter-timeout minimum (11.25 s)
+    (56.25, True, 11.25),   # exactly the minimum window is still a normal tool request
+    (60, True, 15),
+    (231, True, 45),        # the real slice: ordinary tool calls keep the full request timeout
+])
+def test_short_tool_window_goes_to_final_only_and_final_stays_sendable(
+        tmp_path, monkeypatch, max_seconds, tools_allowed, tool_window):
+    from linkloom.ui import task_provider
+    calls = []
+    adapter = SimpleNamespace(estimate_input_tokens=lambda r: 20000,
+        complete=lambda r: calls.append(r) or ModelResponse(action=ModelAction.final('{}')))
+    policy = TaskProviderLimits(8, 400000, 8000, 1.0, max_seconds, 45, .02)
+    bound = TaskProviderSession(tmp_path, policy, lambda: None).bind(adapter, 'runtime', final_input_upper_bound=106496)
+    monkeypatch.setattr(task_provider, 'monotonic', lambda: bound.session.started)
+    prepared = bound.prepare_request(request())
+    assert prepared.final_only is (not tools_allowed)
+    if tools_allowed:
+        assert not bound.complete(prepared).error
+        assert bound.session.attempts[-1]['timeout_seconds'] == tool_window
+        prepared = bound.prepare_request(request())  # unchanged clock: still a tool request
+        assert not prepared.final_only
+        prepared = replace(prepared, final_only=True)
+    else:
+        assert not calls  # no short request was ever sent
+    assert not bound.complete(prepared).error
+    assert bound.session.attempts[-1]['timeout_seconds'] == min(45, max_seconds)  # the Final keeps its full window
+    assert bound.session.failure is None
+
+
+def test_provider_timeout_is_still_uncertain_and_never_retried_after_a_normal_tool_window(tmp_path):
+    calls = []
+    def slow(r):
+        calls.append(r)
+        time.sleep(.6)
+        return ModelResponse(action=ModelAction.final('{}'))
+    adapter = SimpleNamespace(estimate_input_tokens=lambda r: 1000, complete=slow)
+    bound = TaskProviderSession(tmp_path, TaskProviderLimits(8, 200000, 8000, .4, 1.5, .4, .02), lambda: None).bind(
+        adapter, 'runtime', final_input_upper_bound=106496)
+    prepared = bound.prepare_request(request())
+    assert not prepared.final_only  # 1.1 s remain after the Final window: a 0.4 s tool request
+    assert bound.complete(prepared).error
+    assert bound.session.failure == 'PROVIDER_TIMEOUT_UNCERTAIN' and len(calls) == 1
+    assert bound.prepare_request(request()).final_only  # a poisoned session only ever finalizes
+    assert bound.complete(replace(prepared, final_only=True, available_tools=[])).error
+    assert len(calls) == 1  # the unknown receipt is never retried or re-sent
+    assert [a['outcome'] for a in bound.session.attempts] == ['UNCERTAIN']
+
+
 def test_timeout_is_uncertain_and_no_late_result_can_publish(tmp_path):
     def slow(r):
         time.sleep(.15)

@@ -138,12 +138,16 @@ class TaskProviderSession:
             final_output = final_output_upper_bound or output
             final_cost = self.limits.reservation_cost(final_input_upper_bound, final_output)
             remaining = self.limits.max_seconds - (monotonic() - self.started)
+            # A tool request gets min(timeout, remaining - timeout): the rest is kept for the Final. A window of a
+            # few seconds would time out an ordinary answer, and that unknown receipt would block the Final. Below a
+            # quarter of the existing request timeout, go straight to Final-only instead of sending a short request.
+            tool_window = min(self.limits.request_timeout_seconds, remaining - self.limits.request_timeout_seconds)
             can_continue = (not self.failure
                 and self.requests + 2 <= self.limits.max_requests
                 and self.input_tokens + size + final_input_upper_bound <= self.limits.max_input_tokens
                 and self.output_tokens + output + final_output <= self.limits.max_output_tokens
                 and self.cost + self.limits.reservation_cost(size, output) + final_cost <= self.limits.max_cost_usd + 1e-10
-                and remaining > self.limits.request_timeout_seconds)
+                and tool_window >= self.limits.request_timeout_seconds / 4)
         if can_continue:
             return request
         options = replace(request.generation_options, require_tool_call=False)
