@@ -12,6 +12,7 @@ from __future__ import annotations
 import base64
 from collections.abc import Mapping
 from copy import deepcopy
+from dataclasses import replace
 import hashlib
 import json
 import re
@@ -129,8 +130,9 @@ _FINISH_REASON_MAP = {
     "STOP": "stop",
     "END": "stop",
     "FINISHED": "stop",
-    "MAX_TOKENS": "max_tokens",
-    "LENGTH": "max_tokens",
+    # "length" is the neutral truncation value shared with DeepSeek, record_reply and TaskProviderSession.
+    "MAX_TOKENS": "length",
+    "LENGTH": "length",
     "SAFETY": "safety",
     "BLOCKED": "safety",
     "RECITATION": "recitation",
@@ -432,6 +434,26 @@ def build_gemini_sdk_client(
     )
 
 
+class GeminiSDKClientBridge:
+    """Expose the official SDK's model API through the provider client contract."""
+
+    def __init__(self, sdk_client) -> None:
+        model_api = getattr(sdk_client, "models", None)
+        if not callable(getattr(model_api, "generate_content", None)):
+            raise TypeError("Gemini SDK client must expose models.generate_content().")
+        self._sdk_client = sdk_client
+
+    def generate_content(self, *, model, contents, config):
+        return self._sdk_client.models.generate_content(
+            model=model,
+            contents=contents,
+            config=config,
+        )
+
+    def __getattr__(self, name):
+        return getattr(self._sdk_client, name)
+
+
 def _validate_schema_for_gemini(schema: Any, path: str = "input_schema") -> None:
     if not isinstance(schema, dict):
         _schema_failure(path)
@@ -703,6 +725,16 @@ def _build_contents(
     contents: list[dict[str, Any]] = [
         {"role": "user", "parts": [{"text": initial_user_text}]}
     ]
+    if request.final_only and request.observation is None and request.tool_turns:
+        # Start a text-only Gemini turn when the verified context already carries
+        # all completed reads. Preserve history if it contains other tool results.
+        verified_reads = {result.call_id for result in request.evidence_context
+                          if result.tool_id == "read_verified_note"}
+        if verified_reads and all(
+            result.result.tool_id == "search_notes" or result.runtime_call_id in verified_reads
+            for turn in request.tool_turns for result in turn.tool_results
+        ):
+            return contents
     for tool_turn in request.tool_turns:
         contents.extend(_model_tool_turn_contents(tool_turn))
     if request.observation is None:
@@ -847,9 +879,9 @@ def build_gemini_request(
         "tools": [{"function_declarations": declarations}] if declarations else [],
         "automatic_function_calling": {"disable": True},
     }
-    if options.require_tool_call:
+    if request.final_only or options.require_tool_call:
         config["tool_config"] = {
-            "function_calling_config": {"mode": "ANY"}
+            "function_calling_config": {"mode": "NONE" if request.final_only else "ANY"}
         }
     if options.max_output_tokens is not None:
         config["max_output_tokens"] = options.max_output_tokens
@@ -857,6 +889,9 @@ def build_gemini_request(
         config["thinking_config"] = {
             "thinking_level": options.thinking_level.upper()
         }
+    if options.response_json_schema is not None:
+        config["response_mime_type"] = "application/json"
+        config["response_json_schema"] = deepcopy(options.response_json_schema)
 
     payload = {
         "model": model_id,
@@ -964,6 +999,16 @@ def _extract_finish_reason(response: Any) -> Any:
     return None
 
 
+def _thinking_tokens(usage: Any, input_tokens: Any, visible: Any, total: Any) -> int | None:
+    thinking = _first_present(usage, ("thoughts_token_count", "thoughtsTokenCount"))
+    if thinking is None and None not in (input_tokens, visible, total):
+        try:
+            thinking = max(0, total - input_tokens - visible)
+        except TypeError:
+            return None
+    return thinking if type(thinking) is int and thinking >= 0 else None
+
+
 def _extract_usage(response: Any, duration_ms: float) -> ModelUsage:
     usage = _first_present(response, ("usage_metadata", "usage"), {})
     if usage is None:
@@ -985,6 +1030,11 @@ def _extract_usage(response: Any, duration_ms: float) -> ModelUsage:
         usage,
         ("total_token_count", "total_tokens", "totalTokenCount"),
     )
+    # candidates_token_count excludes thinking tokens, which are billed and share
+    # max_output_tokens; output_tokens is visible plus thinking.
+    thinking = _thinking_tokens(usage, input_tokens, output_tokens, total_tokens)
+    if output_tokens is not None and thinking is not None:
+        output_tokens = output_tokens + thinking
     try:
         return ModelUsage(
             input_tokens=input_tokens,
@@ -1005,6 +1055,15 @@ def _provider_metadata(response: Any, model_id: str) -> dict[str, Any]:
     if model_version is not None:
         _validate_provider_text(model_version, "GeminiResponse.model_version")
         metadata["model_version"] = model_version
+    usage = _first_present(response, ("usage_metadata", "usage"), {}) or {}
+    thinking = _thinking_tokens(
+        usage,
+        _first_present(usage, ("prompt_token_count", "input_tokens", "promptTokenCount")),
+        _first_present(usage, ("candidates_token_count", "output_tokens", "candidatesTokenCount")),
+        _first_present(usage, ("total_token_count", "total_tokens", "totalTokenCount")),
+    )
+    if thinking is not None:
+        metadata["reasoning_tokens"] = thinking
     _validate_provider_metadata(metadata, "GeminiResponse.provider_metadata")
     return metadata
 
@@ -1668,7 +1727,7 @@ class GeminiProviderAdapter:
                 failure_stage="RESPONSE_VALIDATION",
                 failure_category="RESPONSE_VALIDATION_ERROR",
             )
-            return self._failure_response(
+            response = self._failure_response(
                 _AdapterFailure(
                     failure.code,
                     outcome=failure.outcome,
@@ -1677,6 +1736,19 @@ class GeminiProviderAdapter:
                     details=failure_details,
                 )
             )
+            try:
+                # A truncated reply that left no usable text stays visible as "length" with its usage.
+                finish = _normalize_finish_reason(_extract_finish_reason(raw_response))
+                if finish == "length":
+                    response = replace(
+                        response,
+                        finish_reason=finish,
+                        usage=_extract_usage(raw_response, duration_ms),
+                        provider_metadata=_provider_metadata(raw_response, payload["model"]),
+                    )
+            except (_AdapterFailure, ValidationError, TypeError, ValueError):
+                pass
+            return response
         except (ValidationError, TypeError, ValueError) as exception:
             diagnostics = gemini_response_diagnostics(
                 raw_response,
@@ -1843,12 +1915,15 @@ class GeminiProviderAdapter:
             usage=usage,
             provider_request_id=request_id,
             provider_response_id=response_id,
-            finish_reason=finish_reason or "stop",
+            # Structured JSON replies must report a finish_reason; only unstructured text defaults to stop.
+            finish_reason=finish_reason
+            or (None if request.generation_options.response_json_schema is not None else "stop"),
             provider_metadata=metadata,
         )
 __all__ = [
     "GeminiClient",
     "GeminiProviderAdapter",
+    "GeminiSDKClientBridge",
     "build_gemini_sdk_client",
     "build_gemini_request",
     "map_tool_definition_to_gemini_function",

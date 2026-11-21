@@ -1,9 +1,18 @@
 """Real Ask validation/dispatch with a scripted, single-call safety classifier."""
+from http.client import HTTPConnection
 import json
+from threading import Event, Thread
+from time import sleep
+from types import SimpleNamespace
+
 import pytest
 
 from linkloom.agents.model_adapter import ModelAction, ModelResponse
+from linkloom.ui.lifecycle import BackgroundWorkStopped
 from linkloom.ui.router_provider import RouterProvider
+from linkloom.ui.server import create_http_server
+from linkloom.ui.structured_router import CONFIG
+from linkloom.ui.task_provider import TaskProviderLimits
 from linkloom.ui.unified_ask import UnifiedAskService
 from test_structured_router_ask import decisions, ScriptedRouter, output
 
@@ -32,6 +41,14 @@ def service(decisions, gate, mode, router=None, **kwargs):
         router_provider=RouterProvider(router, mode=mode, security_adapter=gate, **kwargs), slot_embedder=None)
 
 
+def supplier_router():
+    """A usable Router reply for 'What supplier is Launch currently using?' (llm_first has no rules to lean on)."""
+    def reply(data):
+        supplier = next(c for c in data['candidates'] if 'uses supplier' in c['label'])
+        return output(domain='DECISION', candidate_ids=[supplier['id']], mentions=['supplier'])
+    return ScriptedRouter(reply)
+
+
 @pytest.mark.parametrize('mode', ['cascade', 'llm_first'])
 def test_block_is_before_missing_entity_time_and_candidate_recall(decisions, monkeypatch, mode):
     gate = Gate('SECRET_OR_POLICY_OVERRIDE')
@@ -49,18 +66,20 @@ def test_block_is_before_missing_entity_time_and_candidate_recall(decisions, mon
 
 
 @pytest.mark.parametrize('mode', ['cascade', 'llm_first'])
-def test_allow_preserves_existing_answer_and_router_fallback_classifies_once(decisions, mode):
+def test_allow_preserves_existing_answer_and_classifies_once(decisions, mode):
     gate = Gate()
-    ask = service(decisions, gate, mode)
+    ask = service(decisions, gate, mode, supplier_router())
     query = dict(query='What supplier is Launch currently using?', workspace_id=decisions.app._workspace_id())
-    baseline, code = service(decisions, None, mode).ask(query)
+    baseline, code = service(decisions, None, mode, supplier_router()).ask(query)
     result, status = ask.ask(query)
     assert status == code == 200 and result['status'] == baseline['status'] == 'COMPLETED'
     assert result['conclusions'] == baseline['conclusions'] and result['evidence'] == baseline['evidence']
     assert result.get('router') == baseline.get('router')
     assert result['security_gate']['decision'] == 'ALLOW'
     assert len(gate.requests) == 1
-    assert len(ask.router_provider.adapter.requests) == (1 if mode == 'llm_first' else 0)
+    # The Router decides an ordinary question alone in both modes: one routing call, no rule pass behind it.
+    assert result['router']['source'] == 'llm' and result['router']['domain'] == 'DECISION'
+    assert len(ask.router_provider.adapter.requests) == 1
 
 
 FAILED_GATES = [Gate(text='invalid'), Gate(text='{"decision":"ALLOW","reason_code":"NONE"}'),
@@ -109,7 +128,7 @@ def test_any_safety_code_blocks_and_none_allows(decisions, mode, reason):
     blocked, _ = service(decisions, Gate(reason), mode).ask(query)
     assert blocked['router']['decision'] == 'REFUSE' and blocked['error']['code'] == reason
     assert blocked['security_gate']['decision'] == 'BLOCK' and not blocked['evidence']
-    allowed, _ = service(decisions, Gate('NONE'), mode).ask(query)
+    allowed, _ = service(decisions, Gate('NONE'), mode, supplier_router()).ask(query)
     assert allowed['status'] == 'COMPLETED' and allowed['evidence']
     assert allowed['security_gate']['decision'] == 'ALLOW'
 
@@ -182,6 +201,64 @@ def test_authorized_classifier_is_one_budgeted_call_before_capability(decisions)
     assert not session.pending_task_ids()
 
 
+def test_budgeted_security_timeout_returns_http_result_and_ignores_late_allow(decisions, monkeypatch):
+    monkeypatch.setitem(CONFIG, 'security_timeout_seconds', .2)
+    release = Event()
+
+    class SlowGate(Gate):
+        def complete(self, request):
+            self.requests.append(request)
+            assert release.wait(5)
+            return ModelResponse(action=ModelAction.final(self.text))
+
+    gate = SlowGate()
+    router = ScriptedRouter(lambda _: pytest.fail('The timed-out Ask reached the Router'))
+    owner = decisions.configure_agent()
+    # Precondition: the request must be dispatched before it can time out. Give the session's total
+    # budget headroom (as configured task budgets do) so slow CI setup cannot consume it before dispatch;
+    # the Router still caps the request itself at security_timeout_seconds. The not-dispatched case is
+    # covered by test_security_budget_spent_before_dispatch_is_reported_as_not_sent.
+    monkeypatch.setattr(owner, 'task_models', SimpleNamespace(execution_kind='OFFLINE', provider_limits=
+        TaskProviderLimits(1, 12000, CONFIG['security_max_output_tokens'], .03, 30, 30, .00656)))
+    monkeypatch.setattr(owner, 'start_orchestrated', lambda *a, **kw: pytest.fail('Ask reached LangGraph'))
+    monkeypatch.setattr(owner, 'start', lambda *a, **kw: pytest.fail('Ask reached Runtime'))
+    with create_http_server(None, product_app=decisions.app, investigation_service=owner,
+                            enable_temporal_graph=False, port=0,
+                            router_provider=RouterProvider(router, external_provider=True,
+                                                           security_adapter=gate)) as server:
+        thread = Thread(target=server.serve_forever, daemon=True)
+        thread.start()
+        client = HTTPConnection('127.0.0.1', server.server_port, timeout=4)
+        try:
+            client.request('POST', '/api/product/ask', json.dumps(dict(
+                query='Why did Launch switch suppliers?', workspace_id=decisions.app._workspace_id(),
+                allow_external_provider=True)), {'Content-Type': 'application/json'})
+            reply = client.getresponse()
+            assert reply.status == 200
+            result = json.load(reply)['result']
+            assert result['status'] == 'NEEDS_SCOPE' and result['error']['code'] == 'MODEL_UNAVAILABLE'
+            assert not result['agent_run_id'] and not result['evidence']
+            security = result['security_gate']
+            assert security['status'] == 'INCOMPLETE' and 'decision' not in security
+            assert security['fallback_reason'] == 'PROVIDER_TIMEOUT_UNCERTAIN'
+            session, = owner._provider_sessions
+            assert session.pending_task_ids()
+            with pytest.raises(BackgroundWorkStopped):
+                session.complete(gate, 'ask-security', gate.requests[0])
+            release.set()
+            session.close(timeout=2)
+            receipt = json.loads((session.root / 'budget.json').read_text(encoding='utf8'))
+            assert receipt['failure'] == 'PROVIDER_TIMEOUT_UNCERTAIN'
+            assert [attempt['outcome'] for attempt in receipt['attempts']] == ['UNCERTAIN']
+            assert receipt['attempts'][0].get('response_sha256') is None
+            assert len(gate.requests) == 1 and not router.requests
+        finally:
+            release.set()
+            client.close()
+            server.shutdown()
+            thread.join()
+
+
 def test_truncated_security_reply_clarifies_and_is_persisted_separately(decisions):
     from linkloom.agents.model_adapter import ModelUsage
 
@@ -216,7 +293,8 @@ def test_graph_fallback_reentry_does_not_classify_again(decisions, monkeypatch):
     gate = Gate()
     ask = service(decisions, gate, 'cascade')
     records = []
-    ask.graph_service = SimpleNamespace(metrics=SimpleNamespace(record=lambda *args: records.append(args)))
+    ask.graph_service = SimpleNamespace(metrics=SimpleNamespace(record=lambda *args: records.append(args)),
+                                        store_factory=lambda _: SimpleNamespace(load_edges=lambda *args: None))
     original = ask._decision_request
     entered = []
     def decision(run, result, payload, values, as_of):
@@ -226,8 +304,9 @@ def test_graph_fallback_reentry_does_not_classify_again(decisions, monkeypatch):
                 dict(run_id='graph-fallback', graph_status='UNKNOWN'))
         return original(run, result, payload, values, as_of)
     monkeypatch.setattr(ask, '_decision_request', decision)
+    # An explicit scope is the rule path that can re-enter (a Router-decided route keeps its graph result).
     result, _ = ask.ask(dict(query='What supplier is Launch currently using?',
-        workspace_id=decisions.app._workspace_id()))
+        workspace_id=decisions.app._workspace_id(), subject='Launch', relation='uses supplier'))
     assert result['status'] == 'COMPLETED' and len(gate.requests) == 1
     assert result['answer_source'] == 'legacy' and records == [('legacy_fallback', 'GRAPH_INSUFFICIENT_UNKNOWN')]
 
@@ -247,6 +326,9 @@ def test_allow_uses_at_most_one_security_and_one_existing_router_send(decisions)
     assert len(gate.requests) == len(router.requests) == 1
     assert [s.attempts[0]['stage'] for s in owner._provider_sessions] == ['ask-security', 'ask-router']
     assert all(s.requests == s.limits.max_requests == 1 for s in owner._provider_sessions)
+    assert [(s.limits.max_seconds, s.limits.request_timeout_seconds) for s in owner._provider_sessions] == [
+        (15, 15), (6, 6),
+    ]
 
 
 def test_workspace_source_change_during_classification_cannot_release_results(decisions):
@@ -268,7 +350,7 @@ def test_workspace_source_change_during_classification_cannot_release_results(de
 def test_without_a_configured_security_model_routing_keeps_its_previous_behavior(decisions, external):
     # Only a configured security model can fail closed; an unconfigured gate is not a failure.
     owner = decisions.configure_agent()
-    ask = service(decisions, None, 'cascade', external_provider=external)
+    ask = service(decisions, None, 'cascade', supplier_router(), external_provider=external)
     ask.investigation = lambda: owner
     result, status = ask.ask(dict(query='What supplier is Launch currently using?',
         workspace_id=decisions.app._workspace_id(), allow_external_provider=True))
@@ -283,3 +365,33 @@ def test_default_rule_mode_without_any_router_is_unchanged(decisions):
         workspace_id=decisions.app._workspace_id()))
     assert status == 200 and result['status'] == 'COMPLETED' and result['evidence']
     assert 'security_gate' not in result
+
+
+def test_security_budget_spent_before_dispatch_is_reported_as_not_sent(decisions, monkeypatch):
+    """Setup that outlasts the whole security budget sends nothing and says so; it is not 'unavailable'."""
+    import linkloom.ui.task_provider as task_provider
+    monkeypatch.setitem(CONFIG, 'security_timeout_seconds', .05)
+    original = task_provider.TaskProviderSession.__init__
+
+    def slow_setup(self, root, limits, validate):
+        def validate_after_budget():
+            sleep(.1)
+            return validate()
+        original(self, root, limits, validate_after_budget)
+
+    monkeypatch.setattr(task_provider.TaskProviderSession, '__init__', slow_setup)
+    gate = Gate()
+    router = ScriptedRouter(lambda _: pytest.fail('The Ask reached the Router'))
+    owner = decisions.configure_agent()
+    ask = UnifiedAskService(decisions.app, lambda: owner, graph_service=False, slot_embedder=None,
+                            router_provider=RouterProvider(router, external_provider=True, security_adapter=gate))
+    result, status = ask.ask(dict(query='Why did Launch switch suppliers?',
+                                  workspace_id=decisions.app._workspace_id(), allow_external_provider=True))
+    assert status == 200 and result['error']['code'] == 'MODEL_UNAVAILABLE'
+    security = result['security_gate']
+    assert security['status'] == 'INCOMPLETE' and security['fallback_reason'] == 'BUDGET_EXHAUSTED'
+    session, = owner._provider_sessions
+    receipt = json.loads((session.root / 'budget.json').read_text(encoding='utf8'))
+    assert receipt['failure'] == 'TASK_PROVIDER_BUDGET_EXHAUSTED'
+    assert receipt['requests_reserved'] == 0 and receipt['attempts'] == []
+    assert not gate.requests and not router.requests

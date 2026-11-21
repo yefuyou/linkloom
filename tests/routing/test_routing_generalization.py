@@ -102,7 +102,7 @@ def test_low_semantic_candidates_are_kept_and_sent_to_selector():
             options = json.loads(request.user_input.split("\n", 1)[1])["candidates"]
             assert {item["slot_id"] for item in options} == {"platform", "allocation"}
             return ModelResponse(action=ModelAction.final(json.dumps(
-                {"intent": "CURRENT", "slot_id": "platform", "as_of": None})))
+                {"intent": "CURRENT", "slot_id": "platform", "as_of": None, "entity_mentions": []})))
     result = route_question("Which substrate is Juniper using?", SLOTS, RESOLVER, workspace_id="one",
                             embedder=model, provider_factory=Selector)
     assert result["route"] == "CURRENT" and result["decided_by"] == "llm"
@@ -118,7 +118,7 @@ def test_null_selection_on_low_scores_falls_back_with_candidates():
     class Selector:
         def complete(self, request):
             return ModelResponse(action=ModelAction.final(
-                '{"intent":"CURRENT","slot_id":null,"as_of":null}'))
+                '{"intent":"CURRENT","slot_id":null,"as_of":null,"entity_mentions":[]}'))
     result = route_question("Which substrate is Juniper using?", SLOTS, RESOLVER, workspace_id="one",
                             embedder=model, provider_factory=Selector)
     assert result["route"] == "CLARIFY" and result["scope"] is None
@@ -142,8 +142,7 @@ def test_default_auto_mode_with_provider_uses_available_local_model(monkeypatch)
     monkeypatch.setattr(scope, "get_slot_embedder", lambda: model)
     from types import SimpleNamespace
     from linkloom.agents.model_adapter import ModelAction, ModelResponse
-    choice = json.dumps({"intent": "CURRENT", "slot_id": scope.decision_slot_id(
-        SLOTS[0]["subject"], SLOTS[0]["relation"]), "as_of": None})
+    choice = json.dumps({"intent": "CURRENT", "slot_id": SLOTS[0]["slot_id"], "as_of": None, "entity_mentions": []})
     selector = SimpleNamespace(complete=lambda request: ModelResponse(action=ModelAction.final(choice)))
     result = route_question("Which substrate is Juniper using?", SLOTS, RESOLVER,
                             workspace_id="one", provider_factory=lambda: selector)
@@ -229,7 +228,7 @@ def test_real_gemini_adapter_accepts_selector_request_without_temperature():
         def generate_content(self, **payload):
             calls.append(payload)
             assert "temperature" not in payload["config"]
-            return {"text": '{"intent":"CURRENT","slot_id":"platform","as_of":null}',
+            return {"text": '{"intent":"CURRENT","slot_id":"platform","as_of":null,"entity_mentions":[]}',
                     "finish_reason": "STOP"}
     inputs = [SLOTS[0], dict(SLOTS[0], subject="Willow", slot_id="willow")]
     adapter = GeminiProviderAdapter(Transport())
@@ -248,7 +247,7 @@ def test_zero_overlap_without_embeddings_still_reaches_configured_selector(selec
             options = json.loads(request.user_input.split("\n", 1)[1])["candidates"]
             assert {item["slot_id"] for item in options} == {"platform", "allocation"}
             return ModelResponse(action=ModelAction.final(json.dumps(
-                {"intent": "CURRENT", "slot_id": selected, "as_of": None})))
+                {"intent": "CURRENT", "slot_id": selected, "as_of": None, "entity_mentions": []})))
     result = route_question("Which substrate?", SLOTS, RESOLVER, workspace_id="one",
                             embedder=None, provider_factory=Selector)
     # Current contract: no related recall means no arbitrary slot backfill,
@@ -275,7 +274,7 @@ def test_unresolved_period_without_a_topic_still_allows_null_selection(embedded)
         def complete(self, request):
             calls.append(request)
             return ModelResponse(action=ModelAction.final(
-                '{"intent":"AS_OF","slot_id":null,"as_of":null}'))
+                '{"intent":"AS_OF","slot_id":null,"as_of":null,"entity_mentions":[]}'))
     result = route_question("What was chosen last week?", SLOTS, RESOLVER, workspace_id="one",
                             embedder=SemanticModel(query=(0.1, 0.1, 0.98)) if embedded else None,
                             provider_factory=Selector)
@@ -289,7 +288,7 @@ def test_selector_can_identify_a_slot_but_cannot_guess_an_unresolved_date():
     class Selector:
         def complete(self, request):
             return ModelResponse(action=ModelAction.final(
-                '{"intent":"AS_OF","slot_id":"platform","as_of":null}'))
+                '{"intent":"AS_OF","slot_id":"platform","as_of":null,"entity_mentions":[]}'))
     result = route_question("Which substrate last week?", SLOTS, RESOLVER, workspace_id="one",
                             embedder=SemanticModel(query=(0.5, 0.5, 0.7)), provider_factory=Selector)
     assert result["llm_attempted"] and result["route"] == "CLARIFY"

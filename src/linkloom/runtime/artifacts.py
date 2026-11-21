@@ -205,8 +205,8 @@ class ModelArtifactStore:
         return self.write(
             (
                 f"model/{self.safe_segment(run_id)}"
-                f"/{self.safe_segment(turn_id)}/tool-results"
-                f"/{ordinal:02d}-{self.safe_segment(runtime_call_id)}.json"
+                f"/{self.safe_segment(turn_id)}"
+                f"/t{ordinal:02d}-{self.safe_segment(runtime_call_id)}.json"
             ),
             payload,
             kind="tool_result",

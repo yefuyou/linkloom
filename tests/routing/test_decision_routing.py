@@ -66,7 +66,6 @@ def test_workspace_and_review_filter_run_before_indexing_and_embedding():
     "Which platform does project 456 use?",
     "Which platform does Juniper or Stranger use?",
     "陌生项目当前采用哪个平台？",
-    "Juniper 现在采用哪家支付平台？",
     "Why did Juniper switch from Quartz to Unrecorded?",
     "What is Support's current platform?",
     "Which platform has Support chosen?",
@@ -78,19 +77,41 @@ def test_workspace_and_review_filter_run_before_indexing_and_embedding():
     "Which platform is Juniper using with stranger?",
 ])
 def test_unknown_or_foreign_explicit_binding_never_borrows_a_known_slot(question):
-    provider = Selector('{"intent":"CURRENT","slot_id":"forged","as_of":null}')
+    provider = Selector('{"intent":"CURRENT","slot_id":"forged","as_of":null,"entity_mentions":[]}')
     result = route_question(question, [slot(), slot("Support", workspace="other")], RESOLVER,
                             workspace_id="one", provider_factory=lambda: provider)
-    # Authorized contract migration: an unknown common-noun topic qualifier
-    # is soft uncertainty; all explicit unknown proper-name cases remain hard.
-    soft_topic = question == "Juniper 现在采用哪家支付平台？"
-    assert result["route"] == ("CLARIFY" if soft_topic else "NO_MATCH")
+    assert result["route"] == "NO_MATCH"
     assert result["scope"] is None and result["decided_by"] == "fallback"
-    if soft_topic:
-        assert slot()["slot_id"] in {c["slot_id"] for c in result["discovery"]["raw_candidates"]}
-        assert len(provider.requests) == 1
-    else:
-        assert provider.requests == []
+    assert result["discovery"]["status"] == "NO_MATCH" and result["discovery"]["scope"] is None
+
+
+@pytest.mark.parametrize("question,unknown", [
+    ("Which platform does Support currently use?", "Support"),
+    ("Which platform does project 456 use?", "project 456"),
+    ("Which platform is Juniper using with Stranger?", "Stranger"),
+    ("陌生项目当前采用哪个平台？", "陌生项目"),
+])
+@pytest.mark.parametrize("mentions", ["unknown", "omitted", "none"])
+def test_a_model_reply_never_binds_a_name_the_catalogue_does_not_know(question, unknown, mentions):
+    # The model may be asked, but whatever it replies, the unknown or other-workspace name ends in NO_MATCH.
+    slots = [slot(), slot("Support", workspace="other")]
+    chosen = dict(intent="CURRENT", slot_id=slots[0]["slot_id"], as_of=None, entity_mentions=[])
+    if mentions == "unknown":
+        chosen["entity_mentions"] = [unknown]
+    elif mentions == "omitted":
+        chosen["entity_mentions"] = ["platform"] if "platform" in question else []
+    provider = Selector(json.dumps(chosen))
+    result = route_question(question, slots, RESOLVER, workspace_id="one", provider_factory=lambda: provider)
+    assert result["route"] == "NO_MATCH" and result["scope"] is None and result["decided_by"] == "fallback"
+    assert result["discovery"]["scope"] is None
+
+
+def test_unrecorded_topic_qualifier_does_not_block_a_named_subject():
+    # "支付" is not a recorded topic word. The named project and recorded relation still anchor the slot;
+    # the answer shows the recorded slot and its sources instead of a rule-based refusal.
+    result = route_question("Juniper 现在采用哪家支付平台？", [slot(), slot("Support", workspace="other")],
+                            RESOLVER, workspace_id="one")
+    assert result["route"] == "CURRENT" and result["scope"]["subject"] == "Juniper"
 
 
 def test_same_question_resolves_only_in_its_own_workspace():
@@ -115,7 +136,7 @@ def test_missing_or_unreviewed_provenance_is_not_implicitly_trusted(metadata):
 
 def test_valid_llm_selection_is_one_bounded_choice_over_top_five():
     inputs = ambiguous_slots()
-    provider = Selector(json.dumps({"intent": "CURRENT", "slot_id": inputs[1]["slot_id"], "as_of": None}))
+    provider = Selector(json.dumps({"intent": "CURRENT", "slot_id": inputs[1]["slot_id"], "as_of": None, "entity_mentions": []}))
     result = route_question("Which platform are we using now?", inputs, RESOLVER,
                             workspace_id="one", provider_factory=lambda: provider)
     assert result["route"] == "CURRENT" and result["scope"]["subject"] == "Willow"
@@ -128,14 +149,14 @@ def test_valid_llm_selection_is_one_bounded_choice_over_top_five():
 
 
 @pytest.mark.parametrize("answer", [
-    '{"intent":"CURRENT","slot_id":"not-a-candidate","as_of":null}',
-    '{"intent":"CURRENT","slot_id":123,"as_of":null}',
-    '{"intent":"OTHER","slot_id":null,"as_of":null}',
+    '{"intent":"CURRENT","slot_id":"not-a-candidate","as_of":null,"entity_mentions":[]}',
+    '{"intent":"CURRENT","slot_id":123,"as_of":null,"entity_mentions":[]}',
+    '{"intent":"OTHER","slot_id":null,"as_of":null,"entity_mentions":[]}',
     '{"intent":"CURRENT","slot_id":null,"as_of":null,"extra":1}',
-    '{"intent":"CURRENT","intent":"AS_OF","slot_id":null,"as_of":null}',
+    '{"intent":"CURRENT","intent":"AS_OF","slot_id":null,"as_of":null,"entity_mentions":[]}',
     '{"intent":"CURRENT","slot_id":null,"as_of":"2020-01-01"}',
-    '{"intent":"AS_OF","slot_id":null,"as_of":null}',
-    chr(96) * 3 + 'json\n{"intent":"CURRENT","slot_id":null,"as_of":null}\n' + chr(96) * 3,
+    '{"intent":"AS_OF","slot_id":null,"as_of":null,"entity_mentions":[]}',
+    chr(96) * 3 + 'json\n{"intent":"CURRENT","slot_id":null,"as_of":null,"entity_mentions":[]}\n' + chr(96) * 3,
     '{"intent":"CURRENT","slot_id":null,"as_of":NaN}',
     '["CURRENT",null,null]', "not JSON", TimeoutError("private transport detail"),
 ])
@@ -156,7 +177,7 @@ def test_top_five_membership_and_top_three_fallback():
         assert len(options) == 5
         excluded = next(item["slot_id"] for item in inputs
                         if item["slot_id"] not in {option["slot_id"] for option in options})
-        return json.dumps({"intent": "CURRENT", "slot_id": excluded, "as_of": None})
+        return json.dumps({"intent": "CURRENT", "slot_id": excluded, "as_of": None, "entity_mentions": []})
     provider = Selector(outside)
     result = route_question("Which platform are we using now?", inputs, RESOLVER,
                             workspace_id="one", provider_factory=lambda: provider)
@@ -164,26 +185,57 @@ def test_top_five_membership_and_top_three_fallback():
     assert len(result["discovery"]["candidates"]) == 3
 
 
-def test_unique_match_and_explicit_rule_do_not_call_optional_model():
+def test_explicit_subject_relation_does_not_call_optional_model():
     provider = Selector(RuntimeError("must not run"))
-    for extra, layer in (({}, "slot_match"), ({"subject": "Juniper", "relation": "uses platform"}, "rule")):
-        result = route_question("Which platform is Juniper using?", [slot()], RESOLVER,
-                                workspace_id="one", provider_factory=lambda: provider, **extra)
-        assert result["route"] == "CURRENT" and result["decided_by"] == layer
+    result = route_question("Which platform is Juniper using?", [slot()], RESOLVER, workspace_id="one",
+                            provider_factory=lambda: provider, subject="Juniper", relation="uses platform")
+    assert result["route"] == "CURRENT" and result["decided_by"] == "rule"
     assert provider.requests == []
 
 
-def test_llm_cannot_invent_a_date_or_downgrade_explanation():
+def test_a_rule_bound_question_makes_no_selector_call_and_a_broken_selector_cannot_degrade_it():
+    # The rules already bind the single slot, so no semantic disambiguation is needed: no model call,
+    # and an invalid or failing selector can never turn the answerable question into CLARIFY.
+    question = "Which platform is Juniper using now, not the one that changed?"
+    assert classify_task(question)["intent"] == "INVESTIGATION"
+    for provider in (Selector(RuntimeError("down")), Selector("not json")):
+        result = route_question(question, [slot()], RESOLVER, workspace_id="one", provider_factory=lambda: provider)
+        assert provider.requests == [] and result["llm_attempted"] is False and result["llm_error"] is None
+        assert result["route"] == "INVESTIGATION" and result["scope"]["subject"] == "Juniper"
+
+
+def test_llm_cannot_invent_a_date():
     inputs = ambiguous_slots()
     identifier = inputs[0]["slot_id"]
     for question, answer in (
         ("Which platform now?", dict(intent="AS_OF", slot_id=identifier, as_of="2021-01-01")),
-        ("Why did the platform change?", dict(intent="CURRENT", slot_id=identifier, as_of=None)),
         ("Which platform on 2026-10-06?", dict(intent="AS_OF", slot_id=identifier, as_of="2026-10-07")),
     ):
         provider = Selector(json.dumps(answer))
         result = route_question(question, inputs, RESOLVER, workspace_id="one", provider_factory=lambda: provider)
         assert result["route"] == "CLARIFY" and result["decided_by"] == "fallback"
+
+
+def test_model_current_intent_is_honored_when_investigation_words_misfire():
+    inputs = ambiguous_slots()
+    identifier = inputs[0]["slot_id"]
+    question = "Which platform are we using now since it changed?"
+    assert classify_task(question)["intent"] == "INVESTIGATION"
+    provider = Selector(json.dumps(dict(intent="CURRENT", slot_id=identifier, as_of=None, entity_mentions=[])))
+    result = route_question(question, inputs, RESOLVER,
+                            workspace_id="one", provider_factory=lambda: provider)
+    assert result["route"] == "CURRENT" and result["decided_by"] == "llm"
+    assert result["scope"]["subject"] == inputs[0]["subject"]
+
+
+def test_model_investigation_intent_is_honored_for_why_question():
+    inputs = ambiguous_slots()
+    identifier = inputs[0]["slot_id"]
+    provider = Selector(json.dumps(dict(intent="INVESTIGATION", slot_id=identifier, as_of=None, entity_mentions=[])))
+    result = route_question("Why did the platform change?", inputs, RESOLVER,
+                            workspace_id="one", provider_factory=lambda: provider)
+    assert result["route"] == "INVESTIGATION" and result["decided_by"] == "llm"
+    assert result["scope"]["subject"] == inputs[0]["subject"]
 
 
 def test_multiple_explicit_topics_and_unresolved_dates_remain_clarifications():
@@ -234,20 +286,30 @@ def test_original_relation_and_task_dispatch_never_enter_slot_router(case, monke
 
 
 @pytest.mark.parametrize("question", [
-    "为什么石英被花岗岩替换？", "石英为什么换成花岗岩？",
-    "比较石英和花岗岩的平台方案？",
     "Why was Quartz replaced by Unrecorded?",
     "Compare Quartz and unrecorded in the platform choice.",
 ])
-def test_unknown_replacement_and_comparison_values_fail_closed(question):
+def test_unknown_latin_replacement_and_comparison_values_fail_closed(question):
     item = slot()
     item["values"] = ["石英", "青玉", "Quartz"]
     result = route_question(question, [item], RESOLVER, workspace_id="one")
-    # Authorized migration: unmarked Chinese rock/material nouns are not
-    # independently proven proper names. Named Latin operands remain hard.
-    assert result["route"] == ("CLARIFY" if "石英" in question else "NO_MATCH")
-    assert result["scope"] is None
+    assert result["route"] == "NO_MATCH" and result["scope"] is None
     assert item["slot_id"] in {c["slot_id"] for c in result["discovery"]["raw_candidates"]}
+
+
+@pytest.mark.parametrize("question", [
+    "为什么石英被花岗岩替换？", "石英为什么换成花岗岩？", "比较石英和花岗岩的平台方案？",
+])
+def test_unrecorded_chinese_value_does_not_hide_the_recorded_value_anchor(question):
+    # 石英 is recorded only in this slot, so scope is not ambiguous. The unrecorded 花岗岩 is a claim for
+    # the evidence stage to report as absent; the scope step must not reject or rebind it.
+    item = slot()
+    item["values"] = ["石英", "青玉", "Quartz"]
+    result = route_question(question, [item], RESOLVER, workspace_id="one")
+    assert result["route"] == "INVESTIGATION" and result["scope"]["subject"] == "Juniper"
+    other = dict(slot("Willow", value="Jasper"), values=["花岗岩"])
+    result = route_question(question, [item, other], RESOLVER, workspace_id="one")
+    assert result["scope"] is None and result["route"] == "CLARIFY"
 
 
 def test_declared_subject_alias_is_scoped_and_consistent_with_retrieval():
@@ -263,7 +325,7 @@ def test_external_selector_factory_requires_per_question_authorization(monkeypat
     inputs = ambiguous_slots()
     def factory(query):
         calls.append(query)
-        return Selector(json.dumps({"intent": "CURRENT", "slot_id": inputs[1]["slot_id"], "as_of": None}))
+        return Selector(json.dumps({"intent": "CURRENT", "slot_id": inputs[1]["slot_id"], "as_of": None, "entity_mentions": []}))
     provider = SimpleNamespace(model_factory=factory, external_provider=True, task_only=False)
     app = SimpleNamespace(repository=SimpleNamespace(database_path=":memory:"), _store_lock=RLock(),
         _workspace_id=lambda: "one", relation_resolver=RESOLVER,

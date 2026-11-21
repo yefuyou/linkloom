@@ -12,6 +12,7 @@ from uuid import uuid4
 from linkloom.agents.providers import (
     GEMINI_38_FLASH_MODEL_ID,
     GeminiProviderAdapter,
+    GeminiSDKClientBridge,
     build_gemini_sdk_client,
 )
 from linkloom.semantic_ingestion.extraction import (
@@ -24,26 +25,6 @@ from linkloom.ui.demo import DemoCase, DemoRunBackend
 from linkloom.ui.product import ProductApplication
 from linkloom.ui.investigation import ProductInvestigationService
 from linkloom.ui.server import create_http_server
-
-
-class GeminiSDKClientBridge:
-    """Expose the official SDK's model API through the provider client contract."""
-
-    def __init__(self, sdk_client) -> None:
-        model_api = getattr(sdk_client, "models", None)
-        if not callable(getattr(model_api, "generate_content", None)):
-            raise TypeError("Gemini SDK client must expose models.generate_content().")
-        self._sdk_client = sdk_client
-
-    def generate_content(self, *, model, contents, config):
-        return self._sdk_client.models.generate_content(
-            model=model,
-            contents=contents,
-            config=config,
-        )
-
-    def __getattr__(self, name):
-        return getattr(self._sdk_client, name)
 
 
 def main() -> int:
@@ -83,6 +64,9 @@ def main() -> int:
     )
     parser.add_argument('--allow-task-investigation', action='store_true',
         help='Configure task Provider stages. Each Ask still needs source-snapshot permission.')
+    parser.add_argument('--experimental-parallel-investigation', action='store_true',
+        help='Run scoped investigations on the LangGraph Supervisor/Worker orchestration (dynamic task DAG, '
+             'shared evidence, checkpointed resume) within the explicit task budgets.')
     for name in ('requests', 'input-tokens', 'output-tokens'):
         parser.add_argument('--task-max-' + name, type=int)
     for name in ('cost-usd', 'seconds'):
@@ -125,6 +109,8 @@ def main() -> int:
             parser.error('Task Provider requires all explicit --task-* budgets: ' + str(exc))
     if not math.isfinite(args.estimated_cost_per_request) or args.estimated_cost_per_request < 0:
         parser.error("--estimated-cost-per-request must be a finite non-negative number")
+    if args.experimental_parallel_investigation and not (task_limits and args.allow_temporal_agent):
+        parser.error('Orchestrated investigation requires task Provider budgets and --allow-temporal-agent.')
     if args.offline_task_demo:
         if args.allow_external_provider or args.allow_temporal_agent or args.allow_task_investigation:
             parser.error("--offline-task-demo cannot be combined with external or temporal Agent flags")
@@ -138,6 +124,10 @@ def main() -> int:
 
     extractor = None
     sdk_client = None
+
+    def gemini_adapter(**options):
+        # Every product call shares the one SDK client and model selection.
+        return GeminiProviderAdapter(GeminiSDKClientBridge(sdk_client), model_id=args.model, **options)
     if args.offline_task_demo:
         from linkloom.ui.offline_task_demo import build_offline_task_demo
         default_database = str(Path.home() / ".linkloom" / "product.sqlite")
@@ -161,10 +151,7 @@ def main() -> int:
                     timeout=round(task_limits.request_timeout_seconds * 1000),
                     retry_options=dict(attempts=1)) if task_limits else
                     {"timeout": 180000, "retry_options": {"attempts": 1}} if meeting_mode else None))
-                provider = GeminiProviderAdapter(
-                    GeminiSDKClientBridge(sdk_client),
-                    model_id=args.model,
-                )
+                provider = gemini_adapter()
             except (ImportError, TypeError, ValueError, ValidationError):
                 parser.error(
                     'Gemini provider could not be initialized. Install the provider dependency with '
@@ -198,20 +185,18 @@ def main() -> int:
             from linkloom.semantic_ingestion.task_extraction import TaskExtractionConfig
             config = TaskExtractionConfig(task_extraction_mode=args.task_extraction_mode)
             meeting_options = dict(task_extraction_config=config, meeting_speakers=meeting_speakers,
-                meeting_adapter=GeminiProviderAdapter(GeminiSDKClientBridge(sdk_client), model_id=args.model,
-                                                     max_input_bytes=config.max_input_bytes),
+                meeting_adapter=gemini_adapter(max_input_bytes=config.max_input_bytes),
                 meeting_request_guard=lambda request: authorize_request(request) is not None)
         product_app = ProductApplication(database_path=args.database, extractor=extractor, **meeting_options)
         if task_limits:
             from linkloom.ui.task_provider import compose_task_provider
             investigation_service = compose_task_provider(product_app, provider, task_limits,
-                                                         enable_temporal=args.allow_temporal_agent)
+                enable_temporal=args.allow_temporal_agent,
+                parallel_investigation=args.experimental_parallel_investigation)
         elif args.allow_temporal_agent:
             investigation_service = ProductInvestigationService(
                 product_app,
-                model_factory=lambda _query: GeminiProviderAdapter(
-                    GeminiSDKClientBridge(sdk_client), model_id=args.model,
-                ),
+                model_factory=lambda _query: gemini_adapter(),
                 run_mode="GEMINI_38_FLASH_EXPLICIT",
                 max_steps=8,
             )

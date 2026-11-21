@@ -223,115 +223,6 @@ def _parts(phrase: str) -> list[str]:
             if part.strip()]
 
 
-def _clean_binding(value: str) -> str:
-    value = re.sub(r"^(?:(?:为什么|为何|为啥|怎么会|请问|比较|对比)\s*)+", "", value.strip())
-    return re.sub(r"(?:为什么|为何|为啥|怎么会)$", "", value).strip(" \t'\"“”")
-
-
-def _query_bindings(query: str, relation_names: set[str], known_values: set[str],
-                    subject_names: set[str]) -> tuple[list[str], list[str], list[str]]:
-    """Parse explicit grammatical arguments, never a remainder/stopword list."""
-    text = re.sub(r"^(?:as\s+of|截至)\s*[,，:]?\s*", "", _without_dates(query), flags=re.I)
-    subjects, topics, values = [], [], []
-    patterns = (
-        r"\b(?:does|did|do|is|are|was|were|has|have|had)\s+(.+?)\s+(?:(?:currently|now|already)\s+)?(?:use|using|used|adopt|adopted|choose|chosen|pick|picked|select|selected|decide|decided)\b",
-        r"^(.+?)\s+(?:currently|now)\s+(?:uses?|using|adopts?)\b",
-        r"^([^，,？?。]+?)(?:现在|当前|目前)?(?:采用|使用|选用|用的是|用的|用)(?:哪|什)",
-        r"\b(?:is|are|was|were)\s+(.+?)\s+(?:on|with)\b",
-        r"\b([^\W\d_][\w-]*)['’]s\b",
-        r"^(.+?)(?:现在|当前|目前)(?:是(?:什么|哪个|哪家)|选了(?:什么|哪个|哪家))",
-    )
-    for index, pattern in enumerate(patterns):
-        if index == 1 and re.match(r"(?:what|which|who|why|how|when|is|are|was|were|does|did|do)\b", text, re.I):
-            continue
-        if index == 2 and re.match(r"^(?:(?:现在|当前|目前|正式)\s*)?(?:采用|使用|选用|用的是|用的|用)", text):
-            continue  # A verb-initial question has no explicit subject.
-        match = re.search(pattern, text, re.I)
-        if match:
-            if index == 3:
-                # A complete "on/with VALUE" predicate, or a preposition-ended
-                # interrogative. Do not reinterpret a previously parsed verb.
-                if subjects or re.search(r"\b(?:using|use|used)\b", match[1], re.I):
-                    continue
-                if not re.search(r"\b(?:on|with)\s+[^\s?？!.,]", text, re.I) and not re.match(
-                        r"^(?:what|which)\b.*\b(?:is|are)\b", text, re.I):
-                    continue
-            actor = _clean_binding(match[1])
-            if index == 2 and normalize_temporal_component(actor) in relation_names:
-                topics.append(actor)  # A leading nominal topic: "TOPIC now use which?"
-            else:
-                subjects.extend(part for part in _parts(actor) if not _deictic(part))
-    # Possessive Chinese noun phrases. Workspace terms/values remain topic/value
-    # arguments, while any explicit object name must resolve in this workspace.
-    for match in re.finditer(r"([A-Za-z][A-Za-z0-9_-]*|[\u3400-\u9fff]+)\s*的", text):
-        phrase = _clean_binding(match[1]).casefold()
-        if phrase in subject_names:
-            subjects.append(phrase)
-            continue
-        if phrase in known_values:
-            continue
-        if re.fullmatch(r"(?:(?:目前|当前|现在|正式)\s*)?(?:选定|采用|使用|选用|批准|审批|决定|用)", phrase):
-            continue  # A relative verb clause, not a possessor.
-        relative = re.fullmatch(r"(.+?)(?:现在|当前|目前)?(?:选定|采用|使用|选用|批准|审批|决定|用)", phrase)
-        if relative:
-            actor = relative[1].strip()
-            if _deictic(actor):
-                continue
-            if actor in subject_names:
-                subjects.append(actor)
-                continue
-        for term in sorted(relation_names, key=len, reverse=True):
-            phrase = phrase.replace(term, " ")
-        phrase = phrase.strip()
-        if phrase:
-            subjects.extend(part for part in _parts(phrase) if not _deictic(part)
-                            and normalize_temporal_component(part) not in known_values)
-    for pattern in (
-        r"\b(?:what|which)\s+(.+?)\s+(?:does|did|do|is|are|was|were)\b",
-        r"(?:哪家|哪个)([^？?，,。]+?)(?=[？?，,。]|$)",
-    ):
-        match = re.search(pattern, text, re.I)
-        if match:
-            topics.extend(_parts(match[1]))
-    # Replacement arguments are values, even when phrased passively.
-    for pattern in (
-        r"\bfrom\s+(.+?)\s+to\s+([^?.!]+)",
-        r"从\s*(.+?)\s*(?:换成|改为|替换为)\s*([^？?。]+)",
-        r"\b(?:was|is)\s+(.+?)\s+(?:replaced|superseded)\s+by\s+([^?.!]+)",
-        r"(.+?)\s*被\s*(.+?)\s*(?:替换|取代|替代)",
-        r"^(.+?)(?:为什么|为何)?\s*(?:换成|替换为|改用)\s*([^？?。]+)",
-    ):
-        match = re.search(pattern, text, re.I)
-        if match:
-            values.extend(map(_clean_binding, (match[1], match[2])))
-            break
-    # A trailing accompaniment is a real argument even after a parsed subject;
-    # it must not disappear when an earlier verb/preposition pattern succeeds.
-    accompaniment = re.search(r"\bwith\s+([^?.!]+)", text, re.I)
-    if accompaniment:
-        for entity in _parts(_clean_binding(accompaniment[1])):
-            if normalize_temporal_component(entity) not in subject_names | relation_names:
-                values.append(entity)
-    # Data-anchored comparative operands catch unknown values in either language.
-    # Delimiters belong to question grammar, not a list of business nouns.
-    for value in known_values:
-        boundary = "" if re.search(r"[\u3400-\u9fff]", value) else r"(?<!\w)"
-        pattern = boundary + re.escape(value) + r"\s*(?:和|与|或|\band\b|\bor\b)\s*(.+?)(?=的|选择|依据|区别|差异|方案|\s+\b(?:in|for|on|at|with|as|now|currently|today)\b|[，,？?。.!]|$)"
-        match = re.search(pattern, text, re.I)
-        if match:
-            other = _clean_binding(match[1])
-            normalized_other = normalize_temporal_component(other)
-            # A known value can be qualified by a known relation, e.g. "VALUE
-            # decision sources". Keep the operand, not its explanatory suffix.
-            for known in sorted(known_values, key=len, reverse=True):
-                if normalized_other == known or normalized_other.startswith(known + " "):
-                    normalized_other = known
-                    break
-            if normalized_other not in subject_names | relation_names:
-                values.append(normalized_other)
-    return subjects, topics, values
-
-
 def _eligible_slots(slots: list[dict[str, Any]], workspace_id: str) -> list[dict[str, Any]]:
     # Filter BEFORE indexing, entity resolution, scoring and provider context.
     # Missing provenance never silently becomes trusted, even for a single slot.
@@ -388,8 +279,7 @@ def retrieve_raw(query: str, snapshot: WorkspaceSnapshot, config: RetrievalConfi
                              for phrase in aliases + slot.get("values", []))
         by_id[identifier] = dict(slot, aliases=aliases, conflicting_mentions=False,
                                  topic_anchored=topic_anchored,
-                                 history_anchor=len(history_matches) == 1 and identifier in history_matches,
-                                 unresolved_topic=False)
+                                 history_anchor=len(history_matches) == 1 and identifier in history_matches)
         topic_tokens[identifier] = _tokens(topic) - _RELATION_VERBS
     index = BM25Index()
     index.build(documents)
@@ -448,8 +338,7 @@ def retrieve_raw(query: str, snapshot: WorkspaceSnapshot, config: RetrievalConfi
 
 
 def rank_decision_slots(query: str, slots: list[dict[str, Any]], resolver: FrozenRelationResolver,
-                        *, workspace_id: str, embedder: Any = AUTO_EMBEDDER,
-                        include_weak: bool = False) -> list[dict[str, Any]]:
+                        *, workspace_id: str, embedder: Any = AUTO_EMBEDDER) -> list[dict[str, Any]]:
     """Compatibility entry; raw recall is independent of every understanding rule."""
     return retrieve_raw(query, workspace_snapshot(slots, resolver, workspace_id), RetrievalConfig(embedder))
 
@@ -488,7 +377,7 @@ def _named(phrase: str) -> bool:
 
 
 def entity_check(query: str, snapshot: WorkspaceSnapshot) -> dict[str, Any]:
-    """Independent raw-text name positions; never consumes parser hypotheses."""
+    """Raw-text name positions, never parser hypotheses. Router off: hard_veto/role_conflict only block, never bind."""
     slots, resolver = snapshot.slots, snapshot.resolver
     original_query = query
     names = {normalize_temporal_component(n) for slot in slots for n in
@@ -543,34 +432,11 @@ def entity_check(query: str, snapshot: WorkspaceSnapshot) -> dict[str, Any]:
             "unbound_proper_names": capitals, "role_conflict": role_conflict}
 
 
-def parse_query_clues(query: str, snapshot: WorkspaceSnapshot) -> dict[str, Any]:
-    subjects = {normalize_temporal_component(n) for slot in snapshot.slots
-                for n in [slot["subject"], *slot.get("subject_aliases", [])]}
-    values = {normalize_temporal_component(str(v)) for slot in snapshot.slots for v in slot.get("values", [])}
-    topics = {normalize_temporal_component(n) for slot in snapshot.slots for n in
-              _relation_phrases(slot["relation"], snapshot.resolver) | set(slot.get("aliases", []))}
-    actors, themes, operands = _query_bindings(query, topics, values, subjects)
-    unresolved = [s for s in actors if normalize_temporal_component(s) not in subjects]
-    unresolved += [t for t in themes if normalize_temporal_component(t) not in topics]
-    unresolved += [v for v in operands if normalize_temporal_component(v) not in values]
-    return {"subjects": actors, "topics": themes, "values": operands, "unresolved": unresolved}
-
-
 def discover_scope(query: str, slots: list[dict[str, Any]], resolver: FrozenRelationResolver,
                    *, workspace_id: str, subject: str = "", relation: str = "",
-                   embedder: Any = AUTO_EMBEDDER, include_weak: bool = False) -> dict[str, Any]:
+                   embedder: Any = AUTO_EMBEDDER) -> dict[str, Any]:
     snapshot = workspace_snapshot(slots, resolver, workspace_id)
-    # Run before parsing. Even a parser exception cannot cancel or change recall.
     raw = retrieve_raw(query, snapshot, RetrievalConfig(embedder))
-    try:
-        clues = parse_query_clues(query, workspace_snapshot(slots, resolver, workspace_id))
-        if not isinstance(clues, dict) or any(
-                not isinstance(clues.get(k, []), list) or
-                any(not isinstance(v, str) for v in clues.get(k, []))
-                for k in ("subjects", "topics", "values", "unresolved")):
-            raise ValueError("invalid parser clues")
-    except Exception:
-        clues = {"unresolved": [], "parser_error": True}
     safety = entity_check(query, snapshot)
     candidates = deepcopy(raw)
     # Candidate validation is data-anchored, not an intersection that removes
@@ -594,22 +460,13 @@ def discover_scope(query: str, slots: list[dict[str, Any]], resolver: FrozenRela
     multiple_topics = len({s["relation"] for s in snapshot.slots if s["slot_id"] in groups}) > 1
     for candidate in candidates:
         candidate["conflicting_mentions"] = multiple_topics or len(subject_hits) > 1
-        candidate["unresolved_topic"] = bool(clues.get("unresolved"))
     explicit = bool(subject or relation)
     if explicit:
         canonical = resolver.resolve(relation).canonical_relation or relation
         candidates = [dict(s, score=2.0, bm25_score=None, dense_score=None) for s in snapshot.slots
                       if normalize_temporal_component(s["subject"]) == normalize_temporal_component(subject)
                       and normalize_temporal_component(s["relation"]) == normalize_temporal_component(canonical)]
-    # Soft uncertainty reduces confidence through a uniform evidence-coverage
-    # factor; it never edits the raw pool or its scores.
     confidence = candidates[0]["score"] if candidates else 0.0
-    if clues.get("unresolved") and candidates:
-        known = set().union(*(_tokens(str(x)) for s in snapshot.slots for x in
-                              [s["subject"], s["relation"], *s.get("values", []),
-                               *_relation_phrases(s["relation"], resolver)]))
-        missing = set().union(*(_tokens(_without_references(x)) for x in clues["unresolved"] if not _deictic(x))) - known
-        confidence /= 1 + len(missing)
     if candidates and not candidates[0].get("topic_anchored") and candidates[0].get("dense_score") is None:
         # A fragment of a multiword alias is weak evidence, not a full alias.
         confidence = min(confidence, max(0.0, candidates[0]["score"] - 1.0))
@@ -643,7 +500,7 @@ def discover_scope(query: str, slots: list[dict[str, Any]], resolver: FrozenRela
         status = "NO_MATCH"
     return {"status": status, "scope": {k: candidates[0][k] for k in ("subject", "relation")} if matched else None,
             "candidates": candidates[:SLOT_LLM_CANDIDATES], "candidate_count": len(candidates),
-            "raw_candidates": raw, "clues": clues, "entity_check": safety,
+            "raw_candidates": raw, "entity_check": safety,
             "confidence": confidence, "basis": [], "entity_anchored": entity_anchored or explicit,
             "reason": "One reviewed slot clears the global confidence and margin." if matched else
                       "The question names a field but not its project; confirm the candidate project."

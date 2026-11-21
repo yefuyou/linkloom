@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from dataclasses import replace
+from hashlib import sha256
 from pathlib import Path
 from uuid import uuid4
 
@@ -16,17 +18,30 @@ from linkloom.agents.model_adapter import (
     runtime_call_id_for,
 )
 from linkloom.runtime.artifacts import ModelArtifactStore
-from linkloom.runtime.model_loop import SingleAgentModelLoop
+from linkloom.evidence_identity import passage_evidence_id
+from linkloom.runtime.model_loop import SingleAgentModelLoop, _final_citation_guidance
 from linkloom.runtime.models import RuntimeState, SourceContext
+from linkloom.runtime.task_plan import TaskPlan
 from linkloom.tools.contracts import ToolCall, ToolDefinition, ToolResult
 from linkloom.tools.registry import ToolRegistry
-from linkloom.tools.runtime import ToolRuntime
+from linkloom.tools.runtime import ToolRuntime, create_retrieval_tool_runtime
 from linkloom.tools.tool_policy import ToolCallPolicy, ToolPolicyEnforcer
 
 
 RUN_ID = "run_runtime_v2_multi"
 TASK_ID = "task_runtime_v2_multi"
 AGENT_ID = "retrieval_agent"
+
+
+def test_final_citation_guidance_only_maps_available_verified_reads():
+    def read(ref):
+        return ToolResult(ref, "read_verified_note", "ok", value={"evidence_id": ref})
+
+    groups = (("ev_first",), ("ev_unavailable", "ev_second"))
+    assert _final_citation_guidance(groups, [read("ev_second"), read("ev_first")]).endswith(
+        "Citation candidates in TaskPlan order: 1=ev_first, 2=ev_second."
+    )
+    assert _final_citation_guidance(groups, [read("ev_first")]) is None
 
 
 class ScriptedProvider:
@@ -97,6 +112,8 @@ def _policy(max_calls: int = 8) -> ToolPolicyEnforcer:
 def _tool_proposal(
     request: ModelTurnRequest,
     arguments: list[dict],
+    *,
+    tool_id: str = "search_notes",
 ) -> ModelResponse:
     proposal_id = f"{request.turn_id}:proposal"
     calls = [
@@ -104,7 +121,7 @@ def _tool_proposal(
             provider_call_id=f"provider-call-{ordinal}",
             proposal_id=proposal_id,
             ordinal=ordinal,
-            tool_id="search_notes",
+            tool_id=tool_id,
             arguments=item,
             run_id=request.run_id,
             task_id=request.task_id,
@@ -123,6 +140,68 @@ def _final_response(request: ModelTurnRequest, answer: str) -> ModelResponse:
             answer,
         )
     )
+
+
+@pytest.mark.parametrize("visible_reads", [3, 2])
+def test_final_request_maps_each_completed_subgoal_to_a_visible_read(artifact_store, visible_reads):
+    workspace_id = "fixture_runtime_v2_multi"
+    goals = ("first", "second", "third")
+    plan = TaskPlan.from_dict({
+        "goal": "Find all three records.",
+        "subgoals": [{"subgoal_id": goal, "question": f"Find the {goal} record.", "depends_on": []}
+                     for goal in goals],
+    })
+    evidence = {}
+    for goal in goals:
+        path = f"{goal}.md"
+        quote = f"This is the {goal} record."
+        digest = sha256(quote.encode("utf-8")).hexdigest()
+        ref = passage_evidence_id(
+            workspace_id=workspace_id, resource_id=path, document_id=path,
+            logical_path=f"/{path}", source_ref=path, content_hash=digest,
+            line_start=1, line_end=1, quote_hash=digest,
+        )
+        evidence[goal] = dict(evidence_id=ref, relative_path=path, quote=quote,
+                              quote_sha256=digest, content_sha256=digest,
+                              line_start=1, line_end=1, status="verified", workspace_id=workspace_id)
+
+    by_ref = {item["evidence_id"]: item for item in evidence.values()}
+    runtime = create_retrieval_tool_runtime(
+        lambda query, source_context, limit: [evidence[source_context["subgoal_id"]]],
+        lambda note_ref: by_ref[note_ref],
+    )
+    tools = ["search_notes", "read_verified_note"]
+    provider = ScriptedProvider([
+        lambda request: _tool_proposal(request, [
+            {"query": goal, "source_context": {"subgoal_id": goal}, "limit": 1}
+            for goal in goals
+        ]),
+        lambda request: _tool_proposal(request, [{"note_ref": ref} for ref in by_ref],
+                                       tool_id="read_verified_note"),
+        lambda request: _final_response(request, "Found the records."),
+    ])
+    policy = ToolPolicyEnforcer(replace(_policy().policy, allowed_tool_ids=tools))
+    result = SingleAgentModelLoop(
+        provider, runtime, policy, task_plan=plan, workspace_id=workspace_id,
+        verified_evidence_context_limit=visible_reads,
+    ).run(state=_state(), task_id=TASK_ID, agent_id=AGENT_ID, user_input=plan.goal,
+          available_tools=[runtime.registry.resolve(tool)[0] for tool in tools],
+          artifact_store=artifact_store, checkpoint_callback=lambda _: None)
+
+    assert result.status == "completed", result.error
+    assert len(provider.requests) == 3
+    assert [(row.tool_id, row.arguments["note_ref"]) for row in result.state.tool_ledger
+            if row.tool_id == "read_verified_note" and row.status == "completed"] == [
+        ("read_verified_note", ref) for ref in by_ref
+    ]
+    final = provider.requests[-1]
+    assert len(final.evidence_context) == visible_reads
+    prefix = "Citation candidates in TaskPlan order: "
+    if visible_reads == 3:
+        mapping = ", ".join(f"{i}={ref}" for i, ref in enumerate(by_ref, 1))
+        assert prefix + mapping in (final.recovery_guidance or "")
+    else:
+        assert prefix not in (final.recovery_guidance or "")
 
 
 def _run(provider, executor, artifact_store, *, max_calls: int = 8):
@@ -467,19 +546,38 @@ def test_empty_search_history_stops_before_later_proposal_members(artifact_store
 
 
 def test_tool_result_artifact_helper_has_explicit_kind_and_stable_path(artifact_store):
+    payload = {"model_tool_result": {"result_id": "tr_test_result"}}
     stored = artifact_store.write_tool_result(
         RUN_ID,
         f"{RUN_ID}:turn:1",
         0,
         "rtc_test_result",
-        {"model_tool_result": {"result_id": "tr_test_result"}},
+        payload,
     )
 
     assert stored.kind == "tool_result"
-    assert stored.ref.endswith("/tool-results/00-rtc_test_result.json")
-    assert artifact_store.read(stored.ref) == {
-        "model_tool_result": {"result_id": "tr_test_result"}
-    }
+    assert stored.ref.endswith("/t00-rtc_test_result.json")
+    assert artifact_store.read(stored.ref) == payload
+    legacy_ref = stored.ref.replace("/t00-", "/tool-results/00-")
+    legacy = artifact_store.write(legacy_ref, payload, kind="tool_result")
+    assert ModelArtifactStore(artifact_store.root).read(legacy.ref, expected_sha256=legacy.sha256) == payload
+
+
+def test_model_tool_artifact_reopens_when_legacy_path_would_exceed_windows_limit(tmp_path):
+    run_id = "run_p4_a461235bc2da"
+    turn_id = f"{run_id}_turn_1"
+    call_id = "rtc_" + "a" * 32
+    legacy_ref = f"model/{run_id}/{turn_id}/tool-results/00-{call_id}.json"
+    padding = 261 - len(str(tmp_path / legacy_ref)) - 1
+    assert padding > 0
+    root = tmp_path / ("a" * padding)
+    assert len(str(root / legacy_ref)) == 261
+    payload = {"model_tool_result": {"result_id": "tr_test_result"}}
+
+    stored = ModelArtifactStore(root).write_tool_result(run_id, turn_id, 0, call_id, payload)
+
+    assert len(str(root / stored.ref)) < 260
+    assert ModelArtifactStore(root).read(stored.ref, expected_sha256=stored.sha256) == payload
 
 
 def test_policy_denial_is_durable_and_stops_later_call_without_final(

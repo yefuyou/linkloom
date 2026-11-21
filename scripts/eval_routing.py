@@ -301,7 +301,7 @@ def llm_metrics(rows, live=None):
         for call in row["actual"].get("llm_calls", []):
             try:
                 selection = json.loads(call["response_text"])
-                if not isinstance(selection, dict) or set(selection) != {"intent", "slot_id", "as_of"}:
+                if not isinstance(selection, dict) or set(selection) != {"intent", "slot_id", "as_of", "entity_mentions"}:
                     raise ValueError("invalid selection")
                 chosen = selection["slot_id"]
                 raw_wrong += chosen is not None and chosen != row["expected_slot"]

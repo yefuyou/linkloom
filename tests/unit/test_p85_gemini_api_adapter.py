@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from copy import deepcopy
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import UTC, datetime
 import json
 from types import SimpleNamespace
@@ -25,6 +25,7 @@ from linkloom.agents.model_adapter import (
 )
 from linkloom.agents.providers.gemini_api import (
     GeminiProviderAdapter,
+    GeminiSDKClientBridge,
     build_gemini_sdk_client,
     build_gemini_request,
     map_tool_definition_to_gemini_function,
@@ -343,6 +344,19 @@ def test_thinking_level_maps_to_gemini_thinking_config():
     assert payload["config"]["thinking_config"] == {"thinking_level": "LOW"}
 
 
+def test_response_json_schema_option_maps_to_gemini_json_mode_and_round_trips():
+    schema = {"type": "object", "properties": {"reason_code": {"type": "string"}}}
+    options = ModelGenerationOptions(max_output_tokens=64, response_json_schema=schema)
+    config = build_gemini_request(_request(generation_options=options))["config"]
+
+    assert config["response_mime_type"] == "application/json"
+    assert config["response_json_schema"] == schema
+    assert config["response_json_schema"] is not schema
+    assert ModelGenerationOptions.from_dict(options.to_dict()) == options
+    assert "response_json_schema" not in ModelGenerationOptions(max_output_tokens=64).to_dict()
+    assert "response_json_schema" not in build_gemini_request(_request())["config"]
+
+
 def test_default_gemini_tool_mode_remains_auto():
     payload = build_gemini_request(_request())
 
@@ -567,6 +581,62 @@ def test_grouped_gemini_turn_preserves_call_parts_signatures_and_results():
     assert [
         part["function_response"]["id"] for part in contents[2]["parts"]
     ] == ["gemini-call-1", "gemini-call-2"]
+
+
+@pytest.mark.parametrize("keep_verified_read", [True, False])
+def test_gemini_final_only_wire_disables_tools_and_preserves_needed_context(keep_verified_read):
+    read_note = replace(_definition(), tool_id="read_verified_note")
+    call = {"id": "read-call", "name": "read_verified_note", "args": {"note_ref": "ev-1"}}
+    proposal = GeminiProviderAdapter(FakeGeminiClient(response={"function_calls": [call]})).complete(
+        _request(available_tools=[read_note])
+    ).proposal
+    model_call, = proposal.tool_calls
+    evidence = ToolResult(
+        call_id=model_call.runtime_call.call_id, tool_id="read_verified_note", status="ok",
+        value=dict(status="verified", evidence_id="ev-1", relative_path="meeting.md",
+                   quote="The supplier changed.", quote_sha256="a" * 64, content_sha256="a" * 64,
+                   line_start=1, line_end=1),
+    )
+    tool_turn = ModelToolTurn(
+        proposal_id=proposal.proposal_id, source_turn_id="run_p85_1:turn:1", source_sequence=1,
+        tool_calls=proposal.tool_calls,
+        tool_results=[ModelToolResult.for_call(run_id="run_p85_1", proposal_id=proposal.proposal_id,
+                                             ordinal=0, model_call=model_call, result=evidence)],
+    )
+    request = _request(
+        turn_id="run_p85_1:turn:2", sequence=2, available_tools=[], final_only=True,
+        recovery_guidance="Submit Final now.", tool_turns=[tool_turn],
+        evidence_context=[evidence] if keep_verified_read else [],
+    )
+    assert ModelTurnRequest.from_dict(request.to_dict()) == request
+    captured = []
+
+    def capture(http_request):
+        captured.append(json.loads(http_request.content))
+        return httpx.Response(200, json={"candidates": [
+            {"content": {"parts": [{"functionCall": call}]}, "finishReason": "STOP"}
+        ]})
+
+    with build_gemini_sdk_client("synthetic-no-network", http_options_kwargs={
+        "client_args": {"transport": httpx.MockTransport(capture)},
+    }) as sdk:
+        response = GeminiProviderAdapter(GeminiSDKClientBridge(sdk)).complete(request)
+
+    body, = captured
+    assert body["tools"] == []
+    assert body["toolConfig"]["functionCallingConfig"]["mode"] == "NONE"
+    parts = body["contents"][0]["parts"]
+    assert "Submit Final now." in parts[0]["text"]
+    if keep_verified_read:
+        assert len(body["contents"]) == 1
+        assert "verified_evidence_context=" in parts[0]["text"]
+        assert "ev-1" in parts[0]["text"] and "The supplier changed." in parts[0]["text"]
+    else:
+        assert "functionCall" in body["contents"][1]["parts"][0]
+        assert "functionResponse" in body["contents"][2]["parts"][0]
+    assert response.action is None and response.proposal is None
+    assert response.error.code == "MODEL_RESPONSE_UNSUPPORTED"
+    assert response.error.details["reason"] == "undeclared_tool"
 
 
 def test_sdk_like_function_call_response_is_parsed_without_importing_sdk_types():

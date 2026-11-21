@@ -402,6 +402,8 @@ class RunRequest:
     task_plan: dict[str, Any] | None = None
     planning_mode: str = "template"
     final_protocol: str = "team-decision-result/v1"
+    reserve_final_turn: bool = False
+    cited_answer: bool = False
 
     def __post_init__(self) -> None:
         _assert_json_safe_primitive(asdict(self), "RunRequest")
@@ -442,6 +444,13 @@ class RunRequest:
             raise ValidationError("RunRequest final_protocol is unsupported.")
         if self.final_protocol == "claim-proposal/v1" and self.workflow != "team_decision":
             raise ValidationError("Typed claims Final is only available for team_decision.")
+        if type(self.reserve_final_turn) is not bool or (self.reserve_final_turn and self.workflow != "team_decision"):
+            raise ValidationError("A reserved Final turn requires team_decision.")
+        if type(self.cited_answer) is not bool or (self.cited_answer and (
+                self.workflow != "team_decision" or self.final_protocol != "team-decision-result/v1")):
+            raise ValidationError("A cited answer requires team_decision with the default Final protocol.")
+        if self.cited_answer and (self.task_plan is not None or self.planning_mode == "model"):
+            raise ValidationError("A cited answer is only for the template branch without a TaskPlan.")
         if self.task_plan is not None:
             if self.workflow != "team_decision":
                 raise ValidationError("TaskPlan is only available for team_decision.")
@@ -460,6 +469,10 @@ class RunRequest:
             data.pop("planning_mode", None)
         if self.final_protocol == "team-decision-result/v1":
             data.pop("final_protocol", None)
+        if not self.reserve_final_turn:
+            data.pop("reserve_final_turn", None)
+        if not self.cited_answer:
+            data.pop("cited_answer", None)
         return data
 
     @classmethod
@@ -484,6 +497,8 @@ class RunRequest:
             task_plan=data.get("task_plan"),
             planning_mode=str(data.get("planning_mode", "template")),
             final_protocol=str(data.get("final_protocol", "team-decision-result/v1")),
+            reserve_final_turn=data.get("reserve_final_turn", False),
+            cited_answer=data.get("cited_answer", False),
         )
 
 

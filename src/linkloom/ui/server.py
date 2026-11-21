@@ -32,6 +32,7 @@ STATIC_FILES = {
     "/product.js": ("product.js", "text/javascript; charset=utf-8"),
     "/product-task-result.js": ("product-task-result.js", "text/javascript; charset=utf-8"),
     "/product-task-review.js": ("product-task-review.js", "text/javascript; charset=utf-8"),
+    "/product-workbench.js": ("product-workbench.js", "text/javascript; charset=utf-8"),
 }
 
 
@@ -191,10 +192,13 @@ class LinkLoomRequestHandler(BaseHTTPRequestHandler):
         )
 
     def _send_error_payload(self, status: int, code: str, message: str,
-                            reason_codes: tuple[str, ...] | None = None) -> None:
+                            reason_codes: tuple[str, ...] | None = None,
+                            details: dict[str, object] | None = None) -> None:
         error: dict[str, object] = {"code": code, "message": message}
         if reason_codes is not None:
             error["reason_codes"] = list(reason_codes)
+        if details:
+            error["details"] = details
         self._send_json({"error": error}, status=status)
 
     def _request_host_is_local(self) -> bool:
@@ -286,6 +290,15 @@ class LinkLoomRequestHandler(BaseHTTPRequestHandler):
             except ProductApplicationError as error:
                 self._send_error_payload(error.status, error.code, str(error))
             return
+        if (self.server.unified_ask is not None and path.startswith("/api/product/ask/runs/")
+                and path.endswith("/trace") and path.count("/") == 6):
+            try:
+                workspace_id = parse_qs(urlsplit(self.path).query).get("workspace_id", [""])[0]
+                result, status = self.server.unified_ask.trace(path.split("/")[-2], workspace_id)
+                self._send_json({"result": result}, status=status)
+            except ProductApplicationError as error:
+                self._send_error_payload(error.status, error.code, str(error))
+            return
         if self.server.unified_ask is not None and path.startswith("/api/product/ask/runs/"):
             try:
                 workspace_id = parse_qs(urlsplit(self.path).query).get("workspace_id", [""])[0]
@@ -364,6 +377,17 @@ class LinkLoomRequestHandler(BaseHTTPRequestHandler):
             except ProductApplicationError as error:
                 self._send_error_payload(error.status, error.code, str(error))
             return
+        if (self.server.unified_ask is not None and path.startswith("/api/product/ask/runs/")
+                and path.endswith("/continue")):
+            payload = self._read_json_payload(MAX_REQUEST_BYTES)
+            if payload is None:
+                return
+            try:
+                result, status = self.server.unified_ask.continue_run(path.split("/")[-2], payload)
+                self._send_json({"result": result}, status=status)
+            except ProductApplicationError as error:
+                self._send_error_payload(error.status, error.code, str(error))
+            return
         if path.startswith("/api/product/feedback/") and self.server.unified_ask is not None:
             payload = self._read_json_payload(MAX_REQUEST_BYTES)
             if payload is None:
@@ -422,7 +446,8 @@ class LinkLoomRequestHandler(BaseHTTPRequestHandler):
             try:
                 result, status = self.server.product_app.handle_post(path, payload)
             except ProductApplicationError as error:
-                self._send_error_payload(error.status, error.code, str(error), error.reason_codes)
+                self._send_error_payload(error.status, error.code, str(error), error.reason_codes,
+                                         getattr(error, "details", None))
                 return
             self.server.ensure_task_relation_sidecar(self.server.product_app._workspace_id())
             self._send_json(result, status=status)
@@ -462,7 +487,7 @@ class LinkLoomRequestHandler(BaseHTTPRequestHandler):
         try:
             result, status = self.server.product_app.handle_put(unquote(urlsplit(self.path).path), payload)
         except ProductApplicationError as error:
-            self._send_error_payload(error.status, error.code, str(error))
+            self._send_error_payload(error.status, error.code, str(error), None, getattr(error, "details", None))
             return
         self._send_json(result, status=status)
 

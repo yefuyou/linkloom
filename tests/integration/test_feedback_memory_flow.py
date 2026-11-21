@@ -205,3 +205,36 @@ def test_instruction_sentences_cannot_become_routing_memory(demo):
         result = ask(demo, "current " + term)
         assert result["discovery"]["status"] == "NO_MATCH"
         assert result["conclusions"] == []
+
+
+def test_glossary_edit_supersedes_and_survives_restart_until_revoked(demo):
+    """E2E #8: an edited glossary term replaces the old one durably; revoking it is durable too."""
+    item = approve(demo, propose(demo))
+    status, body = feedback(demo, "edit", id=item, term="供货方", human_confirmed=True)
+    assert status == 200, body
+    edited = body["entry"]["id"]
+    assert edited != item
+    resolver = demo.app.relation_resolver
+    database, workspaces = demo.database_path, demo.workspace_ids
+    demo.stop()
+    restarted = DecisionDiscoveryFixture(database, seed=False)
+    try:
+        restarted.app.relation_resolver = resolver
+        restarted.workspace_ids = workspaces
+        restarted.select_workspace(ATLAS)
+        assert ask(restarted, "我们现在采用哪家供货方？")["conclusions"][0]["value"] == "Wrenwell"
+        assert_soft_clarification(ask(restarted))  # the superseded term no longer binds
+        _, listing = request_json(restarted.base_url, API + "?workspace_id=" + restarted.app._workspace_id())
+        states = {entry["id"]: entry["status"] for entry in listing["entries"]}
+        assert states[edited] == "active" and states.get(item) != "active"
+        assert feedback(restarted, "revoke", id=edited, human_confirmed=True)[0] == 200
+    finally:
+        restarted.stop()
+    again = DecisionDiscoveryFixture(database, seed=False)
+    try:
+        again.app.relation_resolver = resolver
+        again.workspace_ids = workspaces
+        again.select_workspace(ATLAS)
+        assert_soft_clarification(ask(again, "我们现在采用哪家供货方？"))
+    finally:
+        again.stop()

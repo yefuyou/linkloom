@@ -1,7 +1,7 @@
 """Compute request-local authority and time facts before model routing."""
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import UTC, datetime
 import re
 
@@ -10,9 +10,9 @@ from linkloom.indexing.models import IndexDocument
 from linkloom.temporal_graph.dates import date_tokens
 from linkloom.temporal_graph.models import digest
 from linkloom.ui.scope_discovery import (
-    RetrievalConfig, _grammar_token, _mentions, _relation_phrases, entity_check, resolve_query_date, retrieve_raw, workspace_snapshot,
+    RetrievalConfig, _mentions, _relation_phrases, resolve_query_date, retrieve_raw, workspace_snapshot,
 )
-from linkloom.ui.structured_router import CONFIG, SAFETY, RouterInvalid, mention_spans, normalize_mention, routing_domain
+from linkloom.ui.structured_router import CONFIG, RouterInvalid, mention_spans, normalize_mention, routing_domain
 
 # Existing date parsing handles timestamps and invalid/relative dates. Mask
 # complete timestamps before lexing meeting-date tokens, so they are not split.
@@ -65,7 +65,6 @@ class RouterContext:
     default_subject: str | None = None
     blocked_entities: tuple[tuple[str, str], ...] = ()
     catalogue_names: frozenset[str] = frozenset()
-    missing_names: tuple[str, ...] = ()
 
     def public(self):
         return dict(question=self.query, workspace_scope="CURRENT_ONLY", query_time=self.query_time,
@@ -137,7 +136,10 @@ def _decision_candidates(query, snapshot, view, point, embedder, default_subject
             int(current["status"] == "FOUND"), int(dated["status"] == "FOUND") if dated else None,
             # A slot that has records, just none yet at the asked date, is confirmed: admission then
             # reports NO_VALID_RECORD_AT_TIME instead of NO_CONFIRMED_RECORD.
-            len(effective["history"]) or len(current["history"]), "CONFLICT" in effective["status"], (subject, relation),
+            # A confirmed, time-unknown decision is a confirmed record too; it never counts as current.
+            len(effective["history"]) or len(current["history"])
+            or (len(row.get("decision_ids", ())) if row.get("effective_time_unknown") else 0),
+            "CONFLICT" in effective["status"], (subject, relation),
             tuple(sorted(a for a in anchors if _mentions(query.casefold(), a))[:8]),
             references if subject == default_subject else ())
 
@@ -225,11 +227,12 @@ def _ascii_word(char):
     return normalized.isascii() and (normalized.isalnum() or normalized == "_")
 
 
-def blocked_entity_reason(query, facts, *, mentions=()):
+def _matching_facts(query, facts, mentions=()):
     normalized_mentions = {normalize_mention(text) for text in mentions}
     for label, reason in facts:
         if normalize_mention(label) in normalized_mentions:
-            return reason
+            yield label, reason
+            continue
         for start, end in mention_spans(query, label):
             # Keep ASCII word boundaries (a workspace called "Ops" does
             # not block "DevOps"), including in mixed-language questions.
@@ -237,8 +240,17 @@ def blocked_entity_reason(query, facts, *, mentions=()):
                 continue
             if end < len(query) and _ascii_word(query[end - 1]) and _ascii_word(query[end]):
                 continue
-            return reason
-    return None
+            yield label, reason
+            break
+
+
+def blocked_entity_reason(query, facts, *, mentions=()):
+    return next((reason for _, reason in _matching_facts(query, facts, mentions)), None)
+
+
+def authorization_facts(facts):
+    """The facts that deny access (another workspace). Every other fact only says a name is not confirmed."""
+    return tuple(fact for fact in facts if fact[1] == "WORKSPACE_DENIED")
 
 
 def build_context(query, workspace, slots, resolver, *, view, graph_snapshot=None,
@@ -273,17 +285,15 @@ def build_context(query, workspace, slots, resolver, *, view, graph_snapshot=Non
                             *slot.get("values", ()), *slot.get("aliases", ()),
                             *_relation_phrases(slot["relation"], resolver))}
     labels.update(anchor for candidate in decision if candidate.status == "unconfirmed" for anchor in candidate.anchors)
+    labels.update(references)  # a first-person workspace word names the workspace's own default subject
     if graph_snapshot:
         labels.update(node.label for node in graph_snapshot.nodes if node.kind != "task_observation")
         labels.update(value for row in graph_snapshot.records for value in
                       (row.get("title"), row.get("project"), *row.get("project_aliases", ())) if value)
     names = frozenset(normalize_mention(value) for value in labels if value)
-    detected = entity_check(query, reviewed)
-    missing = tuple(sorted({name for name in detected["unbound_names"]
-                            if not _grammar_token(name) and name_missing(name, names)}))
     return RouterContext(query, workspace, now, options, required, spans, unresolved, catalog,
                          len(ranked), signature, graph_available, default_subject, blocked_entities,
-                         names, missing)
+                         names)
 
 
 def name_missing(name, catalogue_names):
@@ -306,12 +316,10 @@ def value_only_binding(query, scope, slots):
                    for name in (slot["subject"], *slot.get("subject_aliases", ())))
 
 
-def handoff_blocker(context, *, model_entities=False):
-    """model_entities: the model will report the question's entity names; rule-detected names do not gate."""
+def handoff_blocker(context):
+    """Host-only facts that stop a handoff; entity names are checked from the model's own reply at admission."""
     if context.unresolved_time:
         return "TIME_SCOPE_UNRESOLVED"
-    if context.missing_names and not model_entities:
-        return "ENTITY_NOT_FOUND"
     if not context.candidates:
         return "NO_ROUTER_CANDIDATES"
     return None
@@ -363,28 +371,86 @@ class RouterAdmission:
     reason: str
     candidate: RouteCandidate | None = None
     as_of: str | None = None
+    # Names the question mentions that are not confirmed in this workspace. Only the orchestrated
+    # investigation executor carries them; it resolves them through source evidence.
+    leads: tuple[str, ...] = ()
 
 
-def admit_route(context, route, *, model_entities=False):
+def _lead_names(context, route, listed):
+    """Names to verify in sources: unknown to the confirmed catalogue, or known only as unconfirmed proposals.
+
+    Another workspace's name is never a lead (the caller stops on it before this point).
+    """
+    # Only names the model reported (each already located literally in the question) become leads.
+    names = tuple(name for name in (*(listed or ()), *route.unresolved_names)
+                  if name_missing(name, context.catalogue_names))
+    soft = tuple(fact for fact in context.blocked_entities if fact[1] != "WORKSPACE_DENIED")
+    names += tuple(label for label, _ in _matching_facts(
+        context.query, soft, (*(text for text, _, _ in route.mentions), *(listed or ()))))
+    return tuple(dict.fromkeys(names))
+
+
+def _investigation_handoff(context, route, listed):
+    """An INVESTIGATION question about a confirmed subject or about names the workspace does not confirm.
+
+    The confirmed scope (a unique grounded candidate, or just the current workspace) and the unconfirmed leads
+    are kept apart. Nothing is bound to a lead: the Supervisor and Workers verify it against source text.
+    """
+    leads = _lead_names(context, route, listed)
+    if not leads or route.intent != "INVESTIGATION" or route.operation != "READ":
+        return None
+    # Only a route, or a clarification that exists solely because a named object has no candidate, may hand off.
+    if route.decision == "REFUSE" or (route.decision == "CLARIFY" and route.reason_code != "ENTITY_NOT_FOUND"):
+        return None
+    if route.time_role in {"RANGE", "UNRESOLVED"}:
+        return RouterAdmission(None, "TIME_SCOPE_UNRESOLVED")
+    if any(context.candidates[key].status != "confirmed" for key in route.candidate_ids):
+        return RouterAdmission(None, "NO_CONFIRMED_RECORD")
+    names = {normalize_mention(name) for name in leads}
+    kept = tuple(item for item in route.mentions if normalize_mention(item[0]) not in names)
+    candidate = None
+    if route.candidate_ids:
+        try:
+            candidate = bind_candidate(context, replace(route, decision="ROUTE", reason_code="NONE", mentions=kept))
+        except RouterInvalid as error:
+            if str(error) != "ENTITY_NOT_FOUND":
+                return RouterAdmission(None, str(error))  # ambiguity or no confirmed record is never guessed away
+    as_of = context.time_options[route.time_ref_ids[0]].value if route.time_role == "AS_OF" else None
+    return RouterAdmission("investigation", "NONE", candidate, as_of, leads)
+
+
+def admit_route(context, route, *, leads_allowed=False):
     """Choose only installed read paths after authority and semantic validation.
 
-    model_entities (cascade mode): entity names come from the model's entity_mentions, each already located
-    in the question. One that is not a known name or alias of this workspace is an unknown entity: the
-    request clarifies with ENTITY_NOT_FOUND and no candidate or recorded value may bind in its place.
+    Entity names come from the model's entity_mentions (router/v5) or, for a v4 reply, its located mentions,
+    each already found in the question. One that is not a known name or alias of this workspace is an unknown
+    entity: the request clarifies with ENTITY_NOT_FOUND and no candidate or recorded value may bind in its place.
+
+    leads_allowed (Host has the orchestrated investigation): an INVESTIGATION question may carry unconfirmed
+    names as leads instead of stopping. Access is still decided first: another workspace's name always stops.
     """
-    listed = route.entity_mentions if model_entities else None
-    blocker = blocked_entity_reason(context.query, context.blocked_entities,
-                                    mentions=(*(text for text, _, _ in route.mentions), *(listed or ())))
+    listed = route.entity_mentions
+    named = (*(text for text, _, _ in route.mentions), *(listed or ()))
+    blocker = blocked_entity_reason(context.query, context.blocked_entities, mentions=named)
     from linkloom.ui.ask_admission import router_safety_reason
     safety = router_safety_reason(context.query, operation=route.operation,
                                   reason=route.reason_code, host_reason=blocker)
     if safety:
         return RouterAdmission(None, safety)
-    if blocker:
-        return RouterAdmission(None, blocker)
-    missing = (context.missing_names if listed is None else
-               any(name_missing(name, context.catalogue_names) for name in listed))
-    if missing or any(name_missing(name, context.catalogue_names) for name in route.unresolved_names):
+    hard = (blocked_entity_reason(context.query, authorization_facts(context.blocked_entities), mentions=named)
+            if leads_allowed else blocker)
+    if hard:
+        return RouterAdmission(None, hard)
+    if leads_allowed:
+        handoff = _investigation_handoff(context, route, listed)
+        if handoff is not None:
+            return handoff
+        if blocker:  # not an investigation: an unconfirmed name still stops the lookup
+            return RouterAdmission(None, blocker)
+    # Every name the model itself reported is checked: entity_mentions (v5), the mentions it located and its
+    # unresolved_names. A list that omits a name the model located elsewhere cannot hide it.
+    names = (*(listed or ()), *(text for text, start, end in route.mentions if (start, end) not in context.date_spans))
+    if any(name_missing(name, context.catalogue_names) for name in (*names, *route.unresolved_names)):
         return RouterAdmission(None, "ENTITY_NOT_FOUND")
     if any(context.candidates[key].status != "confirmed" for key in route.candidate_ids):
         return RouterAdmission(None, "NO_CONFIRMED_RECORD")
@@ -400,7 +466,7 @@ def admit_route(context, route, *, model_entities=False):
         return RouterAdmission(None, 'TIME_SCOPE_UNRESOLVED')
     graph_intents = {'TASK': {'CURRENT', 'AS_OF', 'LIST', 'HISTORY'},
                      'RELATION': {'RELATION_MULTIHOP', 'LIST', 'HISTORY', 'COMPARE'}}
-    decision = route.domain == 'DECISION' and route.intent in {'CURRENT', 'AS_OF', 'INVESTIGATION'}
+    decision = route.domain == 'DECISION' and route.intent in {'CURRENT', 'AS_OF', 'INVESTIGATION', 'HISTORY'}
     graph = route.intent in graph_intents.get(route.domain, ()) and context.graph_available
     if not decision and not graph or decision and route.time_role == 'MEETING_DATE':
         return RouterAdmission(None, 'UNSUPPORTED_QUERY')

@@ -115,6 +115,13 @@ def decide_recovery(
             "ADJUST_SEARCH", "SEARCH_NO_NEW_EVIDENCE",
             "The search found no new evidence. Adjust the search strategy or use already verified evidence.",
         )
+    statuses = {status for _, status in progress.subgoal_statuses}
+    if "completed" in statuses and "ready" in statuses:
+        summary = ", ".join(f"{goal}={status}" for goal, status in progress.subgoal_statuses)
+        return RecoveryDecision(
+            "CONTINUE", progress.reason_code,
+            f"TaskPlan: {summary}. Continue with a ready subgoal before a complete Final.",
+        )
     return RecoveryDecision("CONTINUE", progress.reason_code)
 
 

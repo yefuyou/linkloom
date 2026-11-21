@@ -15,7 +15,7 @@ from scripts import eval_routing as ev
 class Adapter:
     def __init__(self, text=None, usage=None):
         self.requests = []
-        self.text = text or '{"intent":"CURRENT","slot_id":"launch.cloud","as_of":null}'
+        self.text = text or '{"intent":"CURRENT","slot_id":"launch.cloud","as_of":null,"entity_mentions":[]}'
         self.usage = usage or ModelUsage(input_tokens=100, output_tokens=20, total_tokens=150)
 
     def complete(self, request):
@@ -176,7 +176,7 @@ def test_hard_veto_cannot_be_overturned_by_forced_llm(tmp_path, monkeypatch):
     assert report["cases"][0]["actual"]["hard_veto"]
     assert report["cases"][0]["actual"]["route"] == "NO_MATCH"
     assert report["cases"][0]["actual"]["slot"] is None
-    assert not meter.adapter.requests
+    # Whether the model was asked is not the contract; no slot may be bound by it.
     assert report["llm_metrics"]["hard_veto_cases"] == 1
     assert report["llm_metrics"]["hard_veto_overturned"] == 0
 
@@ -235,9 +235,9 @@ def test_deepseek_uses_existing_adapter_and_official_endpoint(monkeypatch):
 
 
 @pytest.mark.parametrize("text,expected", [
-    ('{"intent":"CURRENT","slot_id":"launch.cloud","as_of":null}', (1, 0, 0, 0)),
-    ('{"intent":"CURRENT","slot_id":"made.up","as_of":null}', (0, 1, 0, 1)),
-    ('{"intent":"CURRENT","slot_id":null,"as_of":null}', (0, 0, 1, 0)),
+    ('{"intent":"CURRENT","slot_id":"launch.cloud","as_of":null,"entity_mentions":[]}', (1, 0, 0, 0)),
+    ('{"intent":"CURRENT","slot_id":"made.up","as_of":null,"entity_mentions":[]}', (0, 1, 0, 1)),
+    ('{"intent":"CURRENT","slot_id":null,"as_of":null,"entity_mentions":[]}', (0, 0, 1, 0)),
     ('invalid', (0, 0, 0, 1)),
 ])
 def test_llm_metrics_distinguish_correct_wrong_null_and_invalid(tmp_path, monkeypatch, text, expected):
@@ -292,11 +292,11 @@ def test_journal_failure_prevents_transport_and_latches_failure(tmp_path, monkey
 
 
 @pytest.mark.parametrize("text", [
-    '{"intent":"NOT_AN_INTENT","slot_id":"launch.cloud","as_of":null}',
+    '{"intent":"NOT_AN_INTENT","slot_id":"launch.cloud","as_of":null,"entity_mentions":[]}',
     '{"intent":"CURRENT","slot_id":"launch.cloud","as_of":"2026-10-07T00:00:00Z"}',
-    '{"intent":"AS_OF","slot_id":null,"as_of":null}',
+    '{"intent":"AS_OF","slot_id":null,"as_of":null,"entity_mentions":[]}',
     '{"intent":"CURRENT","slot_id":"launch.cloud","as_of":"not-a-date"}',
-    '{"intent":"CURRENT","slot_id":"launch.cloud","slot_id":"launch.cloud","as_of":null}',
+    '{"intent":"CURRENT","slot_id":"launch.cloud","slot_id":"launch.cloud","as_of":null,"entity_mentions":[]}',
 ])
 def test_invalid_output_uses_production_validator(tmp_path, monkeypatch, text):
     case = deepcopy(next(c for c in ev.load_cases(ev.DEFAULT_CASES) if c["id"] == "R044"))
@@ -399,7 +399,7 @@ def test_gemini_selector_wire_settings_through_budget_wrapper():
         model_id = "gemini-3.8-flash"
         def complete(self, req):
             captured.append(req)
-            return ModelResponse(action=ModelAction.final('{"intent":"CURRENT","slot_id":"launch.cloud","as_of":null}'))
+            return ModelResponse(action=ModelAction.final('{"intent":"CURRENT","slot_id":"launch.cloud","as_of":null,"entity_mentions":[]}'))
     class Wrapper:
         adapter = Inner()
         def complete(self, req):

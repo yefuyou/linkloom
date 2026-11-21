@@ -11,7 +11,7 @@ def _rows(db,table,workspace):
     return rows
 
 
-def _evidence(db,workspace,ref,authorize):
+def read_source_evidence(db,workspace,ref,authorize):
     row=db.execute("""SELECT e.*,v.content,s.active,s.current_version_id
        FROM ll_source_evidence e JOIN ll_source_version v
        ON e.workspace_id=v.workspace_id AND e.source_id=v.source_id AND e.artifact_version_id=v.artifact_version_id
@@ -126,7 +126,7 @@ def _confirmed_decisions(db,workspace,tables,authorize,limits,excluded,confirmed
 
             refs=[r[0] for r in db.execute('SELECT evidence_ref FROM decision_evidence WHERE decision_id=? ORDER BY ordinal',(record['decision_id'],))]
             if not refs or set(refs)!=set(view.decision_evidence_refs): raise ValueError('EXACT_EVIDENCE_SET_REQUIRED')
-            evidence=tuple(_evidence(db,workspace,ref,authorize) for ref in refs)
+            evidence=tuple(read_source_evidence(db,workspace,ref,authorize) for ref in refs)
             bindings={b.evidence_ref:b for b in view.evidence}
             for item in evidence:
                 binding=bindings[item.evidence_id]
@@ -197,7 +197,7 @@ def _unmaterialized(db,workspace,tables,authorize,excluded):
         try:
             _,view,encoded,fp=_candidate_view_from_row(row)
             if encoded!=row['payload_json'] or fp!=row['candidate_fingerprint']:raise ValueError('CANDIDATE_INTEGRITY_MISMATCH')
-            for ref in view.decision_evidence_refs:_evidence(db,workspace,ref,authorize)
+            for ref in view.decision_evidence_refs:read_source_evidence(db,workspace,ref,authorize)
             excluded.append(dict(source_record_id=row['candidate_id'],reason='TIME_NOT_CONFIRMED' if not view.temporal_resolved else 'MATERIALIZATION_REQUIRED'))
         except PermissionError:continue
         except (ValueError,TypeError,KeyError):continue
