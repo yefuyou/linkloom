@@ -227,6 +227,9 @@ class UnifiedAskService:
             result["fallback_reason"] = str(error) if isinstance(error, RouterInvalid) else "PROVIDER_UNAVAILABLE"
             if session is not None and session.failure in {"PROVIDER_TIMEOUT_UNCERTAIN", "PROVIDER_UNCERTAIN"}:
                 result["fallback_reason"] = session.failure
+            elif session is not None and session.failure == "TASK_PROVIDER_BUDGET_EXHAUSTED":
+                # Known not sent: the session budget ran out before dispatch (same code as the Router path).
+                result["fallback_reason"] = "BUDGET_EXHAUSTED"
         finally:
             if session is not None:
                 session.record_validation(result)

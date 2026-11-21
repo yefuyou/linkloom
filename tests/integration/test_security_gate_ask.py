@@ -2,6 +2,8 @@
 from http.client import HTTPConnection
 import json
 from threading import Event, Thread
+from time import sleep
+from types import SimpleNamespace
 
 import pytest
 
@@ -10,6 +12,7 @@ from linkloom.ui.lifecycle import BackgroundWorkStopped
 from linkloom.ui.router_provider import RouterProvider
 from linkloom.ui.server import create_http_server
 from linkloom.ui.structured_router import CONFIG
+from linkloom.ui.task_provider import TaskProviderLimits
 from linkloom.ui.unified_ask import UnifiedAskService
 from test_structured_router_ask import decisions, ScriptedRouter, output
 
@@ -211,6 +214,12 @@ def test_budgeted_security_timeout_returns_http_result_and_ignores_late_allow(de
     gate = SlowGate()
     router = ScriptedRouter(lambda _: pytest.fail('The timed-out Ask reached the Router'))
     owner = decisions.configure_agent()
+    # Precondition: the request must be dispatched before it can time out. Give the session's total
+    # budget headroom (as configured task budgets do) so slow CI setup cannot consume it before dispatch;
+    # the Router still caps the request itself at security_timeout_seconds. The not-dispatched case is
+    # covered by test_security_budget_spent_before_dispatch_is_reported_as_not_sent.
+    monkeypatch.setattr(owner, 'task_models', SimpleNamespace(execution_kind='OFFLINE', provider_limits=
+        TaskProviderLimits(1, 12000, CONFIG['security_max_output_tokens'], .03, 30, 30, .00656)))
     monkeypatch.setattr(owner, 'start_orchestrated', lambda *a, **kw: pytest.fail('Ask reached LangGraph'))
     monkeypatch.setattr(owner, 'start', lambda *a, **kw: pytest.fail('Ask reached Runtime'))
     with create_http_server(None, product_app=decisions.app, investigation_service=owner,
@@ -356,3 +365,33 @@ def test_default_rule_mode_without_any_router_is_unchanged(decisions):
         workspace_id=decisions.app._workspace_id()))
     assert status == 200 and result['status'] == 'COMPLETED' and result['evidence']
     assert 'security_gate' not in result
+
+
+def test_security_budget_spent_before_dispatch_is_reported_as_not_sent(decisions, monkeypatch):
+    """Setup that outlasts the whole security budget sends nothing and says so; it is not 'unavailable'."""
+    import linkloom.ui.task_provider as task_provider
+    monkeypatch.setitem(CONFIG, 'security_timeout_seconds', .05)
+    original = task_provider.TaskProviderSession.__init__
+
+    def slow_setup(self, root, limits, validate):
+        def validate_after_budget():
+            sleep(.1)
+            return validate()
+        original(self, root, limits, validate_after_budget)
+
+    monkeypatch.setattr(task_provider.TaskProviderSession, '__init__', slow_setup)
+    gate = Gate()
+    router = ScriptedRouter(lambda _: pytest.fail('The Ask reached the Router'))
+    owner = decisions.configure_agent()
+    ask = UnifiedAskService(decisions.app, lambda: owner, graph_service=False, slot_embedder=None,
+                            router_provider=RouterProvider(router, external_provider=True, security_adapter=gate))
+    result, status = ask.ask(dict(query='Why did Launch switch suppliers?',
+                                  workspace_id=decisions.app._workspace_id(), allow_external_provider=True))
+    assert status == 200 and result['error']['code'] == 'MODEL_UNAVAILABLE'
+    security = result['security_gate']
+    assert security['status'] == 'INCOMPLETE' and security['fallback_reason'] == 'BUDGET_EXHAUSTED'
+    session, = owner._provider_sessions
+    receipt = json.loads((session.root / 'budget.json').read_text(encoding='utf8'))
+    assert receipt['failure'] == 'TASK_PROVIDER_BUDGET_EXHAUSTED'
+    assert receipt['requests_reserved'] == 0 and receipt['attempts'] == []
+    assert not gate.requests and not router.requests
