@@ -256,7 +256,8 @@ def test_failed_and_abstained_tasks_keep_other_results_as_partial(tmp_path):
     answer = result["answer"]
     assert [a["question"] for a in answer["answers"]] == [Q_SUCC]
     reasons = {(u["branch"], u["reason"]) for u in answer["unknowns"]}
-    assert reasons == {("owner", "BRANCH_FAILED"), ("leader", "BRANCH_NO_DECISION"), ("risk", "BRANCH_SKIPPED")}
+    assert reasons == {("owner", "BRANCH_FAILED"), ("leader", "BRANCH_NO_DECISION"),
+                       ("leader", "BRANCH_UNKNOWN_FIELD"), ("risk", "BRANCH_SKIPPED")}
     owners = {item["task_id"] for item in result["verified_evidence"].values()}
     assert "succ" in owners and not owners & {"owner", "risk"}
 
@@ -511,6 +512,96 @@ def test_worker_session_is_closed_after_a_normal_run_and_leaves_no_provider_thre
         worker_module.close_session = real
     assert receipt["failure"] is None and receipt["run_status"]["status"] == "completed"
     assert closed == [True] and _provider_threads() == []
+
+
+def test_worker_can_follow_three_search_read_pairs_then_use_its_reserved_final(tmp_path):
+    from linkloom.orchestration import worker as worker_module
+
+    class FollowLinks:
+        def __init__(self):
+            self.requests, self.refs = [], []
+
+        def complete(self, request):
+            self.requests.append(request)
+            number = len(self.requests)
+            if request.observation and request.observation.tool_id == 'read_verified_note':
+                self.refs.append(request.observation.value['evidence_id'])
+            if number % 2 == 1 and number < 7:
+                query = ['Meridian A', 'Cobalt B', 'Mira Chen'][number // 2]
+                action = ModelAction.tool(ToolCall(f'search-{number}', 'search_notes',
+                                                  dict(query=query, limit=5, source_context={})))
+            elif number < 7:
+                fact = [FACT['succ'], FACT['owner'], FACT['leader']][number // 2 - 1]
+                hit = next(item for item in request.observation.value if fact in item['quote'])
+                action = ModelAction.tool(ToolCall(f'read-{number}', 'read_verified_note', dict(note_ref=hit['evidence_id'])))
+            else:
+                assert request.final_only is True and request.available_tools == []
+                assert request.generation_options.thinking_level == 'low'
+                action = ModelAction.final(json.dumps(dict(
+                    schema_version='team-decision-result/v1',
+                    decision=dict(value='; '.join(FACT[key] for key in ('succ', 'owner', 'leader')),
+                                  status='approved', evidence_refs=self.refs),
+                    rationale=[], rejected_alternatives=[], actions=[], unresolved_items=[],
+                    uncertainty=dict(status='none', statement=None, unknown_fields=[], evidence_refs=[]),
+                    evidence_refs=self.refs)))
+            return ModelResponse(action=action, usage=ModelUsage(input_tokens=10, output_tokens=10))
+
+    model = FollowLinks()
+    world = World([], {})
+    limits = OrchestrationLimits.split(TOTAL, max_tasks=4, max_rounds=2)
+    # Fund the bounded future Final as well as the seven-turn path; low-budget early Final is tested separately.
+    limits = replace(limits, per_task=TaskProviderLimits(7, 1_000_000, 8192, .40, 120, 20, .02))
+    _, deps = build(tmp_path, world, limits=limits)
+    deps.model_factory = lambda _: model
+    task = dict(id='links', description=GOAL, epoch=0, attempt=1)
+    receipt = worker_module._run(deps, task, GOAL)
+    row, _, error = worker_module._gate(deps, task, receipt)
+    assert error is None and row['run']['reviewer']['decision'] == 'evidence_sufficient'
+    assert len(model.requests) == 7 and len(row['evidence']) == 3
+
+
+def test_worker_budget_switches_to_durable_final_before_spending_its_future_headroom(tmp_path):
+    from linkloom.orchestration import worker as worker_module
+
+    class BoundedResearch:
+        def __init__(self):
+            self.requests, self.refs = [], []
+
+        def complete(self, request):
+            self.requests.append(request)
+            if request.observation and request.observation.tool_id == 'read_verified_note':
+                self.refs.append(request.observation.value['evidence_id'])
+            if request.final_only:
+                assert request.generation_options.thinking_level == 'low'
+                action = ModelAction.final(json.dumps(dict(schema_version='team-decision-result/v1',
+                    decision=dict(value=FACT['succ'], status='partial', evidence_refs=self.refs),
+                    rationale=[], rejected_alternatives=[], actions=[], unresolved_items=[],
+                    uncertainty=dict(status='partial', statement=None, unknown_fields=['owner'], evidence_refs=[]),
+                    evidence_refs=self.refs)))
+            elif request.observation and isinstance(request.observation.value, list):
+                hit = next(item for item in request.observation.value if FACT['succ'] in item['quote'])
+                action = ModelAction.tool(ToolCall('read', 'read_verified_note', dict(note_ref=hit['evidence_id'])))
+            else:
+                action = ModelAction.tool(ToolCall('search', 'search_notes',
+                    dict(query='Meridian A', limit=5, source_context={})))
+            return ModelResponse(action=action)
+
+    limits = OrchestrationLimits.split(TOTAL, max_tasks=4, max_rounds=2)
+    limits = replace(limits, per_task=TaskProviderLimits(7, 1_000_000, 8192, .23, 120, 20, .02))
+    _, deps = build(tmp_path, World([], {}), limits=limits)
+    model = BoundedResearch()
+    deps.model_factory = lambda _: model
+    task = dict(id='bounded', description=GOAL, epoch=0, attempt=1)
+    receipt = worker_module._run(deps, task, GOAL)
+    row, _, error = worker_module._gate(deps, task, receipt)
+    assert error is None and row['conclusion']['decision']['status'] == 'partial'
+    assert 2 < len(model.requests) < limits.worker_turn_budget(limits.per_task)[0]
+    root = worker_module.attempt_dir(deps, task)
+    saved = [json.loads(path.read_text(encoding='utf8'))['model_request'] for path in (root / 'runtime/models').rglob('request.json')]
+    final, = [request for request in saved if request.get('final_only')]
+    assert final['available_tools'] == [] and final['generation_options']['thinking_level'] == 'low'
+    journal = json.loads((root / 'budget.json').read_text())
+    assert journal['failure'] is None and journal['cost_reserved_usd'] <= .23
 
 
 def test_a_timed_out_provider_call_is_uncertain_and_its_session_stops_accepting_work(tmp_path):

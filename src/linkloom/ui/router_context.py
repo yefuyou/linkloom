@@ -391,13 +391,23 @@ def _lead_names(context, route, listed):
 
 
 def _investigation_handoff(context, route, listed):
-    """An INVESTIGATION question about a confirmed subject or about names the workspace does not confirm.
+    """Hand source questions with literal unconfirmed names to the bounded investigation.
 
     The confirmed scope (a unique grounded candidate, or just the current workspace) and the unconfirmed leads
     are kept apart. Nothing is bound to a lead: the Supervisor and Workers verify it against source text.
     """
     leads = _lead_names(context, route, listed)
-    if not leads or route.intent != "INVESTIGATION" or route.operation != "READ":
+    if not leads or route.operation != "READ":
+        return None
+    if route.intent == "RELATION_MULTIHOP":
+        # A chain with no confirmed root cannot execute on the confirmed graph. Keep its
+        # names as search leads, with workspace scope only and no invented time or binding.
+        if (route.decision == "CLARIFY" and route.reason_code == "ENTITY_NOT_FOUND"
+                and not route.candidate_ids and route.time_role == "NONE"
+                and not (context.required_as_of or context.date_spans or context.unresolved_time)):
+            return RouterAdmission("investigation", "NONE", leads=leads)
+        return None
+    if route.intent != "INVESTIGATION":
         return None
     # Only a route, or a clarification that exists solely because a named object has no candidate, may hand off.
     if route.decision == "REFUSE" or (route.decision == "CLARIFY" and route.reason_code != "ENTITY_NOT_FOUND"):
@@ -426,11 +436,11 @@ def admit_route(context, route, *, leads_allowed=False):
     each already found in the question. One that is not a known name or alias of this workspace is an unknown
     entity: the request clarifies with ENTITY_NOT_FOUND and no candidate or recorded value may bind in its place.
 
-    leads_allowed (Host has the orchestrated investigation): an INVESTIGATION question may carry unconfirmed
-    names as leads instead of stopping. Access is still decided first: another workspace's name always stops.
+    With orchestrated investigation installed, source questions and unbound relation chains may carry
+    unconfirmed names as leads. Another workspace's name always stops before that handoff.
     """
     listed = route.entity_mentions
-    named = (*(text for text, _, _ in route.mentions), *(listed or ()))
+    named = (*(text for text, _, _ in route.mentions), *(listed or ()), *route.unresolved_names)
     blocker = blocked_entity_reason(context.query, context.blocked_entities, mentions=named)
     from linkloom.ui.ask_admission import router_safety_reason
     safety = router_safety_reason(context.query, operation=route.operation,
