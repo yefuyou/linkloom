@@ -40,6 +40,13 @@ def test_tool_schema_asks_for_time_text_and_role_instead_of_a_host_time_id():
     assert 'time_id' not in properties
 
 
+def test_confirmed_relation_chain_keeps_graph_executor_with_investigation_enabled():
+    task = "rollout checklist"
+    ctx = context("Who manages the owner of the rollout checklist?", task)
+    route = model_route(ctx, task, "", "NONE", intent="RELATION_MULTIHOP")
+    assert admit_route(ctx, route, leads_allowed=True).executor == "graph"
+
+
 def test_identifier_digits_are_not_a_time_scope():
     ctx = context('Who owns INC-2291?', 'INC-2291')
     assert not ctx.unresolved_time and handoff_blocker(ctx) is None

@@ -51,7 +51,7 @@ class WorkerDeps:
 
 
 class OutputBoundedAdapter:
-    """Caps one request's output tokens at the Worker's slice, never raises the model's own limit."""
+    """Apply the Worker output ceiling and the evidence-only Final policy."""
 
     def __init__(self, adapter, output_limit):
         self.adapter = adapter
@@ -61,7 +61,11 @@ class OutputBoundedAdapter:
     def complete(self, request):
         options = request.generation_options
         output = min(options.max_output_tokens or self.output_limit, self.output_limit)
-        return self.adapter.complete(replace(request, generation_options=replace(options, max_output_tokens=output)))
+        thinking = options.thinking_level
+        if request.final_only and thinking is None:
+            thinking = "low"
+        options = replace(options, max_output_tokens=output, thinking_level=thinking)
+        return self.adapter.complete(replace(request, generation_options=options))
 
 
 def build_branch_row(name, question, status, checkpoint_dir, checkpointer, workspace, source_versions, source_names):

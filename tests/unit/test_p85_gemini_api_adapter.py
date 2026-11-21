@@ -585,6 +585,8 @@ def test_grouped_gemini_turn_preserves_call_parts_signatures_and_results():
 
 @pytest.mark.parametrize("keep_verified_read", [True, False])
 def test_gemini_final_only_wire_disables_tools_and_preserves_needed_context(keep_verified_read):
+    from linkloom.orchestration.worker import OutputBoundedAdapter
+
     read_note = replace(_definition(), tool_id="read_verified_note")
     call = {"id": "read-call", "name": "read_verified_note", "args": {"note_ref": "ev-1"}}
     proposal = GeminiProviderAdapter(FakeGeminiClient(response={"function_calls": [call]})).complete(
@@ -606,6 +608,7 @@ def test_gemini_final_only_wire_disables_tools_and_preserves_needed_context(keep
     request = _request(
         turn_id="run_p85_1:turn:2", sequence=2, available_tools=[], final_only=True,
         recovery_guidance="Submit Final now.", tool_turns=[tool_turn],
+        generation_options=ModelGenerationOptions(),
         evidence_context=[evidence] if keep_verified_read else [],
     )
     assert ModelTurnRequest.from_dict(request.to_dict()) == request
@@ -620,9 +623,15 @@ def test_gemini_final_only_wire_disables_tools_and_preserves_needed_context(keep
     with build_gemini_sdk_client("synthetic-no-network", http_options_kwargs={
         "client_args": {"transport": httpx.MockTransport(capture)},
     }) as sdk:
-        response = GeminiProviderAdapter(GeminiSDKClientBridge(sdk)).complete(request)
+        adapter = OutputBoundedAdapter(GeminiProviderAdapter(GeminiSDKClientBridge(sdk)), 1248)
+        adapter.complete(_request(available_tools=[read_note], generation_options=ModelGenerationOptions()))
+        response = adapter.complete(request)
 
-    body, = captured
+    tool_round, body = captured
+    assert tool_round["generationConfig"]["maxOutputTokens"] == 1248
+    assert "thinkingConfig" not in tool_round["generationConfig"]
+    assert body["generationConfig"]["maxOutputTokens"] == 1248
+    assert body["generationConfig"]["thinkingConfig"] == {"thinking_level": "LOW"}
     assert body["tools"] == []
     assert body["toolConfig"]["functionCallingConfig"]["mode"] == "NONE"
     parts = body["contents"][0]["parts"]
