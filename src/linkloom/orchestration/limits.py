@@ -133,6 +133,26 @@ class OrchestrationLimits:
                 and turns >= (minimum or cls.WORKER_MIN_REQUESTS))
 
     @classmethod
+    def worker_planning_research_turns(cls, budget):
+        """Conditional planning space after Final, not a promise about future inputs or latency.
+
+        Use the existing input allowance and full request timeouts. The Worker may obtain more
+        turns with smaller/faster requests, or fewer with larger inputs, failures or a changed source.
+        This projection neither changes nor transfers any reservation.
+        """
+        turns, output = cls.worker_turn_budget(budget)
+        if not turns:
+            return 0
+        final_input = cls.WORKER_FINAL_INPUT_UPPER_BOUND
+        final_cost = budget.reservation_cost(final_input, output)
+        research_cost = budget.reservation_cost(cls.WORKER_INPUT_ALLOWANCE, output)
+        return max(0, min(turns - 1, budget.max_requests - 1,
+            (budget.max_input_tokens - final_input) // cls.WORKER_INPUT_ALLOWANCE,
+            (budget.max_output_tokens - output) // output,
+            math.floor((budget.max_cost_usd - final_cost) / research_cost + 1e-9),
+            math.floor(budget.max_seconds / budget.request_timeout_seconds) - 1))
+
+    @classmethod
     def for_budget(cls, provider, *, max_tasks=6, max_rounds=2, **options):
         """Prefer follow-up research space before more equal Worker slices; retain the four-turn minimum.
 

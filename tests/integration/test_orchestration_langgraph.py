@@ -402,6 +402,9 @@ def test_limits_come_from_the_host_budget_not_the_model():
     tight = OrchestrationLimits(provider=TOTAL, per_task=TaskProviderLimits(20, 5_000_000, 100_000, 8.0, 60, 10, .01),
                                 supervisor=TaskProviderLimits(1, 100_000, 4096, .1, 30, 10, .01), max_tasks=9)
     assert tight.task_cap() < 9  # four Workers' slices plus the Supervisor reserve exhaust the total
+    approved = OrchestrationLimits.for_budget(TaskProviderLimits(39, 1991805, 35952, 1.19, 225, 45, .02))
+    assert approved.worker_turn_budget(approved.per_task) == (7, 1027)
+    assert approved.worker_planning_research_turns(approved.per_task) == 2
 
 
 def test_reducers_are_monotonic_and_never_overwrite_accepted_results():

@@ -272,6 +272,11 @@ def test_dependent_task_receives_only_the_verified_upstream_results(make_env):
     assert FACT["succ"] in query and FACT["owner"] in query
     planning = json.loads(world.supervisor_requests[0].user_input.split('context=', 1)[1])['limits']
     assert planning['worker_max_turns'] <= 12 and planning['worker_final_input_reserve'] == 135168
+    assert planning['worker_max_turns_includes_final'] is True
+    assert planning['worker_research_turns_guaranteed'] is False
+    assert planning['worker_planning_research_turns'] < planning['worker_max_turns']
+    assert planning['run_seconds'] > 0 and planning['max_concurrency'] > 0
+    assert planning['worker_final_cost_reserve'] > 0
     assert planning['worker_final_timeout'] <= planning['worker_seconds']
     tasks = {task["id"]: task for task in result["parallel_investigation"]["tasks"]}
     assert tasks["leader"]["depends_on"] == ["succ", "owner"] and tasks["leader"]["status"] == "accepted"
