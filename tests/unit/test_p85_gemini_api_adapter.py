@@ -683,9 +683,11 @@ def test_final_bound_covers_runtime_and_gemini_mapping_boundaries(kind, record_p
     adapter = GeminiProviderAdapter(FakeGeminiClient())
     base = _request(available_tools=[], final_only=True)
     def evidence(call_id, quote):
+        from hashlib import sha256
+        digest = sha256(quote.encode('utf8')).hexdigest()
         return ToolResult(call_id, 'read_verified_note', 'ok', value=dict(status='verified',
-            evidence_id='ev-1', relative_path='meeting.md', quote=quote, quote_sha256='a' * 64,
-            content_sha256='a' * 64, line_start=1, line_end=1))
+            evidence_id='ev-1', relative_path='meeting.md', quote=quote, quote_sha256=digest,
+            content_sha256=digest, line_start=1, line_end=1))
     if kind == 'user':
         base = replace(base, user_input='u' * (32768 - 2))  # JSON string quotes count toward the limit
     elif kind == 'evidence':
@@ -696,7 +698,7 @@ def test_final_bound_covers_runtime_and_gemini_mapping_boundaries(kind, record_p
         calls, results = [], []
         for number in range(16):
             call = ModelToolCall(f'provider-{number}', ToolCall(f'rt-{number}', 'read_verified_note',
-                dict(note_ref=f'ev-{number}'), run_id=base.run_id, task_id=base.task_id,
+                dict(note_ref='ev-1'), run_id=base.run_id, task_id=base.task_id,
                 agent_id=base.agent_id, sequence=1))
             calls.append(call)
             results.append(ModelToolResult.for_call(run_id=base.run_id, proposal_id='batch', ordinal=number,
@@ -704,7 +706,9 @@ def test_final_bound_covers_runtime_and_gemini_mapping_boundaries(kind, record_p
         turn = ModelToolTurn(proposal_id='batch', source_turn_id='run_p85_1:turn:1', source_sequence=1,
                              tool_calls=calls, tool_results=results)
         # Escaping evidence JSON inside Gemini's text increases mapped size; this is not ordinary prose.
-        context = [evidence('other-read', '\\' * 5000)]
+        old_read = evidence('other-read', '\\' * 4000)
+        old_read = replace(old_read, value=dict(old_read.value, evidence_id='old-ev', relative_path='old.md'))
+        context = [old_read, results[0].result]
         if kind == 'prunable_history':
             context = [item.result for item in results[:1]]
             turn = replace(turn, tool_calls=calls[:1], tool_results=results[:1])
@@ -716,7 +720,10 @@ def test_final_bound_covers_runtime_and_gemini_mapping_boundaries(kind, record_p
                 quote_size -= 100
                 assert quote_size > 1000
                 results = [replace(item, result=evidence(item.runtime_call_id, 'x' * quote_size)) for item in results]
-                base = replace(base, tool_turns=[replace(turn, tool_results=results)])
+                # Runtime keeps the first verified read of each unique passage; repeated reads
+                # remain in function history but do not duplicate evidence_context.
+                base = replace(base, tool_turns=[replace(turn, tool_results=results)],
+                               evidence_context=[old_read, results[0].result])
     request, audit = _bounded_model_request(base)
     assert audit['dropped_old_tool_turns'] == 0  # test actual preservation, not silent truncation
     payload = build_gemini_request(request)
