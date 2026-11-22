@@ -52,3 +52,20 @@ def test_q3_allocation_and_execution_share_finite_request_token_and_cost_limits(
         committed = (limits.supervisor_reserve()[field] + limits.comparison_reserve()[field]
                      + limits.dispatch_cap() * getattr(limits.per_task, field))
         assert committed <= getattr(budget, field) + 1e-9
+
+
+def test_only_unspendable_supervisor_slices_are_released_and_the_total_is_unchanged():
+    budget = TaskProviderLimits(39, 1_991_805, 38000 - 2048, 1.21 - .02, 225, 45, .02)
+    limits = OrchestrationLimits.for_budget(budget)
+    assert (limits.max_tasks, limits.max_rounds, limits.task_cap(), limits.dispatch_cap()) == (2, 1, 2, 2)
+    assert limits.released_supervisor_share(rounds_taken=1, task_count=1) == 0  # a review can still add a task
+    assert limits.released_supervisor_share(rounds_taken=2, task_count=2) == 0  # every Supervisor round ran
+    share = limits.released_supervisor_share(rounds_taken=1, task_count=2)
+    assert share == .5 and limits.worker_limits(0) == limits.per_task
+    worker = limits.worker_limits(share)
+    assert worker.max_seconds == limits.per_task.max_seconds
+    assert worker.request_timeout_seconds == limits.per_task.request_timeout_seconds
+    for field in ('max_requests', 'max_input_tokens', 'max_output_tokens', 'max_cost_usd'):
+        spendable = (getattr(limits.supervisor, field) + limits.comparison_reserve()[field]  # one decision taken
+                     + limits.dispatch_cap() * getattr(worker, field))
+        assert spendable <= getattr(budget, field) + 1e-9

@@ -79,6 +79,29 @@ class OrchestrationLimits:
     def task_cap(self):
         return min(self.max_tasks, self.affordable_dispatches())
 
+    def released_supervisor_share(self, rounds_taken, task_count):
+        """Supervisor slices per Worker dispatch that can no longer be spent on a Supervisor decision.
+
+        A review needs room for another task (task_count < task_cap), and tasks are never removed, so
+        once the plan fills task_cap the remaining Supervisor rounds will not run. Their equal slices are
+        divided over every possible dispatch (dispatch_cap), so the total committed budget is unchanged
+        even when some dispatches already ran without a share.
+        """
+        if task_count < self.task_cap() or not self.dispatch_cap():
+            return 0.0
+        return max(0, self.max_rounds + 1 - rounds_taken) / self.dispatch_cap()
+
+    def worker_limits(self, share=0.0):
+        """One Worker attempt: its own equal slice plus a released Supervisor share (seconds unchanged)."""
+        if not share:
+            return self.per_task
+        extra = {key: getattr(self.supervisor, key) * share for key in _BUDGET_KEYS}
+        return replace(self.per_task,
+                       max_requests=self.per_task.max_requests + math.floor(extra['max_requests'] + 1e-9),
+                       max_input_tokens=self.per_task.max_input_tokens + math.floor(extra['max_input_tokens'] + 1e-9),
+                       max_output_tokens=self.per_task.max_output_tokens + math.floor(extra['max_output_tokens'] + 1e-9),
+                       max_cost_usd=self.per_task.max_cost_usd + extra['max_cost_usd'])
+
     @classmethod
     def split(cls, provider, *, max_tasks=6, max_rounds=2, **options):
         """Equal slices of one total budget: max_tasks Workers, max_rounds + 1 Supervisor decisions and, when

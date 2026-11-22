@@ -652,6 +652,37 @@ def test_gemini_final_only_wire_disables_tools_and_preserves_needed_context(keep
     assert response.error.details["reason"] == "undeclared_tool"
 
 
+@pytest.mark.parametrize("has_verified_read", [True, False])
+def test_final_only_turn_ending_on_unread_search_hits_does_not_show_them(has_verified_read):
+    """Run c8a4, Worker 2: Final-only forced right after the leader search. Ending the Gemini turn on those
+    unread hits, with no declared functions, led the model to a call Gemini rejected (MALFORMED_FUNCTION_CALL)."""
+    search = replace(_definition(), tool_id="search_notes")
+    hits = ToolResult(call_id="search-leader", tool_id="search_notes", status="ok",
+                      value=[dict(evidence_id="ev-leader", quote="Mira Chen reports directly to Kai Wu")])
+    read = ToolResult(call_id="read-owner", tool_id="read_verified_note", status="ok",
+                      value=dict(status="verified", evidence_id="ev-owner", relative_path="owner.md",
+                                 quote="Mira Chen is the accountable owner of Cobalt B", quote_sha256="a" * 64,
+                                 content_sha256="a" * 64, line_start=1, line_end=1))
+    request = _request(sequence=4, turn_id="run_p85_1:turn:4", available_tools=[], final_only=True,
+                       recovery_guidance="Submit Final now.", observation=hits,
+                       previous_tool_call=ToolCall("search-leader", "search_notes", {"query": "leader"},
+                                                   run_id="run_p85_1", task_id="task_p85_1",
+                                                   agent_id="retrieval_agent", sequence=3),
+                       evidence_context=[read] if has_verified_read else [],
+                       generation_options=ModelGenerationOptions())
+    payload = build_gemini_request(request)
+    assert payload["config"]["tools"] == []
+    assert payload["config"]["tool_config"] == {"function_calling_config": {"mode": "NONE"}}
+    text = payload["contents"][0]["parts"][0]["text"]
+    if has_verified_read:
+        assert len(payload["contents"]) == 1 and "ev-owner" in text and "Submit Final now." in text
+        assert "ev-leader" not in json.dumps(payload, ensure_ascii=False)  # unread hits are not evidence
+    else:  # nothing verified to answer from: the existing history mapping is kept unchanged
+        assert "function_response" in payload["contents"][-1]["parts"][0]
+    assert GeminiProviderAdapter(FakeGeminiClient()).estimate_input_tokens(request) == len(
+        json.dumps(payload, ensure_ascii=False, separators=(",", ":")).encode("utf8")) + 4096
+
+
 def test_future_final_envelope_covers_large_multi_tool_results_without_discarding_them():
     from linkloom.agents.model_adapter import ModelToolCall
     from linkloom.orchestration.limits import OrchestrationLimits
