@@ -117,11 +117,13 @@ TYPED_CLAIM_RELATIONS = {
         "direction": "The subject person reports to the object person.",
         "source_relations": frozenset({"reports_to", "direct_leader_of"}),
         # A confirmed edge does not say "direct"; keep the weaker relation so
-        # it never upgrades into a direct-leader claim.
+        # it never upgrades into a direct-leader claim. A strong direct-leader
+        # relation needs its own registered predicate with a distinct
+        # confirmed edge type, not different wording.
         "fact_relation": "reports_to",
         "graph_edge": ("reports_to", "source"),
         "single_valued": True,
-        "clause": "{subject}直接向{object}汇报",
+        "clause": "{subject}报告给{object}",
         "legacy_clause_parser": True,
     },
 }
@@ -665,21 +667,26 @@ def _claim_facts(
             clause, current_plan=current_plan, current_owner=current_owner
         )
         if fact is None:
-            # A direct reporting line supports this weaker Chinese paraphrase.
-            # Parse it for final claims only: a source that merely says
-            # "reports to" must not establish a *direct* leader by itself.
-            # Keep the final-only reporting paraphrase on the same terminal
-            # punctuation boundary as _fact_from_clause. The cited source must
-            # still match the exact person and leader relation below.
+            # A direct reporting line supports the plain "reports to" paraphrase.
+            # Parse these for final claims only. Plain "报告给" is the weak
+            # reports_to relation; explicitly direct wordings are strong
+            # direct_leader_of claims, so a weak confirmed edge cannot support them.
             normalized_clause = clause.strip().rstrip(".!?。？！").strip()
-            report = (
-                _ZH_REPORTS_TO_CLAIM.fullmatch(normalized_clause)
-                or _ZH_DIRECT_REPORTS_TO_CLAIM.fullmatch(normalized_clause)
-                or _ZH_REPORTS_DIRECT_TO_CLAIM.fullmatch(normalized_clause)
-            )
+            report = _ZH_REPORTS_TO_CLAIM.fullmatch(normalized_clause)
+            relation = "reports_to"
+            if report and "直接" in normalized_clause[
+                report.end("person"):report.start("leader")
+            ]:
+                relation = "direct_leader_of"
+            if report is None:
+                report = (
+                    _ZH_DIRECT_REPORTS_TO_CLAIM.fullmatch(normalized_clause)
+                    or _ZH_REPORTS_DIRECT_TO_CLAIM.fullmatch(normalized_clause)
+                )
+                relation = "direct_leader_of"
             if report:
                 fact = _Fact(
-                    "reports_to", _normalize_entity(report.group("person")),
+                    relation, _normalize_entity(report.group("person")),
                     _normalize_entity(report.group("leader")),
                 )
         if fact is None or fact.valid_on == _INVALID_DATE:

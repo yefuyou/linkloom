@@ -351,3 +351,136 @@ def test_physical_hash_matches_platform_newlines_written_by_product_investigatio
     assert FrozenSource("src_x.md", "src_x", VERSION, content).physical_sha256 == hashlib.sha256(
         path.read_bytes()).hexdigest()
     assert os.linesep in path.read_bytes().decode("utf-8")
+
+
+def _assess(text, evidence, index=None):
+    return assess_claim_text(text, list(evidence), evidence, confirmed_facts=index).status
+
+
+def _reports(evidence, index, *, subject="Ada", leader="Bo", predicate="reports_to"):
+    return evidence_supports_typed_claim(
+        evidence, predicate=predicate, subject=subject, object_value=leader,
+        valid_on=None, temporal_kind=None, confirmed_facts=index)
+
+
+def test_confirmed_reports_to_never_supports_a_direct_leader_wording():
+    vault = Vault(lead="Ada 的汇报线上是 Bo。")
+    vault.confirm("lead", "reports_to", ("person", "Ada"), ("person", "Bo"))
+    evidence = {"ev-lead": vault.read("lead")}
+    index = vault.index()
+    for direct in ("Ada直接向Bo汇报", "Ada向Bo直接汇报", "Ada报告直接给Bo", "Ada reports directly to Bo"):
+        assert _assess(direct, evidence, index) is not ClaimSupportStatus.SUPPORTED, direct
+    assert _assess("Ada报告给Bo", evidence, index) is ClaimSupportStatus.SUPPORTED
+    # Typed claim: the rendered clause is the weak wording and re-parses as supported.
+    proposal = _proposal(("Ada", "reports_to", "Bo", "ev-lead", evidence["ev-lead"]["quote"]))
+    result = _typed_final(proposal, evidence, index)
+    assert "报告给" in result.decision["value"]
+    assert "直接" not in result.decision["value"]
+    assert _assess(result.decision["value"], evidence, index) is ClaimSupportStatus.SUPPORTED
+    # A confirmed weak edge does not support the strong direct-leader claim.
+    assert _reports(evidence["ev-lead"], index, predicate="reports_to") is True
+
+
+def test_legacy_direct_leader_source_still_supports_direct_and_weak_wordings():
+    vault = Vault(lead="Ada 的直属领导是 Bo。")
+    evidence = {"ev-lead": vault.read("lead")}
+    for claim in ("Ada直接向Bo汇报", "Ada向Bo直接汇报", "Ada报告给Bo"):
+        assert _assess(claim, evidence) is ClaimSupportStatus.SUPPORTED, claim
+    assert _reports(evidence["ev-lead"], None) is True
+    # A legacy source that only says "reports to" does not make a direct leader.
+    weak = Vault(lead="Ada reports to Bo.")
+    assert _assess("Ada直接向Bo汇报", {"ev-lead": weak.read("lead")}) is not ClaimSupportStatus.SUPPORTED
+
+
+@pytest.mark.parametrize("quote_scope", ["partial", "full"])
+def test_final_parse_rejects_same_read_value_conflict(quote_scope):
+    vault = Vault(lead="Ada 的汇报线上是 Bo。Ada 的直属领导是 Cy。")
+    vault.confirm("lead", "reports_to", ("person", "Ada"), ("person", "Bo"))
+    evidence = {"ev-lead": vault.read("lead")}
+    index = vault.index()
+    quote = "Ada 的汇报线上是 Bo。" if quote_scope == "partial" else evidence["ev-lead"]["quote"]
+    assert _reports(evidence["ev-lead"], index) is False
+    with pytest.raises(ValidationError):
+        _typed_final(_proposal(("Ada", "reports_to", "Bo", "ev-lead", quote)), evidence, index)
+
+
+@pytest.mark.parametrize("quote_scope", ["partial", "full"])
+def test_final_parse_rejects_same_read_negation(quote_scope):
+    vault = Vault(own="Ada 牵头 Bay。Ada is not the accountable owner of Bay.")
+    vault.confirm("own", "owner_of", ("person", "Ada"), ("project", "Bay"))
+    evidence = {"ev-own": vault.read("own")}
+    index = vault.index()
+    quote = "Ada 牵头 Bay。" if quote_scope == "partial" else evidence["ev-own"]["quote"]
+    assert _owner(evidence["ev-own"], index) is False
+    with pytest.raises(ValidationError):
+        _typed_final(_proposal(("Bay", "owner_of_project", "Ada", "ev-own", quote)), evidence, index)
+
+
+def test_review_rejects_a_result_when_the_read_gains_same_read_counter_evidence():
+    clean = Vault(lead="Ada 的汇报线上是 Bo。")
+    clean.confirm("lead", "reports_to", ("person", "Ada"), ("person", "Bo"))
+    evidence = {"ev-lead": clean.read("lead")}
+    result = _typed_final(_proposal(("Ada", "reports_to", "Bo", "ev-lead", "Ada 的汇报线上是 Bo。")),
+                          evidence, clean.index())
+    result.validate_claim_support(evidence, observed_evidence_by_ref=evidence, confirmed_facts=clean.index())
+    conflicted = Vault(lead="Ada 的汇报线上是 Bo。Ada 的直属领导是 Cy。")
+    conflicted.confirm("lead", "reports_to", ("person", "Ada"), ("person", "Bo"))
+    changed = {"ev-lead": conflicted.read("lead")}
+    with pytest.raises(ValidationError):
+        result.validate_claim_support(changed, observed_evidence_by_ref=changed,
+                                      confirmed_facts=conflicted.index())
+
+
+def test_missing_confirmed_fact_index_never_supports_confirmed_only_claims(monkeypatch):
+    vault = Vault(lead="Ada 的汇报线上是 Bo。", own=PARAPHRASES["zh"])
+    vault.confirm("lead", "reports_to", ("person", "Ada"), ("person", "Bo"))
+    vault.confirm("own", "owner_of", ("person", "Ada"), ("project", "Bay"))
+    assert _reports(vault.read("lead"), vault.index()) is True
+    assert _reports(vault.read("lead"), None) is False
+    assert _owner(vault.read("own"), None) is False
+    assert _assess("Ada报告给Bo", {"ev-lead": vault.read("lead")}, None) is not ClaimSupportStatus.SUPPORTED
+    assert _assess("Bay的负责人是Ada", {"ev-own": vault.read("own")}, None) is not ClaimSupportStatus.SUPPORTED
+
+    spec = {
+        "subject_type": "plan", "object_type": "plan",
+        "direction": "The subject plan was replaced by the object plan.",
+        "source_relations": frozenset({"replaced_by_plan"}), "fact_relation": "replaced_by_plan",
+        "graph_edge": ("supersedes", "target"), "single_valued": True,
+        "clause": "{subject}已被{object}取代",
+    }
+    monkeypatch.setitem(TYPED_CLAIM_RELATIONS, "replaced_by_plan", spec)
+    plans = Vault(plan="Atlas 方案退场，后面统一按 Orion 方案走。", legacy="Orion replaced Atlas.")
+    plans.confirm("plan", "supersedes", ("plan", "Orion"), ("plan", "Atlas"))
+    plans.confirm("legacy", "supersedes", ("plan", "Orion"), ("plan", "Atlas"))
+
+    def replaced(name, index):
+        return evidence_supports_typed_claim(
+            plans.read(name), predicate="replaced_by_plan", subject="Atlas", object_value="Orion",
+            valid_on=None, temporal_kind=None, confirmed_facts=index)
+    assert replaced("plan", None) is False
+    assert replaced("legacy", None) is False
+    assert replaced("plan", plans.index()) is True
+    assert _assess("Atlas已被Orion取代", {"ev-plan": plans.read("plan")}, None) is not ClaimSupportStatus.SUPPORTED
+
+
+def test_failed_index_load_returns_none_and_new_relation_claim_is_not_supported(tmp_path, monkeypatch):
+    from linkloom.agents.confirmed_facts import load_confirmed_fact_index
+    from linkloom.temporal_graph.store import SQLiteGraphStore
+
+    monkeypatch.setitem(TYPED_CLAIM_RELATIONS, "replaced_by_plan", {
+        "subject_type": "plan", "object_type": "plan",
+        "direction": "The subject plan was replaced by the object plan.",
+        "source_relations": frozenset({"replaced_by_plan"}), "fact_relation": "replaced_by_plan",
+        "graph_edge": ("supersedes", "target"), "single_valued": True,
+        "clause": "{subject}已被{object}取代"})
+    db = tmp_path / "graph.db"
+    db.write_bytes(b"")
+
+    def boom(self, *args, **kwargs):
+        raise ValueError("GRAPH_EDGE_LIMIT")
+    monkeypatch.setattr(SQLiteGraphStore, "__init__", lambda self, *a, **k: None)
+    monkeypatch.setattr(SQLiteGraphStore, "load_edges", boom)
+    vault = Vault(plan="Atlas 方案退场，后面统一按 Orion 方案走。")
+    index = load_confirmed_fact_index(str(db), WS, vault.sources.values(), authorize_source=lambda *a: True)
+    assert index is None
+    assert _assess("Atlas已被Orion取代", {"ev-plan": vault.read("plan")}, index) is not ClaimSupportStatus.SUPPORTED

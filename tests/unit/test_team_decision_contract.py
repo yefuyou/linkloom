@@ -576,7 +576,7 @@ def test_phase14_cn2_claim_proposal_verifies_and_generates_existing_result_contr
 
     assert result.schema_version == "team-decision-result/v1"
     assert result.decision == {
-        "value": "截至 2025-03-01，青岚计划的负责人是李明；李明直接向王芳汇报",
+        "value": "截至 2025-03-01，青岚计划的负责人是李明；李明报告给王芳",
         "status": "approved",
         "evidence_refs": ["ev_owner", "ev_leader"],
     }
@@ -818,7 +818,11 @@ def test_message_timestamp_as_valid_on_is_still_rejected() -> None:
         )
     proposal["claims"][0]["valid_on"] = None
     proposal["claims"][0]["temporal_kind"] = None
-    TeamDecisionResult.from_grounded_final(
-        json.dumps(proposal), ["ev_msg"], evidence_by_ref=evidence,
-        expected_workspace_id="ws-saffron", final_protocol="claim-proposal/v1",
-    )
+    # Final parse now also checks the full read, exactly like review: the
+    # timestamped message is not an atemporal fact, so it is rejected up front
+    # instead of being accepted here and rejected later by validate_claim_support.
+    with pytest.raises(ValidationError):
+        TeamDecisionResult.from_grounded_final(
+            json.dumps(proposal), ["ev_msg"], evidence_by_ref=evidence,
+            expected_workspace_id="ws-saffron", final_protocol="claim-proposal/v1",
+        )

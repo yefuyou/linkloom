@@ -869,6 +869,19 @@ class TeamDecisionResult:
                     raise ValidationError(
                         "ClaimProposal relation or temporal scope is not supported by its quote."
                     )
+                # The model-selected substring must not hide same-read counter-evidence.
+                if not evidence_supports_typed_claim(
+                    evidence,
+                    predicate=claim.predicate,
+                    subject=claim.subject,
+                    object_value=claim.object_value,
+                    valid_on=claim.valid_on,
+                    temporal_kind=claim.temporal_kind,
+                    confirmed_facts=confirmed_facts,
+                ):
+                    raise ValidationError(
+                        "ClaimProposal relation or temporal scope is not supported by its quote."
+                    )
                 _append_refs(refs, [evidence_id])
 
         incomplete = uncertainty is not None
