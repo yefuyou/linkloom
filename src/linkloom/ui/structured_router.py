@@ -28,8 +28,9 @@ Emit exactly one submit_route result. For READ choose ROUTE when a candidate and
 or unresolved time, REFUSE for policy or unsupported requests. The host checks write requests.
 OTHER includes drafting communications. Drafting text is outside Ask, not a request to change a stored record.
 Use UNSUPPORTED_QUERY for drafting. A task owner by itself is task state; only a relationship chain is multi-hop.
-CURRENT: effective state. AS_OF: state at one time. INVESTIGATION: explain or compare reviewed decisions.
-RELATION_MULTIHOP: follow confirmed links. LIST: enumerate records. HISTORY: trace changes.
+CURRENT: effective state. AS_OF: state at one time. LIST: enumerate records. HISTORY: trace changes.
+RELATION_MULTIHOP: follow confirmed links from a confirmed root.
+INVESTIGATION: explain or compare decisions, or verify an unknown root or missing link in source text.
 COMPARE: compare graph meetings. OTHER: unsupported intent.
 Choose the root by its role: a task for its owner, deadline or history; a task, project or person for a link chain;
 a decision slot for a reviewed choice or value. The same project may occur in several domains.
@@ -50,13 +51,12 @@ word inside a range (such as "from March to now") does not turn the range into a
 time_role: NONE without a time or for current state, AS_OF for state at one exact date, MEETING_DATE for
 a meeting on a date, RANGE for an explicit range or open-ended before/after, UNRESOLVED for an unanchored
 relative or vague time such as last week. Names and identifiers are not time.
-Report unmatched named objects in unresolved_names as exact question text.
-For INVESTIGATION, a named object without a candidate is a lead the host verifies in source text, not an error:
-keep intent INVESTIGATION, report the object in unresolved_names and leave candidate_ids empty.
+Report unmatched names verbatim in unresolved_names. For INVESTIGATION they are source leads.
+Keep intent INVESTIGATION if the root is unknown. Use CLARIFY / ENTITY_NOT_FOUND with empty candidate_ids.
 entity_mentions: every project, task, person, named value or other name in the question, copied exactly, matched or not.
 Pronouns and generic words are not names.
 Mentions are optional hints. Omit terms you cannot copy exactly.
-If there is no candidate for an explicitly named object use ENTITY_NOT_FOUND. Ambiguity uses ENTITY_AMBIGUOUS.
+Missing candidates use ENTITY_NOT_FOUND. Ambiguity uses ENTITY_AMBIGUOUS.
 TIME_SCOPE_UNRESOLVED means a valid supported time is missing. NO_CONFIRMED_RECORD means the object lacks confirmation.
 Safety refusals carry no candidate. Write requests use WRITE_NOT_ALLOWED. A quoted change is not a write request.
 """
@@ -380,6 +380,8 @@ def route_payload(context):
     # Exact mention hits precede weaker recall; retrieval order breaks ties.
     ranked = sorted(data["candidates"], key=lambda row: not row["matched_terms"])
     data["candidates"] = []
+    # Budget for the longer coverage label while building the shortlist.
+    data["coverage"] = "truncated"
     for row in ranked:
         if len(data["candidates"]) == 6:
             break

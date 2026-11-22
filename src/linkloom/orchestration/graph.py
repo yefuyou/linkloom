@@ -99,7 +99,24 @@ def build_graph(deps: WorkerDeps, checkpointer):
             write_json(root / 'proposal.json', saved)
             return saved
         context = dict(user_goal=state['query'], **_context(state), tasks=_summary(state),
-                       limits=dict(max_tasks=limits.task_cap(), max_depth=limits.max_depth),
+                       limits=dict(max_tasks=limits.task_cap(), max_depth=limits.max_depth,
+                                   max_concurrency=limits.max_concurrency, run_seconds=limits.deadline_seconds,
+                                   worker_max_turns=limits.worker_turn_budget(limits.per_task)[0],
+                                   worker_max_turns_includes_final=True,
+                                   worker_research_turns_guaranteed=False,
+                                   worker_planning_research_turns=limits.worker_planning_research_turns(limits.per_task),
+                                   worker_planning_input_per_turn=limits.WORKER_INPUT_ALLOWANCE,
+                                   worker_output_per_turn=limits.worker_turn_budget(limits.per_task)[1],
+                                   worker_max_requests=limits.per_task.max_requests,
+                                   worker_input_tokens=limits.per_task.max_input_tokens,
+                                   worker_output_tokens=limits.per_task.max_output_tokens,
+                                   worker_cost_usd=limits.per_task.max_cost_usd,
+                                   worker_seconds=limits.per_task.max_seconds,
+                                   worker_final_input_reserve=limits.WORKER_FINAL_INPUT_UPPER_BOUND,
+                                   worker_final_cost_reserve=limits.per_task.reservation_cost(
+                                       limits.WORKER_FINAL_INPUT_UPPER_BOUND,
+                                       limits.worker_turn_budget(limits.per_task)[1]),
+                                   worker_final_timeout=limits.per_task.request_timeout_seconds),
                        round=round_number)
         session = TaskProviderSession(root, limits.supervisor, deps.validate)
         try:

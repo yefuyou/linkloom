@@ -1,8 +1,8 @@
 """Ask routing hands unconfirmed historical entities to the orchestration as leads, end to end.
 
 Real product Ask (structured router -> UnifiedAskService -> ProductInvestigationService -> LangGraph), real
-Runtime, Reviewer gate and synthesis. The router model is a script that answers the way the router contract
-asks (INVESTIGATION, the unknown name reported in unresolved_names). The Host decides what to do with it.
+Runtime, Reviewer gate and synthesis. The router model is a script that answers using both Investigation and the relation-chain classification seen in a live run. The Host decides what
+to do with these unverified names.
 """
 import json
 
@@ -37,7 +37,8 @@ class ScriptedRouter:
         data = json.loads(request.user_input.removeprefix(PROMPT))
         ids = [item["id"] for item in data["candidates"]][:1] if self.bind else []
         reply = dict(schema_version="router/v5", decision="ROUTE" if ids else "CLARIFY", intent=self.intent,
-            domain="DECISION", operation="READ", candidate_ids=ids, mentions=["Launch"] if ids else [],
+            domain="RELATION" if self.intent == "RELATION_MULTIHOP" else "DECISION",
+            operation="READ", candidate_ids=ids, mentions=["Launch"] if ids else [],
             unresolved_names=list(self.leads), entity_mentions=self.mentions if self.mentions is not None
             else list(self.leads) + (["Launch"] if ids else []),
             time_text="", time_role="NONE", reason_code="NONE" if ids else "ENTITY_NOT_FOUND")
@@ -63,15 +64,17 @@ def worker_context(world, description):
 
 def drive(env, ask, query):
     result, status = ask.ask(dict(query=query, workspace_id=env.workspace_id))
-    assert status == 202, result
+    assert status == 202, result.get("error")
     return result, env.finish(result["agent_run_id"])
 
 
-def test_original_q3_runs_on_the_graph_with_the_unknown_entity_as_a_lead(make_env):
+@pytest.mark.parametrize("intent", ["INVESTIGATION", "RELATION_MULTIHOP"])
+def test_original_q3_runs_on_the_graph_with_the_unknown_entity_as_a_lead(make_env, intent):
     world = World([delegation("delegate", [("succ", Q_SUCC, []), ("owner", Q_OWNER, [])]), delegation("stop")], TASKS)
     env = make_env(world)
-    router = ScriptedRouter()
+    router = ScriptedRouter(intent=intent)
     started, final = drive(env, ask_service(env, router, "llm_first"), Q3)
+    assert started["router"]["intent"] == intent
     assert len(router.requests) == 1 and started["router"]["entity_leads"] == [LEAD]
     assert started["router"]["decision"] == "ROUTE" and started["router"].get("reason_code") == "NONE"
     assert started["error"] is None and LEAD not in [item["label"] for item in started["router"]["entities"]]
@@ -148,10 +151,11 @@ def test_lead_handoff_needs_the_orchestration_and_never_relaxes_other_stops(make
     assert status == 200 and result["error"]["code"] == "ENTITY_NOT_FOUND" and not world.supervisor_requests
 
 
-def test_another_workspace_name_is_never_a_lead(tmp_path, make_env):
+@pytest.mark.parametrize("intent", ["INVESTIGATION", "RELATION_MULTIHOP"])
+def test_another_workspace_name_is_never_a_lead(tmp_path, make_env, intent):
     world = World([delegation("answer_single")], {})
     env = make_env(world, others=("Orchid Labs",))
-    router = ScriptedRouter(leads=("Orchid Labs",))
+    router = ScriptedRouter(intent=intent, leads=("Orchid Labs",))
     query = "Why did Orchid Labs replace Launch with Cobalt B?"
     for mode in ("llm_first", "cascade"):
         result, status = ask_service(env, router, mode).ask(dict(query=query, workspace_id=env.workspace_id))

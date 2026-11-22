@@ -56,6 +56,7 @@ def gaps_of(row):
     if conclusion['decision']['status'] == 'partial':
         gaps.append('PARTIAL_DECISION')
     uncertainty = conclusion['uncertainty']
+    gaps.extend(uncertainty.get('unknown_fields', ()))
     if uncertainty['status'] in ('partial', 'insufficient_evidence', 'conflicting_evidence'):
         gaps.append(uncertainty['statement'] or 'UNCERTAINTY_' + uncertainty['status'].upper())
     return gaps

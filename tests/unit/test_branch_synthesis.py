@@ -65,6 +65,22 @@ def test_no_decision_branch_is_unknown_and_all_unknown_status():
     assert result['unknowns'][0]['reason'] == 'BRANCH_NO_DECISION'
 
 
+def test_legacy_checkpoint_does_not_invent_worker_or_aggregate_review_receipts():
+    from linkloom.orchestration.snapshot import render_snapshot
+    from linkloom.ui.projection import WorkspacePresentationContext
+    rows, index = _setup()
+    rows[0]['run']['review_id'] = 'legacy-worker-review'
+    answer = _run(rows[:1], index, gaps={'branch-2': 'FAILED'})
+    answer.pop('reviewer')  # the prior persisted answer did not carry an aggregate receipt
+    values = dict(status='PARTIAL', tasks={'branch-1': dict(description='Q1?', depends_on=[], status='accepted')},
+                  rows={'branch-1': rows[0]}, answer=answer)
+    snapshot = render_snapshot('legacy', 'Q1?', WorkspacePresentationContext('Test', 2), values, running=False)
+    assert snapshot['reviewer']['performed'] is None
+    assert snapshot['reviewer']['reason'] == 'REVIEW_RECORD_UNAVAILABLE'
+    reviews = snapshot['parallel_investigation']['reviews']
+    assert reviews['workers'] == {} and reviews['unavailable_worker_reviews'] == ['branch-1']
+
+
 def _key_rows(first, second, first_key=None, second_key=None):
     a, b = _item('s1', 'alpha fact'), _item('s2', 'beta fact', 3)
     rows = [_row('branch-1', 'Q1?', first, [a], first_key), _row('branch-2', 'Q2?', second, [b], second_key)]

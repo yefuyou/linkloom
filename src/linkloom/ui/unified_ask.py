@@ -1034,9 +1034,15 @@ class UnifiedAskService:
                               ("review_id", "reviewer_agent_id", "decision", "checks", "reason", "created_at")}
         result["reviewer"].update(performed=disposition.get("performed") is True,
                                    accepted=disposition.get("performed") is True and disposition.get("decision") == "evidence_sufficient")
+        result['reviewer']['scope'] = 'single_agent'
         kind = snapshot["kind"]
         if "parallel_investigation" in snapshot:
             parallel = deepcopy(snapshot["parallel_investigation"])
+            result['reviewer']['scope'] = 'aggregate'
+            result['reviewer']['performed'] = disposition.get('performed')
+            if disposition.get('performed') is None:
+                result['reviewer']['accepted'] = None  # legacy checkpoint has no aggregate receipt
+            result['reviews'] = deepcopy(parallel.get('reviews') or {})
             evidence = [dict(evidence_ref=row["ref"], citation_id=row["id"],
                 source_name=row["source_name"], source_id=row["source_id"], source_version=row["source_version"],
                 line_start=row["line_start"], line_end=row["line_end"], quote=row["source"]["quote"],
@@ -1048,7 +1054,8 @@ class UnifiedAskService:
                 error=deepcopy(snapshot["error"]))
             if parallel["status"] in ("PARTIAL", "UNKNOWN"):
                 unknowns = (parallel.get("answer") or {}).get("unknowns") or []
-                result["uncertainty"] = {"unknown_fields": [row.get("question") or row.get("branch") for row in unknowns],
+                result["uncertainty"] = {"unknown_fields": list(dict.fromkeys(
+                    row.get("detail") or row.get("question") or row.get("branch") for row in unknowns)),
                     "statement": "Some tasks did not produce a verified answer; only verified results are shown."
                                  if parallel["status"] == "PARTIAL" else "No task produced a verified answer."}
             return result

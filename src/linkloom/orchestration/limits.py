@@ -10,6 +10,8 @@ from dataclasses import asdict, dataclass, fields, replace
 import math
 
 from linkloom.agents.model_adapter import MAX_VERIFIED_EVIDENCE_CONTEXT_BYTES
+from linkloom.runtime.models import RunRequest
+from linkloom.runtime.model_loop import MAX_MODEL_REQUEST_CONTEXT_BYTES, MAX_PROVIDER_USER_INPUT_BYTES
 from linkloom.orchestration.supervisor import SUPERVISOR_OUTPUT_TOKENS
 from linkloom.ui.task_provider import TaskProviderLimits
 
@@ -93,35 +95,78 @@ class OrchestrationLimits:
                    comparison=share(1) if max_tasks > 1 else None, max_tasks=max_tasks, max_rounds=max_rounds, **options)
 
     WORKER_MIN_REQUESTS = 4  # search, read, one more evidence turn and the reserved Final turn
+    WORKER_TARGET_REQUESTS = 6  # prefer room for follow-up search/read before spending slices on more tasks
+    WORKER_MAX_STEPS = RunRequest.__dataclass_fields__['max_steps'].default
     WORKER_MAX_OUTPUT_PER_REQUEST = 4096
+    WORKER_MIN_OUTPUT_PER_REQUEST = 1024  # keep space for a complete, cited Final when adding turns
+    # Provider-neutral fallback. Gemini deducts immutable user text already counted by Runtime from
+    # the mapped initial-input allowance in final_input_upper_bound(); it keeps unprunable history.
+    WORKER_FINAL_INPUT_UPPER_BOUND = MAX_MODEL_REQUEST_CONTEXT_BYTES + MAX_PROVIDER_USER_INPUT_BYTES + 4096
     # A planning allowance per turn for an evidence-sized request plus framing.
     # Tool history and other fields can make the serialized request larger.
     WORKER_INPUT_ALLOWANCE = MAX_VERIFIED_EVIDENCE_CONTEXT_BYTES + 4096
 
     @classmethod
-    def _fits_worker_turns(cls, budget):
-        turns = cls.WORKER_MIN_REQUESTS
-        output_per_turn = min(cls.WORKER_MAX_OUTPUT_PER_REQUEST, budget.max_output_tokens // turns)
-        return (budget.max_requests >= turns
-                and budget.max_input_tokens >= turns * cls.WORKER_INPUT_ALLOWANCE
-                and budget.max_output_tokens >= SUPERVISOR_OUTPUT_TOKENS  # equal-sized Supervisor slice
-                and budget.max_cost_usd >= turns * budget.reservation_cost(
-                    cls.WORKER_INPUT_ALLOWANCE, output_per_turn))
+    def worker_turn_budget(cls, budget):
+        """Finite Runtime turns including Final, with the same nominal allowance used by planning.
+
+        Actual serialized input, elapsed time and costs remain enforced by TaskProviderSession.
+        A Worker may finish early; this is a ceiling, never a required number of calls.
+        """
+        ceiling = min(cls.WORKER_MAX_STEPS, budget.max_requests,
+                      budget.max_input_tokens // cls.WORKER_INPUT_ALLOWANCE,
+                      budget.max_output_tokens // cls.WORKER_MIN_OUTPUT_PER_REQUEST)
+        for turns in range(ceiling, cls.WORKER_MIN_REQUESTS - 1, -1):
+            input_cost = cls.WORKER_INPUT_ALLOWANCE * budget.input_usd_per_million / 1_000_000
+            affordable_output = math.floor((budget.max_cost_usd / turns - input_cost)
+                                           * 1_000_000 / budget.output_usd_per_million + 1e-8)
+            output = min(cls.WORKER_MAX_OUTPUT_PER_REQUEST, budget.max_output_tokens // turns, affordable_output)
+            if (output >= cls.WORKER_MIN_OUTPUT_PER_REQUEST
+                    and turns * budget.reservation_cost(cls.WORKER_INPUT_ALLOWANCE, output) <= budget.max_cost_usd + 1e-10):
+                return turns, output
+        return 0, 0
+
+    @classmethod
+    def _fits_worker_turns(cls, budget, minimum=None):
+        turns, _ = cls.worker_turn_budget(budget)
+        return (budget.max_output_tokens >= SUPERVISOR_OUTPUT_TOKENS
+                and turns >= (minimum or cls.WORKER_MIN_REQUESTS))
+
+    @classmethod
+    def worker_planning_research_turns(cls, budget):
+        """Conditional planning space after Final, not a promise about future inputs or latency.
+
+        Use the existing input allowance and full request timeouts. The Worker may obtain more
+        turns with smaller/faster requests, or fewer with larger inputs, failures or a changed source.
+        This projection neither changes nor transfers any reservation.
+        """
+        turns, output = cls.worker_turn_budget(budget)
+        if not turns:
+            return 0
+        final_input = cls.WORKER_FINAL_INPUT_UPPER_BOUND
+        final_cost = budget.reservation_cost(final_input, output)
+        research_cost = budget.reservation_cost(cls.WORKER_INPUT_ALLOWANCE, output)
+        return max(0, min(turns - 1, budget.max_requests - 1,
+            (budget.max_input_tokens - final_input) // cls.WORKER_INPUT_ALLOWANCE,
+            (budget.max_output_tokens - output) // output,
+            math.floor((budget.max_cost_usd - final_cost) / research_cost + 1e-9),
+            math.floor(budget.max_seconds / budget.request_timeout_seconds) - 1))
 
     @classmethod
     def for_budget(cls, provider, *, max_tasks=6, max_rounds=2, **options):
-        """The largest plan whose equal slices cover the nominal Worker turn set.
+        """Prefer follow-up research space before more equal Worker slices; retain the four-turn minimum.
 
         Actual serialized requests and elapsed time stay subject to the Provider session.
         Raises ValueError when no allocation meets the planning allowance.
         """
-        for tasks in range(max_tasks, 0, -1):
-            for rounds in range(min(max_rounds, tasks), -1, -1):
-                if rounds == 0 and tasks > 1:
-                    continue  # a delegation without a review round is only offered for a single Worker
-                limits = cls.split(provider, max_tasks=tasks, max_rounds=rounds,
-                                   deadline_seconds=float(provider.max_seconds),
-                                   **dict(dict(max_concurrency=min(3, tasks)), **options))
-                if cls._fits_worker_turns(limits.per_task):
-                    return limits
+        for minimum in (cls.WORKER_TARGET_REQUESTS, cls.WORKER_MIN_REQUESTS):
+            for tasks in range(max_tasks, 0, -1):
+                for rounds in range(min(max_rounds, tasks), -1, -1):
+                    if rounds == 0 and tasks > 1:
+                        continue  # delegation needs room for a Supervisor review
+                    limits = cls.split(provider, max_tasks=tasks, max_rounds=rounds,
+                                       deadline_seconds=float(provider.max_seconds),
+                                       **dict(dict(max_concurrency=min(3, tasks)), **options))
+                    if cls._fits_worker_turns(limits.per_task, minimum):
+                        return limits
         raise ValueError('TASK_PROVIDER_BUDGET_EXHAUSTED')

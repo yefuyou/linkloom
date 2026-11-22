@@ -1,0 +1,27 @@
+{
+  "actions": [],
+  "decision": {
+    "evidence_refs": [
+      "ev_v2_b7c50f0497522951b405840d402bd3e7809094b0fa7d1e8ea3060e9424d27bd0",
+      "ev_v2_8737033c9e331b00f953fb55d0c0d56741b18e2a6add5dab9f04ea6a0168820a"
+    ],
+    "status": "partial",
+    "value": "As of 2025-02-14, Cobalt B replaced Meridian A, taking effect on 2025-02-14, and Mira Chen is the accountable owner of Cobalt B. The direct leader of Mira Chen is unconfirmed in the verified evidence."
+  },
+  "evidence_refs": [
+    "ev_v2_b7c50f0497522951b405840d402bd3e7809094b0fa7d1e8ea3060e9424d27bd0",
+    "ev_v2_8737033c9e331b00f953fb55d0c0d56741b18e2a6add5dab9f04ea6a0168820a"
+  ],
+  "rationale": [],
+  "rejected_alternatives": [],
+  "schema_version": "team-decision-result/v1",
+  "uncertainty": {
+    "evidence_refs": [],
+    "statement": "The direct leader of owner Mira Chen is not documented in the verified evidence.",
+    "status": "partial",
+    "unknown_fields": [
+      "direct leader of Mira Chen"
+    ]
+  },
+  "unresolved_items": []
+}
