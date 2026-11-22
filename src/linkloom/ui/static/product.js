@@ -465,11 +465,15 @@
       <div class="section-title"><h2>${copy("Decisions needing review", "待复核决定")}</h2></div>${attentionCards}`;
   }
 
-  async function inspectCandidate(candidateId, revalidation = null) {
+  async function inspectCandidate(candidateId, revalidation = null, pendingOnly = false) {
     const viewToken = ++state.agentViewToken;
     const workspaceId = state.workspace?.workspace_id;
     const { candidate } = await request(`/api/review/candidates/${encodeURIComponent(candidateId)}`);
     if (viewToken !== state.agentViewToken || workspaceId !== state.workspace?.workspace_id) return;
+    if (pendingOnly && (!["PENDING_REVIEW", "CONFLICT"].includes(candidate.status) || candidate.source?.active !== true
+        || !candidate.source.current_source_version || candidate.source.current_source_version !== candidate.source.source_version)) {
+      throw new Error(copy("This candidate is no longer pending or its source changed. Refresh the source differences.", "该候选已不再待审或来源已变化，请重新查询待审差异。"));
+    }
     if (revalidation && candidate.status === "APPROVED") {
       await inspectRevalidation(revalidation.original.decision_id);
       return;
@@ -549,7 +553,7 @@
     const cards = pending.map((item) => {
       const evidence = item.evidence || {};
       const link = item.candidate_id && reviewable.has(item.review_status)
-        ? `<button class="button quiet" type="button" data-action="inspect-candidate" data-id="${escapeHtml(item.candidate_id)}">${t("Go to Review to verify", "前往 Review 核实")}</button>` : "";
+        ? `<button class="button quiet" type="button" data-action="inspect-candidate" data-id="${escapeHtml(item.candidate_id)}" data-pending-review="true">${t("Go to Review to verify", "前往 Review 核实")}</button>` : "";
       return `<article class="timeline-item pending-source-claim"><strong>${escapeHtml(item.value)}</strong> ${badge(item.review_status)}
         <p class="metadata">${t("Source:", "来源：")} ${escapeHtml(evidence.source_name || t("Unavailable", "不可用"))} · ${t("lines", "行号")} ${escapeHtml(evidence.line_start ?? "?")}–${escapeHtml(evidence.line_end ?? "?")} · ${t("Effective from", "生效日期")} ${askDate(item.effective_from, locale)}</p>
         <blockquote class="quote">${escapeHtml(evidence.quote || t("Verified quote unavailable", "核验原文不可用"))}</blockquote>${link}</article>`;
@@ -558,6 +562,43 @@
       : t("Pending sources disagree; there is no formal decision yet", "待审核来源存在不同说法，当前无正式决定");
     return `<section class="pending-source-conflicts" role="note"><h3>${heading}</h3>
       <p class="hint">${t("These claims are not approved decisions. Go to Review to verify the sources before relying on them.", "这些说法尚未批准，不是正式决定。请前往 Review 核实来源后再采信。")}</p>${cards}</section>`;
+  }
+
+  async function showPendingSourceDifferences() {
+    const viewToken = state.agentViewToken;
+    const workspaceId = state.workspace?.workspace_id;
+    const requestToken = state.pendingConflictToken = (state.pendingConflictToken || 0) + 1;
+    const target = document.getElementById("pending-source-differences");
+    if (!target) return;
+    const asOf = document.getElementById("ask-date")?.value || null;
+    const current = () => viewToken === state.agentViewToken && workspaceId === state.workspace?.workspace_id
+      && requestToken === state.pendingConflictToken;
+    target.innerHTML = `<p role="status">${copy("Checking pending sources…", "正在核查待审来源…")}</p>`;
+    try {
+      const {candidates} = await request("/api/review/candidates");
+      if (!current()) return;
+      const slots = new Map();
+      for (const candidate of candidates || []) {
+        if (candidate.claim_type === "DECISION" && candidate.subject && candidate.relation) {
+          slots.set(JSON.stringify([candidate.subject, candidate.relation]), candidate);
+        }
+      }
+      const sections = [];
+      for (const slot of slots.values()) {
+        const {recovery} = await send("POST", "/api/decisions/recover", {
+          subject: slot.subject, relation: slot.relation, as_of: asOf,
+        });
+        if (!current()) return;
+        if (recovery.workspace_id !== workspaceId) throw new Error(copy("Workspace changed. Refresh pending sources.", "工作区已变化，请重新查询待审来源。"));
+        if (recovery.status !== "SOURCE_CONFLICT_UNREVIEWED" || recovery.effective || !recovery.pending_conflicts?.length) continue;
+        sections.push(`<article><h3>${escapeHtml(recovery.subject)} · ${escapeHtml(relationLabel(recovery.relation))}</h3>
+          <p class="metadata">${copy("Source differences as of", "来源差异查询日期")} ${askDate(recovery.as_of, askLocale())}</p>
+          ${pendingConflictsHtml(recovery.pending_conflicts, false, copy, askLocale())}</article>`);
+      }
+      if (current()) target.innerHTML = sections.join("") || `<p role="status">${copy("No differing pending sources without a formal decision at this date.", "该日期暂无双方待审、尚无正式决议的差异记录。")}</p>`;
+    } catch (error) {
+      if (current()) target.innerHTML = `<p class="notice error" role="alert">${escapeHtml(error.message)}</p>`;
+    }
   }
 
   async function inspectDecision(decisionId, asOf = "") {
@@ -688,6 +729,10 @@
 
       <div class="example-questions" aria-label="${escapeHtml(askCopy('Example questions', '示例问题'))}"><button type="button" class="source-chip" data-action="ask-example" data-query="我们现在采用哪家供应商？">${askLabel('Who is our current supplier?', '我们现在采用哪家供应商？')}</button><button type="button" class="source-chip" data-action="ask-example" data-query="联调报告由谁负责？">${askLabel('Who owns the integration report?', '联调报告由谁负责？')}</button></div>
       </form>${savedTaskRun(workspaceId) ? `<button class="button quiet" type="button" data-action="reopen-task">${askLabel('Recheck last task investigation', '重新核验上次任务调查')}</button>` : ''}</section><div id="ask-result" tabindex="-1" aria-live="polite"></div>
+      <section class="panel"><h2>${askLabel("Pending source differences", "待审来源差异")}</h2>
+        <p class="hint">${askLabel("Read-only workspace sources at the query date above, separate from this question's answer. Unapproved claims are not formal decisions.", "按上方查询日期核查本工作区来源，与本次问题答案分开展示；待审说法不是正式决议。")}</p>
+        <button class="button quiet" type="button" data-action="pending-source-conflicts">${askLabel("View pending differences without a formal decision", "查看尚无正式决议的待审差异")}</button>
+        <div id="pending-source-differences" aria-live="polite"></div></section>
       <details class="feedback-footer" id="feedback-panel" hidden><summary>${askLabel("Term not understood?", "术语没识别对？")}</summary>
         <p>${askLabel("Terminology applies only to this workspace after your explicit approval. It cannot approve or change business decisions.", "术语仅在本工作区经人工确认后生效，不能批准或修改业务决策。")}</p>
         <form id="feedback-form" class="form-stack">
@@ -772,6 +817,8 @@
 
   function invalidateAsk({keepFeedback = false} = {}) {
     closeEvidenceJump();
+    const pending = document.getElementById("pending-source-differences");
+    if (pending) pending.innerHTML = "";
     state.askLocaleRun = null;
     state.agentViewToken += 1;
     state.askCandidates = [];
@@ -1444,7 +1491,8 @@
           await submitAsk(form, slot);
         }
       }
-      else if (action === "inspect-candidate") await inspectCandidate(id);
+      else if (action === "inspect-candidate") await inspectCandidate(id, null, button.dataset.pendingReview === "true");
+      else if (action === "pending-source-conflicts") await showPendingSourceDifferences();
       else if (action === "revalidate-decision") await inspectRevalidation(id);
       else if (action === "revalidate-candidate") await inspectCandidate(id, state.revalidation);
       else if (action === "retry-revalidation") {

@@ -1454,7 +1454,7 @@ class ProductApplication:
                 or candidate.event_time > timestamp):
                 continue
             detail = self._candidate_detail(candidate.candidate_id)
-            if not detail["source"]["active"] or detail["source"]["source_version"] != candidate.artifact_version_id:
+            if not detail["source"]["active"] or detail["source"]["current_source_version"] != candidate.artifact_version_id:
                 continue
             proposals.append({
                 "candidate_id": candidate.candidate_id,
@@ -1488,7 +1488,7 @@ class ProductApplication:
             if effective_from > timestamp:
                 continue
             detail = self._candidate_detail(candidate.candidate_id)
-            if not detail["source"]["active"] or detail["source"]["source_version"] != candidate.artifact_version_id:
+            if not detail["source"]["active"] or detail["source"]["current_source_version"] != candidate.artifact_version_id:
                 continue
             source_claims.append({
                 "candidate_id": candidate.candidate_id,
@@ -1504,7 +1504,7 @@ class ProductApplication:
             })
         conflict_times = {
             item["effective_from"] for item in source_claims
-            if len({other["value"] for other in source_claims
+            if len({str(other["value"]).strip().casefold() for other in source_claims
                     if other["effective_from"] == item["effective_from"]}) > 1
         }
         source_conflicts = [item for item in source_claims
@@ -1904,6 +1904,7 @@ class ProductApplication:
             "source_version": candidate.artifact_version_id,
             "content_sha256": candidate.content_sha256,
             "active": bool(source["active"]),
+            "current_source_version": source["source_version"],
         }
         payload["evidence"] = {
             "quote": candidate.provenance.quote,
