@@ -660,3 +660,20 @@ def test_session_is_closed_when_the_run_is_cancelled_by_a_base_exception(tmp_pat
     assert len(seen) == 1 and seen[0].pending_task_ids() == ()
     with pytest.raises(BackgroundWorkStopped):  # closed: no call can start afterwards
         seen[0]._calls.operation("late").__enter__()
+
+
+@pytest.mark.parametrize("tasks,shared", [(2, True), (1, False)])
+def test_worker_slice_receives_supervisor_share_only_when_no_review_can_run(tmp_path, tasks, shared):
+    world_tasks = [("succ", Q_SUCC, []), ("owner", Q_OWNER, ["succ"])][:tasks]
+    world = World([delegation("delegate", world_tasks), delegation("stop")], TASKS)
+    limits = OrchestrationLimits.split(TOTAL, max_tasks=2, max_rounds=1, max_concurrency=2)
+    orchestrator, deps = build(tmp_path, world, limits=limits)
+    result = orchestrator.start(GOAL)
+    expected = limits.worker_limits(.5 if shared else 0)
+    for task_id, _, _ in world_tasks:
+        assert result["tasks"][task_id]["status"] == ACCEPTED
+        budget = json.loads((deps.root / "tasks" / task_id / "attempt-0-1" / "budget.json").read_text())
+        assert budget["limits"]["max_cost_usd"] == pytest.approx(expected.max_cost_usd)
+        assert budget["limits"]["max_requests"] == expected.max_requests
+    if shared:
+        assert len(world.supervisor_requests) == 1  # the released review round never ran

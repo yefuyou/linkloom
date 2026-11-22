@@ -725,9 +725,13 @@ def _build_contents(
     contents: list[dict[str, Any]] = [
         {"role": "user", "parts": [{"text": initial_user_text}]}
     ]
-    if request.final_only and request.observation is None and request.tool_turns:
+    trailing_search = request.observation is not None and request.observation.tool_id == "search_notes"
+    if request.final_only and (request.tool_turns or trailing_search):
         # Start a text-only Gemini turn when the verified context already carries
         # all completed reads. Preserve history if it contains other tool results.
+        # Search hits are not evidence. A Final-only turn that ends on unread hits
+        # (with no declared functions) invites a call Gemini then rejects as
+        # MALFORMED_FUNCTION_CALL, so those hits are not shown either.
         verified_reads = {result.call_id for result in request.evidence_context
                           if result.tool_id == "read_verified_note"}
         if verified_reads and all(

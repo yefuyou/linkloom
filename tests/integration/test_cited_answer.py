@@ -135,7 +135,7 @@ def test_every_orchestration_worker_requests_a_cited_answer(tmp_path, monkeypatc
     limits = TaskProviderLimits(20, 1_000_000, 50_000, 1.0, 60, 10, .01)
     deps = SimpleNamespace(root=tmp_path, run_id="run", vault=tmp_path, index=tmp_path, workspace_id="w",
         model_factory=lambda question: None, validate=lambda: None,
-        limits=SimpleNamespace(per_task=limits))
+        limits=SimpleNamespace(per_task=limits, worker_limits=lambda share=0.0: limits))
     for number in (1, 2):
         task = dict(id=f"task-{number}", description="q", epoch=0, attempt=1)
         worker._run(deps, task, "q")

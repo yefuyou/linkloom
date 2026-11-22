@@ -223,8 +223,9 @@ def build_graph(deps: WorkerDeps, checkpointer):
         if batch:
             sends = []
             rows = state.get('rows') or {}
+            share = limits.released_supervisor_share(state.get('round', 0), len(tasks))
             for task in batch:
-                put(task, status=RUNNING, attempt=task['attempt'] + 1)
+                put(task, status=RUNNING, attempt=task['attempt'] + 1, supervisor_share=share)
                 upstream = [blackboard.upstream_result(dep, rows[dep]) for dep in task['depends_on']]
                 sends.append(Send('worker', dict(task=dict(task), upstream=upstream, context=_context(state))))
             update = dict(tasks=dict(changed), dispatches=dispatches + len(batch), trace=[

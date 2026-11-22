@@ -185,7 +185,7 @@ def _run(deps, task, query):
         receipt = dict(run_status=None, failure='PROVIDER_UNCERTAIN', error=None)
         write_json(root / 'status.json', receipt)
         return receipt
-    limits = deps.limits.per_task
+    limits = deps.limits.worker_limits(task.get('supervisor_share', 0.0))
     session = TaskProviderSession(root, limits, deps.validate)
     status, error = None, None
     try:

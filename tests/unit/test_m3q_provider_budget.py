@@ -277,3 +277,38 @@ def test_completed_provider_receipt_revalidates_budget_and_usage(tmp_path, damag
     path.write_text(json.dumps(budget), encoding='utf8')
     with pytest.raises(ValueError):
         validate_task_provider_receipt(path, datetime.now(UTC).isoformat())
+
+
+def test_released_supervisor_share_lets_the_real_q3_worker_read_on_and_keeps_its_final(tmp_path):
+    """Real Q3 Worker ledger, same $0.238 slice as run c8a4 (forced Final-only at request 4 there).
+    With the unspendable Supervisor slice released, the next reads are allowed; at every state a
+    worst-case Final under the unchanged Gemini bound still fits all limits."""
+    from linkloom.agents.providers.gemini_api import GeminiProviderAdapter
+    from linkloom.orchestration.limits import OrchestrationLimits
+    from linkloom.runtime.model_loop import MAX_MODEL_REQUEST_CONTEXT_BYTES
+    journal = json.loads((Path(__file__).resolve().parents[1] / 'fixtures/orchestration-final/task-2-budget.json').read_text())
+    run = OrchestrationLimits.for_budget(TaskProviderLimits(39, 1_991_805, 38000 - 2048, 1.21 - .02, 225, 45, .02))
+    gemini = GeminiProviderAdapter(SimpleNamespace(generate_content=lambda **_: pytest.fail('no transport')))
+    def first_forced(limits):
+        _, output = OrchestrationLimits.worker_turn_budget(limits)
+        sizes = [row['input_reserved'] for row in journal['attempts']]
+        for index in range(len(sizes) + 1):
+            session = TaskProviderSession(tmp_path / f'{limits.max_cost_usd}-{index}', limits, lambda: None)
+            session.requests, session.input_tokens = index, sum(sizes[:index])
+            session.output_tokens = index * output
+            session.cost = sum(limits.reservation_cost(size, output) for size in sizes[:index])
+            turn = replace(request(), user_input='u' * 8790,
+                           generation_options=replace(request().generation_options, max_output_tokens=output))
+            adapter = SimpleNamespace(estimate_input_tokens=lambda r, n=(sizes + [sizes[-1]])[index]: n,
+                                      final_input_upper_bound=gemini.final_input_upper_bound)
+            final = gemini.final_input_upper_bound(turn, MAX_MODEL_REQUEST_CONTEXT_BYTES)
+            assert session.requests + 1 <= limits.max_requests
+            assert session.input_tokens + final <= limits.max_input_tokens
+            assert session.output_tokens + output <= limits.max_output_tokens
+            assert session.cost + limits.reservation_cost(final, output) <= limits.max_cost_usd + 1e-10
+            if session.prepare_request(adapter, turn, OrchestrationLimits.WORKER_FINAL_INPUT_UPPER_BOUND, output).final_only:
+                return index + 1
+        return None
+    assert first_forced(run.worker_limits()) == 4  # as observed in run c8a4
+    released = run.worker_limits(run.released_supervisor_share(rounds_taken=1, task_count=2))
+    assert first_forced(released) == 7
