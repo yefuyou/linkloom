@@ -121,6 +121,7 @@ class RetrievalAgent:
         context_runtime: Any | None = None,
         reserve_final_turn: bool = False,
         cited_answer: bool = False,
+        confirmed_fact_index: Any | None = None,
     ) -> None:
         self.agent_id = agent_id
         self.model = model
@@ -139,6 +140,9 @@ class RetrievalAgent:
         self.context_runtime = context_runtime
         self.reserve_final_turn = reserve_final_turn
         self.cited_answer = cited_answer
+        # Host callable returning a fresh ConfirmedFactIndex (or None) on each
+        # check, so reviewed facts revoked during the run stop counting.
+        self.confirmed_fact_index = confirmed_fact_index
         if prompt_profile not in PROMPT_PROFILES:
             raise ValidationError("Unsupported retrieval prompt profile.")
         self.prompt_profile = prompt_profile
@@ -505,6 +509,14 @@ class RetrievalAgent:
             if isinstance(ref, str) and ref and ref not in refs:
                 refs.append(ref)
         return refs
+
+    def _confirmed_facts(self) -> Any | None:
+        if self.confirmed_fact_index is None:
+            return None
+        try:
+            return self.confirmed_fact_index()
+        except Exception as error:  # Host store failure becomes a structured Final failure.
+            raise ValidationError("Confirmed source facts could not be loaded.") from error
 
     def _final_model_visible_evidence(
         self,
@@ -900,6 +912,7 @@ class RetrievalAgent:
                     read_evidence_ids=read_refs,
                     observed_temporal_decision_ids=observed_temporal_decision_ids,
                     require_read_evidence=True,
+                    confirmed_facts=self._confirmed_facts(),
                 )
             except ValidationError as error:
                 temporal_reason = error.details.get("reason") if isinstance(error.details, dict) else None
@@ -1181,6 +1194,7 @@ class RetrievalAgent:
                         visible_evidence,
                         question=query,
                         observed_evidence_by_ref=read_evidence,
+                        confirmed_facts=self._confirmed_facts(),
                     )
             except ValidationError:
                 return self._failed_result(

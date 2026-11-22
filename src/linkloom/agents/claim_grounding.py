@@ -1,14 +1,26 @@
 """Deterministic support checks for a deliberately small TeamDecision vocabulary.
 
-This is not a general natural-language entailment judge. It recognizes a few
-explicit relation forms used by LinkLoom's bounded multi-hop decision slice;
-unrecognized material claims are returned as UNVERIFIABLE and must fail closed.
+This is not a general natural-language entailment judge. Source-side facts
+come from two places, in order of trust:
+
+1. Host-confirmed structured facts (``ConfirmedFactIndex`` in
+   ``confirmed_facts.py``): human-approved relation receipts re-verified by
+   the temporal graph projection and bound to the cited read by workspace,
+   source version, content hash, line range and quote. They need no sentence
+   parsing. Parser facts from the same reads are still kept, so a parsed
+   negation or different value contradicts a confirmed fact (fail closed).
+2. The frozen LEGACY CLAUSE PARSER below (``_fact_from_clause``). It only
+   serves the historical relations listed in ``LEGACY_CLAUSE_RELATIONS``.
+   New relations are registered in ``TYPED_CLAIM_RELATIONS`` with a graph
+   edge mapping and never gain sentence regexes (enforced at import).
+
+Unrecognized material claims are returned as UNVERIFIABLE and must fail closed.
 """
 
 from __future__ import annotations
 
 from dataclasses import dataclass, replace
-from datetime import date
+from datetime import UTC, date, datetime
 from enum import StrEnum
 import re
 from collections.abc import Mapping, Sequence
@@ -47,34 +59,128 @@ class _Fact:
     subject: str
     value: str
     valid_on: str | None = None
+    # None/"snapshot"/"event" from the legacy parser; confirmed facts may also
+    # be "interval" (valid_on is the start, valid_to the exclusive end).
     temporal_kind: str | None = None
     project_scope: str | None = None
+    valid_to: str | None = None
+    # "legacy_clause" (sentence parser) or "confirmed" (human-approved receipt).
+    origin: str = "legacy_clause"
 
+
+# Relations the frozen legacy clause parser can emit. Do not extend: a new
+# business relation is registered in TYPED_CLAIM_RELATIONS with graph_edge.
+LEGACY_CLAUSE_RELATIONS = frozenset({
+    "superseded_by", "not_superseded_by", "owner_of", "not_owner_of",
+    "proposed_owner_of", "direct_leader_of", "reports_to", "alias_of",
+    "approved_for", "selected_supplier_for", "approved_model_provider_for",
+    "named_entity", "approval_record",
+})
+_LEGACY_TYPED_PREDICATES = frozenset({"alias_of_project", "owner_of_project", "reports_to"})
 
 # ClaimProposal roles share the same direction as the normalized source facts.
 # Keep the historical predicate names; changing their meaning would break v1.
+#
+# Adding a relation needs one entry here and no sentence pattern:
+# - fact_relation: the _Fact.relation used for structured source facts;
+# - source_relations: fact relations that may witness this predicate;
+# - graph_edge: (confirmed graph edge type, endpoint holding the claim subject);
+# - single_valued: whether two objects for one subject/time contradict;
+# - clause: the reviewed Chinese projection of a verified claim;
+# - legacy_clause_parser: True only for the frozen historical predicates.
 TYPED_CLAIM_RELATIONS = {
     "alias_of_project": {
         "subject_type": "alias",
         "object_type": "project",
         "direction": "The subject name is an alias for the object project; this says nothing about ownership.",
         "source_relations": frozenset({"alias_of"}),
+        "fact_relation": "alias_of",
+        "graph_edge": ("alias_of", "source"),
+        "single_valued": True,
+        "clause": "{subject}是{object}的别名",
+        "legacy_clause_parser": True,
     },
     "owner_of_project": {
         "subject_type": "project",
         "object_type": "person",
         "direction": "The subject project has the object person as its owner.",
         "source_relations": frozenset({"owner_of"}),
+        "fact_relation": "owner_of",
+        "graph_edge": ("owner_of", "target"),
+        "single_valued": True,
+        "clause": "{subject}的负责人是{object}",
+        "legacy_clause_parser": True,
     },
     "reports_to": {
         "subject_type": "person",
         "object_type": "person",
         "direction": "The subject person reports to the object person.",
         "source_relations": frozenset({"reports_to", "direct_leader_of"}),
+        # A confirmed edge does not say "direct"; keep the weaker relation so
+        # it never upgrades into a direct-leader claim. A strong direct-leader
+        # relation needs its own registered predicate with a distinct
+        # confirmed edge type, not different wording.
+        "fact_relation": "reports_to",
+        "graph_edge": ("reports_to", "source"),
+        "single_valued": True,
+        "clause": "{subject}报告给{object}",
+        "legacy_clause_parser": True,
     },
 }
 
 
+def validate_typed_relation_registry(registry: Mapping[str, Mapping[str, Any]] | None = None) -> None:
+    """Reject registry entries that would route a new relation through sentence regexes."""
+    cardinality: dict[str, bool] = {}
+    for predicate, spec in (TYPED_CLAIM_RELATIONS if registry is None else registry).items():
+        for relation in spec.get("source_relations") or ():
+            if cardinality.setdefault(relation, spec.get("single_valued")) != spec.get("single_valued"):
+                raise ValueError(f"Typed relation {predicate!r} disagrees on single_valued for {relation!r}.")
+        relations = spec.get("source_relations")
+        edge = spec.get("graph_edge")
+        if (not isinstance(relations, frozenset) or spec.get("fact_relation") not in relations
+                or not isinstance(spec.get("clause"), str)
+                or not isinstance(spec.get("single_valued"), bool)
+                or not (edge is None or (isinstance(edge, tuple) and len(edge) == 2
+                                         and edge[1] in {"source", "target"}))):
+            raise ValueError(f"Typed relation {predicate!r} is incomplete.")
+        if spec.get("legacy_clause_parser") is True:
+            if predicate not in _LEGACY_TYPED_PREDICATES:
+                raise ValueError(f"Typed relation {predicate!r} cannot use the frozen legacy clause parser.")
+        elif relations & LEGACY_CLAUSE_RELATIONS:
+            raise ValueError(f"Typed relation {predicate!r} must not reuse legacy parser relations.")
+
+
+validate_typed_relation_registry()
+
+
+def _single_valued(relation: str) -> bool:
+    """Unregistered legacy relations keep their historical single-value rule."""
+    for spec in TYPED_CLAIM_RELATIONS.values():
+        if relation in spec["source_relations"]:
+            return bool(spec["single_valued"])
+    return True
+
+
+def _evidence_facts(evidence: Mapping[str, Any], confirmed_facts: Any = None, *,
+                    legacy: bool = True) -> tuple[_Fact, ...]:
+    """Confirmed facts bound to this read, plus legacy parser facts when allowed.
+
+    Legacy facts are never dropped: a parsed negation or a different value in
+    the same read still contradicts a confirmed fact and fails closed.
+    """
+    reviewed: tuple[_Fact, ...] = ()
+    if confirmed_facts is not None:
+        reviewed = tuple(confirmed_facts.facts_for(evidence))
+    return reviewed + (_source_facts(evidence) if legacy else ())
+
+
+# ---------------------------------------------------------------------------
+# LEGACY CLAUSE PARSER (frozen compatibility path, issue #147).
+# These patterns map a few historical English/Chinese sentence forms onto
+# LEGACY_CLAUSE_RELATIONS. Do not add patterns or relations here; register new
+# relations in TYPED_CLAIM_RELATIONS and supply confirmed structured facts.
+# ---------------------------------------------------------------------------
 _LATIN_ENTITY_TOKEN = r"[A-Z][A-Za-z0-9]*(?:[.'’&/-][A-Za-z0-9]+)*"
 _CJK_ENTITY_TOKEN = r"[\u3400-\u4dbf\u4e00-\u9fff]+(?:[A-Za-z0-9][A-Za-z0-9.'’&/-]*)?"
 _ENTITY_TOKEN = rf"(?:{_LATIN_ENTITY_TOKEN}|{_CJK_ENTITY_TOKEN})"
@@ -561,21 +667,26 @@ def _claim_facts(
             clause, current_plan=current_plan, current_owner=current_owner
         )
         if fact is None:
-            # A direct reporting line supports this weaker Chinese paraphrase.
-            # Parse it for final claims only: a source that merely says
-            # "reports to" must not establish a *direct* leader by itself.
-            # Keep the final-only reporting paraphrase on the same terminal
-            # punctuation boundary as _fact_from_clause. The cited source must
-            # still match the exact person and leader relation below.
+            # A direct reporting line supports the plain "reports to" paraphrase.
+            # Parse these for final claims only. Plain "报告给" is the weak
+            # reports_to relation; explicitly direct wordings are strong
+            # direct_leader_of claims, so a weak confirmed edge cannot support them.
             normalized_clause = clause.strip().rstrip(".!?。？！").strip()
-            report = (
-                _ZH_REPORTS_TO_CLAIM.fullmatch(normalized_clause)
-                or _ZH_DIRECT_REPORTS_TO_CLAIM.fullmatch(normalized_clause)
-                or _ZH_REPORTS_DIRECT_TO_CLAIM.fullmatch(normalized_clause)
-            )
+            report = _ZH_REPORTS_TO_CLAIM.fullmatch(normalized_clause)
+            relation = "reports_to"
+            if report and "直接" in normalized_clause[
+                report.end("person"):report.start("leader")
+            ]:
+                relation = "direct_leader_of"
+            if report is None:
+                report = (
+                    _ZH_DIRECT_REPORTS_TO_CLAIM.fullmatch(normalized_clause)
+                    or _ZH_REPORTS_DIRECT_TO_CLAIM.fullmatch(normalized_clause)
+                )
+                relation = "direct_leader_of"
             if report:
                 fact = _Fact(
-                    "reports_to", _normalize_entity(report.group("person")),
+                    relation, _normalize_entity(report.group("person")),
                     _normalize_entity(report.group("leader")),
                 )
         if fact is None or fact.valid_on == _INVALID_DATE:
@@ -593,6 +704,13 @@ def _claim_facts(
 
 
 def _source_facts(evidence: Mapping[str, Any]) -> tuple[_Fact, ...]:
+    """LEGACY: parse a verified quote with the frozen clause parser.
+
+    Typed claims and v1 claim text reach this only through _evidence_facts,
+    after Host-confirmed facts. TaskPlan/progress helpers below still call it
+    directly; their relations are limited to LEGACY_CLAUSE_RELATIONS, so a
+    newly registered relation can never be satisfied here.
+    """
     quote = evidence.get("quote")
     if (
         evidence.get("status") != "verified"
@@ -624,13 +742,17 @@ def evidence_supports_typed_claim(
     valid_on: str | None,
     temporal_kind: str | None,
     observed_evidence_by_ref: Mapping[str, Mapping[str, Any]] | None = None,
+    confirmed_facts: Any = None,
 ) -> bool:
-    """Compare a typed proposal with an existing normalized fact in one quote.
+    """Compare a typed proposal with structured source facts of one cited read.
 
-    This intentionally adds no answer-language parser. The caller supplies an
-    exact source quote copied from verified evidence; this function maps the
-    supported proposal predicates onto the existing source-fact vocabulary
-    and requires exact entity and temporal-scope equality.
+    No answer-language parser is involved: the proposal is already typed.
+    Source facts come from Host-confirmed receipts bound to this exact read
+    and, only for the frozen historical predicates, from the legacy clause
+    parser. Entity roles, direction, time and project scope are compared
+    structurally; a contradiction or negation in the cited read or in any
+    other successful read vetoes support. A model-written quote or object can
+    never create its own source fact.
     """
     definition = TYPED_CLAIM_RELATIONS.get(predicate)
     relations = definition["source_relations"] if definition is not None else None
@@ -643,20 +765,24 @@ def evidence_supports_typed_claim(
         or (valid_on is None) != (temporal_kind is None)
     ):
         return False
-    normalized_subject = _normalize_entity(subject)
-    normalized_object = _normalize_entity(object_value)
+    legacy = definition.get("legacy_clause_parser") is True
+    claim = _Fact(definition["fact_relation"], _normalize_entity(subject),
+                  _normalize_entity(object_value), valid_on, temporal_kind)
+    cited = _evidence_facts(evidence, confirmed_facts, legacy=legacy)
     witnesses = tuple(
-        fact for fact in _source_facts(evidence)
+        fact for fact in cited
         if fact.relation in relations
-        and fact.subject == normalized_subject
-        and fact.value == normalized_object
-        and fact.valid_on == valid_on
-        and fact.temporal_kind == temporal_kind
+        and fact.subject == claim.subject
+        and fact.value == claim.value
+        and (_time_supports(fact, claim) if fact.temporal_kind == "interval"
+             else fact.valid_on == valid_on and fact.temporal_kind == temporal_kind)
     )
     observations = [fact for ref, value in (observed_evidence_by_ref or {}).items()
                     if isinstance(value, Mapping) and value.get("evidence_id") == ref
-                    for fact in _source_facts(value)]
-    return bool(witnesses) and not _has_observed_conflict(witnesses, observations)
+                    for fact in _evidence_facts(value, confirmed_facts, legacy=legacy)]
+    return (bool(witnesses)
+            and not _has_observed_conflict(witnesses, cited)
+            and not _has_observed_conflict(witnesses, observations))
 
 
 def _has_observed_conflict(witnesses: Sequence[_Fact], observations: Sequence[_Fact]) -> bool:
@@ -689,7 +815,9 @@ def _fact_status(claim: _Fact, evidence_facts: Sequence[_Fact]) -> ClaimSupportS
             or (claim.valid_on is None and fact.temporal_kind == "event")
         )
     ]
-    if any(fact.value != claim.value for fact in same_relation_and_subject):
+    if _single_valued(claim.relation) and any(
+        fact.value != claim.value for fact in same_relation_and_subject
+    ):
         return ClaimSupportStatus.CONTRADICTED
     if any(
         fact.relation == f"not_{claim.relation}"
@@ -721,16 +849,66 @@ def _fact_supports(evidence: _Fact, claim: _Fact) -> bool:
         and evidence.value == claim.value
         and (claim.project_scope is None
              or evidence.project_scope in {None, claim.project_scope})
-        and (
-            evidence.valid_on == claim.valid_on
-            and evidence.temporal_kind == claim.temporal_kind
-            if claim.valid_on is not None
-            else evidence.valid_on is None or evidence.temporal_kind == "event"
-        )
+        and _time_supports(evidence, claim)
     )
 
 
+def _time_supports(evidence: _Fact, claim: _Fact) -> bool:
+    if evidence.temporal_kind == "interval":
+        # A confirmed validity interval supports an undated (current) claim
+        # only if it holds today, and a dated claim only for a day inside it.
+        if claim.valid_on is None:
+            return _interval_relation(evidence, _today()) == "inside"
+        return _interval_relation(evidence, claim.valid_on) == "inside"
+    if claim.valid_on is not None:
+        return (evidence.valid_on == claim.valid_on
+                and evidence.temporal_kind == claim.temporal_kind)
+    return evidence.valid_on is None or evidence.temporal_kind == "event"
+
+
+def _today() -> str:
+    return datetime.now(UTC).date().isoformat()
+
+
+def _interval_relation(fact: _Fact, day: str) -> str:
+    """Return inside/overlap/outside for one ISO day against a confirmed interval."""
+    from linkloom.temporal_graph.models import interval
+
+    try:
+        left, right = interval(day)
+        start = interval(fact.valid_on)[0]
+        end = interval(fact.valid_to)[0] if fact.valid_to else None
+    except (TypeError, ValueError):
+        # Unparseable time never supports a claim and never hides a conflict.
+        return "overlap"
+    if start >= right or (end is not None and end <= left):
+        return "outside"
+    if start <= left and (end is None or right <= end):
+        return "inside"
+    return "overlap"
+
+
+def _intervals_overlap(left: _Fact, right: _Fact) -> bool:
+    from linkloom.temporal_graph.models import interval
+
+    try:
+        left_start, right_start = interval(left.valid_on)[0], interval(right.valid_on)[0]
+        left_end = interval(left.valid_to)[0] if left.valid_to else None
+        right_end = interval(right.valid_to)[0] if right.valid_to else None
+    except (TypeError, ValueError):
+        return True
+    return ((right_end is None or left_start < right_end)
+            and (left_end is None or right_start < left_end))
+
+
 def _same_temporal_scope(left: _Fact, right: _Fact) -> bool:
+    if left.temporal_kind == "interval" or right.temporal_kind == "interval":
+        # Confirmed intervals conflict with any fact valid at an overlapping
+        # time; an undated fact means "currently", i.e. today.
+        if left.temporal_kind == right.temporal_kind == "interval":
+            return _intervals_overlap(left, right)
+        ranged, other = (left, right) if left.temporal_kind == "interval" else (right, left)
+        return _interval_relation(ranged, other.valid_on or _today()) != "outside"
     if left.valid_on is None or right.valid_on is None:
         return left.valid_on is None and right.valid_on is None
     return left.valid_on == right.valid_on and left.temporal_kind == right.temporal_kind
@@ -743,8 +921,15 @@ def assess_claim_text(
     *,
     question: str | None = None,
     observed_evidence_by_ref: Mapping[str, Mapping[str, Any]] | None = None,
+    confirmed_facts: Any = None,
 ) -> ClaimAssessment:
-    """Require cited support; successful observed reads can veto it for conflict."""
+    """Require cited support; successful observed reads can veto it for conflict.
+
+    The answer text is still parsed by the legacy clause parser (TeamDecision
+    v1 has no typed claims). Source facts prefer Host-confirmed facts bound to
+    each cited read, so source wording outside the legacy patterns can still
+    ground a claim when a reviewer approved that relation.
+    """
     if not isinstance(text, str) or not text.strip():
         return ClaimAssessment(ClaimSupportStatus.UNVERIFIABLE, ())
     parsed = _claim_facts(text, question=question)
@@ -757,13 +942,13 @@ def assess_claim_text(
         evidence = evidence_by_ref.get(ref)
         if not isinstance(evidence, Mapping) or evidence.get("evidence_id") != ref:
             continue
-        for fact in _source_facts(evidence):
+        for fact in _evidence_facts(evidence, confirmed_facts):
             source_facts.append(fact)
             evidence_refs_by_fact.setdefault(fact, []).append(ref)
 
     observations = [fact for ref, value in (observed_evidence_by_ref or {}).items()
                     if isinstance(value, Mapping) and value.get("evidence_id") == ref
-                    for fact in _source_facts(value)]
+                    for fact in _evidence_facts(value, confirmed_facts)]
     claims: list[AtomicClaimAssessment] = []
     for index, fact in enumerate(parsed):
         scoped_facts = source_facts
@@ -783,7 +968,7 @@ def assess_claim_text(
                 # they make no claim about another project's identity.
                 scoped_facts = [
                     source_fact for source_fact in source_facts
-                    if source_fact.relation != "direct_leader_of"
+                    if source_fact.relation not in {"direct_leader_of", "reports_to"}
                     or source_fact.project_scope is None
                     or (len(owner_scopes) == 1
                         and source_fact.project_scope in owner_scopes)
@@ -1418,6 +1603,7 @@ __all__ = [
     "AtomicClaimAssessment",
     "ClaimAssessment",
     "ClaimSupportStatus",
+    "LEGACY_CLAUSE_RELATIONS",
     "TYPED_CLAIM_RELATIONS",
     "assess_claim_text",
     "assess_rejected_owner_alternative",
@@ -1428,4 +1614,5 @@ __all__ = [
     "verified_subgoal_conflict",
     "verified_subgoal_conflict_refs",
     "verified_relation_conflict_refs",
+    "validate_typed_relation_registry",
 ]

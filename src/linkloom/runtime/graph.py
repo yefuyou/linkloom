@@ -171,8 +171,10 @@ class RuntimeEngine:
         task_relation_tools: Any = None,
         context_runtime_config: Any = None,
         lexical_indexes: Any = None,
+        confirmed_fact_index: Any | None = None,
     ) -> None:
         self._lexical_indexes = lexical_indexes
+        self._confirmed_fact_index = confirmed_fact_index
         self.vault_root = Path(vault_root)
         self.index_path = Path(index_path)
         self.checkpoint_dir = Path(checkpoint_dir)
@@ -248,6 +250,9 @@ class RuntimeEngine:
 
         lexical_options = ({"lexical_indexes": self._lexical_indexes}
                            if self._lexical_indexes is not None else {})
+        # Only a Host that configured confirmed facts passes the option (#147).
+        fact_options = ({"confirmed_fact_index": self._confirmed_fact_index}
+                        if self._confirmed_fact_index is not None else {})
         if task_relations:
             if self._task_relation_tools is None:
                 raise ValidationError("Task relation tools are not configured.")
@@ -257,7 +262,8 @@ class RuntimeEngine:
 
         if not self.decision_memory_enabled:
             return RuntimeAgentAdapter(self.vault_root, self.index_path, **lexical_options,
-                workspace_id=self._decision_memory_workspace_id, decision_memory_enabled=False)
+                workspace_id=self._decision_memory_workspace_id, decision_memory_enabled=False,
+                **fact_options)
         try:
             decision_memory_store = self._get_decision_memory_store()
         except Exception:
@@ -274,6 +280,7 @@ class RuntimeEngine:
             workspace_id=self._decision_memory_workspace_id,
             temporal_decision_lookup=self._temporal_decision_lookup,
             temporal_claim_validator=self._temporal_claim_validator,
+            **fact_options,
         )
 
     def _recall_project_memory(self, query: str, workspace_id: str) -> tuple[list[dict[str, Any]], dict[str, int]]:
