@@ -794,6 +794,8 @@ class RuntimeAgentAdapter:
         prompt_profile: str = "zero-v1",
         verified_evidence_context_limit: int = 8,
         final_protocol: str = SCHEMA_VERSION,
+        reserve_final_turn: bool = False,
+        cited_answer: bool = False,
     ) -> dict[str, Any]:
         task_relations = workflow == "task_relations"
         context_runtime = None
@@ -865,9 +867,9 @@ class RuntimeAgentAdapter:
                     or original.task_id != retrieval_task_id
                     or payload.get("user_input") != original.user_input
                     or not (context_runtime.validate_instruction(first, RetrievalAgent._retrieval_instruction(
-                        query, source_context, workflow, self._task_plan, prompt_profile, memory_hints, final_protocol))
+                        query, source_context, workflow, self._task_plan, prompt_profile, memory_hints, final_protocol, cited_answer))
                         if context_runtime is not None else original.user_input == RetrievalAgent._retrieval_instruction(
-                            query, source_context, workflow, self._task_plan, prompt_profile, memory_hints, final_protocol))):
+                            query, source_context, workflow, self._task_plan, prompt_profile, memory_hints, final_protocol, cited_answer))):
                 raise ValidationError("Resume input does not match the original durable request.")
             if context_runtime is not None:
                 context_runtime.restore(initial_state)
@@ -949,6 +951,8 @@ class RuntimeAgentAdapter:
                 verified_evidence_context_limit=verified_evidence_context_limit,
                 memory_hints=memory_hints,
                 final_protocol=final_protocol,
+                reserve_final_turn=reserve_final_turn,
+                cited_answer=cited_answer,
                 temporal_claim_validator=(
                     self._verify_temporal_claim
                     if self._temporal_claim_validator is not None else None

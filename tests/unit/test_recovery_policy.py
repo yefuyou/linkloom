@@ -1,5 +1,7 @@
 """Bounded recovery decisions, without invoking a model or tool."""
 
+from dataclasses import replace
+
 from linkloom.agents.model_adapter import ModelProviderError
 from linkloom.runtime.progress import ProgressAssessment
 from linkloom.runtime.recovery import ModelResumeDecision
@@ -35,6 +37,16 @@ def test_empty_search_suggests_adjustment_but_confirmed_stall_stops_search():
 def test_new_evidence_or_read_keeps_normal_search_available():
     for reason in ("NEW_EVIDENCE", "VERIFIED_READ"):
         assert decide_recovery(_progress("PROGRESS", reason)).action == "CONTINUE"
+
+
+def test_partial_task_plan_guides_the_next_turn_without_overriding_partial_final():
+    progress = ProgressAssessment("PROGRESS", "VERIFIED_READ", subgoal_statuses=(
+        ("first", "completed"), ("second", "ready"), ("third", "pending"), ("fourth", "blocked"),
+    ))
+    decision = decide_recovery(progress)
+    assert decision.action == "CONTINUE"
+    assert "first=completed, second=ready, third=pending, fourth=blocked" in decision.hint
+    assert decide_recovery(replace(progress, exhausted_subgoals=("second",))).action == "FINAL_PARTIAL"
 
 
 def test_permission_failure_terminates_and_budget_allows_a_final_answer_only():

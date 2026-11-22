@@ -382,6 +382,28 @@ class TaskStore:
             data['reviewed_at'] = datetime.fromisoformat(data['reviewed_at'])
             return ObservationLink(**data)
 
+    def get_task_links(self, workspace_id, task_id) -> tuple[ObservationLink, ...]:
+        """List effective human-reviewed links, including links without field changes."""
+        workspace = required_text(workspace_id, 'workspace_id')
+        task_id = required_text(task_id, 'task_id')
+        with self._lock:
+            candidates = {row[0] for row in self._connection.execute(
+                'SELECT observation_id FROM task_observation_link WHERE workspace_id=? AND task_id=?',
+                (workspace, task_id),
+            )}
+            if self._connection.execute(
+                "SELECT 1 FROM sqlite_master WHERE type='table' AND name='task_candidate_assignment'"
+            ).fetchone():
+                candidates.update(row[0] for row in self._connection.execute(
+                    'SELECT DISTINCT candidate_id FROM task_candidate_assignment WHERE workspace_id=? AND task_id=?',
+                    (workspace, task_id),
+                ))
+            links = (self.get_link(workspace, candidate) for candidate in candidates)
+            return tuple(sorted(
+                (link for link in links if link is not None and link.task_id == task_id),
+                key=lambda link: (link.reviewed_at, link.observation_id),
+            ))
+
     def replay_task(self, workspace_id, task_id) -> Task:
         """Reconstruct a task solely from its ordered immutable events."""
         events = self.get_events(workspace_id, task_id)

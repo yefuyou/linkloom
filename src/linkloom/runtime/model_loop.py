@@ -95,6 +95,24 @@ def _bounded_model_request(request: ModelTurnRequest) -> tuple[ModelTurnRequest,
             raise ValidationError("Model request exceeds the bounded context budget.")
 
 
+def _final_citation_guidance(
+    evidence_by_subgoal: tuple[tuple[str, ...], ...], evidence_context: list[ToolResult],
+) -> str | None:
+    """Provide a visible verified citation candidate for each completed subgoal."""
+    visible_reads = {
+        item.value["evidence_id"] for item in evidence_context
+        if item.tool_id == "read_verified_note" and isinstance(item.value, dict)
+    }
+    candidates = [next((ref for ref in refs if ref in visible_reads), None)
+                  for refs in evidence_by_subgoal]
+    if not candidates or any(ref is None for ref in candidates):
+        return None
+    mapping = ", ".join(f"{index}={ref}" for index, ref in enumerate(candidates, 1))
+    hint = ("In Final, state the finding for each TaskPlan subgoal and cite its verified evidence. "
+            f"Citation candidates in TaskPlan order: {mapping}.")
+    return hint if len(hint.encode("utf-8")) <= 512 else None
+
+
 def project_model_request_for_audit(request: ModelTurnRequest, context_audit: dict[str, Any]) -> dict[str, Any]:
     """Redacted, provider-neutral projection of exactly one durable model request."""
     def size(value: Any) -> dict[str, int | str]:
@@ -205,6 +223,7 @@ class SingleAgentModelLoop:
         task_plan: TaskPlan | None = None,
         workspace_id: str | None = None,
         context_runtime: Any | None = None,
+        reserve_final_turn: bool = False,
     ) -> None:
         has_decide = callable(getattr(model, "decide", None))
         has_complete = callable(getattr(model, "complete", None))
@@ -235,6 +254,7 @@ class SingleAgentModelLoop:
         self.tool_runtime = tool_runtime
         self.policy_enforcer = policy_enforcer
         self.max_steps = max_steps
+        self.reserve_final_turn = reserve_final_turn
         self.verified_evidence_context_limit = verified_evidence_context_limit
         self.task_plan = task_plan
         self.context_runtime = context_runtime
@@ -1173,6 +1193,18 @@ class SingleAgentModelLoop:
                 "Durable model response origin is missing or cannot be proven legacy.",
                 details={"reason": "response_origin_missing"},
             )
+
+        def final_only_tool_error(record: ModelExecutionRecord, response: ModelResponse,
+                                  request: ModelTurnRequest | None = None) -> ToolError | None:
+            if not self.reserve_final_turn:
+                return None
+            action = response.proposal or response.action
+            if action is None or action.kind == "final":
+                return None
+            if (request or load_request(record)).available_tools:
+                return None
+            return self._error("MODEL_FINAL_REQUIRED", "runtime",
+                               "The final-only request cannot execute tools.", {})
 
         def load_response(record: ModelExecutionRecord) -> ModelResponse:
             payload: dict[str, Any] | None = None
@@ -2225,6 +2257,8 @@ class SingleAgentModelLoop:
                     if response_envelope.error is not None:
                         upsert_record(replace(record, status="failed"))
                         return failed_result(provider_tool_error(response_envelope.error))
+                    if error := final_only_tool_error(record, response_envelope):
+                        return failed_result(error)
                     proposal = response_envelope.proposal
                     if proposal is not None:
                         if proposal.kind == "final":
@@ -2294,13 +2328,24 @@ class SingleAgentModelLoop:
                     # singleton proposal.  Legacy observation fields are used
                     # only by the pre-V2 ModelAction path.
                     grouped_history = bool(completed_tool_turns)
-                    recovery_decision = current_recovery_decision()
+                    progress = current_progress_assessment()
+                    recovery_decision = decide_recovery(progress)
+                    final_only = recovery_decision.action in {"FINAL_CONFLICT", "FINAL_PARTIAL"}
+                    guidance = recovery_decision.hint
+                    if self.reserve_final_turn and model_steps == self.max_steps and not final_only:
+                        final_only = True
+                        guidance = (
+                            "Submit Final now. Use only verified evidence already read. If it does not "
+                            "cover the question or TaskPlan, report insufficient evidence using the "
+                            "existing Final schema and identify what remains unknown."
+                        )
+                    guide_final = recovery_decision.action == "CONTINUE" and bool(progress.completed_plan_evidence)
                     context_audit: dict[str, Any] = {}
                     evidence_budget = min(
                         MAX_VERIFIED_EVIDENCE_CONTEXT_BYTES,
                         MAX_PROVIDER_USER_INPUT_BYTES
                         - len(user_input.encode("utf-8"))
-                        - len((recovery_decision.hint or "").encode("utf-8"))
+                        - (512 if guide_final else len((guidance or "").encode("utf-8")))
                         - 2048,
                     )
                     request = ModelTurnRequest(
@@ -2310,12 +2355,10 @@ class SingleAgentModelLoop:
                         agent_id=agent_id,
                         sequence=turn.sequence,
                         user_input=user_input,
-                        recovery_guidance=recovery_decision.hint,
+                        recovery_guidance=guidance,
                         observation=None if grouped_history else observation,
-                        available_tools=(
-                            [] if recovery_decision.action in {"FINAL_CONFLICT", "FINAL_PARTIAL"}
-                            else list(tool_definitions)
-                        ),
+                        available_tools=[] if final_only else list(tool_definitions),
+                        final_only=final_only,
                         previous_tool_call=None if grouped_history else previous_tool_call,
                         provider_continuation=(
                             None if grouped_history else provider_continuation
@@ -2361,6 +2404,10 @@ class SingleAgentModelLoop:
                             return failed_result(self._error("CONTEXT_INCOMPLETE", "budget",
                                 "Required original context cannot fit or be recovered; no model request sent.", error.details))
                         context_audit["engineering"] = engineering_audit
+                    if guide_final:
+                        guidance = _final_citation_guidance(progress.completed_plan_evidence, request.evidence_context)
+                        if guidance is not None:
+                            request = replace(request, recovery_guidance=guidance)
                     request, request_budget_audit = _bounded_model_request(request)
                     context_audit.update(request_budget_audit)
                     tools_artifact = tool_definitions_artifact(turn.turn_id)
@@ -2495,6 +2542,8 @@ class SingleAgentModelLoop:
                 if response_envelope.error is not None:
                     upsert_record(replace(record, status="failed"))
                     return failed_result(provider_tool_error(response_envelope.error))
+                if error := final_only_tool_error(record, response_envelope, request):
+                    return failed_result(error)
 
                 bound_proposal = response_envelope.proposal
                 if bound_proposal is not None:

@@ -81,7 +81,7 @@ def _few_shot_examples(
         }, ensure_ascii=False, separators=(",", ":"))
         return (
             "prompt_profile=few-v1; synthetic examples only (not facts for this task):\n"
-            "Example A: search_notes(query='Who owns Lantern Plan?', source_context=<current Runtime source_context>, limit=5) "
+            "Example A: search_notes(query='Who owns Lantern Plan?', source_context={}, limit=5) "
             "returns evidence_id='ex_lantern_1'; read_verified_note(note_ref='ex_lantern_1') "
             "returns a verified passage 'Mira is the accountable owner of Lantern Plan'. "
             f"A valid Final JSON for that synthetic passage is {synthetic_final}.\n"
@@ -92,7 +92,7 @@ def _few_shot_examples(
         )
     return (
         "prompt_profile=few-v1; synthetic examples only (not facts for this task):\n"
-        "search_notes(query='Lantern Plan owner', source_context=<current Runtime source_context>, limit=5) "
+        "search_notes(query='Lantern Plan owner', source_context={}, limit=5) "
         "returns evidence_id='ex_lantern_1'; read_verified_note(note_ref='ex_lantern_1') "
         "reads that ID, not a note path. If no verified evidence exists, stop without a factual answer. "
         "A memory hint may adjust terminology but is never source evidence.\n"
@@ -119,6 +119,8 @@ class RetrievalAgent:
         final_protocol: str = SCHEMA_VERSION,
         temporal_claim_validator: Any | None = None,
         context_runtime: Any | None = None,
+        reserve_final_turn: bool = False,
+        cited_answer: bool = False,
     ) -> None:
         self.agent_id = agent_id
         self.model = model
@@ -135,6 +137,8 @@ class RetrievalAgent:
         self.final_protocol = final_protocol
         self.temporal_claim_validator = temporal_claim_validator
         self.context_runtime = context_runtime
+        self.reserve_final_turn = reserve_final_turn
+        self.cited_answer = cited_answer
         if prompt_profile not in PROMPT_PROFILES:
             raise ValidationError("Unsupported retrieval prompt profile.")
         self.prompt_profile = prompt_profile
@@ -192,6 +196,7 @@ class RetrievalAgent:
         prompt_profile: str = "zero-v1",
         memory_hints: tuple[dict[str, Any], ...] = (),
         final_protocol: str = SCHEMA_VERSION,
+        cited_answer: bool = False,
     ) -> str:
         if not isinstance(query, str) or not query.strip():
             raise ValidationError("Retrieval query must be non-empty text.")
@@ -280,6 +285,12 @@ class RetrievalAgent:
                 "call tools only to populate optional sections.\n"
             )
             grounding_instruction = (
+                "Answer the question directly in natural language in decision.value, citing for "
+                "each conclusion the evidence_refs you actually read in this run. If the material "
+                "you read cannot answer the question, return a null decision with "
+                "insufficient_evidence. Leave actions, unresolved_items, and "
+                "rejected_alternatives empty.\n"
+                if cited_answer and final_protocol == SCHEMA_VERSION else
                 "Represent material facts only with the selected typed claim fields. For every "
                 "claim, provide the source subject, predicate, object, exact supporting quote, "
                 "observed evidence_ids, and source-backed temporal fields. The Runtime checks "
@@ -307,13 +318,10 @@ class RetrievalAgent:
                 "action, alternative, or uncertainty statement.\n"
             )
             legacy_plan_instruction = (
-                "Every search must copy ALL original source_context fields exactly: "
-                "index_path, index_sha256, index_schema_version, vault_root_fingerprint, "
-                "document_count, and fixture_id when present. Missing document_count is an "
-                "identity violation, never an optional omission. Never issue an unscoped "
+                "The Host binds the source identity for every search. Never issue an unscoped "
                 "search without subgoal_id to recover from an error. "
-                "For each task_plan subgoal, call search_notes with the original source_context "
-                "plus subgoal_id, dependency_entities (one literal entity from each verified "
+                "For each task_plan subgoal, call search_notes with source_context containing "
+                "subgoal_id, dependency_entities (one literal entity from each verified "
                 "parent read), and query_variant primary or alternate. The runtime constructs "
                 "the bounded effective query. You may batch search_notes calls only for "
                 "independent subgoals whose dependencies are already verified. Do not batch "
@@ -336,8 +344,8 @@ class RetrievalAgent:
                 "Do not claim completion.\n"
             )
             typed_plan_instruction = (
-                "For each task_plan subgoal, call search_notes with the original source_context "
-                "plus subgoal_id, dependency_entities (one literal entity from each verified "
+                "For each task_plan subgoal, call search_notes with source_context containing "
+                "subgoal_id, dependency_entities (one literal entity from each verified "
                 "parent read), and query_variant primary or alternate. The Runtime constructs "
                 "the bounded effective query. You may batch searches only for independent "
                 "subgoals whose dependencies are already verified; read a parent's evidence "
@@ -942,7 +950,7 @@ class RetrievalAgent:
                         "The model reported missing evidence without a completed search.",
                     ), warnings,
                 )
-            if self.task_plan is None and null_result and read_refs:
+            if self.task_plan is None and null_result and read_refs and not self.cited_answer:
                 return self._failed_result(
                     task, usage,
                     self._safe_error(
@@ -1158,11 +1166,22 @@ class RetrievalAgent:
                         warnings,
                         )
             try:
-                decision.validate_claim_support(
-                    visible_evidence,
-                    question=query,
-                    observed_evidence_by_ref=read_evidence,
-                )
+                if self.cited_answer:
+                    # Cited answers rely on evidence binding only (observed, read,
+                    # verified, same workspace; quotes are re-checked by the Reviewer
+                    # and synthesizer). Binding is not semantic correctness: a
+                    # direction-reversed sentence passes with correct refs. The
+                    # deterministic claim proof is skipped for ordinary answers; the
+                    # Decision Memory review constraints are unchanged. Other
+                    # capabilities stay closed.
+                    if decision.actions or decision.unresolved_items or decision.rejected_alternatives:
+                        raise ValidationError("A cited answer cannot carry actions or alternatives.")
+                else:
+                    decision.validate_claim_support(
+                        visible_evidence,
+                        question=query,
+                        observed_evidence_by_ref=read_evidence,
+                    )
             except ValidationError:
                 return self._failed_result(
                     task,
@@ -1302,6 +1321,7 @@ class RetrievalAgent:
             instruction = self._retrieval_instruction(
                 query, source_context, task.workflow, self.task_plan,
                 self.prompt_profile, self.memory_hints, self.final_protocol,
+                self.cited_answer,
             )
             consumed_provider_requests = max(
                 self.initial_state.usage.provider_requests,
@@ -1375,6 +1395,7 @@ class RetrievalAgent:
                 task_plan=self.task_plan if task.workflow == "team_decision" else None,
                 workspace_id=self.expected_workspace_id,
                 context_runtime=self.context_runtime,
+                reserve_final_turn=self.reserve_final_turn,
             )
             invoke_loop = loop.resume if self.resume_model_loop else loop.run
             loop_result = invoke_loop(

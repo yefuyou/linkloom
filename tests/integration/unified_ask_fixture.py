@@ -420,6 +420,27 @@ def wait_source(base_url: str, source_id: str, *, timeout: float = 10.0) -> dict
     raise AssertionError(f"source ingestion did not finish: {source_id}")
 
 
+def answer_slot_selector(request: Any) -> ModelResponse:
+    """Scripted reply to the slot-selector prompt: INVESTIGATION for the one explicit slot, same date.
+
+    The Legacy selector contract requires entity_mentions, so the scripted reply carries an empty list.
+    """
+    prompt = json.loads(request.user_input[request.user_input.index("\n") + 1:])
+    return ModelResponse(action=ModelAction.final(json.dumps(
+        {"intent": "INVESTIGATION", "slot_id": prompt["candidates"][0]["slot_id"], "as_of": prompt["as_of"],
+         "entity_mentions": []})))
+
+
+class SlotSelectorOnly:
+    """Adapter handed to the one selector call; it never serves an investigation turn."""
+
+    capability = None
+
+    def complete(self, request: Any) -> ModelResponse:
+        assert request.agent_id == "slot-selector", request.agent_id
+        return answer_slot_selector(request)
+
+
 @dataclass
 class UnifiedAskFixture:
     """A running, seeded, offline Product Ask server."""
@@ -564,6 +585,22 @@ class UnifiedAskFixture:
         if self.app is None or self.server is None or self.transports is None:
             raise RuntimeError("fixture not initialized")
 
+        self_transports = self.transports
+
+        class ScopedProvider(GeminiProviderAdapter):
+            """Answers the slot-selector prompt, then behaves as the Gemini transport adapter.
+
+            For an explicit Subject/Relation whose wording reads as an investigation, Ask asks the model once
+            to decide only the intent. This fake answers that single call; it never changes the scope.
+            """
+
+            def complete(self, request: Any) -> ModelResponse:
+                if request.agent_id != "slot-selector":
+                    return super().complete(request)
+                if self.client in self_transports:  # a selector provider is not an investigation transport
+                    self_transports.remove(self.client)
+                return answer_slot_selector(request)
+
         def model_factory(_query: str) -> GeminiProviderAdapter:
             selected_scenario = scenario
             normalized_query = _query.casefold()
@@ -574,7 +611,7 @@ class UnifiedAskFixture:
                     selected_scenario = "fail"
             transport = FakeTransport(scenario=selected_scenario)
             self.transports.append(transport)
-            return GeminiProviderAdapter(transport)
+            return ScopedProvider(transport)
 
         service = ProductInvestigationService(
             self.app,

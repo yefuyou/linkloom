@@ -51,6 +51,8 @@ time_role: NONE without a time or for current state, AS_OF for state at one exac
 a meeting on a date, RANGE for an explicit range or open-ended before/after, UNRESOLVED for an unanchored
 relative or vague time such as last week. Names and identifiers are not time.
 Report unmatched named objects in unresolved_names as exact question text.
+For INVESTIGATION, a named object without a candidate is a lead the host verifies in source text, not an error:
+keep intent INVESTIGATION, report the object in unresolved_names and leave candidate_ids empty.
 entity_mentions: every project, task, person, named value or other name in the question, copied exactly, matched or not.
 Pronouns and generic words are not names.
 Mentions are optional hints. Omit terms you cannot copy exactly.
@@ -184,8 +186,10 @@ def rule_date_blocker(date_error, *, has_scope):
     return "TIME_SCOPE_UNRESOLVED" if has_scope else None
 
 
-def rule_needs_router(route, *, blocker=None):
-    return blocker is None and route in {"NO_MATCH", "CLARIFY", "AMBIGUOUS"}
+def rule_needs_router(route, *, blocker=None, explicit=False):
+    # Rule wording never settles the intent of an ordinary question (history, negation, contrast), so the
+    # Router decides every one. Only an explicit scope with a plain lookup reading stays rule-answered.
+    return blocker is None and (not explicit or route in {"NO_MATCH", "CLARIFY", "AMBIGUOUS", "INVESTIGATION"})
 
 
 def routing_domain(candidate_domain, intent):
@@ -455,7 +459,7 @@ def route_with_adapter(adapter, request, context, record=None):
             offered = {row["id"] for row in route_payload(context)["candidates"]}
             ids = proposal.get("candidate_ids")
             if (checked.time_role == "UNRESOLVED" and names and isinstance(ids, list)
-                    and len(ids) == 1 and ids[0] in offered and not context.missing_names
+                    and len(ids) == 1 and ids[0] in offered
                     and any(normalize_mention(name) in {normalize_mention(anchor)
                             for anchor in context.candidates[ids[0]].anchors} for name in names)
                     and not any(name_missing(name, context.catalogue_names) for name in (*names, *checked.unresolved_names))

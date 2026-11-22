@@ -293,6 +293,7 @@ class SemanticExtractionContext:
     relation_resolver: FrozenRelationResolver
     task_discovery: TaskDiscoveryContext | None = None
     product_task_fields: ProductTaskFieldContext | None = None
+    document_quote_evidence: bool = False
 
     def __post_init__(self) -> None:
         if not isinstance(self.expected_workspace_id, str) or not self.expected_workspace_id.strip():
@@ -681,7 +682,7 @@ def _parse_claim(data: Any) -> ExtractedClaim:
         "confidence",
     }
     # The v2 model-facing contract requires task; historical recordings can omit it.
-    if set(data) not in (expected_keys, expected_keys | {"task"}):
+    if set(data) - {"evidence_quote"} not in (expected_keys, expected_keys | {"task"}):
         raise ValueError("claim has missing or unsupported fields")
     try:
         claim_type = ClaimType(data["claim_type"])
@@ -723,7 +724,23 @@ def _parse_claim(data: Any) -> ExtractedClaim:
         valid_to_raw=valid_to,
         confidence=confidence,
         task=TaskProposal.from_dict(data["task"]) if data.get("task") is not None else None,
+        evidence_quote=data.get("evidence_quote"),
     )
+
+
+def _document_quote_schema(schema):
+    schema = deepcopy(schema)
+    claim = schema["properties"]["claims"]["items"]
+    claim["properties"]["evidence_quote"] = {"type": ["string", "null"], "maxLength": 4096}
+    claim["required"].append("evidence_quote")
+    return schema
+
+
+def is_document_quote_schema(schema_sha256, *, fact_profile=False):
+    from linkloom.fact_memory.extraction import fact_schema
+
+    schema = fact_schema() if fact_profile else _EXTRACTION_SCHEMA
+    return schema_sha256 == _sha256(_canonical_json(_document_quote_schema(schema)))
 
 
 class _SemanticPayloadError(ValueError):
@@ -825,11 +842,22 @@ class ProviderNeutralSemanticExtractor:
         fact_profile = fact_memory_enabled() and (isolate_product_tasks or task_input is None)
         if fact_profile:
             schema = fact_schema()
-        schema_sha256 = _sha256(_canonical_json(schema)) if field_profile or fact_profile else _EXTRACTION_SCHEMA_SHA256
+        document_quotes = context.document_quote_evidence and isinstance(segment, DocumentTextSegment) and not field_profile
+        if document_quotes:
+            schema = _document_quote_schema(schema)
+        schema_sha256 = _sha256(_canonical_json(schema)) if field_profile or fact_profile or document_quotes else _EXTRACTION_SCHEMA_SHA256
         prompt = (_product_field_prompt(segment, context, self.prompt_version, task_input) if product_profile else _recall_prompt(segment, task_input) if recall_profile else _field_prompt(segment, task_input) if field_profile else _task_prompt(segment, task_input) if task_input is not None
                   else _prompt(segment, context, self.prompt_version))
         if fact_profile:
             prompt = fact_prompt(segment, context)
+        if document_quotes:
+            prompt += (
+                "\nFor each DECISION include evidence_quote, the shortest verbatim contiguous excerpt "
+                "supporting this specific decision, including any stated effective-date clause you report. "
+                "Preserve punctuation, whitespace and line breaks. Include surrounding original text if "
+                "needed to uniquely disambiguate repeated wording. If no single unambiguous excerpt supports "
+                "the claim, use null. For other claims set evidence_quote to null; for tasks use the existing task.text exact work excerpt."
+            )
         prompt_sha256 = _sha256(prompt.encode("utf-8"))
         generation_options = self.generation_options
         if isolate_product_tasks:
@@ -1026,6 +1054,8 @@ class ProviderNeutralSemanticExtractor:
                 raw_claims = payload["claims"]
                 if not isinstance(raw_claims, list) or len(raw_claims) > _MAX_CLAIMS_PER_SEGMENT:
                     raise ValueError("claims must be a bounded array")
+                if not document_quotes and any(isinstance(item, dict) and "evidence_quote" in item for item in raw_claims):
+                    raise ValueError("evidence_quote requires the document quote schema")
                 if isolate_product_tasks:
                     from linkloom.semantic_ingestion.product_task_stages import parse_stage_one_claims, check_stage_one_safety
                     check_stage_one_safety(raw_claims, context.expected_workspace_id)

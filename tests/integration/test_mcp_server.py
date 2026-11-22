@@ -13,7 +13,7 @@ from linkloom.mcp_server import build_server
 from linkloom.ui.product import ProductApplication
 from linkloom.ui.task_api import TaskProductAPI
 from linkloom.ui.unified_ask import UnifiedAskService
-from test_security_gate_ask import Gate, service
+from test_security_gate_ask import Gate, service, supplier_router
 from test_structured_router_ask import decisions  # noqa: F401  (fixture)
 from tests.unit.test_task_legacy_adapter import close, preview, seed
 from unified_ask_fixture import OTHER
@@ -34,7 +34,7 @@ def anyio_backend():
 
 
 def decision_server(demo, gate=None):
-    ask = (service(demo, gate, "cascade") if gate is not None else
+    ask = (service(demo, gate, "cascade", supplier_router()) if gate is not None else
            UnifiedAskService(demo.app, lambda: None, graph_service=False, slot_embedder=None))
     return build_server(demo.app, ask, TaskProductAPI(demo.app.repository.database_path))
 
