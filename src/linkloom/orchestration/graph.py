@@ -39,7 +39,7 @@ from linkloom.orchestration.supervisor import (
     tool_arguments,
 )
 from linkloom.orchestration.worker import (
-    HARD_FAILURES, WorkerDeps, build_worker_graph, close_session, paid_without_receipt)
+    HARD_FAILURES, WorkerDeps, build_worker_graph, close_session, paid_without_receipt, run_cost_usd)
 from linkloom.orchestration.comparison import compare_pending
 from linkloom.ui.branch_synthesis import merge_evidence, plan_comparison, resolve_pairs, synthesize_reviewed
 from linkloom.ui.task_provider import TaskProviderSession
@@ -99,9 +99,10 @@ def build_graph(deps: WorkerDeps, checkpointer):
             write_json(root / 'proposal.json', saved)
             return saved
         context = dict(user_goal=state['query'], **_context(state), tasks=_summary(state),
-                       limits=dict(max_tasks=limits.task_cap(), max_depth=limits.max_depth),
+                       limits=dict(max_tasks=limits.max_tasks if round_number == 0 else limits.task_cap(),
+                                   max_depth=limits.max_depth),
                        round=round_number)
-        session = TaskProviderSession(root, limits.supervisor, deps.validate)
+        session = TaskProviderSession(root, limits.provider, deps.validate)
         try:
             request = delegation_request(state['query'], context, round_number)
             arguments = tool_arguments(session.bind(deps.model_factory(state['query']), 'supervisor').complete(request))
@@ -172,7 +173,8 @@ def build_graph(deps: WorkerDeps, checkpointer):
         abort = state.get('abort_reason')
         # Each invocation (start or a resume after a restart) gets its own deadline window.
         expired = time() >= config['configurable'].get('deadline_at', state['deadline_at'])
-        stop_reason = 'ABORTED' if abort else 'DEADLINE' if expired else None
+        over_cost = limits.max_run_cost_usd is not None and run_cost_usd(deps.root) >= limits.max_run_cost_usd
+        stop_reason = 'ABORTED' if abort else 'DEADLINE' if expired else 'RUN_COST_LIMIT' if over_cost else None
         left = limits.dispatch_cap() - dispatches
         changed = {}
 
@@ -202,7 +204,7 @@ def build_graph(deps: WorkerDeps, checkpointer):
         batch = ready[:max(0, min(limits.max_concurrency, left))]
         if ready and not batch:
             for task in ready:
-                put(task, status=SKIPPED, failure='BUDGET_EXHAUSTED')
+                put(task, status=SKIPPED, failure='DISPATCH_LIMIT')
         if batch:
             sends = []
             rows = state.get('rows') or {}
@@ -215,10 +217,8 @@ def build_graph(deps: WorkerDeps, checkpointer):
             return Command(update=update, goto=sends)
         update = dict(tasks=dict(changed)) if changed else {}
         merged = dict(state, tasks={**state['tasks'], **changed})
-        # A review can propose equivalent work under a new ID, but it cannot enlarge the Worker slice.
-        budget_exhausted = any(task['status'] == FAILED and task.get('failure') == budget_failure
-                               for task in tasks.values())
-        reviewable = (not stop_reason and not budget_exhausted and state.get('round', 0) <= limits.max_rounds
+        # Round 0 never uses up the follow-up room: a review may add up to max_followup_tasks while gaps remain.
+        reviewable = (not stop_reason and state.get('round', 0) <= limits.max_rounds
                       and len(tasks) < limits.task_cap() and left > 0 and _has_gaps(merged)
                       and not any(task['status'] in (PENDING, RUNNING) for task in tasks.values()))
         return Command(update=update, goto='supervisor' if reviewable else 'synthesize')

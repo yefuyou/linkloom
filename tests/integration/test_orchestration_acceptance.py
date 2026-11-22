@@ -6,7 +6,7 @@ code is known not to have (semantic judgement done by exact string or name match
 fixed, in the change that adds them: a strict xfail turns into a failure the day the limitation is removed, so it
 cannot be forgotten. The two E7 limitations are fixed by the bounded claim comparison and are regular tests now. No test here adds a natural-language rule to production code or loosens an expectation to pass.
 """
-from dataclasses import replace
+from dataclasses import asdict, replace
 import json
 from types import SimpleNamespace
 import threading
@@ -23,7 +23,7 @@ from linkloom.tools.contracts import ToolCall
 from linkloom.ui import branch_synthesis as bs
 from tests.integration import test_orchestration_langgraph as lg
 from tests.integration.test_orchestration_langgraph import (
-    FACT, GOAL, Q_LEADER, Q_OWNER, Q_RISK, Q_SUCC, TASKS, TOTAL, World, build, delegation, events,
+    FACT, GOAL, Q_LEADER, Q_OWNER, Q_RISK, Q_SUCC, TASKS, TOTAL, World, build, delegation, events, run_limits,
 )
 from tests.integration.test_orchestration_product import (  # noqa: F401 (pytest fixture)
     assert_cited, make_env, started, wait_idle, waves,
@@ -92,7 +92,7 @@ def test_e5_rounds_stop_the_review_loop_even_when_the_supervisor_keeps_proposing
     questions = [Q_SUCC, Q_OWNER, Q_LEADER, Q_RISK, "Who reviewed the rollout?", "Who funds the rollout?"]
     plans = [delegation("delegate", [(f"t{i}", question, [], f"gap {i}")]) for i, question in enumerate(questions)]
     world = World(plans, {**TASKS, **gap_tasks(*questions)})
-    limits = OrchestrationLimits.split(TOTAL, max_tasks=6, max_rounds=2, max_concurrency=3)
+    limits = run_limits(max_tasks=6, max_rounds=2, max_concurrency=3)
     orchestrator, _ = build(tmp_path, world, limits=limits)
     result = orchestrator.start(GOAL)
     assert len(world.supervisor_requests) == limits.max_rounds + 1 == 3
@@ -101,11 +101,23 @@ def test_e5_rounds_stop_the_review_loop_even_when_the_supervisor_keeps_proposing
     assert result["round"] == 3 and result["status"] == "PARTIAL"
 
 
-def test_e5_no_review_is_requested_once_the_task_cap_is_reached(tmp_path):
+def test_e5_a_review_round_still_runs_when_the_first_plan_fills_max_tasks(tmp_path):
+    questions = [Q_SUCC, Q_OWNER]
+    plan = delegation("delegate", [(f"t{i}", question, []) for i, question in enumerate(questions)])
+    world = World([plan, delegation("delegate", [("extra", Q_LEADER, [])]), delegation("stop")],
+                  {**TASKS, **gap_tasks(*questions)})
+    limits = run_limits(max_tasks=2, max_followup_tasks=1, max_rounds=2)
+    orchestrator, _ = build(tmp_path, world, limits=limits)
+    result = orchestrator.start(GOAL)
+    assert sorted(result["tasks"]) == ["extra", "t0", "t1"] and len(world.supervisor_requests) >= 2
+    assert result["tasks"]["extra"]["round"] == 1 and result["tasks"]["extra"]["status"] == ACCEPTED
+
+
+def test_e5_no_review_is_requested_once_the_followup_room_is_used(tmp_path):
     questions = [Q_SUCC, Q_OWNER]
     plan = delegation("delegate", [(f"t{i}", question, []) for i, question in enumerate(questions)])
     world = World([plan, delegation("delegate", [("extra", Q_LEADER, [])])], {**TASKS, **gap_tasks(*questions)})
-    limits = OrchestrationLimits.split(TOTAL, max_tasks=2, max_rounds=2)
+    limits = run_limits(max_tasks=2, max_followup_tasks=0, max_rounds=2)
     orchestrator, _ = build(tmp_path, world, limits=limits)
     result = orchestrator.start(GOAL)
     assert sorted(result["tasks"]) == ["t0", "t1"] and len(world.supervisor_requests) == 1
@@ -117,7 +129,7 @@ def test_e5_a_review_that_exceeds_the_task_limit_is_refused_and_adds_nothing(tmp
     plan = delegation("delegate", [(f"t{i}", question, []) for i, question in enumerate(questions)])
     over = delegation("delegate", [("x1", Q_LEADER, []), ("x2", Q_RISK, [])])  # room is 1
     world = World([plan, over], {**TASKS, **gap_tasks(*questions)})
-    limits = OrchestrationLimits.split(TOTAL, max_tasks=3, max_rounds=2)
+    limits = run_limits(max_tasks=3, max_followup_tasks=0, max_rounds=2)
     orchestrator, _ = build(tmp_path, world, limits=limits)
     result = orchestrator.start(GOAL)
     assert sorted(result["tasks"]) == ["t0", "t1"] and result["dispatches"] == 2
@@ -128,7 +140,7 @@ def test_e5_a_review_that_exceeds_the_task_limit_is_refused_and_adds_nothing(tmp
 def test_e5_a_first_plan_over_the_task_limit_becomes_one_task_for_the_goal(tmp_path):
     plan = delegation("delegate", [(f"t{i}", question, []) for i, question in enumerate(TASKS)])
     world = World([plan], {GOAL: (FACT["succ"], "Meridian A", "ok")})
-    limits = OrchestrationLimits.split(TOTAL, max_tasks=3, max_rounds=0)
+    limits = run_limits(max_tasks=3, max_rounds=0)
     orchestrator, _ = build(tmp_path, world, limits=limits)
     result = orchestrator.start(GOAL)
     assert list(result["tasks"]) == ["task-1"] and len(world.workers) == 1
@@ -141,7 +153,7 @@ def test_e5_depth_limit_stops_a_chain_that_a_review_tries_to_extend(tmp_path):
              delegation("delegate", [("b", Q_OWNER, ["a"], "deeper")]),
              delegation("delegate", [("c", Q_LEADER, ["b"], "deeper still")])]  # depth 3 > max_depth 2
     world = World(plans, gap_tasks(*questions))
-    limits = OrchestrationLimits.split(TOTAL, max_tasks=5, max_rounds=3, max_depth=2)
+    limits = run_limits(max_tasks=5, max_rounds=3, max_depth=2)
     orchestrator, _ = build(tmp_path, world, limits=limits)
     result = orchestrator.start(GOAL)
     assert sorted(result["tasks"]) == ["a", "b"] and result["tasks"]["b"]["depth"] == 2
@@ -151,7 +163,7 @@ def test_e5_depth_limit_stops_a_chain_that_a_review_tries_to_extend(tmp_path):
 def test_e5_a_first_plan_deeper_than_the_depth_limit_falls_back_to_one_task(tmp_path):
     chain = delegation("delegate", [("a", Q_SUCC, []), ("b", Q_OWNER, ["a"]), ("c", Q_LEADER, ["b"])])
     world = World([chain], {GOAL: (FACT["succ"], "Meridian A", "ok")})
-    limits = OrchestrationLimits.split(TOTAL, max_tasks=4, max_rounds=0, max_depth=2)
+    limits = run_limits(max_tasks=4, max_rounds=0, max_depth=2)
     orchestrator, _ = build(tmp_path, world, limits=limits)
     result = orchestrator.start(GOAL)
     assert result["tasks"]["task-1"]["spawn_reason"] == "HOST_FALLBACK_SUPERVISOR_DEPTH_LIMIT" and len(result["tasks"]) == 1
@@ -176,23 +188,23 @@ def test_e5_running_workers_never_exceed_the_concurrency_limit(tmp_path, monkeyp
     monkeypatch.setattr(lg.WorkerModel, "complete", watched)
     plan = delegation("delegate", [("a", Q_SUCC, []), ("b", Q_OWNER, []), ("c", Q_LEADER, []), ("d", Q_RISK, [])])
     world = World([plan, delegation("stop")], TASKS, barrier_for=(Q_SUCC, Q_OWNER), barrier=Barrier(2))
-    limits = OrchestrationLimits.split(TOTAL, max_tasks=4, max_rounds=1, max_concurrency=2)
+    limits = run_limits(max_tasks=4, max_rounds=1, max_concurrency=2)
     orchestrator, _ = build(tmp_path, world, limits=limits)
     result = orchestrator.start(GOAL)
     assert [event["tasks"] for event in events(result, "wave_dispatched")] == [["a", "b"], ["c", "d"]]
     assert peak[0] == 2 and active[0] == 0  # two ran together (the barrier proves it), never three
 
 
-def test_e5_retries_stop_at_the_dispatch_cap_which_the_run_budget_can_lower(tmp_path):
+def test_e5_retries_stop_at_the_dispatch_cap_of_the_run_limits(tmp_path):
     world = World([delegation("delegate", [("a", Q_SUCC, []), ("b", Q_OWNER, [])]), delegation("stop")],
                   {Q_SUCC: (FACT["succ"], "Meridian A", "error"), Q_OWNER: (FACT["owner"], "Cobalt B", "error")})
-    limits = OrchestrationLimits.split(TOTAL, max_tasks=2, max_rounds=1, max_attempts=2)
-    assert limits.max_tasks * limits.max_attempts == 4 and limits.dispatch_cap() == 2  # the budget pays for two
+    limits = run_limits(max_tasks=2, max_followup_tasks=0, max_rounds=1, max_attempts=2)
+    assert limits.max_tasks * limits.max_attempts == 4 and limits.dispatch_cap() == 4
     orchestrator, _ = build(tmp_path, world, limits=limits)
     result = orchestrator.start(GOAL)
-    assert result["dispatches"] == limits.dispatch_cap() == 2
-    assert sorted(task["attempt"] for task in result["tasks"].values()) == [1, 1] and result["status"] == "UNKNOWN"
-    assert len(world.workers) == 2  # no third paid Worker
+    assert result["dispatches"] == limits.dispatch_cap() == 4
+    assert sorted(task["attempt"] for task in result["tasks"].values()) == [2, 2] and result["status"] == "UNKNOWN"
+    assert len(world.workers) == 4  # no fifth Worker
 
 
 # ---------------------------------------------------------------- E7 conflicts
@@ -261,7 +273,7 @@ def _deps(tmp_path, answers, **options):
     world = World([], {})
     for key, value in options.items():
         setattr(world, key, value)
-    limits = OrchestrationLimits.split(TOTAL, max_tasks=4, max_rounds=2)
+    limits = run_limits(max_tasks=4, max_rounds=2)
     deps = SimpleNamespace(root=tmp_path / "run", run_id="run", limits=limits, validate=lambda: None,
                            model_factory=world.factory)
     return deps, world
@@ -368,27 +380,14 @@ def test_e7_no_comparison_call_when_there_is_nothing_structure_cannot_decide(tmp
     assert single.comparison_requests == [] and chained.comparison_requests == []
 
 
-def test_e7_the_comparison_is_paid_from_its_reserved_slice_inside_the_run_budget(tmp_path):
+def test_e7_the_comparison_is_one_recorded_request_under_the_run_provider_limits(tmp_path):
     world = World([delegation("delegate", [("a", Q_SUCC, []), ("b", Q_OWNER, [])]), delegation("stop")], TASKS)
     orchestrator, deps = build(tmp_path, world)
     orchestrator.start(GOAL)
-    limits = deps.limits
     receipt = json.loads((deps.root / "comparison" / "budget.json").read_text(encoding="utf-8"))
     assert receipt["requests_reserved"] == 1 and receipt["attempts"]
-    for field in ("max_requests", "max_input_tokens", "max_output_tokens", "max_cost_usd"):
-        reserved = (limits.supervisor_reserve()[field] + limits.comparison_reserve()[field]
-                    + limits.dispatch_cap() * getattr(limits.per_task, field))
-        assert reserved <= getattr(limits.provider, field) + 1e-9
-    assert limits.comparison_reserve()["max_requests"] == limits.comparison.max_requests >= 1
-    assert OrchestrationLimits.from_dict(limits.to_dict()) == limits
-
-
-def test_e7_a_single_task_budget_reserves_no_comparison_and_old_records_still_load():
-    single = OrchestrationLimits.split(TOTAL, max_tasks=1, max_rounds=0)
-    assert single.comparison is None and single.comparison_reserve()["max_requests"] == 0
-    stored = single.to_dict()
-    stored.pop("comparison")
-    assert OrchestrationLimits.from_dict(stored).comparison is None
+    assert receipt["limits"] == asdict(deps.limits.provider)  # no per-role slice
+    assert OrchestrationLimits.from_dict(deps.limits.to_dict()) == deps.limits
 
 
 def test_e7_a_resumed_synthesis_never_sends_an_accepted_comparison_again(tmp_path):
@@ -407,14 +406,6 @@ def test_e7_a_comparison_killed_after_the_request_left_is_unavailable_and_not_re
     (deps.root / "comparison" / "result.json").unlink()  # the process died before the receipt was written
     verdicts, reason = compare_pending(deps, bs.plan_comparison(rows))
     assert verdicts == {} and reason == "PROVIDER_UNCERTAIN" and len(world.comparison_requests) == 1
-
-
-def test_e7_a_run_without_a_comparison_budget_is_unavailable_and_sends_nothing(tmp_path):
-    rows = [_orchestration_row("a", "Q one?", "A", "A", "s1"), _orchestration_row("b", "Q two?", "B", "B", "s2")]
-    deps, world = _deps(tmp_path, rows)
-    deps.limits = replace(deps.limits, comparison=None)
-    assert compare_pending(deps, bs.plan_comparison(rows)) == ({}, "COMPARISON_NOT_BUDGETED")
-    assert world.comparison_requests == []
 
 
 # ---------------------------------------------------------------- E8 cancel in the middle of a run
@@ -459,7 +450,7 @@ def test_e10_a_delegation_naming_a_blocked_workspace_is_replaced_by_the_original
     blocked = [["Orchid Labs", "WORKSPACE_DENIED"]]
     plan = delegation("delegate", [("a", "Who owns Orchid Labs?", []), ("b", Q_OWNER, [])])
     world = World([plan], {GOAL: (FACT["succ"], "Meridian A", "ok")})
-    orchestrator, _ = build(tmp_path, world, limits=OrchestrationLimits.split(TOTAL, max_tasks=3, max_rounds=0))
+    orchestrator, _ = build(tmp_path, world, limits=run_limits(max_tasks=3, max_rounds=0))
     scope = dict(workspace_id="ws", blocked_entities=blocked)
     result = orchestrator.start(GOAL, confirmed_scope=scope, entity_leads=["Meridian A"])
     assert list(result["tasks"]) == ["task-1"]
@@ -506,14 +497,57 @@ class LingeringModel(lg.WorkerModel):
         return response
 
 
+class EndlessSearchModel(lg.WorkerModel):
+    """Never decides to answer: every turn that still offers tools asks for more evidence."""
+    QUERIES = ("Cobalt B", "Meridian A", "rollout", "owner", "tracker", "risk", "leader")
+
+    def complete(self, request):
+        self.seen = getattr(self, "seen", [])
+        self.seen.append(request)
+        if request.final_only:
+            self.calls = 2  # the base script answers on its third call
+            return super().complete(request)
+        response = super().complete(request) if self.calls < 2 else None
+        if response is not None:
+            if self.calls == 1:
+                self.context = response.action.tool_call.arguments["source_context"]
+            return response
+        self.calls += 1
+        self.requests.append(request)
+        if request.observation and isinstance(request.observation.value, dict):
+            self.refs.append(request.observation.value["evidence_id"])
+        turn = len(self.seen)
+        call = lg.ToolCall(f"search-{turn}", "search_notes",
+                           dict(query=self.QUERIES[turn % len(self.QUERIES)], limit=5, source_context=self.context))
+        return lg.ModelResponse(action=lg.ModelAction.tool(call), usage=lg.ModelUsage(input_tokens=10, output_tokens=10))
+
+
 def _requests(worker):
     return worker.seen
+
+
+def test_scenario_e_long_investigation_keeps_tools_until_the_last_step_then_publishes_partial(tmp_path, monkeypatch):
+    """Needs more than four evidence turns. No dollar slice ends the tools early; max_steps reserves the Final."""
+    monkeypatch.setattr(lg, "WorkerModel", EndlessSearchModel)
+    world = World([delegation("answer_single")], {GOAL: (FACT["succ"], "Meridian A", GAP)})
+    steps = 7
+    orchestrator, deps = build(tmp_path, world, limits=run_limits(max_tasks=2, max_rounds=0, max_steps=steps))
+    result = orchestrator.start(GOAL)
+    (worker,) = world.workers
+    turns = _requests(worker)
+    assert [request.final_only for request in turns] == [False] * (steps - 1) + [True]
+    assert all(request.available_tools for request in turns[:-1]) and turns[-1].available_tools == []
+    assert result["status"] == "PARTIAL" and result["dispatches"] == 1  # no retry, no review loop
+    receipt = json.loads((deps.root / "tasks" / "task-1" / "attempt-0-1" / "budget.json").read_text(encoding="utf-8"))
+    hashes = [row["request_sha256"] for row in receipt["attempts"]]
+    assert receipt["requests_reserved"] == steps == len(hashes) == len(set(hashes))  # one charge per request
+    assert all(row["outcome"] == "SUCCEEDED" and row["usage"] for row in receipt["attempts"])
 
 
 def test_e12_the_reserved_final_turn_has_no_tools_and_earlier_turns_do(tmp_path, monkeypatch):
     monkeypatch.setattr(lg, "WorkerModel", LingeringModel)
     world = World([delegation("answer_single")], {GOAL: (FACT["succ"], "Meridian A", "ok")})
-    orchestrator, deps = build(tmp_path, world)
+    orchestrator, deps = build(tmp_path, world, limits=run_limits(max_tasks=4, max_rounds=2, max_steps=4))
     result = orchestrator.start(GOAL)
     (worker,) = world.workers
     turns = _requests(worker)
@@ -521,10 +555,10 @@ def test_e12_the_reserved_final_turn_has_no_tools_and_earlier_turns_do(tmp_path,
     assert [bool(request.available_tools) for request in turns] == [True, True, True, False]
     assert turns[3].available_tools == []  # the Final turn declares no function at all
     assert result["status"] == "COMPLETE" and result["tasks"]["task-1"]["status"] == ACCEPTED
-    per_task = deps.limits.per_task
+    provider = deps.limits.provider
     receipt = json.loads((deps.root / "tasks" / "task-1" / "attempt-0-1" / "budget.json").read_text(encoding="utf-8"))
-    assert receipt["requests_reserved"] == 4 <= per_task.max_requests  # the reserve is part of the slice
-    assert receipt["output_tokens_reserved"] <= per_task.max_output_tokens
+    assert receipt["requests_reserved"] == 4 <= provider.max_requests
+    assert receipt["output_tokens_reserved"] <= provider.max_output_tokens
 
 
 def test_e12_supervisor_turn_requires_a_tool_call_and_is_not_a_final_only_turn(tmp_path):
@@ -538,3 +572,34 @@ def test_e12_supervisor_turn_requires_a_tool_call_and_is_not_a_final_only_turn(t
     assert worker.calls == 3 and result["status"] == "COMPLETE"  # an on-time Final needs no reserved turn
     receipt = json.loads((deps.root / "tasks" / "task-1" / "attempt-0-1" / "budget.json").read_text(encoding="utf-8"))
     assert receipt["requests_reserved"] == 3
+
+
+def test_explicit_run_cost_fuse_stops_dispatch_and_default_is_off(tmp_path):
+    questions = [Q_SUCC, Q_OWNER]
+    plan = delegation("delegate", [("a", questions[0], []), ("b", questions[1], ["a"])])
+    world = World([plan, delegation("stop")], TASKS)
+    orchestrator, _ = build(tmp_path, world, limits=run_limits(max_tasks=2, max_rounds=1, max_run_cost_usd=.03))
+    result = orchestrator.start(GOAL)
+    assert result["tasks"]["a"]["status"] == ACCEPTED
+    assert result["tasks"]["b"]["status"] == "skipped" and result["tasks"]["b"]["failure"] == "RUN_COST_LIMIT"
+
+
+def test_scenario_f_worker_path_runs_without_coordinator_reviewer_agent_or_budget_slices(tmp_path, monkeypatch):
+    """Call chain: Worker -> RuntimeEngine -> SingleAgentModelLoop + one deterministic verification."""
+    from linkloom.agents import coordinator, runtime_adapter
+
+    def refuse(*args, **kwargs):
+        raise AssertionError("the team_decision Worker path must not use this")
+
+    monkeypatch.setattr(runtime_adapter, "Coordinator", refuse)
+    monkeypatch.setattr(coordinator.Coordinator, "run", refuse)
+    monkeypatch.setattr(runtime_adapter, "ReviewerAgent", refuse)  # the Synthesizer's aggregate check stays
+    world = World([delegation("answer_single")], {GOAL: (FACT["succ"], "Meridian A", "ok")})
+    orchestrator, deps = build(tmp_path, world)
+    result = orchestrator.start(GOAL)
+    assert result["status"] == "COMPLETE" and result["tasks"]["task-1"]["status"] == ACCEPTED
+    row = json.loads((deps.root / "tasks" / "task-1" / "attempt-0-1" / "row.json").read_text(encoding="utf-8"))
+    assert row["run"]["review_id"].startswith("review_")
+    artifact = json.loads(next((deps.root / "tasks" / "task-1" / "attempt-0-1" / "runtime" / "results").rglob(
+        "result.json")).read_text(encoding="utf-8"))
+    assert artifact["review"]["reviewer_agent_id"] == "evidence_verifier" and artifact["handoffs"] == []

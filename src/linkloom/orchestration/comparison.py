@@ -11,8 +11,8 @@ the Reviewer already passed.
 
 Recovery: result.json is the receipt. Once it exists (accepted verdicts or a failure) the request is never sent
 again; a budget journal with requests but no receipt means a call may have been in flight, which is reported
-as UNAVAILABLE (PROVIDER_UNCERTAIN) and is not repeated. Cost comes from the reserved `comparison` slice of
-OrchestrationLimits, which affordable_dispatches already subtracts from the Worker budget.
+as UNAVAILABLE (PROVIDER_UNCERTAIN) and is not repeated. The request runs under the run's Provider hard limits
+and records its own budget.json like every other session.
 """
 from __future__ import annotations
 
@@ -116,9 +116,7 @@ def compare_pending(deps, plan):
         saved = dict(stamp=stamp, verdicts=None, reason='PROVIDER_UNCERTAIN')
         write_json(root / 'result.json', saved)
         return _from_receipt(saved, sent, extra)
-    limits = deps.limits.comparison
-    if limits is None:
-        return extra, 'COMPARISON_NOT_BUDGETED'
+    limits = deps.limits.provider
     known = {claim['branch'] for claim in plan['claims']}
     claims = [claim for claim in plan['claims'] if any(claim['branch'] in pair for pair in sent)]
     verdicts, reason = None, None

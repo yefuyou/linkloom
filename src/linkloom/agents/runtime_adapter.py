@@ -23,7 +23,9 @@ from linkloom.agents.curator_agent import CuratorAgent
 from linkloom.agents.registry import create_default_registry
 from linkloom.agents.retrieval_agent import RetrievalAgent
 from linkloom.agents.model_adapter import ModelTurnRequest
-from linkloom.agents.reviewer_agent import ReviewerAgent
+from linkloom.agents.reviewer_agent import ReviewerAgent, verify_result
+from linkloom.agents.base import AgentTask
+from linkloom.tools.tool_policy import ToolCallPolicy, ToolPolicyEnforcer
 from linkloom.agents.memory_candidate import (
     AgentMemoryBuildStatus,
     AgentMemoryResolutionContext,
@@ -81,7 +83,10 @@ class RuntimeAgentEventSink:
 
 
 class RuntimeAgentAdapter:
-    """Build one isolated Coordinator and its verified read-only tool set."""
+    """Run one workflow over a verified read-only tool set.
+
+    team_decision runs the model loop directly and one deterministic evidence verification; ask, connect and
+    task_relations still go through the legacy Coordinator."""
 
     def __init__(
         self,
@@ -935,48 +940,58 @@ class RuntimeAgentAdapter:
         )
         event_sink = RuntimeAgentEventSink(tracer) if tracer is not None else None
         self._integration_event_sink = event_sink
-        coordinator = Coordinator(
-            registry=create_default_registry(include_decision_memory=self._decision_memory_enabled, task_relations=task_relations,
-                task_semantics=task_relations and task_relation_tools.semantic_analysis is not None),
-            retrieval_agent=RetrievalAgent(
-                model=model,
-                initial_state=initial_state,
-                artifact_store=artifact_store,
-                state_checkpoint_callback=persist_state,
-                resume_model_loop=resume_model_loop,
-                context_runtime=context_runtime,
-                task_plan=self._task_plan,
-                expected_workspace_id=self.workspace_id,
-                prompt_profile=prompt_profile,
-                verified_evidence_context_limit=verified_evidence_context_limit,
-                memory_hints=memory_hints,
-                final_protocol=final_protocol,
-                reserve_final_turn=reserve_final_turn,
-                cited_answer=cited_answer,
-                temporal_claim_validator=(
-                    self._verify_temporal_claim
-                    if self._temporal_claim_validator is not None else None
-                ),
+        registry = create_default_registry(include_decision_memory=self._decision_memory_enabled, task_relations=task_relations,
+            task_semantics=task_relations and task_relation_tools.semantic_analysis is not None)
+        retrieval_agent = RetrievalAgent(
+            model=model,
+            initial_state=initial_state,
+            artifact_store=artifact_store,
+            state_checkpoint_callback=persist_state,
+            resume_model_loop=resume_model_loop,
+            context_runtime=context_runtime,
+            task_plan=self._task_plan,
+            expected_workspace_id=self.workspace_id,
+            prompt_profile=prompt_profile,
+            verified_evidence_context_limit=verified_evidence_context_limit,
+            memory_hints=memory_hints,
+            final_protocol=final_protocol,
+            reserve_final_turn=reserve_final_turn,
+            cited_answer=cited_answer,
+            temporal_claim_validator=(
+                self._verify_temporal_claim
+                if self._temporal_claim_validator is not None else None
             ),
-            curator_agent=CuratorAgent(),
-            reviewer_agent=ReviewerAgent(),
-            tool_funcs=tool_funcs,
-            tool_runtime=retrieval_tool_runtime,
         )
-        coordinator.max_total_steps = max_total_steps
-        # RuntimeEngine supplies the model budget plus two Coordinator-only
-        # review/publication slots.  Recover the bounded model allowance here
-        # so the task cannot exceed the persisted RunRequest policy.
-        coordinator.team_decision_model_max_steps = max(1, max_total_steps - 2)
-        result = coordinator.run(
-            run_id=run_id,
-            workflow=workflow,
-            query=query,
-            source_context=source_context,
-            initial_refs=initial_refs,
-            event_sink=event_sink,
-            retrieval_task_id=retrieval_task_id,
-        )
+        if workflow == "team_decision":
+            # Team Decision: the model loop runs directly over the ToolRuntime and its ledger, then one
+            # deterministic evidence verification. No Coordinator or ReviewerAgent hop.
+            result = _run_team_decision(
+                registry=registry, retrieval_agent=retrieval_agent, tool_runtime=retrieval_tool_runtime,
+                tool_funcs=tool_funcs, run_id=run_id, query=query, source_context=source_context,
+                initial_refs=initial_refs, event_sink=event_sink, retrieval_task_id=retrieval_task_id,
+                # RuntimeEngine adds two bookkeeping slots to the model-loop step count.
+                model_max_steps=max(1, max_total_steps - 2),
+            )
+        else:
+            coordinator = Coordinator(
+                registry=registry,
+                retrieval_agent=retrieval_agent,
+                curator_agent=CuratorAgent(),
+                reviewer_agent=ReviewerAgent(),
+                tool_funcs=tool_funcs,
+                tool_runtime=retrieval_tool_runtime,
+            )
+            coordinator.max_total_steps = max_total_steps
+            coordinator.team_decision_model_max_steps = max(1, max_total_steps - 2)
+            result = coordinator.run(
+                run_id=run_id,
+                workflow=workflow,
+                query=query,
+                source_context=source_context,
+                initial_refs=initial_refs,
+                event_sink=event_sink,
+                retrieval_task_id=retrieval_task_id,
+            )
         if workflow == "team_decision" and self._decision_memory_enabled:
             result["memory_candidate"] = self._capture_agent_memory_candidate(
                 result,
@@ -999,3 +1014,96 @@ class RuntimeAgentAdapter:
             record.to_dict() for record in state_cursor["state"].tool_ledger
         ]
         return result
+
+
+_TEAM_DECISION_POLICY = "p4-readonly-tools-v1"
+_TEAM_DECISION_MAX_TOOL_CALLS = 20
+_DENIED_TOOLS = ["write_file", "rename_file", "read_gold", "raw_filesystem"]
+
+
+def _team_decision_policy(agent_id: str, allowed: list[str]) -> ToolPolicyEnforcer:
+    return ToolPolicyEnforcer(ToolCallPolicy(
+        policy_version=_TEAM_DECISION_POLICY, agent_id=agent_id, allowed_tool_ids=list(allowed),
+        denied_tool_ids=list(_DENIED_TOOLS), max_calls=_TEAM_DECISION_MAX_TOOL_CALLS,
+        network="deny", vault_write="deny", gold_access="deny"))
+
+
+def _run_team_decision(*, registry, retrieval_agent, tool_runtime, tool_funcs, run_id, query, source_context,
+                       initial_refs, event_sink, retrieval_task_id, model_max_steps) -> dict[str, Any]:
+    """One Worker turn set: SingleAgentModelLoop (inside RetrievalAgent.execute) over the ToolRuntime and
+    ToolExecutionLedger, then the deterministic evidence verification. The result keeps the published shape."""
+    from datetime import datetime, timezone
+    import uuid
+
+    def emit(event_type: str, actor: str, status: str, **kwargs):
+        if event_sink is not None and hasattr(event_sink, "emit"):
+            event_sink.emit(event_type=event_type, actor=actor, status=status, **kwargs)
+
+    identity = registry.get_agent("retrieval_agent")
+    task = AgentTask(
+        task_id=retrieval_task_id if retrieval_task_id is not None else f"task_{uuid.uuid4().hex[:8]}",
+        run_id=run_id, parent_task_id=None, parent_agent_id="runtime", agent_id="retrieval_agent",
+        workflow="team_decision", input_refs=list(initial_refs), allowed_tool_ids=identity.capabilities,
+        max_steps=min(model_max_steps, identity.max_steps), deadline_ms=5000, status="queued", attempt=0,
+        created_at=datetime.now(timezone.utc).isoformat())
+    task_row = task.to_dict()
+    outcome = dict(status="failed", result=None, review=None, evidence=[], errors=[], error=None,
+                   usage={"steps": 0, "tool_calls": 0})
+
+    def response():
+        return {
+            "run_id": run_id, "workflow": "team_decision", "status": outcome["status"],
+            "result": outcome["result"], "agent_tasks": [task_row], "handoffs": [],
+            "review": outcome["review"], "evidence": outcome["evidence"], "policy": _TEAM_DECISION_POLICY,
+            "usage": outcome["usage"],
+            "tool_ledger": [record.to_dict() for record in tool_runtime.ledger.to_list()],
+            "fallback_used": False, "errors": outcome["errors"], "error": outcome["error"],
+        }
+
+    def fail(error):
+        outcome["error"] = error
+        outcome["errors"].append(error["code"])
+        emit("run.failed", "runtime", "failed", error=error)
+        return response()
+
+    emit("run.started", "runtime", "started")
+    try:
+        emit("agent.task.created", "runtime", "ok", attributes={"task_id": task.task_id})
+        emit("agent.task.started", "retrieval_agent", "started", attributes={"task_id": task.task_id})
+        retrieved = retrieval_agent.execute(
+            task=task, query=query, source_context=source_context,
+            policy_enforcer=_team_decision_policy("retrieval_agent", identity.capabilities),
+            tool_runtime=tool_runtime, event_sink=event_sink)
+        outcome["usage"] = {"steps": retrieved.usage["steps"], "tool_calls": retrieved.usage["tool_calls"]}
+        if retrieved.status == "failed":
+            task_row["status"] = "failed"
+            emit("agent.task.failed", "retrieval_agent", "failed", attributes={"task_id": task.task_id},
+                 error=retrieved.error)
+            return fail(retrieved.error or {
+                "code": "TEAM_DECISION_CONTRACT_ERROR", "category": "runtime",
+                "message": "The Team Decision result could not be validated.", "retryable": False,
+                "affected_refs": [], "details": {}, "safe_to_expose": True})
+        task_row["status"] = "completed"
+        emit("agent.task.completed", "retrieval_agent", "ok", attributes={"task_id": task.task_id})
+        evidence, payload = list(retrieved.output_refs), retrieved.output_payload
+        outcome["evidence"] = evidence
+        review = verify_result(
+            f"review_{uuid.uuid4().hex[:8]}", "evidence_verifier", evidence,
+            [payload] if payload is not None else [{"ref": ref} for ref in evidence], evidence,
+            _team_decision_policy("evidence_verifier", ["validate_evidence", "validate_schema"]),
+            tool_funcs["validate_evidence"], tool_funcs["validate_schema"]).to_dict()
+        outcome["review"] = review
+        if payload is None or review["decision"] != "evidence_sufficient":
+            return fail({
+                "code": "TEAM_DECISION_EVIDENCE_REVIEW_FAILED", "category": "runtime",
+                "message": "The Team Decision evidence review did not pass.", "retryable": False,
+                "affected_refs": [], "details": {"review_decision": review["decision"]}, "safe_to_expose": True})
+        outcome["status"] = "completed"
+        outcome["result"] = {"evidence_refs": evidence, "candidate_refs": evidence,
+                             "review_decision": review["decision"], "team_decision": payload}
+        emit("run.completed", "runtime", "ok")
+    except Exception as exc:
+        outcome["status"] = "failed"
+        outcome["errors"].append(str(exc))
+        emit("run.failed", "runtime", "failed", error={"message": str(exc), "code": "TEAM_DECISION_RUNTIME_ERROR"})
+    return response()

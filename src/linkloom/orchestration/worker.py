@@ -1,7 +1,8 @@
 """Worker subgraph: one task, own session, own Runtime checkpoint, own result.
 
-A Worker wraps the existing RuntimeEngine.start_multi_agent and the existing Reviewer projection
-(build_branch_row). Failure and abstention are task statuses, never exceptions that stop other Workers.
+A Worker wraps RuntimeEngine.start_multi_agent (team_decision: SingleAgentModelLoop over the ToolRuntime and
+its ledger, then one deterministic evidence verification) and projects the verified result (build_branch_row).
+Its turn count is the run-level max_steps; the last step is reserved for the final answer. Failure and abstention are task statuses, never exceptions that stop other Workers.
 
 Recovery responsibility: the LangGraph checkpoint decides which tasks still need a Worker. The Runtime
 checkpoint under tasks/<id>/attempt-<n>/runtime is only this Worker's execution record. Two small receipts
@@ -51,7 +52,7 @@ class WorkerDeps:
 
 
 class OutputBoundedAdapter:
-    """Caps one request's output tokens at the Worker's slice, never raises the model's own limit."""
+    """Caps one request's output tokens at the Provider per-request limit, never raises the model's own limit."""
 
     def __init__(self, adapter, output_limit):
         self.adapter = adapter
@@ -142,6 +143,16 @@ def paid_without_receipt(root):
     return isinstance(journal, dict) and (journal.get('requests_reserved') or 0) > 0
 
 
+def run_cost_usd(root):
+    """Telemetry total of the estimated cost every session under root has recorded in its budget.json."""
+    total = 0.0
+    for path in Path(root).rglob('budget.json'):
+        journal = _read(path)
+        if isinstance(journal, dict):
+            total += float(journal.get('cost_reserved_usd') or 0)
+    return total
+
+
 def close_session(session, timeout=1.0):
     """Stop the session accepting calls and wait briefly for its in-flight provider thread.
 
@@ -164,26 +175,23 @@ def _run(deps, task, query):
         receipt = dict(run_status=None, failure='PROVIDER_UNCERTAIN', error=None)
         write_json(root / 'status.json', receipt)
         return receipt
-    limits = deps.limits.per_task
+    limits = deps.limits.provider
     session = TaskProviderSession(root, limits, deps.validate)
     status, error = None, None
     try:
-        turns = 3
-        if limits.max_requests < turns or limits.max_output_tokens < turns:
-            session._error('TASK_PROVIDER_BUDGET_EXHAUSTED')
-            raise ValueError('WORKER_BUDGET_INSUFFICIENT')
-        turns = min(turns + 1, limits.max_requests, limits.max_output_tokens)
+        # Run-level step count. The Runtime keeps the last step for the final answer (reserve_final_turn), so a
+        # long investigation that reaches max_steps still publishes what it read.
+        steps = deps.limits.max_steps
         adapter = OutputBoundedAdapter(session.bind(deps.model_factory(task['description']), 'runtime'),
-                                        min(OrchestrationLimits.WORKER_MAX_OUTPUT_PER_REQUEST,
-                                            limits.max_output_tokens // turns))
+                                        min(deps.limits.max_request_output_tokens, limits.max_output_tokens))
         engine = RuntimeEngine(vault_root=deps.vault, index_path=deps.index,
             checkpoint_dir=root / 'runtime', trace_dir=root / 'traces', model=adapter,
             memory_enabled=False, decision_memory_enabled=False,
             decision_memory_workspace_id=deps.workspace_id)
         thread = f"{deps.run_id}-{task['id']}-{task['epoch']}-{task['attempt']}"
         status = engine.start_multi_agent(RunRequest(request_id=thread, thread_id=thread, query=query,
-            workflow='team_decision', task_plan=None, planning_mode='template', max_steps=turns,
-            max_provider_requests=turns, dry_run=True, caller='product_ui', reserve_final_turn=True,
+            workflow='team_decision', task_plan=None, planning_mode='template', max_steps=steps,
+            max_provider_requests=steps, dry_run=True, caller='product_ui', reserve_final_turn=True,
             cited_answer=True))
     except Exception as exc:
         error = str(exc) if isinstance(exc, ValueError) and str(exc).isupper() else 'WORKER_RUNTIME_FAILED'

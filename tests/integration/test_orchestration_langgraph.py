@@ -153,6 +153,11 @@ def _compare(self, request):
 World.compare = _compare
 
 
+def run_limits(**options):
+    """Run-level limits over the shared Provider hard limits (no per-role slices)."""
+    return OrchestrationLimits(provider=TOTAL, **options)
+
+
 def build(tmp_path, world, *, limits=None, name="run"):
     vault = tmp_path / "vault"
     if not vault.exists():
@@ -163,7 +168,7 @@ def build(tmp_path, world, *, limits=None, name="run"):
     if not marker.exists():
         marker.write_text(str(scan_vault(vault, tmp_path / "scan").index_path), encoding="utf-8")
     index = marker.read_text(encoding="utf-8")
-    limits = limits or OrchestrationLimits.split(TOTAL, max_tasks=4, max_rounds=2, max_concurrency=3)
+    limits = limits or run_limits(max_tasks=4, max_rounds=2, max_concurrency=3)
     deps = WorkerDeps(root=tmp_path / name, run_id=name, vault=vault, index=index,
         workspace=WorkspacePresentationContext("Test", len(NOTES)), workspace_id="ws",
         source_names={path: path for path in NOTES},
@@ -246,7 +251,7 @@ def test_failed_and_abstained_tasks_keep_other_results_as_partial(tmp_path):
              Q_RISK: (FACT["risk"], "rollout risk", "ok")}
     world = World([delegation("delegate", [("succ", Q_SUCC, []), ("owner", Q_OWNER, []),
                                            ("leader", Q_LEADER, []), ("risk", Q_RISK, ["owner"])])], tasks)
-    limits = OrchestrationLimits.split(TOTAL, max_tasks=4, max_rounds=0, max_concurrency=4)
+    limits = run_limits(max_tasks=4, max_rounds=0, max_concurrency=4)
     orchestrator, _ = build(tmp_path, world, limits=limits)
     result = orchestrator.start(GOAL)
     status = {task_id: task["status"] for task_id, task in result["tasks"].items()}
@@ -261,11 +266,11 @@ def test_failed_and_abstained_tasks_keep_other_results_as_partial(tmp_path):
     assert "succ" in owners and not owners & {"owner", "risk"}
 
 
-def test_local_worker_budget_failure_keeps_receipt_and_does_not_retry_or_review(tmp_path):
+def test_provider_hard_cap_failure_keeps_receipt_and_does_not_retry_or_review(tmp_path):
     world = World([delegation("answer_single"), delegation("delegate", [("again", GOAL, [])])],
                   {GOAL: (FACT["succ"], "Meridian A", "ok")})
-    limits = OrchestrationLimits.split(TOTAL, max_tasks=3, max_rounds=1, max_attempts=2)
-    limits = replace(limits, per_task=replace(limits.per_task, max_cost_usd=.001))
+    limits = run_limits(max_tasks=3, max_rounds=1, max_attempts=2)
+    limits = replace(limits, provider=replace(limits.provider, max_cost_usd=.001))
     orchestrator, _ = build(tmp_path, world, limits=limits)
 
     result = orchestrator.start(GOAL)
@@ -274,13 +279,12 @@ def test_local_worker_budget_failure_keeps_receipt_and_does_not_retry_or_review(
     task, = result["tasks"].values()
     assert task["failure"] == "TASK_PROVIDER_BUDGET_EXHAUSTED"
     assert task["attempt"] == result["dispatches"] == 1
-    assert len(world.supervisor_requests) == 1
-    assert world.workers == []
+    assert world.supervisor_requests == [] and world.workers == []  # the cap blocked every request, nothing paid
 
 
 def test_every_task_failing_gives_unknown(tmp_path):
     world = World([delegation("answer_single")], {GOAL: (FACT["succ"], "Meridian A", "error")})
-    limits = OrchestrationLimits.split(TOTAL, max_tasks=2, max_rounds=0)
+    limits = run_limits(max_tasks=2, max_rounds=0)
     orchestrator, _ = build(tmp_path, world, limits=limits)
     result = orchestrator.start(GOAL)
     assert result["status"] == "UNKNOWN" and result["tasks"]["task-1"]["status"] == FAILED
@@ -322,7 +326,7 @@ def test_replayed_worker_with_a_receipt_makes_no_provider_call(tmp_path):
 
 def test_plan_above_threshold_waits_for_human_confirmation(tmp_path):
     plan = delegation("delegate", [("succ", Q_SUCC, []), ("owner", Q_OWNER, [])])
-    limits = OrchestrationLimits.split(TOTAL, max_tasks=4, max_rounds=0, confirm_over_tasks=1)
+    limits = run_limits(max_tasks=4, max_rounds=0, confirm_over_tasks=1)
     world = World([plan], TASKS)
     orchestrator, _ = build(tmp_path, world, limits=limits)
     paused = orchestrator.start(GOAL)
@@ -343,7 +347,7 @@ def test_plan_above_threshold_waits_for_human_confirmation(tmp_path):
 def test_concurrency_limit_splits_ready_tasks_into_waves(tmp_path):
     world = World([delegation("delegate", [("a", Q_SUCC, []), ("b", Q_OWNER, []), ("c", Q_LEADER, [])]),
                    delegation("stop")], TASKS)
-    limits = OrchestrationLimits.split(TOTAL, max_tasks=4, max_rounds=1, max_concurrency=2)
+    limits = run_limits(max_tasks=4, max_rounds=1, max_concurrency=2)
     orchestrator, _ = build(tmp_path, world, limits=limits)
     result = orchestrator.start(GOAL)
     assert [event["tasks"] for event in events(result, "wave_dispatched")] == [["a", "b"], ["c"]]
@@ -353,7 +357,7 @@ def test_concurrency_limit_splits_ready_tasks_into_waves(tmp_path):
 def test_invalid_first_plan_falls_back_to_one_task_for_the_goal(tmp_path):
     cycle = delegation("delegate", [("a", Q_SUCC, ["b"]), ("b", Q_OWNER, ["a"])])
     world = World([cycle], {GOAL: (FACT["succ"], "Meridian A", "ok")})
-    limits = OrchestrationLimits.split(TOTAL, max_tasks=3, max_rounds=0)
+    limits = run_limits(max_tasks=3, max_rounds=0)
     orchestrator, _ = build(tmp_path, world, limits=limits)
     result = orchestrator.start(GOAL)
     assert list(result["tasks"]) == ["task-1"]
@@ -362,7 +366,7 @@ def test_invalid_first_plan_falls_back_to_one_task_for_the_goal(tmp_path):
 
 
 def _limits(**options):
-    return OrchestrationLimits.split(TOTAL, **options)
+    return run_limits(**options)
 
 
 def _propose(tasks, existing=None, limits=None, blocked=()):
@@ -395,12 +399,10 @@ def test_host_blocks_entities_outside_the_authorized_scope_and_unverified_depend
         _propose([("old", "x", [])], existing=existing)
 
 
-def test_limits_come_from_the_host_budget_not_the_model():
-    limits = _limits(max_tasks=4, max_rounds=2)
-    assert limits.task_cap() == 4 and limits.dispatch_cap() == 4
-    tight = OrchestrationLimits(provider=TOTAL, per_task=TaskProviderLimits(20, 5_000_000, 100_000, 8.0, 60, 10, .01),
-                                supervisor=TaskProviderLimits(1, 100_000, 4096, .1, 30, 10, .01), max_tasks=9)
-    assert tight.task_cap() < 9  # four Workers' slices plus the Supervisor reserve exhaust the total
+def test_limits_come_from_the_host_not_the_model():
+    limits = _limits(max_tasks=4, max_followup_tasks=2, max_rounds=2, max_attempts=2)
+    assert limits.task_cap() == 6 and limits.dispatch_cap() == 12
+    assert limits.provider is TOTAL  # every session shares the run's Provider hard limits
 
 
 def test_reducers_are_monotonic_and_never_overwrite_accepted_results():
@@ -417,7 +419,7 @@ def test_reducers_are_monotonic_and_never_overwrite_accepted_results():
 
 def test_retryable_failure_is_retried_within_the_attempt_limit_only(tmp_path):
     world = World([delegation("answer_single")], {GOAL: (FACT["succ"], "Meridian A", "error")})
-    limits = OrchestrationLimits.split(TOTAL, max_tasks=2, max_rounds=0, max_attempts=2)
+    limits = run_limits(max_tasks=2, max_rounds=0, max_attempts=2)
     orchestrator, _ = build(tmp_path, world, limits=limits)
     result = orchestrator.start(GOAL)
     assert [event["tasks"] for event in events(result, "wave_dispatched")] == [["task-1"], ["task-1"]]
@@ -441,8 +443,8 @@ def _kill_before_receipt(monkeypatch, module, name):
 def test_kill_after_a_worker_request_before_its_receipt_is_never_paid_again(tmp_path, monkeypatch):
     from linkloom.orchestration import worker as worker_module
     world = World([delegation("delegate", [("succ", Q_SUCC, []), ("owner", Q_OWNER, [])]), delegation("stop")], TASKS)
-    orchestrator, deps = build(tmp_path, world, limits=OrchestrationLimits.split(
-        TOTAL, max_tasks=4, max_rounds=2, max_concurrency=1))
+    orchestrator, deps = build(tmp_path, world, limits=run_limits(
+        max_tasks=4, max_rounds=2, max_concurrency=1))
     state = _kill_before_receipt(monkeypatch, worker_module, "status.json")
     with pytest.raises(Crash):
         orchestrator.start(GOAL)
@@ -487,7 +489,7 @@ def test_a_kill_before_any_request_is_still_replayed(tmp_path):
 
 def test_approved_plan_records_the_reviewer_as_self_asserted(tmp_path):
     plan = delegation("delegate", [("succ", Q_SUCC, []), ("owner", Q_OWNER, [])])
-    limits = OrchestrationLimits.split(TOTAL, max_tasks=4, max_rounds=0, confirm_over_tasks=1)
+    limits = run_limits(max_tasks=4, max_rounds=0, confirm_over_tasks=1)
     orchestrator, _ = build(tmp_path, World([plan], TASKS), limits=limits)
     orchestrator.start(GOAL)
     result = orchestrator.resume(dict(approved=True, reviewer_id="anyone", reason="ok"))
@@ -524,8 +526,8 @@ def test_a_timed_out_provider_call_is_uncertain_and_its_session_stops_accepting_
             return ModelResponse(error=ModelProviderError("MODEL_UNAVAILABLE", "unavailable_model", "late",
                                                           outcome="known_failure"))
     world = World([], {})
-    limits = OrchestrationLimits.split(TOTAL, max_tasks=4, max_rounds=2, max_concurrency=1)
-    limits = replace(limits, per_task=replace(limits.per_task, request_timeout_seconds=0.2))
+    limits = run_limits(max_tasks=4, max_rounds=2, max_concurrency=1)
+    limits = replace(limits, provider=replace(limits.provider, request_timeout_seconds=0.2))
     _, deps = build(tmp_path, world, limits=limits)
     deps.model_factory = lambda text: Hang()
     try:

@@ -152,7 +152,7 @@ def accept_delegation(payload, *, query, existing, limits, blocked=(), round_num
     known = {item['id'] for item in proposed}
     if len(known) != len(proposed) or known & set(existing):
         raise DelegationRejected('SUPERVISOR_TASK_ID_DUPLICATE')
-    room = limits.task_cap() - len(existing)
+    room = (limits.max_tasks if first else limits.task_cap()) - len(existing)
     if len(proposed) > room:
         raise DelegationRejected('SUPERVISOR_TASK_LIMIT')
     graph = {task_id: dict(task) for task_id, task in existing.items()}

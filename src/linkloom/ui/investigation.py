@@ -418,8 +418,9 @@ class ProductInvestigationService:
         if len(leads) > 8 or any(len(name) > 160 for name in leads):
             raise ProductApplicationError("ENTITY_LEADS_INVALID", "At most eight short entity leads are accepted.")
         try:
-            limits = OrchestrationLimits.for_budget(remaining_provider_limits(self.parallel_limits),
-                                                    confirm_over_tasks=self.confirm_over_tasks)
+            provider = remaining_provider_limits(self.parallel_limits)
+            limits = OrchestrationLimits(provider=provider, deadline_seconds=float(provider.max_seconds),
+                                         confirm_over_tasks=self.confirm_over_tasks)
         except ValueError as error:
             raise ProductApplicationError("TASK_PROVIDER_BUDGET_EXHAUSTED",
                 "No remaining Provider budget for investigation.", status=409) from error
