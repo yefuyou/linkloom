@@ -24,6 +24,7 @@ from linkloom.orchestration.state import ABSTAINED, ACCEPTED, FAILED, WorkerStat
 from linkloom.runtime.checkpoint import SQLiteCheckpointer
 from linkloom.runtime.graph import RuntimeEngine
 from linkloom.runtime.models import RunRequest, RunStatus
+from linkloom.runtime.team_decision_planner import HOST_GUIDANCE_SEPARATOR
 from linkloom.ui.backend import project_reviewer
 from linkloom.ui.projection import collect_observed_evidence, project_run_snapshot
 from linkloom.ui.lifecycle import BackgroundShutdownTimeout
@@ -129,9 +130,9 @@ def render_query(task, upstream, context):
         structured['entity_leads_unverified'] = context['entity_leads']
     if upstream:
         structured['verified_upstream_results'] = upstream
-    query = task['description']
+    query = task['description'] + HOST_GUIDANCE_SEPARATOR
     query += (
-        '\nInvestigate the remaining requested objectives. Reuse verified upstream results. '
+        'Investigate the remaining requested objectives. Reuse verified upstream results. '
         'Use existing multi-tool calls to batch independent searches and group reads of already known evidence IDs; '
         'read a prerequisite before searching a dependent objective. Read passages relevant to an unresolved '
         'objective, not incidental search hits. Search hits alone cannot support Final. '

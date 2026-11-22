@@ -1,6 +1,7 @@
 """LangGraph orchestration with the real RuntimeEngine, Reviewer gate and synthesis (offline fake models)."""
 from dataclasses import replace
 import json
+import sys
 import threading
 from pathlib import Path
 from threading import Barrier
@@ -660,3 +661,32 @@ def test_session_is_closed_when_the_run_is_cancelled_by_a_base_exception(tmp_pat
     assert len(seen) == 1 and seen[0].pending_task_ids() == ()
     with pytest.raises(BackgroundWorkStopped):  # closed: no call can start afterwards
         seen[0]._calls.operation("late").__enter__()
+
+
+@pytest.mark.parametrize("context", [{}, {"entity_leads": ["Meridian A"]}])
+def test_host_guidance_does_not_hide_the_task_plan_of_a_recognized_relation_chain(tmp_path, monkeypatch, context):
+    """A Worker for a recognized multi-hop question keeps its TaskPlan: dependency-ordered subgoals and the
+    'unsearched reachable subgoal' gate. Host guidance and context after the marker are not planning input."""
+    from linkloom.orchestration import worker as worker_module
+    from linkloom.runtime.team_decision_planner import HOST_GUIDANCE_SEPARATOR, planning_text
+    q3 = ("Which plan replaced Meridian A, who owns it, who is that owner's direct leader, "
+          "and when did the replacement take effect?")
+    rendered = worker_module.render_query({"description": q3}, [], context)
+    assert planning_text(rendered) == q3 and HOST_GUIDANCE_SEPARATOR in rendered
+    seen = []
+
+    class Capture(WorkerModel):
+        def complete(self, request):
+            seen.append(request)
+            return super().complete(request)
+
+    monkeypatch.setattr(sys.modules[__name__], "WorkerModel", Capture)
+    original = worker_module.render_query
+    monkeypatch.setattr(worker_module, "render_query", lambda task, upstream, ctx: original(task, upstream, context))
+    world = World([delegation("answer_single")], {q3: (FACT["succ"], "Meridian A", "ok")})
+    orchestrator, _ = build(tmp_path, world)
+    orchestrator.start(q3)
+    request = json.loads(seen[0].user_input.rsplit("team_decision_request=", 1)[1])
+    assert [item["subgoal_id"] for item in request["task_plan"]["subgoals"]] == [
+        "successor", "owner", "leader", "effective_date"]
+    assert request["task_plan"]["goal"] == q3
