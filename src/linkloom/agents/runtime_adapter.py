@@ -52,7 +52,7 @@ from linkloom.runtime.task_plan import (
     TaskPlan, assess_task_plan, verified_dependency_entities,
     verified_plan_subgoal_values,
 )
-from linkloom.runtime.team_decision_planner import plan_team_decision_query, planning_text
+from linkloom.runtime.team_decision_planner import plan_team_decision_query
 from linkloom.semantic_ingestion.materialization import SemanticDecisionMaterializer
 from linkloom.semantic_ingestion.relations import FrozenRelationResolver
 from linkloom.tools.read_tools import _require_relative_note_ref
@@ -829,7 +829,7 @@ class RuntimeAgentAdapter:
             raise ValidationError("Typed claims Final is only available for team_decision.")
         self._task_plan = TaskPlan.from_dict(task_plan) if task_plan is not None else None
         if workflow == "team_decision" and self._task_plan is None:
-            self._task_plan = plan_team_decision_query(planning_text(query))
+            self._task_plan = plan_team_decision_query(query)
         if resume_model_loop != (retrieval_task_id is not None):
             raise ValidationError("Resume mode requires a canonical retrieval task identity.")
         if retrieval_task_id is not None and not retrieval_task_id.strip():

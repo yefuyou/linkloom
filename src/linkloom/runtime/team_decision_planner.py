@@ -17,15 +17,6 @@ _ZH_TAIL = r"\s*[?？!！。]*\s*$"
 
 _JOIN = r"(?:,\s*(?:and\s+)?|\s+and\s+)"
 
-# An orchestrated Worker appends Host guidance and context after this marker. Only the text before it
-# is the task question that a TaskPlan is built from.
-HOST_GUIDANCE_SEPARATOR = "\n\nhost_guidance="
-
-
-def planning_text(query: str) -> str:
-    """The task question a TaskPlan is built from, without Host-appended guidance."""
-    return query.split(HOST_GUIDANCE_SEPARATOR, 1)[0]
-
 _REPLACEMENT_OWNER_LEADER_DATE = re.compile(
     rf"^(?i:which plan replaced)\s+(?P<entity>{_ENTITY})"
     rf"{_JOIN}(?i:who owns (?:it|the replacement|the new plan))"
@@ -245,4 +236,4 @@ def plan_relation_investigation(query: object) -> TaskPlan | None:
     })
 
 
-__all__ = ["HOST_GUIDANCE_SEPARATOR", "plan_team_decision_query", "plan_relation_investigation", "planning_text"]
+__all__ = ["plan_team_decision_query", "plan_relation_investigation"]
