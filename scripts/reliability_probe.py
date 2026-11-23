@@ -164,7 +164,6 @@ def run_product(case, root, sdk, ledger, budget, *, offline=False):
     import httpx
     from linkloom.agents.providers.gemini_api import GeminiProviderAdapter
     from linkloom.ui.investigation import ProductInvestigationService
-    from linkloom.runtime.team_decision_planner import plan_relation_investigation
     from run_bounded_multihop import SourceOnlyController
     root.mkdir(parents=True, exist_ok=False)
     app, workspace = seed(root, case['documents'])
@@ -197,6 +196,9 @@ def run_product(case, root, sdk, ledger, budget, *, offline=False):
     client = bounded_sdk_client(sdk, ledger, budget)
 
     class ObservedAdapter(GeminiProviderAdapter):
+        # The probe measures the plan-free Worker loop: no separate plan request is sent.
+        propose_task_plan = None
+
         def complete(self, request):
             requests.append(request)
             response = super().complete(request)
@@ -210,7 +212,7 @@ def run_product(case, root, sdk, ledger, budget, *, offline=False):
     initial_requests = ledger.request_count
     first_useful = None
     try:
-        snapshot = service.start(case['query'], workspace, task_plan=plan_relation_investigation(case['query']))
+        snapshot = service.start(case['query'], workspace, source_relation=True)
         preparation_ms = (time.monotonic()-started)*1000
         rid = snapshot['run']['id']
         while True:

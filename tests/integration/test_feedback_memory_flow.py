@@ -20,10 +20,10 @@ def demo(tmp_path, monkeypatch):
     fixture.stop()
 
 
-def ask(demo, query=QUERY):
+def ask(demo, query=QUERY, expected=200):
     status, body = request_json(demo.base_url, "/api/product/ask", method="POST", data={
         "workspace_id": demo.app._workspace_id(), "query": query, "as_of": "2026-10-10"})
-    assert status == 200, body
+    assert status == expected, body
     return body["result"]
 
 
@@ -68,11 +68,14 @@ def test_comparable_before_pending_approved_revoked(demo):
     item = approve(demo, candidate)
     approved = ask(demo)
     for query in ("我们现在采用哪家供方外星部门？", "供方把预算改为9000", "current megasupplyx?"):
-        result = ask(demo, query)
         if query in ("current megasupplyx?", "我们现在采用哪家供方外星部门？"):
+            # No reviewed decision matches: the question goes to a source investigation,
+            # which first needs permission for the external provider.
+            result = ask(demo, query, expected=403)
             assert result["discovery"]["status"] == "NO_MATCH"
+            assert result["error"]["code"] == "EXTERNAL_PROVIDER_PERMISSION_REQUIRED"
         else:
-            assert_soft_clarification(result)
+            assert_soft_clarification(ask(demo, query))
     assert feedback(demo, "revoke", id=item, human_confirmed=True)[0] == 200
     revoked = ask(demo)
     for result in (before, pending, revoked):

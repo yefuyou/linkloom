@@ -93,12 +93,8 @@ def prepare(root,dataset):
 def execute(root):
     root=Path(root);inputs=LockedInputs(root,require_runtime=True);seal=inputs.verify();config=read(inputs.dependencies['configuration']);cases=inputs.public_cases()
     if (root/'run-started.json').exists() or (root/'budget.json').exists():raise ValueError('ONE_HOLDOUT_EVALUATION_ONLY')
-    from linkloom.runtime.team_decision_planner import plan_relation_investigation,plan_team_decision_query
-    legacy=0
-    for _,_,public in cases:
-        candidates=[public['question']]
-        if public.get('as_of'):candidates.append('As of '+public['as_of']+', '+public['question'])
-        if any(plan_relation_investigation(q) or plan_team_decision_query(q) for q in candidates):legacy+=3*config['legacy_max_turns']
+    # No wording template gates the legacy route any more: every case may enter it.
+    legacy=len(cases)*3*config['legacy_max_turns']
     graph=len(cases)*3;call_cap=legacy+graph;quote=seal['price_quote'];cap=(call_cap*8192*quote['input_upper_per_million']+call_cap*1024*quote['output_upper_per_million'])/1000000
     old=[read('work/graph-opt/budget-r1.json'),read('work/graph-opt/budget-r2.json')];previous=sum(x['reserved_usd'] for x in old);remaining=1-previous
     if cap>remaining*.8:raise BudgetExceeded('COMPLETE_HOLDOUT_MATRIX_EXCEEDS_BUDGET_PREFLIGHT')

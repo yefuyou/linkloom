@@ -16,10 +16,8 @@ from linkloom.runtime.graph import RuntimeEngine
 from linkloom.runtime.context_engineering import ContextRuntimeConfig
 from linkloom.runtime.errors import CheckpointError
 from linkloom.runtime.errors import ToolArgumentValidationError, ValidationError
-from linkloom.runtime.task_plan import TaskPlan, assess_task_plan, verified_plan_conflict_refs
-from linkloom.runtime.team_decision_planner import plan_relation_investigation
-from linkloom.agents.claim_grounding import assess_claim_text, ClaimSupportStatus, TYPED_CLAIM_RELATIONS
-from linkloom.ui.projection import collect_observed_evidence
+from linkloom.agents.claim_grounding import claim_conflicts, normalize_entity
+from linkloom.agents.team_decision import _VerifiedClaim
 from linkloom.scanner import scan_vault
 from linkloom.ui.backend import RuntimeRunBackend
 from linkloom.ui.lifecycle import (
@@ -27,6 +25,14 @@ from linkloom.ui.lifecycle import (
 from linkloom.orchestration.files import write_json as _write_json
 from linkloom.ui.product import ProductApplication, ProductApplicationError
 from linkloom.ui.projection import WorkspacePresentationContext
+
+
+def _chain_end(claims):
+    """The object no other verified claim continues from, when the chain has exactly one end."""
+    subjects = {normalize_entity(claim.subject) for claim in claims}
+    ends = {normalize_entity(claim.object_value): claim.object_value for claim in claims
+            if normalize_entity(claim.object_value) not in subjects}
+    return next(iter(ends.values())) if len(ends) == 1 else None
 
 
 @dataclass
@@ -38,7 +44,7 @@ class _InvestigationJob:
     workspace_id: str
     temporal_scope: tuple[str, str, str] | None = None
     temporal_view_holder: dict[str, Any] | None = None
-    task_plan: TaskPlan | None = None
+    source_relation: bool = False
     task_preparation: Any = None
 
 
@@ -158,14 +164,14 @@ class ProductInvestigationService:
     def start(
         self, query: str, workspace_id: str, *,
         temporal_scope: tuple[str, str, str] | None = None,
-        task_plan: TaskPlan | None = None,
+        source_relation: bool = False,
         task_investigation: bool = False,
         task_source_authorization: dict | None = None,
     ) -> dict[str, Any]:
         try:
             with self._starts.operation("investigation-start-" + uuid4().hex[:12]):
                 return self._start(query, workspace_id, temporal_scope=temporal_scope,
-                    task_plan=task_plan, task_investigation=task_investigation,
+                    source_relation=source_relation, task_investigation=task_investigation,
                     task_source_authorization=task_source_authorization)
         except BackgroundWorkStopped as error:
             raise ProductApplicationError("APPLICATION_SHUTTING_DOWN", str(error), status=503) from error
@@ -173,7 +179,7 @@ class ProductInvestigationService:
     def _start(
         self, query: str, workspace_id: str, *,
         temporal_scope: tuple[str, str, str] | None = None,
-        task_plan: TaskPlan | None = None,
+        source_relation: bool = False,
         task_investigation: bool = False,
         task_source_authorization: dict | None = None,
     ) -> dict[str, Any]:
@@ -187,11 +193,9 @@ class ProductInvestigationService:
             raise ProductApplicationError("INVALID_QUERY", "Enter a question of at most 4000 characters.")
         if not isinstance(workspace_id, str) or not workspace_id.strip():
             raise ProductApplicationError("WORKSPACE_REQUIRED", "Select a workspace first.", status=409)
-        if task_plan is not None:
-            expected = plan_relation_investigation(query)
-            if temporal_scope is not None or expected is None or expected.to_dict() != task_plan.to_dict():
-                raise ProductApplicationError("INVALID_RELATION_PLAN", "Only a query-bound supported relation plan can start.")
-        source_run = task_plan is not None
+        if source_relation and temporal_scope is not None:
+            raise ProductApplicationError("TASK_SCOPE_CONFLICT", "A source investigation cannot use a decision slot.")
+        source_run = source_relation
         if task_investigation and (not self.config()['task_investigation'] or source_run or temporal_scope is not None):
             raise ProductApplicationError("TASK_INVESTIGATION_UNAVAILABLE", "Task stages require explicit Host configuration.", status=409)
         source_run = source_run or task_investigation
@@ -293,6 +297,8 @@ class ProductInvestigationService:
                         error=dict(code=preparation.manifest.get('provider_failure', 'TASK_PLAN_BLOCKED'), classification='validation',
                                    message='The investigation plan did not pass Host admission.'))
             vault, index, source_names, source_versions = self._materialize_sources(root, sources)
+            confirmed_fact_index = (None if task_investigation else
+                                    self._confirmed_fact_index_factory(workspace_id, sources, source_versions))
             from linkloom.ui.task_provider import _ROUTER_RESERVATION, TaskProviderSession
             if self.external_provider and not task_investigation and graph_provider_session is None and _ROUTER_RESERVATION.get() is not None:
                 if task_models is None or task_models.provider_limits is None:
@@ -324,6 +330,7 @@ class ProductInvestigationService:
                 temporal_claim_validator=temporal_validator,
                 task_relation_tools=preparation.tools if preparation else None,
                 context_runtime_config=ContextRuntimeConfig() if preparation else None,
+                confirmed_fact_index=confirmed_fact_index,
             )
             backend = RuntimeRunBackend(
                 engine=engine,
@@ -332,17 +339,18 @@ class ProductInvestigationService:
                 ),
                 max_steps=max_steps,
                 max_provider_requests=max_steps,
-                final_protocol=("claim-proposal/v1" if temporal_scope is not None
+                # A source investigation answers with Typed Claims; the Host checks
+                # them deterministically and projects them without re-parsing text.
+                final_protocol=("claim-proposal/v1" if temporal_scope is not None or source_run and not preparation
                                 else "team-decision-result/v1"),
-                # The current TaskPlan relation vocabulary covers people and
-                # projects, not approved business-decision slots. The model
-                # still chooses read-only tools; no incompatible plan is sent.
-                planning_mode="template" if temporal_scope is not None or task_plan is not None else None,
+                # The model plans the investigation itself (when it can propose a
+                # plan); the Host validates plan structure only.
+                planning_mode="template" if temporal_scope is not None else None,
                 workflow="task_relations" if preparation else "team_decision",
             )
             with self._lock:
                 self._backends.append(backend)
-            snapshot = backend.start(query.strip(), task_plan=task_plan.to_dict() if task_plan else None)
+            snapshot = backend.start(query.strip())
         except Exception:
             # A backend may already be running if projection/setup failed. Keep
             # its files owned until close has drained every worker, even here.
@@ -350,7 +358,7 @@ class ProductInvestigationService:
         with self._lock:
             self._jobs[snapshot["run"]["id"]] = _InvestigationJob(
                 temporary_root, backend, source_names, source_versions, workspace_id,
-                temporal_scope, temporal_view_holder, task_plan,
+                temporal_scope, temporal_view_holder, source_run and not preparation,
                 preparation,
             )
         if preparation is not None:
@@ -358,7 +366,7 @@ class ProductInvestigationService:
             pointer = dict(run_id=snapshot['run']['id'], thread_id=snapshot['run']['thread_id'],
                 workspace_id=workspace_id, root=root.name)
             (root.parent / (pointer['run_id'] + '.json')).write_text(json.dumps(pointer), encoding='utf8')
-        return self._decorate(snapshot, None, task_plan=task_plan, max_steps=max_steps)
+        return self._decorate(snapshot, None, source_relation=source_run and not preparation, max_steps=max_steps)
 
     def save_task_ask(self, run_id, ask_run):
         job = self._jobs.get(run_id)
@@ -452,6 +460,29 @@ class ProductInvestigationService:
         finally:
             with self._lock:
                 self._active.discard(run.run_id)
+
+    def _confirmed_fact_index_factory(self, workspace_id, sources, source_versions):
+        """Reload human-confirmed relation facts for this run's frozen sources on every check."""
+        from linkloom.agents.confirmed_facts import FrozenSource, load_confirmed_fact_index
+
+        content = {str(source["source_id"]): str(source["content"]) for source in sources}
+        frozen = tuple(FrozenSource(path, item["source_id"], item["source_version"], content[item["source_id"]])
+                       for path, item in source_versions.items())
+        frozen_ids = {(item.source_id, item.source_version) for item in frozen}
+        app = self.product_app
+
+        def load():
+            with app._store_lock:
+                if app._workspace_id() != workspace_id:
+                    return None
+                active = {(s["source_id"], s["source_version"]) for s in app.repository.list_sources(workspace_id)
+                          if s.get("active", True)}
+            allowed = frozen_ids & active
+            return load_confirmed_fact_index(
+                app.repository.database_path, workspace_id, frozen,
+                authorize_source=lambda ws, source, version: ws == workspace_id and (source, version) in allowed,
+            )
+        return load
 
     @staticmethod
     def _materialize_sources(root, sources):
@@ -826,7 +857,7 @@ class ProductInvestigationService:
                 return None
             return self._decorate(snapshot, state, source_names=job.source_names, source_versions=job.source_versions,
                                   temporal_scope=job.temporal_scope,
-                                  temporal_view_holder=job.temporal_view_holder, task_plan=job.task_plan,
+                                  temporal_view_holder=job.temporal_view_holder, source_relation=job.source_relation,
                                   max_steps=job.backend.max_steps)
 
     def start_temporal(
@@ -873,7 +904,7 @@ class ProductInvestigationService:
         return True
 
     def _decorate(self, snapshot, state, *, source_names=None, source_versions=None, temporal_scope=None,
-                  temporal_view_holder=None, task_plan=None, max_steps=None):
+                  temporal_view_holder=None, source_relation=False, max_steps=None):
         snapshot["run_mode"] = self.run_mode
         snapshot["read_only"] = True
         ledger = list(state.tool_ledger) if state is not None else []
@@ -887,7 +918,7 @@ class ProductInvestigationService:
                 None if (snapshot.get("error") or {}).get("code", "").startswith("MODEL_PLAN_") else 0),
         }
         if snapshot.get("planning"):
-            snapshot["planning"]["plan"] = task_plan.to_dict() if task_plan else snapshot.get("task_plan")
+            snapshot["planning"]["plan"] = snapshot.get("task_plan")
         snapshot["trace"] = [
             {
                 "sequence": item.sequence,
@@ -937,12 +968,12 @@ class ProductInvestigationService:
                 deepcopy(view) if isinstance(view, dict) and view.get("status") == "FOUND"
                 else None
             )
-        if task_plan is not None and snapshot["kind"] in {"success", "insufficient"}:
-            self._source_relations(snapshot, state, task_plan, source_versions or {})
+        if source_relation and snapshot["kind"] in {"success", "insufficient"}:
+            self._source_relations(snapshot, source_versions or {})
         return snapshot
 
-    def _source_relations(self, snapshot, state, plan, versions):
-        """Project accepted Final atoms; this never searches or invents a hop."""
+    def _source_relations(self, snapshot, versions):
+        """Project the Host-verified Typed Claims of a source investigation; nothing is re-parsed."""
         if snapshot.get("reviewer", {}).get("decision") != "evidence_sufficient":
             return
         # A captured run is not a license to present an obsolete product source.
@@ -953,32 +984,16 @@ class ProductInvestigationService:
                     snapshot.update(kind="error", evidence=[], decision=None, rationale=[], error={"code": "SOURCE_VERSION_MISMATCH",
                         "classification": "runtime_failure", "message": "A source changed during investigation; ask again."})
                     return
-        observed = collect_observed_evidence(r for r in state.tool_ledger if r.tool_id == "read_verified_note")
-        cited = {e["id"]: e["ref"] for e in snapshot["evidence"]}
-        texts = [(snapshot["decision"]["value"], snapshot["decision"]["citations"])]
-        texts.extend((item["point"], item["citations"]) for item in snapshot["rationale"])
-        facts = []
-        for text, ids in texts:
-            if text is None:
-                continue
-            claims = assess_claim_text(text, [cited[i] for i in ids], observed)
-            if claims.status is not ClaimSupportStatus.SUPPORTED:
-                raise ValidationError("Accepted source Final cannot be projected as verified facts.")
-            for claim in claims.claims:
-                predicate = next(p for p, spec in TYPED_CLAIM_RELATIONS.items() if claim.relation in spec["source_relations"])
-                literal = re.search(re.escape(claim.value), text, re.I)
-                facts.append({"subject": claim.subject, "predicate": predicate,
-                    "value": literal.group() if literal else claim.value, "valid_on": claim.valid_on,
-                    "evidence_refs": list(claim.supporting_evidence_refs)})
-        leaders = [fact["value"] for fact in facts if fact["predicate"] == "reports_to"]
-        search = next(r for r in state.tool_ledger if r.tool_id == "search_notes")
-        assessment = assess_task_plan(plan, state.tool_ledger, run_id=search.run_id,
-            task_id=search.task_id, agent_id=search.agent_id, expected_workspace_id=self.product_app._workspace_id())
-        conflicts = {goal.subgoal_id: list(refs) for goal in plan.subgoals
-                     if (refs := verified_plan_conflict_refs(plan, goal.subgoal_id, assessment.evidence_by_subgoal))}
-        snapshot["source_investigation"] = {"plan": plan.to_dict(), "facts": facts,
+        claims = snapshot.get("typed_claims") or []
+        facts = [{"subject": claim["subject"], "predicate": claim["predicate"], "value": claim["object"],
+                  "valid_on": claim["valid_on"], "evidence_refs": list(claim["evidence_ids"])} for claim in claims]
+        parsed = [_VerifiedClaim(claim["subject"], claim["predicate"], claim["object"], tuple(claim["evidence_ids"]),
+                                 claim["quote"], claim["valid_on"], claim["temporal_kind"]) for claim in claims]
+        conflicts = {f"{left.predicate}:{left.subject}": list(dict.fromkeys((*left.evidence_ids, *right.evidence_ids)))
+                     for left, right in claim_conflicts(parsed)}
+        snapshot["source_investigation"] = {"plan": snapshot.get("task_plan"), "facts": facts,
             "thread_id": snapshot["run"]["thread_id"], "runtime_id": snapshot["run"].get("runtime_id"),
-            "answer": leaders[0] if snapshot["kind"] == "success" and len(set(leaders)) == 1 else None,
+            "answer": _chain_end(parsed) if snapshot["kind"] == "success" and not conflicts else None,
             "evidence_level": "SOURCE_SUPPORTED" if facts else "UNRESOLVED", "trace": snapshot["trace"],
             "conflicts": conflicts}
 

@@ -23,8 +23,8 @@ SLOT_LLM_MAX_OUTPUT_TOKENS = 256
 # for the three-field response. This is an allowance, not separate token pools.
 SLOT_LLM_GEMINI_MAX_OUTPUT_TOKENS = 1024
 
-# Rules-mode (Router off) operators. With a model, they are only clues: the selector reply decides.
-# Question operators only: no subjects, relation names, industries or values.
+# Rules-mode (Router off) intent hint: it only chooses between a deterministic lookup and an
+# investigation and never refuses a question. With a model, the selector reply decides.
 _INVESTIGATION = re.compile(
     r"\b(why|reasons?|rationale|explain\w*|investigat\w*|conflict\w*|contradict\w*|"
     r"compar\w*|differ\w*|distinguish|uncertain\w*|unverified|changed?|switched?)\b|"
@@ -33,20 +33,13 @@ _INVESTIGATION = re.compile(
     r"sources?\s+support|original\s+(sources?|evidence)|"
     r"为什么|为何|为啥|怎么会|咋会|咋就|怎么就|变了|换了|改了|原因|调查|冲突|矛盾|区别|差异|比较|无法证实|未证实|不确定|"
     r"原始来源|支持.*变更|谁.*(?:决定|批准)|谁.*什么时候", re.I)
-_STATE_FORM = re.compile(
-    r"\b(what|which|who|how|when|is|are|was|were|current\w*|now|approved|adopt\w*|"
-    r"effective|receipt\w*|valid|formal)\b|[?？]|"
-    r"当前|现行|正式|现在|目前|采用|选定|选用|使用|生效|审核|审批|收据|"
-    r"用的是|查看.*来源|哪|什么|多少", re.I)
-
-
 def classify_task(query: str, as_of: object = None) -> dict[str, Any]:
     date, date_error = resolve_query_date(query, as_of)
     investigation = bool(_INVESTIGATION.search(query))
     intent = "INVESTIGATION" if investigation else "AS_OF" if date or date_error else "CURRENT"
     return {"intent": intent, "code": "SOURCE_INVESTIGATION" if investigation else "REVIEWED_STATE_LOOKUP",
             "reason": "Question operators determine the task type independently of workspace topics.",
-            "supported": investigation or bool(_STATE_FORM.search(query)), "decided_by": "rule"}
+            "supported": True, "decided_by": "rule"}
 
 
 def _selector_generation_options(provider: Any) -> ModelGenerationOptions:
@@ -167,11 +160,8 @@ def route_question(query: str, slots: list[dict[str, Any]], resolver: Any, *,
     candidates, selected = discovery["candidates"], discovery["scope"]
     route, decided_by = task["intent"], discovery["decided_by"]
     llm_attempted, llm_error = False, None
-    # Independently validate that the raw input is a read question. A guessed
-    # intent/supported flag cannot turn an imperative into an accepted answer.
-    if not (_STATE_FORM.search(query) or _INVESTIGATION.search(query)) and not (subject or relation) and not (
-            candidates and candidates[0].get("history_anchor")):
-        selected = None
+    # Write/imperative requests are refused by the admission gate (ask_admission) and the
+    # read-only Tool ACL; question wording does not unbind a retrieved scope here.
     # Router off (no selector): entity_check (hard_veto, role_conflict) and conflicting_mentions are the
     # fail-closed no-model guard; they only block. A valid selector reply carries located entity_mentions,
     # which _mention_verdict checks instead, so the rule guess never overrides a valid model choice.

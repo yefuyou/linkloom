@@ -17,11 +17,9 @@ from linkloom.ui.question_routing import classify_task, route_question
 from linkloom.ui.feedback_memory import FeedbackMemory
 from linkloom.ui.structured_router import rule_date_blocker, rule_needs_router
 from linkloom.decision_memory.models import normalize_temporal_component
-from linkloom.runtime.team_decision_planner import plan_relation_investigation
 from linkloom.ui.ask_admission import (accept_model_safety, admission_restriction, model_safety_scope,
     parse_context, source_context, validate_context)
 
-_RELATION_QUESTION = re.compile(r"\b(owner|owns|leader|supervisor|alias)\b|\breports?\s+(?:directly\s+)?to\b|负责人|领导|汇报|别名", re.I)
 
 @dataclass(frozen=True)
 class _AskRun:
@@ -310,15 +308,12 @@ class UnifiedAskService:
                     routed_graph = self._run_graph_request(run, payload)
                     if routed_graph is not None:
                         return routed_graph
-                plan = plan_relation_investigation(run.query)
                 if context:
                     validate_context(self.app, run.workspace_id, context)
                     if context["domain"] == "tasks":
-                        # The explicit structured domain owns task wording.  A
-                        # task question may mention an owner/leader naturally;
-                        # only an advanced decision scope or an independently
-                        # recognized relation plan is a real admission conflict.
-                        if values["subject"] or values["relation"] or plan is not None:
+                        # The explicit structured domain owns task wording; only an
+                        # advanced decision scope is a real admission conflict.
+                        if values["subject"] or values["relation"]:
                             result["path"] = None
                             return self._failure(result, "INVESTIGATION_DOMAIN_CONFLICT",
                                 "Clear the advanced decision selection and choose the task domain for a task question.", status="NEEDS_SCOPE"), 200
@@ -348,10 +343,9 @@ class UnifiedAskService:
                     return routing
                 orchestrated = bool(not context and values["subject"] and values["relation"]
                                     and service is not None and service.orchestration_enabled())
-                eligible = bool(orchestrated and (plan is not None
-                                                  or (not cascade and _RELATION_QUESTION.search(run.query))
-                                                  or (routed_once()[2]["route"] == "INVESTIGATION"
-                                                      and routed_once()[2]["scope"] is not None and routed_once()[2]["supported"])))
+                # The question wording never decides here: with the user's explicit scope the
+                # Supervisor reads the question and decides whether to delegate.
+                eligible = orchestrated
                 if eligible:
                     as_of, date_error = resolve_query_date(run.query, payload.get("as_of"))
                     if date_error:
@@ -371,14 +365,6 @@ class UnifiedAskService:
                     blocker = blocked_entity_reason(run.query, self._router_blocked_entities(run.workspace_id))
                     if blocker:
                         return self._router_stop(run, None, blocker)
-                if plan is not None or (not cascade and _RELATION_QUESTION.search(run.query)):
-                    if cascade:
-                        from linkloom.ui.router_context import router_query_date
-                        _, time_error = router_query_date(run.query, payload.get("as_of"))
-                        invalid_date = rule_date_blocker(time_error, has_scope=False)
-                        if invalid_date:
-                            return self._router_stop(run, None, invalid_date)
-                    return self._source_request(run, payload, plan)
                 slots, memory, routed = routed_once()
                 discovery = routed["discovery"]
                 if memory is not None:
@@ -422,6 +408,14 @@ class UnifiedAskService:
                         fact = self._fact_request(run, result, payload)
                         if fact is not None:
                             return fact
+                    if (not cascade and discovery["status"] == "NO_MATCH"
+                            and not (values["subject"] or values["relation"])
+                            and service is not None and service.model_factory is not None
+                            and not getattr(service, "task_only", False)):
+                        # No reviewed decision matches: the question is still a legitimate
+                        # source question. The model investigates the workspace sources
+                        # instead of the Host refusing an unrecognized phrasing.
+                        return self._source_request(run, payload, discovery)
                     result["path"] = None
                     return self._failure(result, "DECISION_SCOPE_" + discovery["status"],
                                          discovery["reason"], status="NEEDS_SCOPE"), 200
@@ -432,8 +426,6 @@ class UnifiedAskService:
                     result["path"] = None
                     return self._failure(result, date_error["code"], date_error["message"],
                                          status="NEEDS_SCOPE"), 200
-                if not routed["supported"]:
-                    return self._failure(result, "TASK_UNCLASSIFIED", run.route["reason"], status="NEEDS_SCOPE"), 200
                 return self._decision_request(run, result, payload, values, as_of)
         except ProductApplicationError as error:
             if self.router_provider is not None:
@@ -845,31 +837,23 @@ class UnifiedAskService:
             scope=run.scope, route=run.route, discovery=run.discovery))
         return self._from_snapshot(run, snapshot), 202
 
-    def _source_request(self, run, payload, plan):
-        route = {"intent": "SOURCE_RELATION", "code": "SOURCE_RELATION_MULTIHOP",
-                 "reason": "A bounded directed source-relation chain; no business approval is implied.",
-                 "plan": plan.to_dict() if plan else None}
-        run = _AskRun(run.query, run.workspace_id, run.scope, route)
+    def _source_request(self, run, payload, discovery=None):
+        route = {"intent": "SOURCE_RELATION", "code": "SOURCE_INVESTIGATION",
+                 "reason": "A source investigation without a reviewed decision slot; no business approval is implied."}
+        run = _AskRun(run.query, run.workspace_id, run.scope, route, discovery)
         result = self._base(run)
-        if plan is None:
-            return self._failure(result, "UNSUPPORTED_QUERY",
-                "This relationship question cannot be reliably decomposed. Supported paths: project → owner → direct leader; alias → project → owner → direct leader.", status="NEEDS_SCOPE"), 200
         if run.scope["subject"] or run.scope["relation"]:
             return self._failure(result, "TASK_SCOPE_CONFLICT",
-                "A source-relation question cannot use an approved decision slot. Clear the advanced decision selection or clarify the question.", status="NEEDS_SCOPE"), 200
+                "A source investigation cannot use an approved decision slot. Clear the advanced decision selection or clarify the question.", status="NEEDS_SCOPE"), 200
         as_of, error = resolve_query_date(run.query, payload.get("as_of"))
         if error:
             return self._failure(result, error["code"], error["message"], status="NEEDS_SCOPE"), 200
         if as_of and re.fullmatch(r"\d{4}-\d{2}-\d{2}", as_of) is None:
-            return self._failure(result, "DATE_SCOPE_REQUIRED", "Source relationships require an exact snapshot date, without a time of day.", status="NEEDS_SCOPE"), 200
+            return self._failure(result, "DATE_SCOPE_REQUIRED", "Source investigations require an exact snapshot date, without a time of day.", status="NEEDS_SCOPE"), 200
         runtime_query = run.query
-        if as_of and not re.search(r"\d{4}-\d{2}-\d{2}", run.query):
+        if as_of and as_of not in run.query:
+            # The selected snapshot date is Host context for the model, not a template.
             runtime_query = f"As of {as_of}, {run.query}"
-            plan = plan_relation_investigation(runtime_query)
-        if plan is None:
-            return self._failure(result, "UNSUPPORTED_QUERY", "The dated relationship plan exceeds the supported bounds.", status="NEEDS_SCOPE"), 200
-        route["plan"] = plan.to_dict()
-        route["relations"] = [goal.relation_path[0] for goal in plan.subgoals]
         result["scope"] = {"subject": "", "relation": "", "as_of": as_of}
         service = self.investigation()
         config = service.config() if service else {}
@@ -882,14 +866,21 @@ class UnifiedAskService:
         if not route["can_start"]:
             return self._failure(result, "EXTERNAL_PROVIDER_PERMISSION_REQUIRED", "Allow this request before sources are sent or model costs are incurred.", category="permission"), 403
         try:
-            snapshot = service.start(runtime_query, run.workspace_id, task_plan=plan)
+            if service.orchestration_enabled():
+                # Supervisor -> Worker: the Supervisor decomposes the question itself.
+                snapshot = service.start_orchestrated(runtime_query, run.workspace_id,
+                    blocked_entities=self._authorization_blocks(run.workspace_id))
+            else:
+                snapshot = service.start(runtime_query, run.workspace_id, source_relation=True)
         except ProductApplicationError as error:
             return self._failure(result, error.code, str(error)), error.status
         except Exception:
-            return self._failure(result, "INVESTIGATION_START_FAILED", "The bounded source investigation could not start.", category="runtime"), 500
-        pinned = _AskRun(run.query, run.workspace_id, dict(result["scope"]), route)
+            return self._failure(result, "INVESTIGATION_START_FAILED", "The source investigation could not start.", category="runtime"), 500
+        pinned = _AskRun(run.query, run.workspace_id, dict(result["scope"]), route, run.discovery)
         with self._lock:
             self._runs[snapshot["run"]["id"]] = (pinned, service)
+        service.save_parallel_ask(snapshot["run"]["id"], dict(query=pinned.query, workspace_id=pinned.workspace_id,
+            scope=pinned.scope, route=pinned.route, discovery=pinned.discovery))
         return self._from_snapshot(pinned, snapshot), 202
 
     @staticmethod

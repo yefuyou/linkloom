@@ -18,15 +18,13 @@ from linkloom.ui.unified_ask import classify_task
     ("Write a poem", "CURRENT"),
     ("Launch supplier", "CURRENT"),
 ])
-# The approved router now has exactly three domain-neutral question types.
-# Unsupported wording is handled by admission/fallback, not a fourth intent.
+# The approved router has exactly three domain-neutral question types. The rule
+# hint never refuses wording; write requests are refused by admission and the Tool ACL.
 def test_bounded_capability_routing(query, intent):
     route = classify_task(query)
     assert route["intent"] == intent
     assert route["reason"]
-    # The intent enum changed; unsupported commands/fragments must still fail admission.
-    if query in {"Write a poem", "Launch supplier"}:
-        assert route["supported"] is False
+    assert route["supported"] is True
 
 
 def test_rejected_final_keeps_the_actual_runtime_review_record():

@@ -9,10 +9,8 @@ from typing import Sequence
 
 from linkloom.runtime.models import RuntimeState
 from linkloom.runtime.task_plan import (
-    TaskPlan, assess_task_plan, conflicted_subgoals, pending_alternate_subgoals,
-    refusal_missing_subgoals,
+    TaskPlan, assess_task_plan, pending_alternate_subgoals, refusal_missing_subgoals,
 )
-from linkloom.agents.claim_grounding import verified_subgoal_conflict_refs
 from linkloom.tools.contracts import ToolCall, ToolError, ToolResult
 from linkloom.tools.ledger import ToolExecutionLedger
 
@@ -32,8 +30,6 @@ class ProgressAssessment:
     evidence_ids: frozenset[str] = frozenset()
     latest_tool_id: str | None = None
     latest_error_code: str | None = None
-    conflicted_subgoals: tuple[str, ...] = ()
-    conflict_evidence_ids: frozenset[str] = frozenset()
     pending_alternate_subgoals: tuple[str, ...] = ()
     exhausted_subgoals: tuple[str, ...] = ()
     latest_error_path: str | None = None
@@ -183,8 +179,6 @@ def assess_progress(
             status = "CONFIRMED_STALL" if no_progress >= 2 else "SUSPECTED_STALL"
             reason = "SEARCH_NO_NEW_EVIDENCE"
 
-    conflict_slots: tuple[str, ...] = ()
-    conflict_refs: frozenset[str] = frozenset()
     pending_alternates: tuple[str, ...] = ()
     exhausted: tuple[str, ...] = ()
     subgoal_statuses: tuple[tuple[str, str], ...] = ()
@@ -207,30 +201,9 @@ def assess_progress(
             task_plan, plan_assessment, plan_records,
             run_id=state.run_id, task_id=task_id, agent_id=agent_id,
         )
-        conflict_slots = conflicted_subgoals(task_plan, plan_assessment)
-        if conflict_slots:
-            blocked = set(conflict_slots)
-            for subgoal in task_plan.subgoals:
-                if any(parent in blocked for parent in subgoal.depends_on):
-                    blocked.add(subgoal.subgoal_id)
-            independent_ready = any(
-                plan_assessment.status_by_subgoal[item.subgoal_id] == "ready"
-                and item.subgoal_id not in blocked
-                for item in task_plan.subgoals
-            )
-            if not independent_ready:
-                conflict_refs = frozenset(
-                    ref
-                    for slot in conflict_slots
-                    for ref in verified_subgoal_conflict_refs(
-                        task_plan.get(slot).question,
-                        plan_assessment.evidence_by_subgoal[slot],
-                    )
-                )
-                status, reason = "CONFIRMED_CONFLICT", "VERIFIED_SOURCE_CONFLICT"
-            else:
-                conflict_slots = ()
-        if pending_alternates and not conflict_slots:
+        # Source text is not parsed for conflicts here; conflicting sides are
+        # stated by the model's typed claims and checked at Final.
+        if pending_alternates:
             status, reason = "SUSPECTED_STALL", "PLAN_ALTERNATE_PENDING"
         missing = refusal_missing_subgoals(task_plan, plan_assessment)
         searched = {
@@ -251,7 +224,7 @@ def assess_progress(
         if (task_plan.schema_version == 'task-plan/v2'
                 and missing and reachable_missing and evidence_ids <= read_ids
                 and all(slot in searched for slot in reachable_missing)
-                and not pending_alternates and not conflict_slots):
+                and not pending_alternates):
             exhausted = missing
 
     return ProgressAssessment(
@@ -263,8 +236,6 @@ def assess_progress(
         evidence_ids=frozenset(evidence_ids),
         latest_tool_id=latest_tool_id,
         latest_error_code=latest_error_code,
-        conflicted_subgoals=conflict_slots,
-        conflict_evidence_ids=conflict_refs,
         pending_alternate_subgoals=pending_alternates,
         exhausted_subgoals=exhausted,
         latest_error_path=latest_error_path,

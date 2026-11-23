@@ -16,9 +16,6 @@ import time
 from typing import Any, Callable
 
 from linkloom.agents.coordinator import Coordinator
-from linkloom.agents.claim_grounding import (
-    verified_dependent_leader_values, verified_subgoal_conflict,
-)
 from linkloom.agents.curator_agent import CuratorAgent
 from linkloom.agents.registry import create_default_registry
 from linkloom.agents.retrieval_agent import RetrievalAgent
@@ -50,11 +47,7 @@ from linkloom.retrieval_v2.subgoal_query_strategy import SubgoalQueryStrategy
 from linkloom.runtime.artifacts import ModelArtifactStore
 from linkloom.runtime.errors import ValidationError, ToolArgumentValidationError
 from linkloom.runtime.models import RuntimeState
-from linkloom.runtime.task_plan import (
-    TaskPlan, assess_task_plan, verified_dependency_entities,
-    verified_plan_subgoal_values,
-)
-from linkloom.runtime.team_decision_planner import plan_team_decision_query
+from linkloom.runtime.task_plan import TaskPlan, assess_task_plan, verified_dependency_entities
 from linkloom.semantic_ingestion.materialization import SemanticDecisionMaterializer
 from linkloom.semantic_ingestion.relations import FrozenRelationResolver
 from linkloom.tools.read_tools import _require_relative_note_ref
@@ -106,8 +99,12 @@ class RuntimeAgentAdapter:
         decision_memory_enabled: bool = True,
         task_relation_tools: Any = None,
         context_runtime_config: Any = None,
+        confirmed_fact_index: Callable[[], Any] | None = None,
+        blocked_entities: tuple[str, ...] = (),
     ) -> None:
         self.reader = VaultReader(vault_root=vault_root, index_path=index_path)
+        self._confirmed_fact_index = confirmed_fact_index
+        self._blocked_entities = tuple(blocked_entities)
         self._task_relation_tools = task_relation_tools
         self._context_runtime_config = context_runtime_config
         if context_runtime_config is not None:
@@ -275,21 +272,9 @@ class RuntimeAgentAdapter:
                 "TaskPlan query_variant is invalid.",
                 details={"reason": "task_plan_semantic_mismatch", "path": "$.source_context.query_variant"},
             )
-        read_values = assessment.evidence_by_subgoal[subgoal_id]
-        supported_values = verified_plan_subgoal_values(
-            plan, subgoal_id, assessment.evidence_by_subgoal,
-        )
-        if supported_values is None and len(subgoal.depends_on) == 1:
-            parent_id = subgoal.depends_on[0]
-            supported_values = verified_dependent_leader_values(
-                plan.get(parent_id).question, subgoal.question,
-                assessment.evidence_by_subgoal[parent_id], read_values,
-            )
-        if read_values and not (
-            variant == "alternate"
-            and supported_values == ()
-            and not verified_subgoal_conflict(subgoal.question, read_values)
-        ):
+        # One verified read closes the primary search; the planned alternate
+        # stays available. What the read means is stated by the model's claims.
+        if assessment.evidence_by_subgoal[subgoal_id] and variant != "alternate":
             raise ToolArgumentValidationError(
                 "TaskPlan subgoal already has a verified relation read.",
                 details={"reason": "task_plan_semantic_mismatch", "path": "$.source_context.subgoal_id"},
@@ -832,9 +817,9 @@ class RuntimeAgentAdapter:
             raise ValidationError("RuntimeAgentAdapter Final protocol is unsupported.")
         if final_protocol == CLAIM_PROPOSAL_SCHEMA_VERSION and workflow != "team_decision":
             raise ValidationError("Typed claims Final is only available for team_decision.")
+        # A TaskPlan is the caller's (model-proposed, structure-validated) plan;
+        # no plan is ever derived from the wording of the question.
         self._task_plan = TaskPlan.from_dict(task_plan) if task_plan is not None else None
-        if workflow == "team_decision" and self._task_plan is None:
-            self._task_plan = plan_team_decision_query(query)
         if resume_model_loop != (retrieval_task_id is not None):
             raise ValidationError("Resume mode requires a canonical retrieval task identity.")
         if retrieval_task_id is not None and not retrieval_task_id.strip():
@@ -961,6 +946,8 @@ class RuntimeAgentAdapter:
                 self._verify_temporal_claim
                 if self._temporal_claim_validator is not None else None
             ),
+            confirmed_fact_index=self._confirmed_fact_index,
+            blocked_entities=self._blocked_entities,
         )
         if workflow == "team_decision":
             # Team Decision: the model loop runs directly over the ToolRuntime and its ledger, then one
@@ -1101,6 +1088,8 @@ def _run_team_decision(*, registry, retrieval_agent, tool_runtime, tool_funcs, r
         outcome["status"] = "completed"
         outcome["result"] = {"evidence_refs": evidence, "candidate_refs": evidence,
                              "review_decision": review["decision"], "team_decision": payload}
+        if retrieval_agent.last_verified_claims:
+            outcome["result"]["typed_claims"] = retrieval_agent.last_verified_claims
         emit("run.completed", "runtime", "ok")
     except Exception as exc:
         outcome["status"] = "failed"

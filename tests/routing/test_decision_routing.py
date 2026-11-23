@@ -259,9 +259,9 @@ GUARDS = [json.loads(line) for line in Path(__file__).with_name("relation_guard.
 
 
 @pytest.mark.parametrize("case", GUARDS, ids=lambda item: item["id"])
-def test_original_relation_and_task_dispatch_never_enter_slot_router(case, monkeypatch):
+def test_explicit_task_domain_dispatch_never_enters_slot_router(case, monkeypatch):
     def forbidden(*args, **kwargs):
-        raise AssertionError("legacy relation/task dispatch entered the decision slot router")
+        raise AssertionError("explicit task domain dispatch entered the decision slot router")
     app = SimpleNamespace(repository=SimpleNamespace(database_path=":memory:"),
                           _store_lock=RLock(), _workspace_id=lambda: "one")
     service = unified_ask.UnifiedAskService(app, lambda: None)

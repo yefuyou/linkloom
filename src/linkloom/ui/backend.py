@@ -13,7 +13,6 @@ from linkloom.loader import VaultReader
 from linkloom.runtime.graph import RuntimeEngine
 from linkloom.runtime.models import RunRequest, RunStatus
 from linkloom.runtime.errors import CheckpointError
-from linkloom.runtime.team_decision_planner import plan_team_decision_query
 from linkloom.runtime.task_plan import validate_model_proposed_plan
 from linkloom.ui.lifecycle import BackgroundTasks, DEFAULT_SHUTDOWN_TIMEOUT, shutdown_deadline
 from linkloom.ui.projection import (
@@ -145,11 +144,9 @@ class RuntimeRunBackend:
                     workflow=self.workflow,
                     query=job.query,
                     task_plan=job.task_plan,
+                    # The model plans when it can; the question wording never selects a template.
                     planning_mode=("template" if self.workflow == 'task_relations' or job.task_plan is not None else self.planning_mode) or (
-                        "model" if (
-                            callable(getattr(self.engine.model, "propose_task_plan", None))
-                            and plan_team_decision_query(job.query) is None
-                        ) else "template"
+                        "model" if callable(getattr(self.engine.model, "propose_task_plan", None)) else "template"
                     ),
                     max_steps=self.max_steps,
                     max_provider_requests=self.max_provider_requests,
@@ -242,6 +239,9 @@ class RuntimeRunBackend:
                 tool_ledger=ledger,
             )
         snapshot["reviewer"] = project_reviewer(artifact)
+        claims = ((artifact or {}).get("result") or {}).get("typed_claims") if snapshot["kind"] != "error" else None
+        if isinstance(claims, list):
+            snapshot["typed_claims"] = claims
         if state is not None and state.request_ref:
             request = json.loads((self.engine.checkpoint_dir / state.request_ref).read_text(encoding="utf-8"))
             if request.get("task_plan") is not None:

@@ -89,8 +89,8 @@ def prepare():
 
 def execute():
     require((H/'execution-freeze.json').exists(),'EXECUTION_FREEZE_REQUIRED');inputs=Inputs();inputs.verify(True);config=read(inputs.dependencies['configuration']);cases=list(inputs.public_cases());previous=read(ROOT/'budget-dev.json')['reserved_usd']
-    from linkloom.runtime.team_decision_planner import plan_relation_investigation,plan_team_decision_query
-    hits=sum(int(any(plan_relation_investigation(q) or plan_team_decision_query(q) for q in [p['question']]+(['As of '+p['as_of']+', '+p['question']] if p.get('as_of') else []))) for i,g,p in cases)
+    # No wording template gates the legacy route any more: every case may enter it.
+    hits=len(cases)
     limits=frozen.matrix_budget(len(cases),hits,config,previous);key=os.environ.get('DEEPSEEK_API_KEY','');require(bool(key),'CONFIGURED_KEY_UNAVAILABLE')
     require(not (H/'run-started.json').exists() and not (ROOT/'budget-D3.json').exists(),'ONE_D3_ONLY_NO_RETRY')
     write(H/'preflight.json',dict(combined_cap_usd=1.55,previous_reserved_usd=previous,remaining_before_usd=limits['remaining'],full_upper_usd=limits['upper'],max_calls=limits['max_calls'],legacy_template_hits=hits))

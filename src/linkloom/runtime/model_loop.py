@@ -2330,7 +2330,7 @@ class SingleAgentModelLoop:
                     grouped_history = bool(completed_tool_turns)
                     progress = current_progress_assessment()
                     recovery_decision = decide_recovery(progress)
-                    final_only = recovery_decision.action in {"FINAL_CONFLICT", "FINAL_PARTIAL"}
+                    final_only = recovery_decision.action == "FINAL_PARTIAL"
                     guidance = recovery_decision.hint
                     if self.reserve_final_turn and model_steps == self.max_steps and not final_only:
                         final_only = True

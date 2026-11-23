@@ -38,7 +38,7 @@ from linkloom.agents.providers.gemini_api import (  # noqa: E402
     build_gemini_request,
 )
 from linkloom.agents.runtime_adapter import RuntimeAgentAdapter  # noqa: E402
-from linkloom.agents.claim_grounding import ClaimSupportStatus, assess_claim_text  # noqa: E402
+from linkloom.agents.claim_grounding import ClaimSupportStatus, evidence_span_error  # noqa: E402
 from linkloom.context.assembler import ContextAssembler, ContextBudget  # noqa: E402
 from linkloom.scanner import scan_vault  # noqa: E402
 from linkloom.tools.contracts import ToolResult  # noqa: E402
@@ -91,11 +91,12 @@ def _ground(summary: dict, reads: list[dict]) -> dict:
         if not isinstance(item, dict) or not isinstance(item.get("point"), str):
             continue
         refs = [ref for ref in item.get("evidence_refs", []) if isinstance(ref, str)]
-        try:
-            assessment = assess_claim_text(item["point"], refs, by_ref)
-            status = assessment.status.value
-        except Exception:
-            status = ClaimSupportStatus.UNVERIFIABLE.value
+        # Citation binding only: prose is not re-parsed; each ref must be an intact verified read.
+        intact = bool(refs) and all(
+            isinstance(by_ref.get(ref), dict) and evidence_span_error(
+                ref, None, by_ref, workspace_id=str(by_ref[ref].get("workspace_id")), read_evidence_ids=by_ref,
+            ) is None for ref in refs)
+        status = (ClaimSupportStatus.SUPPORTED if intact else ClaimSupportStatus.UNVERIFIABLE).value
         checks.append({"point": item["point"], "evidence_refs": refs, "status": status})
         facts.append({"point": item["point"], "evidence_refs": refs})
     supported = bool(checks) and all(item["status"] == ClaimSupportStatus.SUPPORTED.value for item in checks)

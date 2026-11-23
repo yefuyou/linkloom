@@ -40,7 +40,7 @@ from linkloom.agents.providers.gemini_diagnostics import (
     gemini_response_diagnostics,
 )
 from linkloom.agents.providers.retry_policy import classify_retryable_failure
-from linkloom.runtime.errors import ValidationError
+from linkloom.runtime.errors import ProviderOutcomeUnknownError, ValidationError
 from linkloom.runtime.models import (
     _assert_json_safe_primitive,
     _assert_no_forbidden_persisted_keys,
@@ -1575,12 +1575,7 @@ class GeminiProviderAdapter:
         feedback = json.dumps(validation_error, ensure_ascii=False, sort_keys=True)
         if len(previous) > 16_384 or len(feedback) > 4_096:
             raise ValidationError("Model plan repair proposal is too large.")
-        direction_note = (
-            " Resolve the relation direction from the trusted user goal; a 'direct "
-            "report of X' is X's subordinate, while 'who X reports to' is X's leader."
-            if validation_error.get("details", {}).get("reason") == "relation_direction"
-            else " Correct the exact structural or semantic validation errors listed."
-        )
+        direction_note = " Correct the exact structural or semantic validation errors listed."
         prompt = (
             "Return exactly one corrected JSON object matching the attached "
             "TaskPlan/v2 schema. Copy the trusted goal exactly; use 2 to 4 bounded, "
@@ -1599,13 +1594,20 @@ class GeminiProviderAdapter:
         return self._request_task_plan_json(prompt)
 
     def _request_task_plan_json(self, prompt: str) -> dict[str, Any]:
-        response = self.client.generate_content(
-            model=self.model_id,
-            contents=[{"role": "user", "parts": [{"text": prompt}]}],
-            config={"tools": [], "automatic_function_calling": {"disable": True},
-                    "response_mime_type": "application/json",
-                    "response_json_schema": deepcopy(_TASK_PLAN_RESPONSE_JSON_SCHEMA)},
-        )
+        try:
+            response = self.client.generate_content(
+                model=self.model_id,
+                contents=[{"role": "user", "parts": [{"text": prompt}]}],
+                config={"tools": [], "automatic_function_calling": {"disable": True},
+                        "response_mime_type": "application/json",
+                        "response_json_schema": deepcopy(_TASK_PLAN_RESPONSE_JSON_SCHEMA)},
+            )
+        except Exception as exception:
+            # The plan request is a Provider call like any turn: an unknown outcome is
+            # reported as uncertain and never retried.
+            if _exception_code(exception)[1] == "unknown_provider_outcome":
+                raise ProviderOutcomeUnknownError() from exception
+            raise
         raw = getattr(response, "text", None)
         if not isinstance(raw, str) or len(raw) > 16_384:
             raise ValidationError("Model plan response must be bounded JSON text.")

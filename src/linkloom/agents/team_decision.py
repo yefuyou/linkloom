@@ -12,8 +12,8 @@ from typing import Any
 
 from linkloom.runtime.errors import ValidationError
 from linkloom.agents.claim_grounding import (
-    ClaimSupportStatus, TYPED_CLAIM_RELATIONS, assess_claim_text, assess_rejected_owner_alternative,
-    evidence_supports_typed_claim,
+    ClaimSupportStatus, TYPED_CLAIM_RELATIONS, claim_conflicts, claim_status, evidence_span_error,
+    unchained_claims,
 )
 
 
@@ -299,7 +299,9 @@ def team_decision_final_instruction(final_protocol: str = SCHEMA_VERSION) -> str
         )
         protocol_rules = (
             "Return exactly one claim-proposal/v1 JSON object containing typed facts, exact quotes "
-            "copied from verified reads, and their observed evidence_ids. Do not write an answer "
+            "copied from verified reads, and their observed evidence_ids. Each quote must contain the "
+            "claim object exactly as the source writes it. A dependent hop starts from the object of "
+            "its verified upstream claim. Do not write an answer "
             "sentence or TeamDecisionResult fields. The Runtime independently checks each claim "
             "against its cited active-workspace evidence, then projects verified facts into the "
             "existing TeamDecisionResult/v1 result for review. Copy date scope into valid_on and "
@@ -418,6 +420,9 @@ class _VerifiedClaimSet:
         default=None, repr=False, compare=False,
     )
     read_evidence_ids: frozenset[str] = frozenset()
+    require_read_evidence: bool = False
+    confirmed_facts: Any = field(default=None, repr=False, compare=False)
+    blocked_entities: tuple[str, ...] = ()
 
 
 def _result_digest(result: "TeamDecisionResult") -> str:
@@ -671,8 +676,15 @@ class TeamDecisionResult:
         read_evidence_ids: Collection[str] = (),
         observed_temporal_decision_ids: Collection[str] = (),
         require_read_evidence: bool = False,
+        confirmed_facts: Any = None,
+        blocked_entities: Collection[str] = (),
     ) -> "TeamDecisionResult":
-        """Parse the explicitly selected protocol and verify it against observed evidence."""
+        """Parse the explicitly selected protocol and verify it against observed evidence.
+
+        ``confirmed_facts`` is a Host-built ConfirmedFactIndex (or None) and
+        ``blocked_entities`` the names this run may never use; the model
+        cannot provide or alter either.
+        """
         if final_protocol not in {SCHEMA_VERSION, CLAIM_PROPOSAL_SCHEMA_VERSION}:
             raise ValidationError("Unsupported Team Decision Final protocol.")
         observed = _require_refs(
@@ -703,6 +715,8 @@ class TeamDecisionResult:
                 read_evidence_ids=read_evidence_ids,
                 observed_temporal_decision_ids=observed_temporal_decision_ids,
                 require_read_evidence=require_read_evidence,
+                confirmed_facts=confirmed_facts,
+                blocked_entities=blocked_entities,
             )
         if (isinstance(payload, dict)
                 and payload.get("schema_version") == CLAIM_PROPOSAL_SCHEMA_VERSION):
@@ -767,6 +781,8 @@ class TeamDecisionResult:
         read_evidence_ids: Collection[str],
         observed_temporal_decision_ids: Collection[str],
         require_read_evidence: bool,
+        confirmed_facts: Any = None,
+        blocked_entities: Collection[str] = (),
     ) -> "TeamDecisionResult":
         if (not isinstance(expected_workspace_id, str)
                 or not expected_workspace_id.strip()
@@ -813,63 +829,36 @@ class TeamDecisionResult:
                 )
                 for evidence_id in temporal_claim["prior_evidence_ids"]:
                     _append_refs(refs, [evidence_id])
+        conflicts = claim_conflicts(claims)
+        if conflicts and (uncertainty is None or uncertainty["status"] != "conflicting_evidence"):
+            raise ValidationError(
+                "Conflicting typed claims require conflicting_evidence uncertainty.",
+                details={"reason": "claim_conflict"},
+            )
         for claim in claims:
-            if claim.predicate == "owner_of_project":
-                clause = (
-                    f"截至 {claim.valid_on}，{claim.subject}的负责人是{claim.object_value}"
-                    if claim.temporal_kind == "snapshot"
-                    else f"在 {claim.valid_on}，{claim.subject}的负责人是{claim.object_value}"
-                    if claim.temporal_kind == "event"
-                    else f"{claim.subject}的负责人是{claim.object_value}"
-                )
-            elif claim.predicate == "alias_of_project":
-                clause = f"{claim.subject}是{claim.object_value}的别名"
-            else:
-                relation = f"{claim.subject}直接向{claim.object_value}汇报"
-                clause = (
-                    f"截至 {claim.valid_on}，{relation}"
-                    if claim.temporal_kind == "snapshot"
-                    else f"在 {claim.valid_on}，{relation}"
-                    if claim.temporal_kind == "event"
-                    else relation
-                )
+            relation = TYPED_CLAIM_RELATIONS[claim.predicate]["clause"].format(
+                subject=claim.subject, object=claim.object_value,
+            )
+            clause = (
+                f"截至 {claim.valid_on}，{relation}"
+                if claim.temporal_kind == "snapshot"
+                else f"在 {claim.valid_on}，{relation}"
+                if claim.temporal_kind == "event"
+                else relation
+            )
             clauses.append(clause)
-            for evidence_id in claim.evidence_ids:
-                if evidence_id not in observed:
-                    raise ValidationError(
-                        "ClaimProposal references evidence not observed by the model."
-                    )
-                evidence = evidence_by_ref.get(evidence_id)
-                if require_read_evidence and evidence_id not in set(read_evidence_ids):
-                    raise ValidationError(
-                        "ClaimProposal source claims must cite evidence returned by a successful read."
-                    )
-                source_quote = evidence.get("quote") if isinstance(evidence, Mapping) else None
-                if (
-                    not isinstance(evidence, Mapping)
-                    or evidence.get("evidence_id") != evidence_id
-                    or evidence.get("status") != "verified"
-                    or evidence.get("workspace_id") != expected_workspace_id
-                    or not isinstance(source_quote, str)
-                    or claim.quote not in source_quote
-                ):
-                    raise ValidationError(
-                        "ClaimProposal evidence must be an exact quote from verified active-workspace evidence."
-                    )
-                exact_quote_evidence = dict(evidence)
-                exact_quote_evidence["quote"] = claim.quote
-                if not evidence_supports_typed_claim(
-                    exact_quote_evidence,
-                    predicate=claim.predicate,
-                    subject=claim.subject,
-                    object_value=claim.object_value,
-                    valid_on=claim.valid_on,
-                    temporal_kind=claim.temporal_kind,
-                ):
-                    raise ValidationError(
-                        "ClaimProposal relation or temporal scope is not supported by its quote."
-                    )
-                _append_refs(refs, [evidence_id])
+            if any(evidence_id not in observed for evidence_id in claim.evidence_ids):
+                raise ValidationError("ClaimProposal references evidence not observed by the model.")
+            status, reason = claim_status(
+                claim, evidence_by_ref, workspace_id=expected_workspace_id,
+                read_evidence_ids=set(read_evidence_ids) if require_read_evidence else None,
+                confirmed_facts=confirmed_facts, blocked_entities=blocked_entities,
+            )
+            if status is not ClaimSupportStatus.SUPPORTED:
+                raise ValidationError(
+                    "ClaimProposal failed Host evidence verification.", details={"reason": reason},
+                )
+            _append_refs(refs, list(claim.evidence_ids))
 
         incomplete = uncertainty is not None
         temporal_partial = incomplete and temporal_claim is not None
@@ -902,6 +891,9 @@ class TeamDecisionResult:
             temporal_claim=temporal_claim,
             temporal_validator=temporal_validator,
             read_evidence_ids=frozenset(read_evidence_ids),
+            require_read_evidence=require_read_evidence,
+            confirmed_facts=confirmed_facts,
+            blocked_entities=tuple(blocked_entities),
         )
         return replace(result, verified_claims=verified)
 
@@ -926,69 +918,41 @@ class TeamDecisionResult:
                     evidence_by_ref,
                     set(self.verified_claims.read_evidence_ids),
                 )
-            for claim in self.verified_claims.claims:
-                for evidence_id in claim.evidence_ids:
-                    evidence = evidence_by_ref.get(evidence_id)
-                    source_quote = evidence.get("quote") if isinstance(evidence, Mapping) else None
-                    if (
-                        not isinstance(evidence, Mapping)
-                        or evidence.get("evidence_id") != evidence_id
-                        or evidence.get("status") != "verified"
-                        or evidence.get("workspace_id") != self.verified_claims.workspace_id
-                        or not isinstance(source_quote, str)
-                        or claim.quote not in source_quote
-                    ):
-                        raise ValidationError(
-                            "Verified ClaimProposal evidence changed before review."
-                        )
-                    # Preserve the full read scope when checking known conflict;
-                    # a model-selected substring cannot discard project or time.
-                    if not evidence_supports_typed_claim(
-                        evidence,
-                        predicate=claim.predicate,
-                        subject=claim.subject,
-                        object_value=claim.object_value,
-                        valid_on=claim.valid_on,
-                        temporal_kind=claim.temporal_kind,
-                        observed_evidence_by_ref=(observed_evidence_by_ref
-                            if self.decision["status"] in {"approved", "partial"} else None),
-                    ):
-                        raise ValidationError(
-                            "Verified ClaimProposal relation no longer matches its evidence."
-                        )
+            verified = self.verified_claims
+            for claim in verified.claims:
+                # Re-run the Host checks at review time: sources, confirmed facts or
+                # revocations may have changed since the Final was accepted.
+                status, reason = claim_status(
+                    claim, evidence_by_ref, workspace_id=verified.workspace_id,
+                    read_evidence_ids=verified.read_evidence_ids if verified.require_read_evidence else None,
+                    observed_evidence_by_ref=(observed_evidence_by_ref
+                        if self.decision["status"] in {"approved", "partial"} else None),
+                    confirmed_facts=verified.confirmed_facts, blocked_entities=verified.blocked_entities,
+                )
+                if status is not ClaimSupportStatus.SUPPORTED:
+                    raise ValidationError(
+                        "Verified ClaimProposal no longer passes Host evidence verification.",
+                        details={"reason": reason},
+                    )
+            if question is not None and unchained_claims(verified.claims, question):
+                raise ValidationError(
+                    "A typed claim starts from an entity that is neither in the question nor a verified hop.",
+                    details={"reason": "unchained_claim"},
+                )
             return
-        claims: list[tuple[str, list[str], str | None]] = []
-        if isinstance(self.decision["value"], str):
-            claims.append((self.decision["value"], self.decision["evidence_refs"], question))
-        claims.extend(
-            (item["point"], item["evidence_refs"], None) for item in self.rationale
-        )
+        # TeamDecisionResult/v1 prose is not re-parsed: the Host checks that every
+        # cited span is a real, untampered verified read. Typed claims carry semantics.
         if self.actions or self.unresolved_items:
             raise ValidationError(
-                "Team Decision action claims are outside the verified relation vocabulary."
+                "Team Decision action claims are outside the verified Final capability."
             )
-        if isinstance(self.uncertainty["statement"], str):
-            claims.append((self.uncertainty["statement"], self.uncertainty["evidence_refs"], None))
-
-        for text, refs, claim_question in claims:
-            assessment = assess_claim_text(
-                text, refs, evidence_by_ref, question=claim_question,
-                observed_evidence_by_ref=observed_evidence_by_ref,
-            )
-            if assessment.status is not ClaimSupportStatus.SUPPORTED:
+        for ref in self.claim_evidence_refs():
+            evidence = evidence_by_ref.get(ref)
+            workspace = evidence.get("workspace_id") if isinstance(evidence, Mapping) else None
+            if not isinstance(workspace, str) or evidence_span_error(
+                    ref, None, evidence_by_ref, workspace_id=workspace, read_evidence_ids=None) is not None:
                 raise ValidationError(
-                    "Team Decision contains a claim without deterministic source support."
-                )
-        for item in self.rejected_alternatives:
-            if not isinstance(self.decision["value"], str) or (
-                assess_rejected_owner_alternative(
-                    item["alternative"], item["reason"], item["evidence_refs"],
-                    self.decision["value"], evidence_by_ref,
-                    alias_evidence_refs=self.decision["evidence_refs"],
-                ) is not ClaimSupportStatus.SUPPORTED
-            ):
-                raise ValidationError(
-                    "Team Decision rejected alternative lacks historical and current support."
+                    "Team Decision cites evidence that is not an intact verified read."
                 )
 
     def claim_evidence_refs(self) -> list[str]:

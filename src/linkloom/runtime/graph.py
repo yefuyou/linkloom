@@ -171,8 +171,14 @@ class RuntimeEngine:
         task_relation_tools: Any = None,
         context_runtime_config: Any = None,
         lexical_indexes: Any = None,
+        confirmed_fact_index: Any | None = None,
+        blocked_entities: tuple[str, ...] = (),
     ) -> None:
         self._lexical_indexes = lexical_indexes
+        # Host-only grounding inputs: confirmed facts and names a run may never use.
+        self._fact_options = {key: value for key, value in (
+            ("confirmed_fact_index", confirmed_fact_index), ("blocked_entities", tuple(blocked_entities)))
+            if value}
         self.vault_root = Path(vault_root)
         self.index_path = Path(index_path)
         self.checkpoint_dir = Path(checkpoint_dir)
@@ -257,7 +263,8 @@ class RuntimeEngine:
 
         if not self.decision_memory_enabled:
             return RuntimeAgentAdapter(self.vault_root, self.index_path, **lexical_options,
-                workspace_id=self._decision_memory_workspace_id, decision_memory_enabled=False)
+                workspace_id=self._decision_memory_workspace_id, decision_memory_enabled=False,
+                **self._fact_options)
         try:
             decision_memory_store = self._get_decision_memory_store()
         except Exception:
@@ -274,6 +281,7 @@ class RuntimeEngine:
             workspace_id=self._decision_memory_workspace_id,
             temporal_decision_lookup=self._temporal_decision_lookup,
             temporal_claim_validator=self._temporal_claim_validator,
+            **self._fact_options,
         )
 
     def _recall_project_memory(self, query: str, workspace_id: str) -> tuple[list[dict[str, Any]], dict[str, int]]:
@@ -644,7 +652,9 @@ class RuntimeEngine:
                     details={"reason": str(exc) if isinstance(exc, ValidationError)
                              else "provider_request_result_uncertain"
                              if isinstance(exc, ProviderOutcomeUnknownError)
-                             else type(exc).__name__},
+                             else type(exc).__name__,
+                             **({"outcome": "unknown_provider_outcome"}
+                                if isinstance(exc, ProviderOutcomeUnknownError) else {})},
                 )
                 tracer.emit("plan.rejected", "failed", error=error_env)
                 tracer.emit("run.failed", "failed", error=error_env)

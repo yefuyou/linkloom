@@ -90,8 +90,8 @@ def run():
     inputs={g:Inputs(g) for g in ('D','D2')};marker=inputs['D'].verify(strong_assets=True);config=read(inputs['D'].dependencies['configuration'])
     previous_reserved=sum(read(p)['reserved_usd'] for p in LEDGERS);remaining=1.6-previous_reserved;cap=(120*6144*.15+120*1024*.6)/1e6
     if cap>remaining*.8:raise BudgetExceeded('FULL_MATRIX_EXCEEDS_REMAINING_BUDGET')
-    from linkloom.runtime.team_decision_planner import plan_relation_investigation,plan_team_decision_query
-    legacy_hits=sum(int(any(plan_relation_investigation(q) or plan_team_decision_query(q) for q in [p['question']]+(['As of '+p['as_of']+', '+p['question']] if p.get('as_of') else []))) for i,g,p in cases())
+    # No wording template gates the legacy route any more: every case may enter it.
+    legacy_hits=len(list(cases()))
     if legacy_hits:raise ValueError('LEGACY_CALL_PREFLIGHT_CHANGED')
     key=os.environ.get('DEEPSEEK_API_KEY','')
     if not key:raise ValueError('CONFIGURED_API_KEY_UNAVAILABLE')

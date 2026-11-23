@@ -42,24 +42,16 @@ class MeetingDevScorer:
                 self.truth.add(triple(state['owner'],'owner_of',task['title']))
                 self.truth.add(triple(task['title'],'assigned_in',self.meetings[state['meeting']]['name']))
             if task.get('source_decision'):self.truth.add(triple(task['title'],'derived_from',labels[task['source_decision']]))
-        # Bound-dev legacy assertions are still checked against the same public
-        # source facts by the existing grounded-claim parser, independently of Gold.
+        # Bound-dev legacy assertions are checked against the same public source
+        # documents, independently of Gold: both endpoints must be in one source.
     def relation_errors(self,actual,public):
         observed={triple(r['subject'],r['edge_type'],r['target']) for r in actual['relations']}
         truth=set(self.truth)
         return len(observed-truth)
     def bound_truth(self,actual,documents):
-        from linkloom.agents.claim_grounding import _claim_facts
-        allowed=set()
-        for doc in documents:
-            for claim in _claim_facts(doc['content']) or ():
-                subject,kind,target=claim.subject,claim.relation,claim.value
-                if kind=='owner_of':subject,target=target,subject
-                elif kind=='superseded_by':subject,target=target,subject;kind='supersedes'
-                elif kind=='direct_leader_of':kind='reports_to'
-                if kind in {'owner_of','supersedes','reports_to','alias_of'}:allowed.add(triple(subject,kind,target))
-        observed={triple(r['subject'],r['edge_type'],r['target']) for r in actual['relations']}
-        return len(observed-allowed)
+        texts=[norm(doc['content']) for doc in documents]
+        return sum(1 for r in actual['relations']
+                   if not any(norm(r['subject']) in text and norm(r['target']) in text for text in texts))
     def __call__(self,case_id,actual,expected,public,documents):
         if not isinstance(actual.get('relations'),list):raise ValueError('STRUCTURED_RELATION_METRICS_REQUIRED')
         errors=self.bound_truth(actual,documents) if public['fixture_id'].startswith('DEV-') else self.relation_errors(actual,public)

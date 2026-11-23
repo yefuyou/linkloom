@@ -212,9 +212,17 @@ def test_repeated_tool_failures_stop_without_becoming_missing_evidence():
 
 
 def test_plan_exhaustion_does_not_use_searches_after_the_assessment_boundary():
-    from linkloom.runtime.team_decision_planner import plan_relation_investigation
+    from linkloom.runtime.task_plan import TaskPlan
 
-    plan = plan_relation_investigation('Who is the direct leader of the owner of Cedar Lantern?')
+    # A model-proposed plan: the Host validates its structure, not its wording.
+    plan = TaskPlan.from_dict({
+        'goal': 'Who is the direct leader of the owner of Cedar Lantern?', 'schema_version': 'task-plan/v2',
+        'subgoals': [
+            {'subgoal_id': 'owner', 'question': 'Who owns Cedar Lantern?', 'depends_on': [],
+             'relation_path': ['owner_of_project']},
+            {'subgoal_id': 'leader', 'question': 'Who is the direct leader of {verified_entity}?',
+             'depends_on': ['owner'], 'relation_path': ['reports_to']},
+        ]})
     ledger = ToolExecutionLedger()
     _record(ledger, 2, 'search_notes', {
         'query': plan.subgoals[0].question,

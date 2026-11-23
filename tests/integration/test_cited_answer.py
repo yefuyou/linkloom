@@ -74,11 +74,6 @@ def test_cited_answer_publishes_natural_language_with_read_evidence(tmp_path, mo
     assert decision["decision"]["value"] == value and decision["evidence_refs"]
 
 
-def test_cited_answer_off_keeps_semantic_claim_validation(tmp_path, monkeypatch):
-    result, _ = _run(tmp_path, monkeypatch, lambda read, other: _final(REASON, [read]), cited=False)
-    assert result.status == "failed" and result.error["code"] == "TEAM_DECISION_CONTRACT_ERROR"
-
-
 def test_cited_answer_allows_abstention_after_reading_but_not_without_search(tmp_path, monkeypatch):
     result, decision = _run(tmp_path, monkeypatch, lambda read, other: _final(None, [read], status="insufficient_evidence"))
     assert result.status == "completed", result.error

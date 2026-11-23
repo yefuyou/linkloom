@@ -6,7 +6,6 @@ import argparse,json
 from run_temporal_graph_dev import (FrozenMeetingDevInputs,CampaignBudget,PriceReference,BudgetExceeded,_json,_dump,summarize)
 from temporal_graph_routes import TemporalGraphDevRoutes
 from deepseek_eval_transport import adapter_factory,assert_off_peak
-from linkloom.runtime.team_decision_planner import plan_relation_investigation,plan_team_decision_query
 
 EXCLUSION='数据不满足图准入（缺生效时间）'
 
@@ -20,12 +19,9 @@ def route_names(group,repeat):
 def preflight(inputs,budget,config):
     cases=list(inputs.public_cases());legacy=0;graph=0
     for _,group,public in cases:
-        question=public['question']
-        # This is a conservative superset of the legacy compiler calls made by
-        # the route; explicit date prefix can remove hits, never grant more calls.
-        candidates=[question]
-        if public.get('as_of'):candidates.append('As of '+public['as_of']+', '+question)
-        if any(plan_relation_investigation(q) or plan_team_decision_query(q) for q in candidates):legacy+=3*config['legacy_max_turns']
+        # Every question may enter the legacy route (no wording gate refuses it),
+        # so the conservative cap counts its full turns for each case.
+        legacy+=3*config['legacy_max_turns']
         if group in {'D','B_MERIDIAN'}:graph+=3
     total_in=legacy*config['input_token_caps']['legacy_only']+graph*config['input_token_caps']['graph_only']
     maximum=budget.preflight(total_in,(legacy+graph)*config['max_output_tokens'])

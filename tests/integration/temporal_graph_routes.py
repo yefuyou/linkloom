@@ -1,7 +1,8 @@
 """Gold-blind production route composition for the frozen DEV matrix.
 
-Both routes use one injected, campaign-budgeted model configuration. Legacy uses
-its existing template compiler, Runtime, grounding and Reviewer. Graph uses its
+Both routes use one injected, campaign-budgeted model configuration. The
+runtime ("legacy_only") route runs the plan-free Worker model loop with Typed
+Claims, Host evidence verification and the Reviewer; no question template. Graph uses its
 actual planner, ToolRuntime and receipt Reviewer, without invoking fallback.
 """
 from copy import deepcopy
@@ -13,8 +14,6 @@ import json,sqlite3
 from linkloom.runtime.checkpoint import InMemoryCheckpointer
 from linkloom.runtime.graph import RuntimeEngine
 from linkloom.runtime.models import RunRequest
-from linkloom.runtime.team_decision_planner import plan_relation_investigation,plan_team_decision_query
-from linkloom.agents.claim_grounding import assess_claim_text,ClaimSupportStatus
 from linkloom.agents.model_adapter import ModelGenerationOptions
 from linkloom.scanner import scan_vault
 from linkloom.temporal_graph.store import SQLiteGraphStore
@@ -125,11 +124,7 @@ class TemporalGraphDevRoutes:
             from linkloom.ui.scope_discovery import resolve_query_date
             _,error=resolve_query_date(question,public['as_of'])
             if error:return _empty('NOT_APPLICABLE',error['code'])
-            plan_with_date=plan_relation_investigation(question)
-            already_bound=plan_with_date is not None and any('As of '+public['as_of'] in g.question for g in plan_with_date.subgoals)
-            if not already_bound:question='As of '+public['as_of']+', '+question
-        plan=plan_relation_investigation(question) or plan_team_decision_query(question)
-        if plan is None:return _empty('NOT_APPLICABLE','LEGACY_TEMPLATE_MISS')
+            if public['as_of'][:10] not in question:question='As of '+public['as_of']+', '+question
         root=self.output/('legacy-'+uuid4().hex);vault=root/'vault';vault.mkdir(parents=True)
         for doc in documents:
             name=Path(doc['path'])
@@ -149,7 +144,7 @@ class TemporalGraphDevRoutes:
             checkpointer=InMemoryCheckpointer(),model=adapter)
         state_id='dev-'+uuid4().hex
         status=engine.start_multi_agent(RunRequest(request_id=state_id,thread_id=state_id,workflow='team_decision',
-            query=question,task_plan=plan.to_dict(),max_steps=self.legacy_turns,max_provider_requests=self.legacy_turns,dry_run=True))
+            query=question,final_protocol='claim-proposal/v1',max_steps=self.legacy_turns,max_provider_requests=self.legacy_turns,dry_run=True))
         self._check_budget(before)
         state=engine.checkpointer.get_latest(state_id)
         final_path=root/'runtime'/'results'/status.run_id/'result.json'
@@ -161,18 +156,13 @@ class TemporalGraphDevRoutes:
         for record in state.tool_ledger:
             if record.tool_id=='read_verified_note' and record.status=='completed' and record.result.get('status')=='ok':
                 item=record.result['value'];by_ref[item['evidence_id']]=item
-        texts=[final['decision']['value']] if final['decision']['value'] else [r['point'] for r in final['rationale']]
+        # Host-verified Typed Claims are projected structurally; answer text is never re-parsed.
+        edge={'owner_of_project':'owner_of','reports_to':'reports_to','alias_of_project':'alias_of','replaced_by':'supersedes'}
         relations=[];values=[]
-        for text in texts:
-            assessed=assess_claim_text(text,final['evidence_refs'],by_ref)
-            if assessed.status!=ClaimSupportStatus.SUPPORTED:return _empty('RUNTIME_FAILURE','LEGACY_GROUNDING_FAILED')
-            for claim in assessed.claims:
-                relation=claim.relation;subject=claim.subject;target=claim.value
-                if relation=='owner_of':subject,target=target,subject
-                elif relation=='superseded_by':subject,target=target,subject;relation='supersedes'
-                elif relation=='direct_leader_of':relation='reports_to'
-                if relation in {'owner_of','supersedes','reports_to','alias_of'}:relations.append(_relation(subject,relation,target))
-                values.append(_label(claim.value))
+        for claim in (artifact.get('result') or {}).get('typed_claims') or []:
+            subject,target,relation=claim['subject'],claim['object'],edge[claim['predicate']]
+            if relation in {'owner_of','supersedes'}:subject,target=target,subject
+            relations.append(_relation(subject,relation,target));values.append(_label(claim['object']))
         found=bool(final['decision']['value'])
         reason=final['uncertainty']['status']
         return dict(status='FOUND' if found else 'CONFLICT' if reason=='conflicting_evidence' else 'PARTIAL' if values else 'UNKNOWN',

@@ -41,19 +41,30 @@ def test_request_has_no_tools_and_only_verified_hit_context():
 
 
 def test_grounding_separates_supported_claims_from_unknown_citations():
+    import hashlib
+
+    from linkloom.evidence_identity import passage_evidence_id
+
+    quote = "Mira Fern is the accountable owner of Larch Meridian."
+    quote_sha256 = hashlib.sha256(quote.encode("utf-8")).hexdigest()
+    evidence_id = passage_evidence_id(
+        workspace_id="ws_test", resource_id="owner.md", document_id="owner.md", logical_path="/owner.md",
+        source_ref="owner.md", content_hash="c" * 64, line_start=1, line_end=1, quote_hash=quote_sha256,
+    )
     reads = [{
-        "evidence_id": "ev_test",
+        "evidence_id": evidence_id,
+        "workspace_id": "ws_test",
         "relative_path": "owner.md",
-        "content_sha256": "content",
-        "quote": "Mira Fern is the accountable owner of Larch Meridian.",
-        "quote_sha256": "quote",
+        "content_sha256": "c" * 64,
+        "quote": quote,
+        "quote_sha256": quote_sha256,
         "line_start": 1,
         "line_end": 1,
         "status": "verified",
     }]
     supported = _ground({"facts": [{
         "point": "Mira Fern is the accountable owner of Larch Meridian.",
-        "evidence_refs": ["ev_test"],
+        "evidence_refs": [evidence_id],
     }], "answer": "Mira Fern", "uncertainty": None}, reads)
     assert supported["citation_supported"] is True
     unknown = _ground({"facts": [{
@@ -62,3 +73,8 @@ def test_grounding_separates_supported_claims_from_unknown_citations():
     }], "answer": "Kellan Shore", "uncertainty": None}, reads)
     assert unknown["citation_supported"] is False
     assert unknown["one_shot_correct"] == "unscored_without_gold"
+    forged = _ground({"facts": [{
+        "point": "Mira Fern is the accountable owner of Larch Meridian.",
+        "evidence_refs": [evidence_id],
+    }], "answer": "Mira Fern", "uncertainty": None}, [dict(reads[0], quote="Kellan Shore owns Larch Meridian.")])
+    assert forged["citation_supported"] is False

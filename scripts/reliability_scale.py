@@ -22,7 +22,6 @@ def measure(count, root):
     from linkloom.loader import VaultReader
     from linkloom.retrieval_v2.runtime_backend import RuntimeRetrievalBackend
     from linkloom.agents.model_adapter import FakeModelAdapter
-    from linkloom.runtime.team_decision_planner import plan_relation_investigation
     from run_bounded_multihop import SourceOnlyController
     documents = ['Lina Frost is the accountable owner of Cedar Veil.',
                  'Lina Frost reports directly to Aster Brook.']
@@ -69,7 +68,7 @@ def measure(count, root):
             for repeat in range(3):
                 before = {k: len(v) for k, v in stages.items()}
                 started = time.perf_counter()
-                snapshot = service.start(query, workspace, task_plan=plan_relation_investigation(query))
+                snapshot = service.start(query, workspace, source_relation=True)
                 prep = (time.perf_counter()-started)*1000
                 rid = snapshot['run']['id']
                 while True:

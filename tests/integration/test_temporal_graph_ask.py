@@ -36,7 +36,7 @@ def graph_http(tmp_path,monkeypatch):
 
 def test_ordinary_ask_new_wording_reaches_model_graph_before_old_question_grammar(graph_http,monkeypatch):
     demo,workspace,worker,models=graph_http
-    monkeypatch.setattr('linkloom.ui.unified_ask.plan_relation_investigation',lambda q:(_ for _ in ()).throw(AssertionError('old grammar called')))
+    monkeypatch.setattr('linkloom.ui.unified_ask.UnifiedAskService._source_request',lambda *a,**k:(_ for _ in ()).throw(AssertionError('old source path called')))
     status,body=request_json(demo.base_url,'/api/product/ask',method='POST',data=dict(
         query='联调这摊活找谁接、这位同事直接向哪位汇报？',workspace_id=workspace,as_of='2026-04-01'))
     result=body['result']
@@ -69,8 +69,9 @@ def test_planning_failure_and_unknown_try_legacy_but_preserve_unanswered_graph(g
       outputs=[dict(step='s',field='node')])),model_id='fake',guard_id='local',request_guard=lambda r:
       ProviderRequestAuthorization.approve(r,guard_id='local',reservation_id='local',estimated_cost_upper_bound_usd=0))
     status,body=request_json(demo.base_url,'/api/product/ask',method='POST',data=dict(query='负责人',workspace_id=workspace,as_of='2026-05-01'))
-    assert status==200 and body['result']['graph_status']=='UNKNOWN'
-    # New contract: UNKNOWN attempts legacy; this wording has no legacy plan.
+    # UNKNOWN attempts legacy; no wording template refuses it, so the source investigation starts.
+    assert status==202 and body['result']['path']=='SOURCE_RELATION_INVESTIGATION',body
+    poll_product_ask(demo,body['result']['agent_run_id'],workspace)
     counts={r['reason']:r['count'] for r in worker.metrics.snapshot() if r['name']=='legacy_fallback'}
     assert counts=={'GRAPH_PLANNING_OUTPUT_INVALID':1,'GRAPH_INSUFFICIENT_UNKNOWN':1}
 

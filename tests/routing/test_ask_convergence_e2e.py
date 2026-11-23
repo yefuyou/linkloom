@@ -285,7 +285,8 @@ class Selector:
     ("What supplier did Launch use on 2026-10-04?", "COMPLETED", None, ["Birchline"]),
     ("How has Launch's supplier evolved?", "COMPLETED", None, ["Wrenwell"]),
     ("Why did Launch switch suppliers?", "INVESTIGATING", None, []),
-    ("Which supplier is Zebra using now?", "NEEDS_SCOPE", "DECISION_SCOPE_NO_MATCH", []),
+    # No reviewed decision matches: the question still reaches a source investigation by the model.
+    ("Which supplier is Zebra using now?", "INVESTIGATING", None, []),
 ])
 def test_router_off_answers_rule_resolved_questions_without_the_selector(demo, query, status, code, answer_values):
     # Router off with a selector-capable investigation service: a question the deterministic path already

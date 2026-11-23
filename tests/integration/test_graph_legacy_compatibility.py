@@ -7,7 +7,6 @@ from copy import deepcopy
 import json
 from pathlib import Path
 from time import monotonic, sleep
-from dataclasses import replace
 
 import pytest
 
@@ -84,14 +83,7 @@ class Harness:
         self.legacy_models = []
         def factory(query):
             controller = SourceOnlyController()
-            def respond(request):
-                action = controller(request)
-                if action.kind == 'tool_call' and action.tool_call.tool_id == 'search_notes':
-                    call = action.tool_call
-                    action = ModelAction.tool(replace(call, arguments=dict(call.arguments,
-                        limit=4 if call.arguments['source_context']['subgoal_id'] == 'leader' else 2)))
-                return action
-            model = FakeModelAdapter([respond] * 12)
+            model = FakeModelAdapter([controller] * 12)
             self.legacy_models.append(model)
             return model
         self.service.model_factory = factory
@@ -176,11 +168,12 @@ def offline(monkeypatch):
 
 @pytest.fixture
 def legacy_spy(monkeypatch):
+    """Counts entries into the old (non-graph) source investigation path."""
     import linkloom.ui.unified_ask as module
-    original = module.plan_relation_investigation
+    original = module.UnifiedAskService._source_request
     calls = []
-    def spy(question): calls.append(question); return original(question)
-    monkeypatch.setattr(module, 'plan_relation_investigation', spy)
+    def spy(self, run, *args, **kwargs): calls.append(run.query); return original(self, run, *args, **kwargs)
+    monkeypatch.setattr(module.UnifiedAskService, '_source_request', spy)
     return calls
 
 

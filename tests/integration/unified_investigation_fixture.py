@@ -1,5 +1,4 @@
 """Offline model injection only; production imports no controller or oracle."""
-from dataclasses import replace
 from uuid import uuid4
 
 from decision_discovery_fixture import DecisionDiscoveryFixture
@@ -7,7 +6,6 @@ from run_bounded_multihop import SourceOnlyController
 from unified_ask_fixture import request_json, FakeTransport
 from linkloom.agents.model_adapter import FakeModelAdapter, ModelAction, ModelResponse
 from linkloom.agents.providers import GeminiProviderAdapter
-from linkloom.runtime.team_decision_planner import plan_relation_investigation
 
 RELATIONS = "Relations"
 TWO = "Orion 项目负责人的直属领导是谁？"
@@ -50,22 +48,24 @@ class UnifiedInvestigationFixture(DecisionDiscoveryFixture):
         temporal_factory = service.model_factory
         self.relation_models = []
         service.relation_max_steps = relation_max_steps
+        source_queries = set()
+        start = service.start
+
+        def start_source(query, workspace_id, **options):
+            # The Host call kind, not a question grammar, selects the relation fake.
+            if options.get("source_relation"):
+                source_queries.add(query.strip())
+            return start(query, workspace_id, **options)
+        service.start = start_source
+
         def factory(query):
-            if plan_relation_investigation(query) is None:
+            if query not in source_queries:
                 return temporal_factory(query)
             if scenario == "uncertain":
                 transport = FakeTransport(scenario="uncertain")
                 self.relation_models.append(transport)
                 return GeminiProviderAdapter(transport)
-            controller = SourceOnlyController()
-            def respond(request):
-                action = controller(request)
-                if action.kind == "tool_call" and action.tool_call.tool_id == "search_notes":
-                    action = ModelAction.tool(replace(action.tool_call,
-                        arguments={**action.tool_call.arguments, "limit": 4
-                            if action.tool_call.arguments["source_context"]["subgoal_id"] == "leader" else 2}))
-                return action
-            model = FakeModelAdapter([respond] * 12)
+            model = FakeModelAdapter([SourceOnlyController()] * 12)
             self.relation_models.append(model)
             return model
         service.model_factory = factory

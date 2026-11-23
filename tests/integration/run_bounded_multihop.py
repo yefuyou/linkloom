@@ -1,6 +1,10 @@
 """Answer-blind offline controller exercising the existing production Runtime.
 
-This is a FakeModel demonstration, not a claim of real-model generalization.
+This is a FakeModel demonstration, not a claim of real-model generalization. The
+fake plays the model's part: it reads the question and the verified sources
+itself, follows newly read entities with further searches, and proposes Typed
+Claims (claim-proposal/v1). The Runtime receives no plan or template; the Host
+checks every claim deterministically against the Tool Ledger.
 Run artifacts (including the existing Tool Ledger) remain under ignored work/.
 """
 from __future__ import annotations
@@ -13,113 +17,144 @@ import re
 import time
 from uuid import uuid4
 
-from linkloom.agents.claim_grounding import assess_claim_text, ClaimSupportStatus
 from linkloom.agents.model_adapter import FakeModelAdapter, ModelAction
 from linkloom.runtime.checkpoint import InMemoryCheckpointer
 from linkloom.runtime.errors import ValidationError
 from linkloom.runtime.graph import RuntimeEngine
 from linkloom.runtime.models import RunRequest
-from linkloom.runtime.task_plan import TaskPlan, verified_plan_subgoal_values, assess_task_plan, verified_dependency_entities, verified_plan_conflict_refs
-from linkloom.runtime.team_decision_planner import plan_relation_investigation
 from linkloom.scanner import scan_vault
 from linkloom.tools.contracts import ToolCall
 
+# The fake model's own reading of the synthetic fixture sentences. This stands in
+# for model understanding inside a test; production code has no such table.
+_READINGS = (
+    (re.compile(r'(?P<o>[^.;\n]+?) is the accountable owner of (?P<s>[^.;\n]+?)(?: for [^.;\n]+)?$'), 'owner_of_project'),
+    (re.compile(r'(?P<s>[^.;\n]+?) reports directly to (?P<o>[^.;\n]+?)$'), 'reports_to'),
+    (re.compile(r'(?P<s>[^.;\n]+?) is the team alias for (?P<o>[^.;\n]+?)$'), 'alias_of_project'),
+)
+_WANTS = (
+    ('reports_to', re.compile(r'lead|manager|report|直属|领导|汇报|上级', re.I)),
+    ('owner_of_project', re.compile(r'\bown|负责', re.I)),
+    ('alias_of_project', re.compile(r'alias|behind|别名', re.I)),
+)
+_DATE = re.compile(r'\d{4}-\d{2}-\d{2}')
+
+
+def _norm(value):
+    return ' '.join(str(value).casefold().split())
+
+
+def read_facts(passage):
+    """Facts the fake model understands in one verified read, with exact quotes."""
+    facts = []
+    for line in passage['quote'].splitlines():
+        line = re.sub(r'^\[[^\]]*\]\s*(?:[^:]{1,40}:\s*)?', '', line.strip()).lstrip('# ')
+        for sentence in re.split(r'(?<=[.;])\s+', line):
+            text = sentence.strip().rstrip('.;')
+            date = _DATE.match(text.removeprefix('As of ')) if text.startswith('As of ') else None
+            body = text[len('As of ') + 10:].strip() if date else text
+            for pattern, predicate in _READINGS:
+                match = pattern.match(body)
+                if match and text in passage['quote']:
+                    facts.append({'subject': match['s'].strip(), 'predicate': predicate,
+                                  'object': match['o'].strip(), 'evidence_ids': [passage['evidence_id']],
+                                  'quote': text, 'valid_on': date.group() if date else None,
+                                  'temporal_kind': 'snapshot' if date else None})
+    return facts
+
 
 class SourceOnlyController:
-    """Fixed tool policy; receives only Runtime instructions and tool observations."""
+    """Observation-driven fake model: search, read every hit, follow new entities, Final."""
     def __init__(self):
-        self.slot = 0
         self.pending = []
-        self.reads = {}
-        self.values = {}
-        self.claims = []
-        self.searched = False
+        self.read_ids = set()
+        self.facts = []
+        self.searched = []
 
     def __call__(self, request):
         # This injected fake is bounded by the caller's Runtime step/request caps.
         # A host scheduling or snapshot delay is not a model-policy refusal.
         packet = json.loads(request.user_input.split('team_decision_request=', 1)[1])
-        plan = TaskPlan.from_dict(packet['task_plan'])
-        goal = plan.subgoals[self.slot]
-        self.reads.setdefault(goal.subgoal_id, [])
         observation = request.observation
         if observation is not None:
             if observation.status != 'ok':
                 raise ValidationError('Offline controller stops on tool failure')
             if observation.tool_id == 'search_notes':
-                self.pending = [item['evidence_id'] for item in observation.value]
+                self.pending.extend(item['evidence_id'] for item in observation.value
+                                    if item['evidence_id'] not in self.read_ids
+                                    and item['evidence_id'] not in self.pending)
             elif observation.tool_id == 'read_verified_note':
-                self.reads[goal.subgoal_id].append(observation.value)
+                self.read_ids.add(observation.value['evidence_id'])
+                self.facts.extend(fact for fact in read_facts(observation.value) if fact not in self.facts)
         if getattr(request, 'available_tools', None) == []:
-            # Exhaustion or an established conflict closes tools. Remaining
-            # search hits stay unverified and never enter reads or claims.
+            # Exhaustion closes tools. Remaining search hits stay unread and never enter claims.
             self.pending.clear()
         def tool(name, arguments):
             return ModelAction.tool(ToolCall(call_id=f'mh_{request.sequence}', tool_id=name, arguments=arguments))
-        if self.pending:
-            return tool('read_verified_note', {'note_ref': self.pending.pop(0)})
-        if not self.searched:
-            self.searched = True
-            dependencies = {parent: self.values[parent] for parent in goal.depends_on}
-            return tool('search_notes', {'query': goal.question,
-                'source_context': {**packet['source_context'], 'subgoal_id': goal.subgoal_id,
-                                   'dependency_entities': dependencies}, 'limit': 4})
-        evidence = {row.subgoal_id: tuple(self.reads.get(row.subgoal_id, [])) for row in plan.subgoals}
-        targets = verified_plan_subgoal_values(plan, goal.subgoal_id, evidence)
-        if len(targets or ()) == 1:
-            target = targets[0]
-            literal = next(re.search(re.escape(target), item['quote'], re.I).group()
-                           for item in evidence[goal.subgoal_id] if re.search(re.escape(target), item['quote'], re.I))
-            self.values[goal.subgoal_id] = literal
-            subject = (self.values[goal.depends_on[0]] if goal.depends_on else
-                       re.search(r'(?:Who owns |Which project does )(.+?)(?: alias)?[?]$', goal.question)[1])
-            predicate = goal.relation_path[0]
-            text = {'alias_of_project': f'{subject} is the team alias for {literal}',
-                    'owner_of_project': f'{literal} is the accountable owner of {subject}',
-                    'reports_to': f'{subject} reports directly to {literal}'}[predicate]
-            date = re.search(r'[0-9]{4}-[0-9]{2}-[0-9]{2}', goal.question)
-            if date:
-                text = f'As of {date.group()} ' + text
-            by_ref = {item['evidence_id']: item for item in evidence[goal.subgoal_id]}
-            assessment = assess_claim_text(text, list(by_ref), by_ref)
-            if assessment.status != ClaimSupportStatus.SUPPORTED:
-                raise ValidationError('Source binding does not ground a claim')
-            refs = list(dict.fromkeys(ref for claim in assessment.claims for ref in claim.supporting_evidence_refs))
-            self.claims.append({'point': text, 'evidence_refs': refs})
-            if self.slot + 1 < len(plan.subgoals):
-                self.slot += 1
-                self.searched = False
-                new_goal = plan.subgoals[self.slot]
-                self.searched = True
-                return tool('search_notes', {'query': new_goal.question, 'source_context': {
-                    **packet['source_context'], 'subgoal_id': new_goal.subgoal_id,
-                    'dependency_entities': {parent: self.values[parent] for parent in new_goal.depends_on}},
-                    'limit': 4})
-        complete = len(self.claims) == len(plan.subgoals)
-        conflict = bool(verified_plan_conflict_refs(plan, goal.subgoal_id, evidence)) if not complete else False
-        missing = [item.subgoal_id for item in plan.subgoals if item.subgoal_id not in self.values]
-        unknown_refs = [item['evidence_id'] for item in evidence[goal.subgoal_id]] if not complete else []
-        claim_refs = list(dict.fromkeys(ref for claim in self.claims for ref in claim['evidence_refs']))
-        refs = list(dict.fromkeys(claim_refs + unknown_refs))
-        return ModelAction.final(json.dumps({'schema_version': 'team-decision-result/v1',
-            'decision': {'value': '; '.join(item['point'] for item in self.claims) if complete else None,
-                         'status': 'approved' if complete else 'insufficient_evidence',
-                         'evidence_refs': claim_refs if complete else []},
-            'rationale': [] if complete else self.claims, 'actions': [], 'unresolved_items': [],
-            'rejected_alternatives': [], 'uncertainty': {
-                'status': 'none' if complete else 'conflicting_evidence' if conflict else 'insufficient_evidence',
-                'statement': None, 'unknown_fields': missing, 'evidence_refs': unknown_refs},
-            'evidence_refs': refs}))
+        if getattr(request, 'available_tools', None) != []:
+            if self.pending:
+                return tool('read_verified_note', {'note_ref': self.pending.pop(0)})
+            claims, conflicted = self._chain(packet['query'])
+            # A disputed entity is never used for a dependent search.
+            frontier = [packet['query']] + [claim['object'] for claim in claims if (
+                claim['predicate'], _norm(claim['subject']), claim['valid_on']) not in conflicted]
+            query = next((item for item in frontier if item not in self.searched), None)
+            if query is not None:
+                self.searched.append(query)
+                return tool('search_notes', {'query': query, 'source_context': packet['source_context'], 'limit': 4})
+        return ModelAction.final(json.dumps(self.final(packet['query'])))
+
+    def _chain(self, question):
+        """Claims connected to the question, and the (predicate, subject) slots read as conflicting."""
+        day = (_DATE.findall(question) or [None])[0]
+        facts = [fact for fact in self.facts if day is None or fact['valid_on'] in {None, day}]
+        # For a dated question, a fact stated for that day outranks an undated one.
+        dated = {(fact['predicate'], _norm(fact['subject'])) for fact in facts if fact['valid_on']}
+        facts = [fact for fact in facts if fact['valid_on'] or (fact['predicate'], _norm(fact['subject'])) not in dated]
+        known = {_norm(question)}
+        chain, conflicted = [], set()
+        while True:
+            added = [fact for fact in facts if fact not in chain
+                     and (any(_norm(fact['subject']) in entity for entity in known))]
+            if not added:
+                return chain, conflicted
+            chain.extend(added)
+            for fact in added:
+                slot = (fact['predicate'], _norm(fact['subject']), fact['valid_on'])
+                if len({_norm(item['object']) for item in chain
+                        if (item['predicate'], _norm(item['subject']), item['valid_on']) == slot}) > 1:
+                    conflicted.add(slot)
+            known |= {_norm(fact['object']) for fact in added
+                      if (fact['predicate'], _norm(fact['subject']), fact['valid_on']) not in conflicted}
+
+    def final(self, question):
+        claims, conflicted = self._chain(question)
+        wanted = [predicate for predicate, pattern in _WANTS if pattern.search(question)]
+        if not wanted:
+            claims, conflicted = [], set()  # Nothing read answers what was asked.
+        resolved = {claim['predicate'] for claim in claims
+                    if (claim['predicate'], _norm(claim['subject']), claim['valid_on']) not in conflicted}
+        unknown = [predicate for predicate in wanted if predicate not in resolved] or (
+            [] if wanted else ['answer'])
+        payload = {'schema_version': 'claim-proposal/v1', 'claims': claims}
+        if conflicted or unknown:
+            payload['uncertainty'] = {
+                'status': 'conflicting_evidence' if conflicted else 'insufficient_evidence',
+                'unknown_fields': unknown or sorted({slot[0] for slot in conflicted})}
+        return payload
+
+
+def conflict_free_values(claims):
+    slots = {}
+    for claim in claims:
+        slots.setdefault((claim['predicate'], _norm(claim['subject']), claim['valid_on']), set()).add(_norm(claim['object']))
+    return [_norm(claim['object']) for claim in claims
+            if len(slots[(claim['predicate'], _norm(claim['subject']), claim['valid_on'])]) == 1]
 
 
 def run_case(public, root):
     """No oracle enters this function, the controller, or the Runtime input."""
     started = time.monotonic()
-    plan = plan_relation_investigation(public['query'])
-    if plan is None:
-        return {'outcome': 'refused', 'reason': 'planning_failed', 'values': [], 'calls': [],
-                'sources': [], 'verified_hops': 0, 'model_turns': 0, 'context_bytes': 0,
-                'bindings_verified': True, 'citation_valid': True, 'elapsed_ms': 0}
     root = root / ('run_' + uuid4().hex[:12])
     vault = root / 'vault'; vault.mkdir(parents=True)
     for document in public['documents']:
@@ -134,40 +169,31 @@ def run_case(public, root):
     engine = RuntimeEngine(vault_root=vault, index_path=index, checkpoint_dir=root/'runtime',
         trace_dir=root/'traces', checkpointer=InMemoryCheckpointer(), model=model)
     status = engine.start_multi_agent(RunRequest(request_id='bounded_mh', thread_id='bounded_mh',
-        workflow='team_decision', query=public['query'], task_plan=plan.to_dict(),
+        workflow='team_decision', query=public['query'], final_protocol='claim-proposal/v1',
         max_steps=20, max_provider_requests=20, dry_run=True))
     state = engine.checkpointer.get_latest('bounded_mh')
     records = state.tool_ledger if state else []
-    calls, binding_ok, slot = [], True, None
+    calls, binding_ok, hop, quotes = [], True, None, []
     for record in records:
         row = {'sequence': record.sequence, 'tool': record.tool_id, 'status': record.status}
         if record.tool_id == 'search_notes':
-            context = record.arguments['source_context']; slot = context['subgoal_id']
-            row.update(hop=slot, dependencies=context.get('dependency_entities', {}))
-            prior = [item for item in records if item.sequence < record.sequence]
-            assessment = assess_task_plan(plan, prior, run_id=record.run_id, task_id=record.task_id,
-                agent_id=record.agent_id, expected_workspace_id=state.source.vault_root_fingerprint)
-            try:
-                verified_dependency_entities(plan, assessment, slot, row['dependencies'])
-            except ValidationError:
+            hop = record.arguments['query']
+            row.update(hop=hop)
+            # A follow-up search must use an entity the fake read before it, never a guess.
+            if calls and not any(_norm(hop) in _norm(quote) for quote in quotes):
                 binding_ok = False
         if record.tool_id == 'read_verified_note' and record.status == 'completed':
             value = record.result['value']
-            row.update(hop=slot, source=value['relative_path'], evidence_id=value['evidence_id'],
+            quotes.append(value['quote'])
+            row.update(hop=hop, source=value['relative_path'], evidence_id=value['evidence_id'],
                        content_sha256=value['content_sha256'])
         calls.append(row)
     result_path = root/'runtime'/'results'/status.run_id/'result.json'
     payload = json.loads(result_path.read_text(encoding='utf-8')) if result_path.exists() else {}
     final = (payload.get('result') or {}).get('team_decision')
-    values, cited = [], []
-    if final:
-        texts = [final['decision']['value']] if final['decision']['value'] else [x['point'] for x in final['rationale']]
-        by_ref = {item['evidence_id']: item for result in model.requests[-1].evidence_context
-                  for item in (result.value if isinstance(result.value, list) else [result.value])}
-        for text in texts:
-            support = assess_claim_text(text, final['evidence_refs'], by_ref)
-            values.extend(claim.value for claim in support.claims)
-        cited = final['evidence_refs']
+    claims = (payload.get('result') or {}).get('typed_claims') or [] if final else []
+    values = conflict_free_values(claims)
+    cited = final['evidence_refs'] if final else []
     reads = {row['evidence_id']: row['source'] for row in calls if 'evidence_id' in row}
     reason = ('conflicting_evidence' if final and final['uncertainty']['status']=='conflicting_evidence' else
               'evidence_insufficient' if final and not final['decision']['value'] else
@@ -180,7 +206,7 @@ def run_case(public, root):
                               for request in model.requests), default=0),
         'elapsed_ms': round((time.monotonic()-started)*1000), 'run_id': status.run_id,
         'artifact_instance': root.name,
-        'run_status': status.status, 'error': status.error, 'final': final}
+        'run_status': status.status, 'error': status.error, 'final': final, 'typed_claims': claims}
 
 
 def main():

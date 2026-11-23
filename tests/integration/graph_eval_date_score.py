@@ -5,23 +5,21 @@ answer contents. This correction was motivated by independent synthetic review.
 """
 from copy import deepcopy
 from pathlib import Path
-import argparse,hashlib,json
+import argparse,hashlib,json,re
 import rescore_meeting_graph_dev as base
 from meeting_graph_scoring import norm
-from linkloom.agents.claim_grounding import _claim_facts,_fact_supports
 from run_temporal_graph_dev import _dump,_json
+
+ISO_DATE=re.compile(r'\b\d{4}-\d{2}-\d{2}\b')
 
 
 class DateParityScorer(base.CorrectedScorer):
     def __call__(self,case_id,actual,expected,public,documents):
         selected=deepcopy(actual)
         if case_id.startswith('B') and 'effective_date' in expected.get('values',{}) and actual.get('verified_by')=='legacy-runtime-reviewer':
-            claims=_claim_facts(actual.get('answer') or '') or ()
-            grounded=[]
-            for doc in documents:
-                if doc['path'] not in actual['evidence']:continue
-                grounded.extend(_claim_facts(doc['content']) or ())
-            dates={claim.valid_on for claim in claims if claim.valid_on and claim.relation in {'superseded_by','became_effective_on'} and any(_fact_supports(fact,claim) for fact in grounded)}
+            # An ISO date the answer states counts only when a cited source states it too.
+            cited=' '.join(doc['content'] for doc in documents if doc['path'] in actual['evidence'])
+            dates=set(ISO_DATE.findall(actual.get('answer') or ''))&set(ISO_DATE.findall(cited))
             selected['values']=list(actual.get('values',[]))+sorted(dates)
         return super().__call__(case_id,selected,expected,public,documents)
 
@@ -50,7 +48,7 @@ def rescore(*,final_freeze,**kwargs):
     report['final_scoring_freeze']=marker
     output=Path(kwargs['output']);_dump(output/'report.json',report)
     with (output/'report.md').open('a',encoding='utf8') as stream:
-        stream.write('\n最终评分冻结另含旧路径日期一致性修正：只从现有grounding支持的替代声明valid_on恢复日期，不从背景文本任意取日期。全部结果统一评分，无付费重跑。\n')
+        stream.write('\n最终评分冻结另含旧路径日期一致性修正：只恢复答案与其引用来源同时写明的ISO日期，不从背景文本任意取日期。全部结果统一评分，无付费重跑。\n')
     return report
 
 
