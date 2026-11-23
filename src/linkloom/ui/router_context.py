@@ -433,8 +433,7 @@ def admit_route(context, route, *, leads_allowed=False):
     named = (*(text for text, _, _ in route.mentions), *(listed or ()))
     blocker = blocked_entity_reason(context.query, context.blocked_entities, mentions=named)
     from linkloom.ui.ask_admission import router_safety_reason
-    safety = router_safety_reason(context.query, operation=route.operation,
-                                  reason=route.reason_code, host_reason=blocker)
+    safety = router_safety_reason(operation=route.operation, reason=route.reason_code, host_reason=blocker)
     if safety:
         return RouterAdmission(None, safety)
     hard = (blocked_entity_reason(context.query, authorization_facts(context.blocked_entities), mentions=named)

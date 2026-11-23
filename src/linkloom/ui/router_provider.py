@@ -14,7 +14,7 @@ from linkloom.agents.providers.gemini_api import (
 from linkloom.ui.structured_router import (
     CAPABILITY, CONFIG, INTENTS, PROMPT, SAFETY, TIME_ROLES, _reject_constant, _unique_object, routing_domain,
 )
-from linkloom.ui.ask_admission import admission_restriction, legacy_denial_reason, router_safety_reason
+from linkloom.ui.ask_admission import router_safety_reason
 from linkloom.ui.task_provider import TaskProviderLimits, TaskProviderSession
 
 
@@ -104,8 +104,7 @@ def _route_text(message, context, *, diagnostics=False):
         proposed_operation = args.pop("operation")
         candidate = args.pop("candidate_id")
         query = context["question"]
-        safety = router_safety_reason(query, operation=proposed_operation, reason=args["reason_code"],
-                                      keyword_rules=False)
+        safety = router_safety_reason(operation=proposed_operation, reason=args["reason_code"])
         if safety:
             args["reason_code"] = safety
         op = ("WRITE_REQUEST" if safety == "WRITE_NOT_ALLOWED" else

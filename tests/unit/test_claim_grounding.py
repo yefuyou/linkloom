@@ -183,12 +183,14 @@ def test_typed_claim_schema_id_and_date_are_validated(mutation):
             final_protocol="claim-proposal/v1", require_read_evidence=True, read_evidence_ids=[span["evidence_id"]])
 
 
-def test_unauthorized_write_request_is_refused_before_any_investigation():
-    from linkloom.ui.ask_admission import admission_restriction
+def test_write_wording_is_not_a_wordlist_denial_and_structured_write_signal_is_refused():
+    from linkloom.ui.ask_admission import admission_restriction, router_safety_reason
 
-    assert admission_restriction("Delete the note that says Mira Chen owns Cobalt B.")[0] == "INVESTIGATION_SCOPE_DENIED"
-    assert admission_restriction("请把 Cobalt B 的负责人改成 Kai Wu")[0] == "INVESTIGATION_SCOPE_DENIED"
-    assert admission_restriction("Cobalt B 的 owner 是谁？") is None
+    # Wording never denies; the model's structured WRITE_REQUEST operation and the read-only Tool ACL do.
+    for query in ("Delete the note that says Mira Chen owns Cobalt B.", "请把 Cobalt B 的负责人改成 Kai Wu",
+                  "Cobalt B 的 owner 是谁？"):
+        assert admission_restriction(query) is None
+    assert router_safety_reason(operation="WRITE_REQUEST") == "WRITE_NOT_ALLOWED"
 
 
 @pytest.fixture

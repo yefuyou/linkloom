@@ -17,8 +17,7 @@ from linkloom.ui.question_routing import classify_task, route_question
 from linkloom.ui.feedback_memory import FeedbackMemory
 from linkloom.ui.structured_router import rule_date_blocker, rule_needs_router
 from linkloom.decision_memory.models import normalize_temporal_component
-from linkloom.ui.ask_admission import (accept_model_safety, admission_restriction, model_safety_scope,
-    parse_context, source_context, validate_context)
+from linkloom.ui.ask_admission import admission_restriction, parse_context, source_context, validate_context
 
 
 @dataclass(frozen=True)
@@ -176,13 +175,12 @@ class UnifiedAskService:
 
     def ask(self, payload: dict[str, Any]) -> tuple[dict[str, Any], int]:
         security = {}
-        with model_safety_scope():
-            if self.graph_service is None and self.router_provider is None:
+        if self.graph_service is None and self.router_provider is None:
+            result, status = self._ask(payload, security=security)
+        else:
+            from linkloom.ui.graph_investigation import graph_request_budget
+            with graph_request_budget():
                 result, status = self._ask(payload, security=security)
-            else:
-                from linkloom.ui.graph_investigation import graph_request_budget
-                with graph_request_budget():
-                    result, status = self._ask(payload, security=security)
         if security:
             if security.get("status") == "COMPLETED":
                 security["decided_by"] = "llm"
@@ -268,15 +266,14 @@ class UnifiedAskService:
                     if context:
                         validate_context(self.app, run.workspace_id, context)
                     security.update(self._classify_security(run, payload))
-                    accept_model_safety(security)
                     if security.get("decision") == "BLOCK":
                         blocked, status = self._router_stop(run, None, security["reason_code"])
                         blocked["router"]["source"] = blocked["decided_by"] = "llm"
                         return blocked, status
                     # A configured security model whose classification fails or is invalid never
-                    # releases the input to keyword rules or routing. Without a configured security
-                    # model the rule mode keeps its existing behavior; missing user consent is not
-                    # a model failure and also keeps its existing handling.
+                    # releases the input to routing. Without a configured security model the
+                    # structured checks (read-only Tool ACL, workspace binding, output protection)
+                    # apply; missing user consent is not a model failure and keeps its handling.
                     if (self.router_provider.security_adapter is not None
                             and security.get("status") != "COMPLETED"
                             and security.get("fallback_reason") != "PROVIDER_PERMISSION_REQUIRED"):
@@ -284,18 +281,12 @@ class UnifiedAskService:
                 ordinary_router = (self.router_provider is not None and not context
                                    and not (values["subject"] or values["relation"]))
                 cascade = ordinary_router and self.router_provider.mode == "cascade"
-                if ordinary_router:
-                    from linkloom.ui.ask_admission import router_safety_reason
-                    safety = router_safety_reason(run.query)
-                    if safety:
-                        return self._router_stop(run, None, safety)
                 if ordinary_router and not cascade:
                     return self._route_ordinary(run, payload)
                 restriction = admission_restriction(run.query)
                 if restriction:
                     if cascade:
-                        from linkloom.ui.ask_admission import legacy_denial_reason
-                        return self._router_stop(run, None, legacy_denial_reason(run.query))
+                        return self._router_stop(run, None, "POLICY_BLOCKED")
                     result["path"] = None
                     return self._failure(result, *restriction, status="NEEDS_SCOPE"), 200
                 if cascade:
@@ -592,10 +583,6 @@ class UnifiedAskService:
         from linkloom.ui.router_context import blocked_entity_reason, handoff_blocker
         from linkloom.ui.task_provider import pass_router_reservation
         from linkloom.ui.lifecycle import BackgroundWorkStopped
-        from linkloom.ui.ask_admission import router_safety_reason
-        safety = router_safety_reason(run.query)
-        if safety:
-            return self._router_stop(run, None, safety)
         provider = self.router_provider
         owner = self.investigation()
         def stop(reason, attempted=False, code=None):

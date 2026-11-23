@@ -15,6 +15,7 @@ from linkloom.ui.lifecycle import (BackgroundTasks, BackgroundWorkStopped, DEFAU
 from linkloom.ui.product import MAX_SOURCE_BYTES, ProductApplication, ProductApplicationError
 from linkloom.ui.investigation import ProductInvestigationService
 from linkloom.ui.task_review import TaskReviewService
+from linkloom.ui.ask_admission import leaks_protected_text
 from linkloom.ui.unified_ask import UnifiedAskService
 from linkloom.ui.task_api import TaskProductAPI
 
@@ -315,7 +316,7 @@ class LinkLoomRequestHandler(BaseHTTPRequestHandler):
             try:
                 workspace_id = parse_qs(urlsplit(self.path).query).get("workspace_id", [""])[0]
                 result, status = self.server.unified_ask.trace(path.split("/")[-2], workspace_id)
-                self._send_json({"result": result}, status=status)
+                self._send_ask_result(result, status)
             except ProductApplicationError as error:
                 self._send_error_payload(error.status, error.code, str(error))
             return
@@ -323,7 +324,7 @@ class LinkLoomRequestHandler(BaseHTTPRequestHandler):
             try:
                 workspace_id = parse_qs(urlsplit(self.path).query).get("workspace_id", [""])[0]
                 result, status = self.server.unified_ask.inspect(path.rsplit("/", 1)[-1], workspace_id)
-                self._send_json({"result": result}, status=status)
+                self._send_ask_result(result, status)
             except ProductApplicationError as error:
                 self._send_error_payload(error.status, error.code, str(error))
             return
@@ -404,7 +405,7 @@ class LinkLoomRequestHandler(BaseHTTPRequestHandler):
                 return
             try:
                 result, status = self.server.unified_ask.continue_run(path.split("/")[-2], payload)
-                self._send_json({"result": result}, status=status)
+                self._send_ask_result(result, status)
             except ProductApplicationError as error:
                 self._send_error_payload(error.status, error.code, str(error))
             return
@@ -425,7 +426,7 @@ class LinkLoomRequestHandler(BaseHTTPRequestHandler):
             self.server.ensure_task_relation_sidecar(payload.get("workspace_id"))
             try:
                 result, status = self.server.unified_ask.ask(payload)
-                self._send_json({"result": result}, status=status)
+                self._send_ask_result(result, status)
             except ProductApplicationError as error:
                 self._send_error_payload(error.status, error.code, str(error))
             return
@@ -525,6 +526,13 @@ class LinkLoomRequestHandler(BaseHTTPRequestHandler):
             self._send_error_payload(error.status, error.code, str(error))
             return
         self._send_json(result)
+
+    def _send_ask_result(self, result: Any, status: int) -> None:
+        # Structural output protection: host-held secrets and system prompt text never leave in a result.
+        if leaks_protected_text(result):
+            self._send_error_payload(502, "SENSITIVE_OUTPUT_BLOCKED", "The result contained protected host text and was withheld.")
+            return
+        self._send_json({"result": result}, status=status)
 
     def _unsupported_method(self) -> None:
         if self.server.task_api.matches(self.path):

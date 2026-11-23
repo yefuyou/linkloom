@@ -446,11 +446,10 @@ def route_with_adapter(adapter, request, context, record=None):
         record_invalid(record, proposal["wire_invalid"])
         raise RouterInvalid("ROUTER_SCHEMA_INVALID")
     host_reason = blocked_entity_reason(context.query, context.blocked_entities)
-    safety = router_safety_reason(context.query, operation=proposed_operation, reason=proposed_reason, host_reason=host_reason)
+    safety = router_safety_reason(operation=proposed_operation, reason=proposed_reason, host_reason=host_reason)
     if (safety == "WORKSPACE_DENIED" and not host_reason and proposed_operation == "READ"
             and isinstance(proposal, dict) and proposal.get("intent") == "AS_OF"
-            and proposal.get("time_role") == "AS_OF"
-            and not router_safety_reason(context.query)):
+            and proposal.get("time_role") == "AS_OF"):
         # A model-only denial paired with an unusable date and a local, grounded
         # candidate can be corrected to a clarification. It still cannot execute.
         try:
