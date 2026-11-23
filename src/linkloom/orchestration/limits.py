@@ -4,7 +4,9 @@ The Supervisor model only proposes tasks. Task count, concurrency, depth, rounds
 are decided here, deterministically. These are run-level stop conditions, not a money allocation: there is no
 per-role dollar, token or request slice. Every Provider session (Supervisor, Worker, comparison) runs under the
 same Provider hard limits (request format, context and output caps, request timeout) and records its own
-telemetry in budget.json. A whole-run cost ceiling exists only when the user sets max_run_cost_usd.
+telemetry in budget.json. The product sets max_run_cost_usd to the user's Provider cost budget so that budget
+bounds the whole run. The fuse is soft: it sums the cost reserved in every budget.json and is read once per
+scheduler tick, so Workers already running in the same wave (up to max_concurrency) can finish and overshoot it.
 """
 from __future__ import annotations
 

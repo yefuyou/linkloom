@@ -428,7 +428,8 @@ class ProductInvestigationService:
         try:
             provider = remaining_provider_limits(self.parallel_limits)
             limits = OrchestrationLimits(provider=provider, deadline_seconds=float(provider.max_seconds),
-                                         confirm_over_tasks=self.confirm_over_tasks)
+                                         confirm_over_tasks=self.confirm_over_tasks,
+                                         max_run_cost_usd=provider.max_cost_usd)  # the user's budget bounds the run
         except ValueError as error:
             raise ProductApplicationError("TASK_PROVIDER_BUDGET_EXHAUSTED",
                 "No remaining Provider budget for investigation.", status=409) from error

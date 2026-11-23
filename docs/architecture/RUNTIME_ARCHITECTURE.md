@@ -141,6 +141,11 @@ existing model loop, not another LLM Agent.
 | Identity/scope violation or tool permission denial | Terminate. In an ordered multi-call proposal, denial prevents later calls and a subsequent Final; it cannot be relabeled as evidence insufficiency. |
 | Repeated uncorrected schema/tool errors, invalid outputs or checkpoint/ledger failures | Terminate without an accepted answer. |
 
+Verification scope: `team-decision-result/v1` prose answers (including orchestrated Worker answers) are
+binding-only. The Host checks that each cited ref is an intact verified read, not what the prose says about it.
+Semantic checks (object-in-quote, confirmed-fact and claim-vs-claim conflict, blocked entities) apply to typed
+claims only.
+
 Partial guidance is not partial acceptance: `RetrievalAgent` validates the
 Final against successful observed reads and supported claim relations, then
 Reviewer and product projection apply their existing checks. Unread search

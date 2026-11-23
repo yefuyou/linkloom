@@ -442,3 +442,25 @@ def test_a_result_the_reviewer_does_not_accept_is_a_gap_and_other_results_stay(m
     assert tasks["owner"]["status"] == "failed" and tasks["owner"]["failure"] == "WORKER_REVIEW_FAILED"
     assert tasks["succ"]["status"] == "accepted" and FACT["owner"] not in json.dumps(result["evidence"])
     assert_cited(result)
+
+
+def test_product_run_carries_the_user_cost_budget_as_the_whole_run_fuse(make_env):
+    world = World([delegation("answer_single")], {WHY: (SOURCE_REASON, "Meridian A", "ok")})
+    env = make_env(world)
+    run_id, _ = started(env, WHY)
+    from linkloom.orchestration.runs import load_record
+    record = load_record(env.root(run_id))
+    assert record["limits"]["max_run_cost_usd"] == TOTAL.max_cost_usd
+
+
+def test_unmatched_question_is_budgeted_like_any_orchestrated_run(make_env):
+    """NO_MATCH falls through to a source investigation: same Provider limits, same totals, no extra pool."""
+    question = "Who attended the budget review?"
+    world = World([delegation("answer_single")], {question: (SOURCE_REASON, "Meridian A", "ok")})
+    env = make_env(world)
+    status, payload = _client(env.base, "/api/product/ask", method="POST",
+                              data=dict(query=question, workspace_id=env.workspace_id))
+    assert status == 202, payload
+    run_id = payload["result"]["agent_run_id"]
+    env.finish(run_id)
+    assert_within_budget(env, run_id)

@@ -181,9 +181,12 @@ def _run(deps, task, query):
     try:
         # Run-level step count. The Runtime keeps the last step for the final answer (reserve_final_turn), so a
         # long investigation that reaches max_steps still publishes what it read.
-        steps = deps.limits.max_steps
+        steps = min(deps.limits.max_steps, limits.max_requests)  # never plan more turns than the session allows
         adapter = OutputBoundedAdapter(session.bind(deps.model_factory(task['description']), 'runtime'),
                                         min(deps.limits.max_request_output_tokens, limits.max_output_tokens))
+        # Workers answer in team-decision-result/v1 prose with cited reads. The typed-claim host checks (confirmed
+        # facts, blocked entities) do not run on this path; blocked entities are filtered from task descriptions by
+        # the Supervisor, and v1 prose is verified for span integrity only.
         engine = RuntimeEngine(vault_root=deps.vault, index_path=deps.index,
             checkpoint_dir=root / 'runtime', trace_dir=root / 'traces', model=adapter,
             memory_enabled=False, decision_memory_enabled=False,
