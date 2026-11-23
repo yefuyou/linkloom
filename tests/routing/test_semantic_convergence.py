@@ -27,20 +27,24 @@ def test_as_of_query_with_exact_date_needs_no_model():
     assert result["route"] == "AS_OF" and result["decided_by"] == "rule" and provider.requests == []
 
 
-def test_supplier_change_reason_routes_investigation():
+def test_supplier_change_reason_is_not_routed_by_wording():
     question = "Why did Juniper change its platform?"
     result = route(question, [slot()])
-    assert result["route"] == "INVESTIGATION" and result["scope"]["subject"] == "Juniper"
+    assert result["route"] == "CURRENT" and result["scope"]["subject"] == "Juniper"
     model = reply(slot()["slot_id"], intent="INVESTIGATION")
     result = route(question, [slot()], model)
     # Rule-bound: the deterministic path answers and the selector is not called.
-    assert result["route"] == "INVESTIGATION" and result["decided_by"] != "llm" and model.requests == []
+    assert result["route"] == "CURRENT" and result["decided_by"] != "llm" and model.requests == []
+    # With ambiguous candidates the selector is needed and its INVESTIGATION intent is honored.
+    inputs = ambiguous_slots()
+    result = route("Why did the platform change?", inputs, reply(inputs[0]["slot_id"], intent="INVESTIGATION"))
+    assert result["route"] == "INVESTIGATION" and result["decided_by"] == "llm"
 
 
-def test_negated_current_question_follows_the_model_not_the_regex_clue():
-    # Ambiguous candidates: the selector is genuinely needed, and its intent beats the regex clue.
+def test_negated_current_question_follows_the_model():
+    # Ambiguous candidates: the selector is genuinely needed and its intent decides.
     question = "Which platform are we using now, not the one it changed from?"
-    assert classify_task(question)["intent"] == "INVESTIGATION"
+    assert classify_task(question)["intent"] == "CURRENT"
     result = route(question, ambiguous_slots(), reply(slot()["slot_id"]))
     assert result["route"] == "CURRENT" and result["decided_by"] == "llm"
 
@@ -116,21 +120,21 @@ def test_an_explicit_scope_with_a_plain_lookup_needs_no_model():
     assert provider.requests == [] and result["route"] == "CURRENT" and result["scope"]["subject"] == "Juniper"
 
 
-def test_an_explicit_scope_with_investigation_wording_keeps_the_scope_and_the_rule_intent():
+def test_an_explicit_scope_with_change_wording_keeps_the_scope_and_the_rule_intent():
     # The explicit scope needs no disambiguation, so a failing or abstaining selector is never called.
     for provider in (reply(None), Selector("not json")):
         result = route("Why did Juniper change its platform?", [slot()], provider,
                        subject=slot()["subject"], relation=slot()["relation"])
-        assert provider.requests == [] and result["route"] == "INVESTIGATION"
+        assert provider.requests == [] and result["route"] == "CURRENT"
         assert result["scope"] == {"subject": slot()["subject"], "relation": slot()["relation"]}
 
 
-def test_an_abstaining_selector_cannot_degrade_a_rule_bound_investigation_wording():
+def test_an_abstaining_selector_cannot_degrade_a_rule_bound_question():
     question = "Which platform is Juniper using now, not the one that changed?"
-    assert route(question, [slot()])["route"] == "INVESTIGATION"
+    assert route(question, [slot()])["route"] == "CURRENT"
     provider = reply(None)
     result = route(question, [slot()], provider)
-    assert provider.requests == [] and result["route"] == "INVESTIGATION" and result["scope"]["subject"] == "Juniper"
+    assert provider.requests == [] and result["route"] == "CURRENT" and result["scope"]["subject"] == "Juniper"
     assert result["llm_error"] is None
     # With ambiguous candidates the selector runs, and its abstention clarifies.
     provider = reply(None)

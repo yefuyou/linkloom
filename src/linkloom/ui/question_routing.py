@@ -3,7 +3,6 @@ from __future__ import annotations
 
 from copy import deepcopy
 import json
-import re
 from typing import Any, Callable
 from uuid import uuid4
 
@@ -23,22 +22,15 @@ SLOT_LLM_MAX_OUTPUT_TOKENS = 256
 # for the three-field response. This is an allowance, not separate token pools.
 SLOT_LLM_GEMINI_MAX_OUTPUT_TOKENS = 1024
 
-# Rules-mode (Router off) intent hint: it only chooses between a deterministic lookup and an
-# investigation and never refuses a question. With a model, the selector reply decides.
-_INVESTIGATION = re.compile(
-    r"\b(why|reasons?|rationale|explain\w*|investigat\w*|conflict\w*|contradict\w*|"
-    r"compar\w*|differ\w*|distinguish|uncertain\w*|unverified|changed?|switched?)\b|"
-    r"\b(?:what\s+made|how\s+come)\b|"
-    r"\bwho\b.*\b(decid\w*|approv\w*)\b|\bwho\b.*\band\s+when\b|"
-    r"sources?\s+support|original\s+(sources?|evidence)|"
-    r"为什么|为何|为啥|怎么会|咋会|咋就|怎么就|变了|换了|改了|原因|调查|冲突|矛盾|区别|差异|比较|无法证实|未证实|不确定|"
-    r"原始来源|支持.*变更|谁.*(?:决定|批准)|谁.*什么时候", re.I)
 def classify_task(query: str, as_of: object = None) -> dict[str, Any]:
+    """Deterministic rules-mode default: AS_OF when a date resolves (or fails to), otherwise CURRENT.
+
+    No wording decides INVESTIGATION and no wording refuses a question. Only a selector model reply
+    can choose INVESTIGATION; without a model the deterministic slot lookup answers.
+    """
     date, date_error = resolve_query_date(query, as_of)
-    investigation = bool(_INVESTIGATION.search(query))
-    intent = "INVESTIGATION" if investigation else "AS_OF" if date or date_error else "CURRENT"
-    return {"intent": intent, "code": "SOURCE_INVESTIGATION" if investigation else "REVIEWED_STATE_LOOKUP",
-            "reason": "Question operators determine the task type independently of workspace topics.",
+    return {"intent": "AS_OF" if date or date_error else "CURRENT", "code": "REVIEWED_STATE_LOOKUP",
+            "reason": "Date resolution decides AS_OF versus CURRENT; investigation intent comes from the model.",
             "supported": True, "decided_by": "rule"}
 
 

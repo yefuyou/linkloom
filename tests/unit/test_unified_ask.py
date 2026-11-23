@@ -9,17 +9,17 @@ from linkloom.ui.unified_ask import classify_task
     ("某日期正式采用什么方案？", "CURRENT"),
     ("What is the effective date of this reviewed decision?", "CURRENT"),
     ("查看审批收据和来源", "CURRENT"),
-    ("为什么从 A 换成 B？", "INVESTIGATION"),
-    ("Which original sources support this change?", "INVESTIGATION"),
-    ("历史讨论和正式决策之间有什么区别？", "INVESTIGATION"),
-    ("多份文档的信息是否冲突？", "INVESTIGATION"),
-    ("哪些结论确定，哪些仍无法证实？", "INVESTIGATION"),
-    ("Current decision and why was A replaced?", "INVESTIGATION"),
+    ("为什么从 A 换成 B？", "CURRENT"),
+    ("Which original sources support this change?", "CURRENT"),
+    ("历史讨论和正式决策之间有什么区别？", "CURRENT"),
+    ("多份文档的信息是否冲突？", "CURRENT"),
+    ("哪些结论确定，哪些仍无法证实？", "CURRENT"),
+    ("Current decision and why was A replaced?", "CURRENT"),
     ("Write a poem", "CURRENT"),
     ("Launch supplier", "CURRENT"),
 ])
-# The approved router has exactly three domain-neutral question types. The rule
-# hint never refuses wording; write requests are refused by admission and the Tool ACL.
+# The rules-mode default has no wordlist: only date resolution separates AS_OF from CURRENT, wording never
+# selects INVESTIGATION (a selector model does) and never refuses a question.
 def test_bounded_capability_routing(query, intent):
     route = classify_task(query)
     assert route["intent"] == intent

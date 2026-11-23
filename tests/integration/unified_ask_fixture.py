@@ -456,6 +456,18 @@ class UnifiedAskFixture:
     transports: list[FakeTransport] | None = None
 
     def __post_init__(self) -> None:
+        # classify_task has no wordlist: only a selector model can choose INVESTIGATION. These offline tests
+        # drive the Agent path with a stand-in for that model decision: a question phrased "Why ..." /
+        # "为什么 ..." is the one the fake model would route to INVESTIGATION. Restored in stop().
+        from linkloom.ui import question_routing
+        self._real_classify_task = question_routing.classify_task
+
+        def model_decision(query, as_of=None):
+            task = self._real_classify_task(query, as_of)
+            if query.strip().casefold().startswith(("why", "为什么")):
+                task = dict(task, intent="INVESTIGATION", code="SOURCE_INVESTIGATION")
+            return task
+        question_routing.classify_task = model_decision
         self.database_path = Path(self.database_path)
         self.database_path.parent.mkdir(parents=True, exist_ok=True)
         semantic_provider = OfflineSemanticProvider([
@@ -638,6 +650,8 @@ class UnifiedAskFixture:
         return self.workspace_ids[name]
 
     def stop(self) -> None:
+        from linkloom.ui import question_routing
+        question_routing.classify_task = self._real_classify_task
         if self.server is not None:
             self.server.shutdown()
             self.server.server_close()

@@ -38,8 +38,10 @@ class SemanticModel:
     "What made this happen?", "How come it changed?", "What changed recently?",
     "Has the selection changed?", "怎么改了？",
 ])
-def test_colloquial_causes_and_changes_are_investigations(question):
-    assert classify_task(question)["intent"] == "INVESTIGATION"
+def test_colloquial_causes_and_changes_are_not_decided_by_wording(question):
+    # No wordlist picks INVESTIGATION; the selector model decides it. The rule default stays a lookup.
+    route = classify_task(question)
+    assert route["intent"] == "CURRENT" and route["supported"] is True
 
 
 @pytest.mark.parametrize("question", [

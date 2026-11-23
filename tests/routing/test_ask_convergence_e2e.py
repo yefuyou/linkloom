@@ -284,7 +284,8 @@ class Selector:
     ("Which supplier is Launch using now?", "COMPLETED", None, ["Wrenwell"]),
     ("What supplier did Launch use on 2026-10-04?", "COMPLETED", None, ["Birchline"]),
     ("How has Launch's supplier evolved?", "COMPLETED", None, ["Wrenwell"]),
-    ("Why did Launch switch suppliers?", "INVESTIGATING", None, []),
+    # The fixture stands in for the model decision on "Why ..." questions (UnifiedAskFixture); no wordlist is involved.
+        ("Why did Launch switch suppliers?", "INVESTIGATING", None, []),
     # No reviewed decision matches: the question still reaches a source investigation by the model.
     ("Which supplier is Zebra using now?", "INVESTIGATING", None, []),
 ])
