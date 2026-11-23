@@ -53,6 +53,8 @@ def test_real_loop_records_parent_read_before_dependent_search(tmp_path):
     assert result['values'] == ['mira cole', 'owen park']
     assert result['citation_valid'] and result['bindings_verified']
     assert {claim['predicate'] for claim in result['typed_claims']} == {'owner_of_project', 'reports_to'}
+    # No confirmed structured fact backs these source-only claims: real citations, not semantic support.
+    assert {claim['support'] for claim in result['typed_claims']} == {'UNVERIFIED'}
     leader_search = next(row for row in result['calls'] if row['tool'] == 'search_notes' and row['hop'] == 'Mira Cole')
     assert any(row['tool'] == 'read_verified_note' and row['source'] == 'n1.md'
                and row['sequence'] < leader_search['sequence'] for row in result['calls'])

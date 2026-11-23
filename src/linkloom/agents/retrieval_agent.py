@@ -1132,11 +1132,14 @@ class RetrievalAgent:
                     warnings,
                 )
             # Verified typed claims, for structured projection by the Host (never re-parsed).
+            verified = decision.verified_claims
             self.last_verified_claims = [
                 {"subject": claim.subject, "predicate": claim.predicate, "object": claim.object_value,
                  "valid_on": claim.valid_on, "temporal_kind": claim.temporal_kind,
-                 "evidence_ids": list(claim.evidence_ids), "quote": claim.quote}
-                for claim in (decision.verified_claims.claims if decision.verified_claims else ())
+                 "evidence_ids": list(claim.evidence_ids), "quote": claim.quote,
+                 "support": ("CONFIRMED_FACT" if index < len(verified.semantic_support)
+                             and verified.semantic_support[index] == "CONFIRMED_FACT" else "UNVERIFIED")}
+                for index, claim in enumerate(verified.claims if verified else ())
             ]
             return AgentResult(
                 task_id=task.task_id,

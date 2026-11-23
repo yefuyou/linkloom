@@ -986,8 +986,13 @@ class ProductInvestigationService:
                         "classification": "runtime_failure", "message": "A source changed during investigation; ask again."})
                     return
         claims = snapshot.get("typed_claims") or []
+        # "support" is CONFIRMED_FACT only when a Host-confirmed structured fact states the claim. Otherwise the
+        # citation is real but the relation, direction and negation were not independently verified.
         facts = [{"subject": claim["subject"], "predicate": claim["predicate"], "value": claim["object"],
-                  "valid_on": claim["valid_on"], "evidence_refs": list(claim["evidence_ids"])} for claim in claims]
+                  "valid_on": claim["valid_on"], "evidence_refs": list(claim["evidence_ids"]),
+                  "support": "CONFIRMED_FACT" if claim.get("support") == "CONFIRMED_FACT" else "UNVERIFIED"}
+                 for claim in claims]
+        unverified = [fact for fact in facts if fact["support"] != "CONFIRMED_FACT"]
         parsed = [_VerifiedClaim(claim["subject"], claim["predicate"], claim["object"], tuple(claim["evidence_ids"]),
                                  claim["quote"], claim["valid_on"], claim["temporal_kind"]) for claim in claims]
         conflicts = {f"{left.predicate}:{left.subject}": list(dict.fromkeys((*left.evidence_ids, *right.evidence_ids)))
@@ -995,8 +1000,9 @@ class ProductInvestigationService:
         snapshot["source_investigation"] = {"plan": snapshot.get("task_plan"), "facts": facts,
             "thread_id": snapshot["run"]["thread_id"], "runtime_id": snapshot["run"].get("runtime_id"),
             "answer": _chain_end(parsed) if snapshot["kind"] == "success" and not conflicts else None,
-            "evidence_level": "SOURCE_SUPPORTED" if facts else "UNRESOLVED", "trace": snapshot["trace"],
-            "conflicts": conflicts}
+            "evidence_level": ("UNRESOLVED" if not facts else "SOURCE_SUPPORTED" if not unverified
+                               else "CITATION_VERIFIED_UNCONFIRMED"),
+            "unverified_claim_count": len(unverified), "trace": snapshot["trace"], "conflicts": conflicts}
 
 
 __all__ = ["ProductInvestigationService"]

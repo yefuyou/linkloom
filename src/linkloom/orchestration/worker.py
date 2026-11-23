@@ -186,7 +186,8 @@ def _run(deps, task, query):
                                         min(deps.limits.max_request_output_tokens, limits.max_output_tokens))
         # Workers answer in team-decision-result/v1 prose with cited reads. The typed-claim host checks (confirmed
         # facts, blocked entities) do not run on this path; blocked entities are filtered from task descriptions by
-        # the Supervisor, and v1 prose is verified for span integrity only.
+        # the Supervisor. v1 prose is verified for span integrity only: its claims carry no semantic support and are
+        # unverified, never confirmed. Only a typed claim matching a Host-confirmed fact is SUPPORTED.
         engine = RuntimeEngine(vault_root=deps.vault, index_path=deps.index,
             checkpoint_dir=root / 'runtime', trace_dir=root / 'traces', model=adapter,
             memory_enabled=False, decision_memory_enabled=False,

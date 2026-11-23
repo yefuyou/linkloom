@@ -32,7 +32,13 @@ from linkloom.evidence_identity import passage_evidence_id
 
 
 class ClaimSupportStatus(StrEnum):
+    # A Host-confirmed structured fact states this claim's relation, direction, subject, object and
+    # polarity at the claimed time. This is the only semantic support the Host can prove.
     SUPPORTED = "SUPPORTED"
+    # The cited spans are real, untampered reads and the object appears in the quote, but no confirmed
+    # fact covers the claim. The relation, direction and negation of the model's wording were NOT
+    # independently verified. Accepted only as an explicitly unverified claim, never as confirmed.
+    CITATION_VERIFIED = "CITATION_VERIFIED"
     CONTRADICTED = "CONTRADICTED"
     INSUFFICIENT = "INSUFFICIENT"
     UNVERIFIABLE = "UNVERIFIABLE"
@@ -309,6 +315,22 @@ def claim_conflicts(claims: Sequence[Any]) -> tuple[tuple[Any, Any], ...]:
     return tuple(pairs)
 
 
+def confirmed_supports(
+    claim: Any, evidence_values: Iterable[Mapping[str, Any]], confirmed_facts: Any,
+) -> tuple[str, ...]:
+    """Evidence IDs whose Host-confirmed fact states exactly this claim (not negated, same direction and time)."""
+    if confirmed_facts is None:
+        return ()
+    claimed = _claim_fact(claim)
+    refs = []
+    for evidence in evidence_values:
+        if any(fact.origin == "confirmed" and fact.relation == claimed.relation
+               and fact.subject == claimed.subject and fact.value == claimed.value and _same_time(claimed, fact)
+               for fact in confirmed_facts.facts_for(evidence)):
+            refs.append(str(evidence.get("evidence_id")))
+    return tuple(dict.fromkeys(refs))
+
+
 def claim_status(
     claim: Any,
     evidence_by_ref: Mapping[str, Mapping[str, Any]],
@@ -319,7 +341,10 @@ def claim_status(
     confirmed_facts: Any = None,
     blocked_entities: Iterable[str] = (),
 ) -> tuple[ClaimSupportStatus, str | None]:
-    """Run the five Host checks for one typed claim; return a status and reason code."""
+    """Run the Host checks for one typed claim; return a status and reason code.
+
+    SUPPORTED needs a confirmed structured fact that matches the claim. Span integrity alone returns
+    CITATION_VERIFIED with reason SEMANTIC_SUPPORT_NOT_VERIFIED: no sentence is parsed here."""
     if claim.predicate not in TYPED_CLAIM_RELATIONS:
         return ClaimSupportStatus.UNVERIFIABLE, "PREDICATE_UNSUPPORTED"
     if blocked_entity(claim, blocked_entities) is not None:
@@ -340,7 +365,9 @@ def claim_status(
                 if isinstance(value, Mapping) and value.get("evidence_id") == ref]
     if confirmed_conflicts(claim, [*cited, *observed], confirmed_facts):
         return ClaimSupportStatus.CONTRADICTED, "CONFIRMED_FACT_CONFLICT"
-    return ClaimSupportStatus.SUPPORTED, None
+    if confirmed_supports(claim, [*cited, *observed], confirmed_facts):
+        return ClaimSupportStatus.SUPPORTED, None
+    return ClaimSupportStatus.CITATION_VERIFIED, "SEMANTIC_SUPPORT_NOT_VERIFIED"
 
 
 def unchained_claims(claims: Sequence[Any], question: str) -> tuple[Any, ...]:
@@ -362,6 +389,7 @@ __all__ = [
     "claim_conflicts",
     "claim_status",
     "confirmed_conflicts",
+    "confirmed_supports",
     "evidence_identity_valid",
     "evidence_span_error",
     "facts_conflict",

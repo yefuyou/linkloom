@@ -410,6 +410,11 @@ class _VerifiedClaim:
     temporal_kind: str | None
 
 
+# SUPPORTED: a confirmed fact states the claim. CITATION_VERIFIED: real spans only; the claim is accepted
+# but recorded as UNVERIFIED in _VerifiedClaimSet.semantic_support and never presented as confirmed.
+_ACCEPTED_CLAIM_STATUSES = frozenset({ClaimSupportStatus.SUPPORTED, ClaimSupportStatus.CITATION_VERIFIED})
+
+
 @dataclass(frozen=True)
 class _VerifiedClaimSet:
     workspace_id: str
@@ -423,6 +428,9 @@ class _VerifiedClaimSet:
     require_read_evidence: bool = False
     confirmed_facts: Any = field(default=None, repr=False, compare=False)
     blocked_entities: tuple[str, ...] = ()
+    # Parallel to claims: "CONFIRMED_FACT" when a confirmed structured fact states the claim, else
+    # "UNVERIFIED" (real citation only; relation, direction and negation were not independently verified).
+    semantic_support: tuple[str, ...] = ()
 
 
 def _result_digest(result: "TeamDecisionResult") -> str:
@@ -835,6 +843,7 @@ class TeamDecisionResult:
                 "Conflicting typed claims require conflicting_evidence uncertainty.",
                 details={"reason": "claim_conflict"},
             )
+        support: list[str] = []
         for claim in claims:
             relation = TYPED_CLAIM_RELATIONS[claim.predicate]["clause"].format(
                 subject=claim.subject, object=claim.object_value,
@@ -854,10 +863,11 @@ class TeamDecisionResult:
                 read_evidence_ids=set(read_evidence_ids) if require_read_evidence else None,
                 confirmed_facts=confirmed_facts, blocked_entities=blocked_entities,
             )
-            if status is not ClaimSupportStatus.SUPPORTED:
+            if status not in _ACCEPTED_CLAIM_STATUSES:
                 raise ValidationError(
                     "ClaimProposal failed Host evidence verification.", details={"reason": reason},
                 )
+            support.append("CONFIRMED_FACT" if status is ClaimSupportStatus.SUPPORTED else "UNVERIFIED")
             _append_refs(refs, list(claim.evidence_ids))
 
         incomplete = uncertainty is not None
@@ -894,6 +904,7 @@ class TeamDecisionResult:
             require_read_evidence=require_read_evidence,
             confirmed_facts=confirmed_facts,
             blocked_entities=tuple(blocked_entities),
+            semantic_support=tuple(support),
         )
         return replace(result, verified_claims=verified)
 
@@ -929,7 +940,7 @@ class TeamDecisionResult:
                         if self.decision["status"] in {"approved", "partial"} else None),
                     confirmed_facts=verified.confirmed_facts, blocked_entities=verified.blocked_entities,
                 )
-                if status is not ClaimSupportStatus.SUPPORTED:
+                if status not in _ACCEPTED_CLAIM_STATUSES:
                     raise ValidationError(
                         "Verified ClaimProposal no longer passes Host evidence verification.",
                         details={"reason": reason},

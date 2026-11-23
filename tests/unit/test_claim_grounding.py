@@ -65,11 +65,49 @@ def _status(claim, span, **options):
     return claim_status(claim, {span["evidence_id"]: span}, workspace_id=WORKSPACE, **options)
 
 
-def test_unconfirmed_meeting_text_is_answered_from_a_valid_evidence_span():
-    # A phrasing no relation template knows: the model reads it, the Host checks the span.
+UNVERIFIED = (ClaimSupportStatus.CITATION_VERIFIED, "SEMANTIC_SUPPORT_NOT_VERIFIED")
+
+
+def test_a_real_citation_without_a_confirmed_fact_is_not_semantic_support():
+    # A phrasing no relation template knows: the Host proves the span is real, not what the sentence means.
     span = _span("owner.md", OWNER_NOTE, 2)
-    assert _status(_claim(span), span) == (ClaimSupportStatus.SUPPORTED, None)
-    assert _status(_claim(span), span, confirmed_facts=_index()) == (ClaimSupportStatus.SUPPORTED, None)
+    assert _status(_claim(span), span) == UNVERIFIED
+    assert _status(_claim(span), span, confirmed_facts=_index()) == UNVERIFIED
+
+
+def test_a_matching_confirmed_fact_is_the_only_semantic_support():
+    span = _span("owner.md", OWNER_NOTE, 2)
+    index = _index(_edge("owner_of", "Mira Chen", "Cobalt B"))
+    assert _status(_claim(span), span, confirmed_facts=index) == (ClaimSupportStatus.SUPPORTED, None)
+
+
+def test_negated_and_reversed_sentences_with_real_spans_are_never_supported():
+    # The quoted line is real and contains the object, but says the opposite. Without a confirmed fact the Host
+    # cannot tell, so the claim stays UNVERIFIED; with a confirmed fact it is rejected, never SUPPORTED.
+    negated = "Meeting\nCobalt B is not owned by Mira Chen.\n"
+    span = _span("neg.md", negated, 2)
+    assert _status(_claim(span), span) == UNVERIFIED
+    blocker = _index(_edge("owner_of", "Mira Chen", "Cobalt B", path="neg.md", blocker=True), content=negated, path="neg.md")
+    assert _status(_claim(span), span, confirmed_facts=blocker) == (
+        ClaimSupportStatus.CONTRADICTED, "CONFIRMED_FACT_CONFLICT")
+    note = "Weekly sync\nKai Wu reports to Mira Chen.\n"
+    span = _span("rev.md", note, 2)
+    wrong_way = _claim(span, subject="Mira Chen", predicate="reports_to", obj="Kai Wu")
+    assert _status(wrong_way, span) == UNVERIFIED
+    confirmed = _index(_edge("reports_to", "Kai Wu", "Mira Chen", path="rev.md"), content=note, path="rev.md")
+    assert _status(wrong_way, span, confirmed_facts=confirmed) == (
+        ClaimSupportStatus.CONTRADICTED, "CONFIRMED_FACT_CONFLICT")
+    right_way = _claim(span, subject="Kai Wu", predicate="reports_to", obj="Mira Chen")
+    assert _status(right_way, span, confirmed_facts=confirmed) == (ClaimSupportStatus.SUPPORTED, None)
+
+
+def test_a_weak_reporting_sentence_is_unverified_without_a_confirmed_edge_and_supported_with_one():
+    note = "Weekly sync\nMira Chen syncs weekly with Kai Wu.\n"
+    span = _span("sync.md", note, 2)
+    claim = _claim(span, subject="Mira Chen", predicate="reports_to", obj="Kai Wu")
+    assert _status(claim, span) == UNVERIFIED
+    index = _index(_edge("reports_to", "Mira Chen", "Kai Wu", path="sync.md"), content=note, path="sync.md")
+    assert _status(claim, span, confirmed_facts=index) == (ClaimSupportStatus.SUPPORTED, None)
 
 
 def test_search_only_evidence_is_not_a_read():
@@ -120,7 +158,9 @@ def test_confirmed_fact_conflicts_are_deterministic(edge, conflict):
     span = _span("owner.md", OWNER_NOTE, 2)
     status, reason = _status(_claim(span), span, confirmed_facts=_index(edge))
     assert (status is ClaimSupportStatus.CONTRADICTED) is conflict
-    assert reason == ("CONFIRMED_FACT_CONFLICT" if conflict else None)
+    assert (status, reason) == ((ClaimSupportStatus.CONTRADICTED, "CONFIRMED_FACT_CONFLICT") if conflict else
+                                (ClaimSupportStatus.SUPPORTED, None) if edge.valid_from is None
+                                else UNVERIFIED)
 
 
 def test_reversed_subject_conflicts_with_an_asymmetric_confirmed_fact():
@@ -310,3 +350,36 @@ def test_reports_to_final_is_rendered_as_a_weak_report_never_as_a_direct_line():
         evidence_by_ref={ref: span}, expected_workspace_id=WORKSPACE, final_protocol="claim-proposal/v1",
         require_read_evidence=True, read_evidence_ids=[ref])
     assert result.decision["value"] == "Mira Chen报告给Kai Wu" and "直接" not in result.decision["value"]
+
+
+@pytest.mark.parametrize("with_fact", [False, True])
+def test_final_records_whether_each_claim_has_semantic_support(with_fact):
+    span = _span("owner.md", OWNER_NOTE, 2)
+    ref = span["evidence_id"]
+    claim = {"subject": "Cobalt B", "predicate": "owner_of_project", "object": "Mira Chen", "evidence_ids": [ref],
+             "quote": span["quote"], "valid_on": None, "temporal_kind": None}
+    facts = _index(_edge("owner_of", "Mira Chen", "Cobalt B")) if with_fact else None
+    result = TeamDecisionResult.from_grounded_final(
+        json.dumps({"schema_version": "claim-proposal/v1", "claims": [claim]}), [ref],
+        evidence_by_ref={ref: span}, expected_workspace_id=WORKSPACE, final_protocol="claim-proposal/v1",
+        require_read_evidence=True, read_evidence_ids=[ref], confirmed_facts=facts)
+    assert result.verified_claims.semantic_support == (("CONFIRMED_FACT",) if with_fact else ("UNVERIFIED",))
+    # Review-time validation accepts both, because both pass every Host check; the flag carries the difference.
+    result.validate_claim_support({ref: span})
+
+
+@pytest.mark.parametrize("support,level,count", [("CONFIRMED_FACT", "SOURCE_SUPPORTED", 0),
+                                                   ("UNVERIFIED", "CITATION_VERIFIED_UNCONFIRMED", 1)])
+def test_source_investigation_labels_unverified_claims_instead_of_source_supported(support, level, count):
+    from threading import RLock
+    from linkloom.ui.investigation import ProductInvestigationService
+    owner = SimpleNamespace(product_app=SimpleNamespace(_store_lock=RLock()))
+    snapshot = {"reviewer": {"decision": "evidence_sufficient"}, "kind": "success", "trace": [],
+                "run": {"thread_id": "t", "runtime_id": "r"}, "task_plan": None,
+                "typed_claims": [{"subject": "Cobalt B", "predicate": "owner_of_project", "object": "Mira Chen",
+                                  "valid_on": None, "temporal_kind": None, "evidence_ids": ["ev_1"],
+                                  "quote": "Cobalt B is owned by Mira Chen", "support": support}]}
+    ProductInvestigationService._source_relations(owner, snapshot, {})
+    source = snapshot["source_investigation"]
+    assert source["evidence_level"] == level and source["unverified_claim_count"] == count
+    assert [fact["support"] for fact in source["facts"]] == [support]

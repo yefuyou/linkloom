@@ -1082,7 +1082,7 @@
     const graphAmbiguous = source.graph_query?.status === "AMBIGUOUS";
     const complete = result.status === "COMPLETED" && source.answer;
     const conflict = result.uncertainty?.status === "conflicting_evidence";
-    const labels = {owner_of: t("Owner → work", "负责人 → 工作"), supersedes: t("New → previous", "新版本 → 旧版本"), alias_of: t("Alias → canonical", "别名 → 正式名称"), same_task: t("Merged observation → task", "已合并观察 → 任务"), alias_of_project: t("Alias → project", "别名 → 项目"), owner_of_project: t("Project → owner", "项目 → 负责人"), reports_to: t("Person → direct manager", "人员 → 直属上级")};
+    const labels = {owner_of: t("Owner → work", "负责人 → 工作"), supersedes: t("New → previous", "新版本 → 旧版本"), alias_of: t("Alias → canonical", "别名 → 正式名称"), same_task: t("Merged observation → task", "已合并观察 → 任务"), alias_of_project: t("Alias → project", "别名 → 项目"), owner_of_project: t("Project → owner", "项目 → 负责人"), reports_to: t("Person → reports to", "人员 → 汇报对象")};
     const facts = source.facts || [];
     const coreRefs = new Set([...facts.flatMap(fact => fact.evidence_refs || []), ...Object.values(source.conflicts || {}).flat()]);
     const coreEvidence = (result.evidence || []).filter(item => coreRefs.has(item.evidence_ref));
@@ -1095,7 +1095,7 @@
     }).join("");
     target.innerHTML = `<section class="panel ask-answer ${complete ? "" : "ask-answer--notice"}"><p class="ask-answer-status">${facts.length ? t("Source-supported relationship", "来源支持的关系") : t("Source investigation; no relationship verified", "来源调查，尚无关系得到核实")}</p>
       <h2 class="${complete ? "ask-answer-value" : "ask-answer-headline"}">${title}</h2>
-      <p>${complete ? t("Source evidence supports this relationship.", "已核验的来源证据支持此关系。") : conflict ? t("The known upstream facts are retained. Opposing sources prevent a unique downstream conclusion.", "已确认的上游关系予以保留；下游来源互相矛盾，不能选择唯一结论。") : t("The known upstream facts are retained. The requested final relationship remains unknown.", "已确认的上游关系予以保留；尚未找到足够证据确认最终关系。")}</p>
+      <p>${complete && source.unverified_claim_count > 0 ? t("Citations are verified, but the relationship itself was not independently confirmed.", "引用已核验，但关系本身未经独立确认。") : complete ? t("Source evidence supports this relationship.", "已核验的来源证据支持此关系。") : conflict ? t("The known upstream facts are retained. Opposing sources prevent a unique downstream conclusion.", "已确认的上游关系予以保留；下游来源互相矛盾，不能选择唯一结论。") : t("The known upstream facts are retained. The requested final relationship remains unknown.", "已确认的上游关系予以保留；尚未找到足够证据确认最终关系。")}</p>
       <p class="hint">${t("Source findings · business approval separate", "来源调查结果 · 业务批准需单独进行")}</p>
       <div class="ask-pills"><span>${(source.plan?.subgoals || []).length} ${t("relationship checks", "项关系核查")}</span></div>
       ${steps}<section class="ask-core-evidence"><h2>${t("Sources supporting the verified facts or conflict", "支持已核实关系或冲突的来源")}</h2>${coreEvidence.map((item, index) => askEvidence(item, index, locale)).join("")}</section>
