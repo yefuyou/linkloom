@@ -152,8 +152,8 @@ def route_question(query: str, slots: list[dict[str, Any]], resolver: Any, *,
     candidates, selected = discovery["candidates"], discovery["scope"]
     route, decided_by = task["intent"], discovery["decided_by"]
     llm_attempted, llm_error = False, None
-    # Write/imperative requests are refused by the admission gate (ask_admission) and the
-    # read-only Tool ACL; question wording does not unbind a retrieved scope here.
+    # Write/imperative requests are stopped by the model's WRITE_REQUEST operation and the
+    # read-only Tool ACL (ask_admission only filters output); question wording does not unbind a retrieved scope here.
     # Router off (no selector): entity_check (hard_veto, role_conflict) and conflicting_mentions are the
     # fail-closed no-model guard; they only block. A valid selector reply carries located entity_mentions,
     # which _mention_verdict checks instead, so the rule guess never overrides a valid model choice.

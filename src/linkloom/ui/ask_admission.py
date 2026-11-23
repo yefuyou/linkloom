@@ -12,7 +12,8 @@ DOMAINS = ('tasks', 'source_relations')
 _GREETING = re.compile(r'[\s!！?？,.，。]*(?:(?:你好|您好|谢谢|hello|hi|hey|thanks|thank you)[\s!！?？,.，。]*)+', re.I)
 # No natural-language keyword rule decides authorization. Authority comes only from structured checks (Tool ACL, workspace
 # id equality, the configured security model, structured reason codes) and output protection.
-_PROTECTED_ENV = ("GEMINI_API_KEY", "GOOGLE_API_KEY", "OPENAI_API_KEY", "DEEPSEEK_API_KEY")
+_PROTECTED_ENV = ("GEMINI_API_KEY", "GOOGLE_API_KEY", "OPENAI_API_KEY", "DEEPSEEK_API_KEY",
+                  "LINKLOOM_JEV_API_KEY", "TYPESAFE_API_KEY")
 _FRAGMENT_CHARS = 48
 _SKIPPED_KEYS = frozenset({"query"})  # the user's own text is echoed back and is not a host secret
 

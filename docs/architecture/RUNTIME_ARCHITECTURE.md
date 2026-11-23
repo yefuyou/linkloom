@@ -241,3 +241,17 @@ without calling F/G or the model. Current Evidence Catalog membership is require
 even if retained text/version is unchanged. Invalid source or lifecycle state
 returns no old quotes, relations or trace. Temporal/source-relation jobs keep
 their prior process-local product lifecycle.
+
+## Security without a security model
+
+Question wording is not an authorization signal. With no security adapter
+configured (rules mode), a prompt-injection or write request is stopped only by
+the model's WRITE_REQUEST operation, the read-only Tool ACL and the Host's
+workspace checks. `ask_admission.leaks_protected_text` additionally blocks Ask
+results (`trace`, `inspect`, `continue_run`, `ask`) that contain a configured
+provider key or a 48-character run of the Host prompts. Task, review and
+evidence endpoints return stored Runtime artifacts, not fresh agent text, and are
+not passed through this filter. The `semantic_support` flag (`UNVERIFIED`) for a
+claim whose citation is real but not Host-confirmed is surfaced in the
+source-relations investigation; other consumers receive the approved decision
+without it.

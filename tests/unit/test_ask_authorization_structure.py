@@ -57,6 +57,9 @@ def test_output_protection_withholds_configured_keys_and_system_prompt_text(monk
     from linkloom.ui.security_gate import PROMPT
     monkeypatch.setenv("DEEPSEEK_API_KEY", "ds-test-key-0123456789")
     assert leaks_protected_text({"conclusions": [{"rationale": "the key is ds-test-key-0123456789"}]})
+    for name in ("LINKLOOM_JEV_API_KEY", "TYPESAFE_API_KEY"):
+        monkeypatch.setenv(name, "extra-key-" + name)
+        assert leaks_protected_text({"conclusions": ["leak extra-key-" + name]})
     assert leaks_protected_text({"uncertainty": {"statement": "Quote: " + PROMPT[40:200]}})
     assert leaks_protected_text({"conclusions": ["  ".join(PROMPT[40:200].split())]})
 
