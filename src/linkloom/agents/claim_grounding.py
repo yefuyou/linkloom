@@ -89,7 +89,8 @@ TYPED_CLAIM_RELATIONS: dict[str, dict[str, Any]] = {
         "graph_edge": ("reports_to", "source"),
         "single_valued": True,
         "asymmetric": True,
-        "clause": "{subject}直接向{object}汇报",
+        # A confirmed reports_to edge does not say "direct", so the projection must not either (#149).
+        "clause": "{subject}报告给{object}",
     },
     "replaced_by": {
         "subject_type": "project",

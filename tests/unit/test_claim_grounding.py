@@ -284,3 +284,29 @@ def test_grounded_final_rejects_valid_but_unobserved_evidence(verified_claim_sou
     # All source facts remain valid; only the model's observed allowlist changes.
     with pytest.raises(ValidationError, match="not observed by the model"):
         TeamDecisionResult.from_grounded_final(text, [], **kwargs)
+
+
+def test_reports_to_projection_stays_weak_and_a_direct_leader_predicate_is_not_registered():
+    # #149: a weak reporting relation must never be rendered or proven as a "direct" leader.
+    from linkloom.agents.claim_grounding import TYPED_CLAIM_RELATIONS
+    clause = TYPED_CLAIM_RELATIONS["reports_to"]["clause"]
+    assert clause == "{subject}报告给{object}" and "直接" not in clause and "直属" not in clause
+    assert "direct_leader_of" not in TYPED_CLAIM_RELATIONS
+    note = "Weekly sync\nMira Chen reports to Kai Wu.\n"
+    span = _span("report.md", note, 2)
+    direct = _claim(span, subject="Mira Chen", predicate="direct_leader_of", obj="Kai Wu")
+    assert _status(direct, span, confirmed_facts=_index(
+        _edge("reports_to", "Mira Chen", "Kai Wu", path="report.md"), content=note, path="report.md")) == (
+        ClaimSupportStatus.UNVERIFIABLE, "PREDICATE_UNSUPPORTED")
+
+
+def test_reports_to_final_is_rendered_as_a_weak_report_never_as_a_direct_line():
+    span = _span("report.md", "Weekly sync\nMira Chen reports to Kai Wu.\n", 2)
+    ref = span["evidence_id"]
+    claim = {"subject": "Mira Chen", "predicate": "reports_to", "object": "Kai Wu", "evidence_ids": [ref],
+             "quote": span["quote"], "valid_on": None, "temporal_kind": None}
+    result = TeamDecisionResult.from_grounded_final(
+        json.dumps({"schema_version": "claim-proposal/v1", "claims": [claim]}), [ref],
+        evidence_by_ref={ref: span}, expected_workspace_id=WORKSPACE, final_protocol="claim-proposal/v1",
+        require_read_evidence=True, read_evidence_ids=[ref])
+    assert result.decision["value"] == "Mira Chen报告给Kai Wu" and "直接" not in result.decision["value"]
