@@ -164,7 +164,27 @@ class LinkLoomRequestHandler(BaseHTTPRequestHandler):
     def log_message(self, format: str, *args: object) -> None:
         return
 
+    _body_consumed = False
+
+    def _drain_unread_body(self) -> None:
+        # Replying and closing while request bytes are unread makes Windows reset
+        # the connection (WinError 10053/10054) before the client reads the response.
+        if self._body_consumed:
+            return
+        self._body_consumed = True
+        try:
+            length = int(self.headers.get("Content-Length", "0"))
+        except ValueError:
+            return
+        remaining = min(max(length, 0), MAX_PRODUCT_REQUEST_BYTES)
+        while remaining > 0:
+            chunk = self.rfile.read(min(remaining, 65536))
+            if not chunk:
+                break
+            remaining -= len(chunk)
+
     def _headers(self, status: int, content_type: str, length: int) -> None:
+        self._drain_unread_body()
         self.send_response(status)
         self.send_header("Content-Type", content_type)
         self.send_header("Content-Length", str(length))
@@ -559,7 +579,9 @@ class LinkLoomRequestHandler(BaseHTTPRequestHandler):
             self._send_error_payload(400, "INVALID_REQUEST", "The request body is invalid or too large.")
             return None
         try:
-            payload = json.loads(self.rfile.read(length).decode("utf-8"))
+            raw_body = self.rfile.read(length)
+            self._body_consumed = True
+            payload = json.loads(raw_body.decode("utf-8"))
         except (UnicodeDecodeError, json.JSONDecodeError):
             self._send_error_payload(400, "INVALID_JSON", "The request must be valid JSON.")
             return None
