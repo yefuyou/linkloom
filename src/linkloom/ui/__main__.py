@@ -153,7 +153,6 @@ def main() -> int:
                     request,
                     guard_id=guard_id,
                     reservation_id=f"local-provider-request-{uuid4().hex}",
-                    estimated_cost_upper_bound_usd=0,
                 )
 
             # Task configuration is not permission to send imports. Its source

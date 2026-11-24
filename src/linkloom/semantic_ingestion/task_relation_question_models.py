@@ -1,7 +1,7 @@
 """Host-owned investigation contracts. Plans suggest work; they prove no facts."""
 from __future__ import annotations
 
-from dataclasses import asdict, dataclass, field
+from dataclasses import asdict, dataclass, field, fields
 import unicodedata
 
 from linkloom.agents.model_adapter import ModelUsage
@@ -24,15 +24,19 @@ class PlanningLimits:
     max_relation_hops: int = 3
     max_input_tokens: int = 24576
     max_output_tokens: int = 4096
-    max_provider_calls: int = 3
-    max_total_input_tokens: int = 73728
-    max_total_output_tokens: int = 12288
 
     def __post_init__(self):
-        ceilings = (32, 24, 16, 16, 3, 30720, 8192, 3, 92160, 24576)
+        ceilings = (32, 24, 16, 16, 3, 30720, 8192)
         for (name, value), ceiling in zip(asdict(self).items(), ceilings):
             if type(value) is not int or not 1 <= value <= ceiling:
                 raise ValueError('invalid planning limit: ' + name)
+
+    @classmethod
+    def from_dict(cls, data):
+        # Stored plans written before the cumulative call/token limits were
+        # removed carry extra keys. They are ignored and never gate anything.
+        names = {f.name for f in fields(cls)}
+        return cls(**{k: v for k, v in data.items() if k in names})
 
 
 @dataclass(frozen=True, slots=True)
@@ -192,7 +196,7 @@ class PlanningResult:
     response_sha256: str | None = None
     model_id: str | None = None
     actual_model_version: str | None = None
-    budget: dict = field(default_factory=dict)
+    session_usage: dict = field(default_factory=dict)
     untrusted_output: dict | None = None
     diagnostics: dict = field(default_factory=dict)
 
@@ -202,5 +206,5 @@ class PlanningResult:
                     provider_calls=self.provider_calls, usage=self.usage.to_dict(),
                     request_sha256=self.request_sha256, response_sha256=self.response_sha256,
                     model_id=self.model_id, actual_model_version=self.actual_model_version,
-                    budget=dict(self.budget), untrusted_output=self.untrusted_output,
+                    session_usage=dict(self.session_usage), untrusted_output=self.untrusted_output,
                     diagnostics=self.diagnostics)

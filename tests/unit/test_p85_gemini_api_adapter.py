@@ -982,7 +982,6 @@ def test_projected_provider_limits_are_still_enforced_locally(claims: list[dict]
             request,
             guard_id="p85-semantic-test-guard/v1",
             reservation_id="p85-semantic-test-reservation",
-            estimated_cost_upper_bound_usd=0,
         )
 
     extractor = ProviderNeutralSemanticExtractor(

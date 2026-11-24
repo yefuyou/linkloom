@@ -202,7 +202,7 @@ def run(inputs, output, *, profile='TASK_RECALL_V3', execute=False, gate=None):
         active.clear()
         active.update(ticket=ticket, sdk_entered=False)
         return ProviderRequestAuthorization.approve(request, guard_id=GUARD,
-            reservation_id=sha(canonical(request.to_dict())), estimated_cost_upper_bound_usd=.25)
+            reservation_id=sha(canonical(request.to_dict())))
 
     def record_batch(row):
         save_new(output / f'discovery/{row["meeting_id"]}-{row["batch_start"]:04d}.json', row)

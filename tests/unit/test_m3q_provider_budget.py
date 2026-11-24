@@ -10,9 +10,7 @@ from linkloom.ui.task_provider import TaskProviderLimits, TaskProviderSession
 
 
 def limits(**changes):
-    return TaskProviderLimits(**dict(max_requests=2, max_input_tokens=20000,
-        max_output_tokens=2000, max_cost_usd=.2, max_seconds=5,
-        request_timeout_seconds=1, request_cost_upper_bound_usd=.1, **changes))
+    return TaskProviderLimits(**dict(max_seconds=5, request_timeout_seconds=1, **changes))
 
 
 def request():

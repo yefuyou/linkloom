@@ -32,7 +32,7 @@ def build_graph_demo(database_path, *, seed_graph=True):
             OfflineSemanticProvider([*claims, claim('Birchline')]),
             provider_id='offline-semantic-provider', model_id='offline-semantic-model',
             request_guard=lambda request: ProviderRequestAuthorization.approve(
-                request, guard_id='graph-demo', reservation_id='offline', estimated_cost_upper_bound_usd=0),
+                request, guard_id='graph-demo', reservation_id='offline'),
             request_guard_id='graph-demo', max_attempts=1)
         demo.app.relation_resolver = FrozenRelationResolver(('owner_of_project', 'reports_to', 'uses supplier'),
             aliases={'负责': 'owner_of_project', '直接汇报': 'reports_to'})

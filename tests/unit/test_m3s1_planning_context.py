@@ -1,5 +1,6 @@
 from dataclasses import asdict,replace
 import json
+from linkloom.semantic_ingestion.task_relation_models import canonical_hash
 from linkloom.semantic_ingestion.task_relation_question_models import VerifiedStepResult
 from linkloom.ui.task_investigation import HOST_OPERATION_CAPABILITIES
 from tests.m3s1_support import saved_context,saved_arguments,saved_attempt
@@ -10,7 +11,12 @@ def replan_fixture():
     session=planner(fake,host_capabilities=HOST_OPERATION_CAPABILITIES,result_verifier=lambda receipt,current:True)
     initial=session.plan(context)
     assert initial.status=='PLANNED',initial.errors
-    assert initial.plan.to_dict()==saved_attempt()['planning'][0]['plan']
+    saved=saved_attempt()['planning'][0]['plan'];fresh=initial.plan.to_dict()
+    # The recorded plan predates removal of the cumulative call/token limits: only those keys and the
+    # id hashed over them differ; every other field and the legacy id itself stay reproducible.
+    assert {k:v for k,v in saved['limits'].items() if k in fresh['limits']}==fresh['limits']
+    assert {k:v for k,v in fresh.items() if k not in {'plan_id','limits'}}=={k:v for k,v in saved.items() if k not in {'plan_id','limits'}}
+    assert saved['plan_id']=='investigation_v2_'+canonical_hash(dict(initial.plan._payload(),limits=saved['limits']))
     discover=next(s for s in initial.plan.ready_steps if s.kind=='discover')
     receipt=VerifiedStepResult(initial.plan.plan_id,discover.id,'host_'+discover.execution_key,'a'*64,
         'Bounded F snapshot examined; no new handles; missing information remains UNKNOWN.','UNKNOWN')

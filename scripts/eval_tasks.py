@@ -721,7 +721,7 @@ def linkloom_predict(meeting, client, *, speaker_wiring=False, task_extraction_m
     adapter = ObservationAdapter(client)
     extractor = ProviderNeutralSemanticExtractor(adapter, provider_id="gemini", model_id=GEMINI,
         request_guard=lambda r: ProviderRequestAuthorization.approve(r, guard_id="ami-counter",
-            reservation_id=r.turn_id, estimated_cost_upper_bound_usd=client.counter.quote(GEMINI, r.to_dict(), GEMINI_MAX_OUTPUT)),
+            reservation_id=r.turn_id),
         request_guard_id="ami-counter", max_attempts=1, max_output_tokens=GEMINI_MAX_OUTPUT,
         temperature=None, thinking_level=GEMINI_THINKING)
     windows = (speaker_windows(meeting) if speaker_wiring else
@@ -749,7 +749,7 @@ def linkloom_predict(meeting, client, *, speaker_wiring=False, task_extraction_m
         result = TaskObservationDiscoveryService(extractor, source_registry=registry,
             current_source=lambda workspace, identity: artifact,
             limits=DiscoveryLimits(max_chars=16000 if speaker_wiring else 12000,
-                max_bytes=24000 if speaker_wiring else 20000, max_calls=1),
+                max_bytes=24000 if speaker_wiring else 20000),
             task_profile=TaskDiscoveryProfile.TASK_RECALL_V3).discover((artifact,), workspace_id="ami-eval")
         if speaker_wiring:
             new_json(client.output_dir / f'{meeting["meeting_id"]}.chunk-{index}.discovery.json', result.to_dict())

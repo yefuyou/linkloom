@@ -7,7 +7,6 @@ from __future__ import annotations
 
 from dataclasses import asdict, dataclass, fields, replace
 import json
-import math
 import os
 from types import SimpleNamespace
 
@@ -23,23 +22,23 @@ from linkloom.tools.semantic_context import build_semantic_context, evidence_cov
 @dataclass(frozen=True)
 class SemanticCallPolicy:
     execution_kind: str
-    max_requests: int = 1
     max_input_tokens: int = 32768
     max_output_tokens: int = 8192
-    max_cost_usd: float = 0.0
-    request_cost_upper_bound_usd: float = 0.0
     live_authorized: bool = False
 
     def __post_init__(self):
         if self.execution_kind not in {"FAKE", "REPLAY"} and not (self.execution_kind == 'LIVE' and self.live_authorized is True):
             raise ValueError("new live semantic Provider execution is not enabled")
-        if type(self.max_requests) is not int or self.max_requests not in (0, 1):
-            raise ValueError("one semantic batch per run; request budget must be 0 or 1")
         if any(type(v) is not int or v < 1 for v in (self.max_input_tokens, self.max_output_tokens)):
-            raise ValueError("explicit positive semantic token budgets required")
-        if any(isinstance(v, bool) or not isinstance(v, (int, float)) or not math.isfinite(v) or v < 0
-               for v in (self.max_cost_usd, self.request_cost_upper_bound_usd)):
-            raise ValueError("invalid semantic cost budget")
+            raise ValueError("explicit positive per-request semantic token sizes required")
+
+    @classmethod
+    def from_dict(cls, data):
+        # Saved policies written before the request/cost quotas were removed
+        # carry max_requests, max_cost_usd and request_cost_upper_bound_usd.
+        # Those keys are ignored; replay safety is the exclusive reservation file.
+        names = {f.name for f in fields(cls)}
+        return cls(**{k: v for k, v in data.items() if k in names})
 
 
 def _restore_result(data, context, model_id):
@@ -220,10 +219,6 @@ class BoundSemanticAnalysis:
             if not self._exists(self.response_ref):
                 return self._blocked(call, built, ["SEMANTIC_OUTCOME_UNKNOWN"])
         else:
-            if self.owner.policy.max_requests == 0:
-                return self._blocked(call, built, ["SEMANTIC_REQUEST_BUDGET_EXHAUSTED"])
-            if self.owner.policy.request_cost_upper_bound_usd > self.owner.policy.max_cost_usd:
-                return self._blocked(call, built, ["SEMANTIC_COST_BUDGET_EXHAUSTED"])
             if self.owner.adapter is None:
                 return self._blocked(call, built, ["SEMANTIC_PROVIDER_NOT_CONFIGURED"])
 
@@ -245,7 +240,7 @@ class BoundSemanticAnalysis:
                     outer_tool_call=call.to_dict(), model_request=actual.to_dict()), kind="request")
                 reserved_here = True
             return ProviderRequestAuthorization.approve(actual, guard_id="m3-host",
-                reservation_id=self.invocation_id, estimated_cost_upper_bound_usd=self.owner.policy.request_cost_upper_bound_usd)
+                reservation_id=self.invocation_id)
 
         def complete(actual):
             if exists:

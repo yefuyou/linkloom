@@ -27,7 +27,7 @@ def graph_http(tmp_path,monkeypatch):
           outputs=[dict(step='leader',field='node')])
         model=Model(raw);models.append(model)
         return GraphQuestionPlanner(model,model_id='fake',guard_id='http',request_guard=lambda r:
-          ProviderRequestAuthorization.approve(r,guard_id='http',reservation_id='local',estimated_cost_upper_bound_usd=0))
+          ProviderRequestAuthorization.approve(r,guard_id='http',reservation_id='local'))
     worker=GraphInvestigationService(lambda ws:store,factory)
     demo.server.unified_ask.graph_service=worker
     try:yield demo,workspace,worker,models
@@ -67,7 +67,7 @@ def test_planning_failure_and_unknown_try_legacy_but_preserve_unanswered_graph(g
     worker.planner_factory=lambda context:GraphQuestionPlanner(Model(dict(applicable=True,as_of='',refusal_reasons=[],steps=[
       dict(id='s',input_node=next(n for n in context.nodes if n.kind=='project').node_id,input_step='',edge_type='owner_of',direction='in',as_of='')],
       outputs=[dict(step='s',field='node')])),model_id='fake',guard_id='local',request_guard=lambda r:
-      ProviderRequestAuthorization.approve(r,guard_id='local',reservation_id='local',estimated_cost_upper_bound_usd=0))
+      ProviderRequestAuthorization.approve(r,guard_id='local',reservation_id='local'))
     status,body=request_json(demo.base_url,'/api/product/ask',method='POST',data=dict(query='负责人',workspace_id=workspace,as_of='2026-05-01'))
     # UNKNOWN attempts legacy; no wording template refuses it, so the source investigation starts.
     assert status==202 and body['result']['path']=='SOURCE_RELATION_INVESTIGATION',body

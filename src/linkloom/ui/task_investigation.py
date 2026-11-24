@@ -138,34 +138,28 @@ class ProductTaskSources:
 
 
 class _AuditedAdapter:
-    def __init__(self, adapter, root, stage, validate, *, max_calls, max_request_bytes=48 * 1024):
+    def __init__(self, adapter, root, stage, validate, *, max_request_bytes=48 * 1024):
         self.adapter, self.root, self.stage, self.validate = adapter, root, stage, validate
         self.count = 0
-        self.max_calls, self.max_request_bytes = max_calls, max_request_bytes
-        self.input_reserved = self.output_reserved = 0
+        self.max_request_bytes = max_request_bytes
+        self.request_bytes = 0
 
     def complete(self, request):
         self.validate()
         size = len(json.dumps(request.to_dict(), ensure_ascii=False).encode('utf8'))
-        if self.count >= self.max_calls or size > self.max_request_bytes:
-            raise ValueError('HOST_STAGE_BUDGET_EXHAUSTED')
+        if size > self.max_request_bytes:
+            raise ValueError('HOST_STAGE_REQUEST_TOO_LARGE')
         self.count += 1
-        self.input_reserved += size + 1024
+        self.request_bytes += size
         output_limit = request.generation_options.max_output_tokens
-        self.output_reserved += output_limit
         path = self.root / f'{self.stage}-{self.count}.json'
         payload = {'request': request.to_dict(), 'request_sha256': canonical_hash(request.to_dict())}
-        payload['reservation'] = dict(calls_reserved=self.count, max_calls=self.max_calls,
-            input_tokens_upper_bound=size + 1024, output_tokens=output_limit,
-            max_request_bytes=self.max_request_bytes,
-            new_billable_cost_usd=None if hasattr(self.adapter, 'session') else 0.0)
+        payload['request_info'] = dict(call_number=self.count, request_bytes=size,
+            max_output_tokens=output_limit, max_request_bytes=self.max_request_bytes)
         path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding='utf8')
         try:
             response = self.adapter.complete(request)
             payload['response'] = response.to_dict()
-            if ((response.usage.input_tokens or 0) > size + 1024
-                    or (response.usage.output_tokens or 0) > output_limit):
-                raise ValueError('HOST_STAGE_USAGE_EXCEEDED')
             self.validate()
             return response
         except Exception as exc:
@@ -214,8 +208,14 @@ def restore_task_preparation(sources, manifest, *, relation_path=None):
     plan = InvestigationPlan(data['goal'], data['workspace_id'], data['snapshot_hash'], tuple(steps),
         tuple(data['uncertainties']), tuple(data['refusal_reasons']),
         tuple(VerifiedStepResult(**r) for r in data['verified_results']), data['parent_plan_id'],
-        tuple(data['gaps']), PlanningLimits(**data['limits']))
-    if plan.to_dict() != data:
+        tuple(data['gaps']), PlanningLimits.from_dict(data['limits']))
+    expected = plan.to_dict()
+    if data['limits'] != expected['limits']:
+        # Plans saved before the cumulative call/token limits were removed keep
+        # their original limits and hash; they stay readable, not enforced.
+        payload = dict(plan._payload(), limits=data['limits'])
+        expected = dict(expected, plan_id='investigation_v2_' + canonical_hash(payload), limits=data['limits'])
+    if expected != data:
         raise ValueError('SAVED_PLAN_BINDING_INVALID')
     context = SemanticContext(sources.workspace_id, manifest['question'], sources.artifacts, observations,
         tuple((f'task_{i}', ObservationRef.from_observation(o)) for i, o in enumerate(observations)),
@@ -232,7 +232,7 @@ def restore_task_preparation(sources, manifest, *, relation_path=None):
         semantic = SemanticAnalysis('product-investigation', sources.workspace_id,
             lambda: (sources.validate_current() or SemanticSourceSnapshot.from_context(context)),
             ReadOnlyAdapter(), model_id=manifest['model_id'],
-            policy=SemanticCallPolicy(**manifest.get('semantic_policy', dict(
+            policy=SemanticCallPolicy.from_dict(manifest.get('semantic_policy', dict(
                 execution_kind=manifest['execution_kind']))))
     raw = TaskContextSnapshot(sources.workspace_id, observations, sources.artifacts, sources.registry)
     tools = TaskRelationTools(sources.workspace_id, lambda: (sources.validate_current() or raw),
@@ -259,14 +259,12 @@ def prepare_task_investigation(question, sources, models, root, *, relation_path
     def guard(request):
         sources.validate_current()
         return ProviderRequestAuthorization.approve(request, guard_id=guard_id,
-            reservation_id=canonical_hash(request.to_dict()),
-            estimated_cost_upper_bound_usd=0)
+            reservation_id=canonical_hash(request.to_dict()))
 
     def stage_adapter(adapter, stage):
         return provider_session.bind(adapter, stage) if provider_session else adapter
 
-    discovery_adapter = _AuditedAdapter(stage_adapter(models.discovery, 'discovery'), root, 'discovery', sources.validate_current,
-        max_calls=models.discovery_limits.max_calls)
+    discovery_adapter = _AuditedAdapter(stage_adapter(models.discovery, 'discovery'), root, 'discovery', sources.validate_current)
     extractor = ProviderNeutralSemanticExtractor(
         discovery_adapter,
         provider_id=models.provider_id if models.execution_kind == 'LIVE' else models.execution_kind, model_id=models.model_id,
@@ -286,8 +284,7 @@ def prepare_task_investigation(question, sources, models, root, *, relation_path
     # G can plan with incomplete Discovery. That coverage is never evidence of
     # absence, and is separately retained in the final release gaps.
     receipts = {}
-    planning_adapter = _AuditedAdapter(stage_adapter(models.planner, 'planning'), root, 'planning', sources.validate_current,
-        max_calls=models.planning_limits.max_provider_calls)
+    planning_adapter = _AuditedAdapter(stage_adapter(models.planner, 'planning'), root, 'planning', sources.validate_current)
     planner = InvestigationPlanner(planning_adapter,
         model_id=models.model_id, request_guard=guard, guard_id=guard_id, limits=models.planning_limits,
         host_capabilities=HOST_OPERATION_CAPABILITIES,
@@ -370,13 +367,11 @@ def prepare_task_investigation(question, sources, models, root, *, relation_path
         semantic_policy=asdict(semantic_policy),
         operation_capabilities=HOST_OPERATION_CAPABILITIES, ready_tool_operations=ready_tools,
         discovery=discovery.to_dict(), planning=plans, source_mapping=sources.mapping,
-        source_snapshot_hash=sources.identity, gaps=gaps, stage_budget=dict(
-            discovery_calls_reserved=len(discovery.extractions), discovery_call_limit=models.discovery_limits.max_calls,
-            discovery_input_tokens_reserved_upper_bound=discovery_adapter.input_reserved,
-            discovery_output_tokens_reserved=discovery_adapter.output_reserved,
+        source_snapshot_hash=sources.identity, gaps=gaps, stage_usage=dict(
+            discovery_calls=len(discovery.extractions),
+            discovery_request_bytes=discovery_adapter.request_bytes,
             discovery_max_request_bytes=discovery_adapter.max_request_bytes,
-            planning=planning.budget, semantic_call_limit=1 if queries else 0,
-            new_billable_cost_usd=None if provider_session else 0.0),
+            planning=planning.session_usage, semantics_requested=bool(queries)),
         evidence_layers=dict(component='SEPARATE_TEST_EVIDENCE', integration=models.execution_kind,
             real_model_semantics='NOT_EVALUATED', real_product_business_task='NOT_EVALUATED'))
     sources.validate_current()

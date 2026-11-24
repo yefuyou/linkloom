@@ -125,7 +125,7 @@ def confirm_candidates(public,database_path):
                         valid_to=original.get('valid_to'),confidence=dict.fromkeys(('claim_type','entity','relation','temporal','overall'),.95)))
                 guard_id='given-public-candidates'
                 extractor=ProviderNeutralSemanticExtractor(_GivenCandidates(claims),provider_id='simulated-human-no-model',model_id='given-candidates',
-                    request_guard=lambda r:ProviderRequestAuthorization.approve(r,guard_id=guard_id,reservation_id='no-model',estimated_cost_upper_bound_usd=0),
+                    request_guard=lambda r:ProviderRequestAuthorization.approve(r,guard_id=guard_id,reservation_id='no-model'),
                     request_guard_id=guard_id,max_attempts=1)
                 resolver=FrozenRelationResolver(tuple(sorted({c['relation'] for c in claims})))
                 results=SemanticIngestionPipeline(extractor,CandidateValidator()).process_segment(segments[0],artifact,SemanticExtractionContext(workspace,resolver))

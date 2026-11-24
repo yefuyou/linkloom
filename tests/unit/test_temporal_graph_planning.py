@@ -25,7 +25,7 @@ def output(ctx):
       outputs=[dict(step='manager',field='node')])
 
 def planner(model,**kwargs):
-    guard=lambda request:ProviderRequestAuthorization.approve(request,guard_id='test',reservation_id='local',estimated_cost_upper_bound_usd=0)
+    guard=lambda request:ProviderRequestAuthorization.approve(request,guard_id='test',reservation_id='local')
     return GraphQuestionPlanner(model,model_id='fake',request_guard=guard,guard_id='test',**kwargs)
 
 
@@ -48,7 +48,7 @@ def test_model_cannot_invent_scope_or_turn_plan_into_facts(attack):
     assert planner(Model(raw)).plan(ctx)['status']=='OUTPUT_INVALID'
 
 
-def test_budget_and_guard_fail_before_provider_and_changed_context_after_call_cannot_publish():
+def test_request_size_and_guard_fail_before_provider_and_changed_context_after_call_cannot_publish():
     ctx=context();model=Model(output(ctx))
     assert planner(model,limits=PlanningLimits(max_input_tokens=1)).plan(ctx)['status']=='BLOCKED' and model.calls==[]
     current=[True];ctx=replace(ctx,validate_current=lambda:current[0]); model=Model(output(ctx),lambda:current.__setitem__(0,False))
@@ -116,7 +116,7 @@ class ReviewedModel(Model):
         return super().complete(request)
 
 
-def test_two_call_intent_review_preserves_exact_plan_and_cumulative_budget():
+def test_two_call_intent_review_preserves_exact_plan():
     ctx=context();model=ReviewedModel(output(ctx),dict(aligned=True,reason='ALIGNED'))
     session=planner(model,alignment_review=True);result=session.plan(ctx)
     assert result['status']=='PLANNED' and len(model.calls)==2 and result['provider_calls']==2
@@ -139,11 +139,10 @@ def test_intent_rejection_or_repair_attempt_cannot_publish_plan(review,reason):
     assert result['status']=='OUTPUT_INVALID' and result['plan'] is None and result['reason']==reason and len(model.calls)==2
 
 
-def test_review_shares_authorization_and_never_resets_budget_or_trusts_changed_context():
+def test_review_shares_authorization_and_never_trusts_changed_context():
     ctx=context();model=ReviewedModel(output(ctx),dict(aligned=True,reason='ALIGNED'))
-    limits=PlanningLimits(max_provider_calls=1)
-    result=planner(model,alignment_review=True,limits=limits).plan(ctx)
-    assert result['reason']=='SESSION_BUDGET_EXHAUSTED' and len(model.calls)==1 and result['plan'] is None
+    result=planner(model,alignment_review=True).plan(ctx)
+    assert result['status']=='PLANNED' and len(model.calls)==2 and result['plan'] is not None
     current=[True];ctx=replace(ctx,validate_current=lambda:current[0])
     model=ReviewedModel(output(ctx),dict(aligned=True,reason='ALIGNED'),lambda:current.__setitem__(0,False))
     result=planner(model,alignment_review=True).plan(ctx)
@@ -152,7 +151,7 @@ def test_review_shares_authorization_and_never_resets_budget_or_trusts_changed_c
     def guard(request):
         guarded.append(request.turn_id)
         if len(guarded)==2:object.__setattr__(request,'user_input',request.user_input+'tampered')
-        return ProviderRequestAuthorization.approve(request,guard_id='test',reservation_id='local',estimated_cost_upper_bound_usd=0)
+        return ProviderRequestAuthorization.approve(request,guard_id='test',reservation_id='local')
     ctx=context();session=GraphQuestionPlanner(model,model_id='fake',request_guard=guard,guard_id='test',alignment_review=True)
     result=session.plan(ctx)
     assert result['reason']=='EXACT_REQUEST_NOT_AUTHORIZED' and len(model.calls)==1 and len(guarded)==2
@@ -162,9 +161,18 @@ def test_review_shares_authorization_and_never_resets_budget_or_trusts_changed_c
 def test_draft_and_intent_review_share_same_deepseek_generation_parameters():
     from linkloom.agents.providers.deepseek_api import build_deepseek_request
     ctx=context();model=ReviewedModel(output(ctx),dict(aligned=True,reason='ALIGNED'))
-    limits=PlanningLimits(max_output_tokens=1024,max_total_output_tokens=2048,max_provider_calls=2)
+    limits=PlanningLimits(max_output_tokens=1024)
     assert planner(model,alignment_review=True,limits=limits).plan(ctx)['status']=='PLANNED'
     payloads=[build_deepseek_request(r) for r in model.calls]
     for payload in payloads:
         assert payload['model']=='fake' and payload['max_tokens']==1024 and payload['temperature']==0
         assert payload['thinking']=={'type':'disabled'}
+
+
+def test_provider_exception_latches_graph_session_and_never_resends():
+    class Broken(Model):
+        def complete(self,request):
+            self.calls.append(request);raise RuntimeError('timeout after send')
+    ctx=context();model=Broken(output(ctx));session=planner(model)
+    assert session.plan(ctx)['reason']=='PROVIDER_EXCEPTION'
+    assert session.plan(ctx)['reason']=='GRAPH_SESSION_SINGLE_USE' and len(model.calls)==1

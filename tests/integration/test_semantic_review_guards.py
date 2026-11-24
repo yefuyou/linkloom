@@ -44,7 +44,8 @@ def test_incomplete_raw_parser_result_is_blocked_before_semantic_adapter(tmp_pat
     ("workspace_id", "other"), ("investigation_id", "forged"), ("errors", []),
     ("execution", {"kind": "LIVE", "new_live_provider_requests": 1})])
 def test_reviewer_rejects_changed_blocked_projection(tmp_path, field, value):
-    bound, call, _, _ = prepared(tmp_path, policy=SemanticCallPolicy("FAKE", max_requests=0))
+    bound, call, _, _ = prepared(tmp_path)
+    bound.owner.adapter = None
     result = bound.execute(call)
     assert result["result_artifact"] is None and bound.review(result, call_id=call.call_id)["status"] == "pass"
     result[field] = value

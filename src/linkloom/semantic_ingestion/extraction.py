@@ -162,12 +162,11 @@ _EXTRACTION_SCHEMA_SHA256 = _sha256(_canonical_json(_EXTRACTION_SCHEMA))
 
 @dataclass(frozen=True, slots=True)
 class ProviderRequestAuthorization:
-    """A budget guard's auditable approval for one exact normalized request."""
+    """A host guard's auditable approval for one exact normalized request."""
 
     guard_id: str
     request_sha256: str
     reservation_id: str
-    estimated_cost_upper_bound_usd: float
     authorized: bool = True
 
     def __post_init__(self) -> None:
@@ -177,13 +176,6 @@ class ProviderRequestAuthorization:
                 raise ValueError(f"{name} is required")
         if not re.fullmatch(r"[0-9a-f]{64}", self.request_sha256):
             raise ValueError("request_sha256 must be a lowercase SHA-256 digest")
-        if (
-            isinstance(self.estimated_cost_upper_bound_usd, bool)
-            or not isinstance(self.estimated_cost_upper_bound_usd, (int, float))
-            or not math.isfinite(self.estimated_cost_upper_bound_usd)
-            or self.estimated_cost_upper_bound_usd < 0
-        ):
-            raise ValueError("estimated cost upper bound must be finite and non-negative")
         if not isinstance(self.authorized, bool):
             raise ValueError("authorized must be boolean")
 
@@ -194,14 +186,12 @@ class ProviderRequestAuthorization:
         *,
         guard_id: str,
         reservation_id: str,
-        estimated_cost_upper_bound_usd: float,
     ) -> "ProviderRequestAuthorization":
         request_sha256 = _sha256(_canonical_json(request.to_dict()))
         return cls(
             guard_id=guard_id,
             request_sha256=request_sha256,
             reservation_id=reservation_id,
-            estimated_cost_upper_bound_usd=estimated_cost_upper_bound_usd,
         )
 
 
@@ -947,13 +937,8 @@ class ProviderNeutralSemanticExtractor:
                         latency_ms=(time.perf_counter() - started) * 1000,
                         failure_code=CandidateReasonCode.PROVIDER_REQUEST_BLOCKED.value,
                         outcome="preflight_blocked",
-                        budget_reservation_id=(
+                        authorization_id=(
                             authorization.reservation_id if authorization is not None else None
-                        ),
-                        estimated_cost_upper_bound_usd=(
-                            authorization.estimated_cost_upper_bound_usd
-                            if authorization is not None
-                            else None
                         ),
                     )
                 )
@@ -976,8 +961,7 @@ class ProviderNeutralSemanticExtractor:
                         latency_ms=elapsed_ms,
                         failure_code="PROVIDER_CALL_EXCEPTION",
                         outcome="provider_call_exception",
-                        budget_reservation_id=authorization.reservation_id,
-                        estimated_cost_upper_bound_usd=authorization.estimated_cost_upper_bound_usd,
+                        authorization_id=authorization.reservation_id,
                     )
                 )
                 terminal_reason = CandidateReasonCode.EXTRACTION_FAILED
@@ -998,8 +982,7 @@ class ProviderNeutralSemanticExtractor:
                         latency_ms=elapsed_ms,
                         failure_code="PROVIDER_RESPONSE_TYPE_INVALID",
                         outcome="provider_call_exception",
-                        budget_reservation_id=authorization.reservation_id,
-                        estimated_cost_upper_bound_usd=authorization.estimated_cost_upper_bound_usd,
+                        authorization_id=authorization.reservation_id,
                     )
                 )
                 terminal_reason = CandidateReasonCode.EXTRACTION_FAILED
@@ -1031,8 +1014,7 @@ class ProviderNeutralSemanticExtractor:
                         latency_ms=elapsed_ms,
                         failure_code=error.code,
                         outcome=("known_provider_failure" if known_failure else "unknown_provider_outcome"),
-                        budget_reservation_id=authorization.reservation_id,
-                        estimated_cost_upper_bound_usd=authorization.estimated_cost_upper_bound_usd,
+                        authorization_id=authorization.reservation_id,
                     )
                 )
                 terminal_reason = CandidateReasonCode.EXTRACTION_FAILED
@@ -1089,8 +1071,7 @@ class ProviderNeutralSemanticExtractor:
                     latency_ms=elapsed_ms,
                     failure_code=terminal_reason.value if terminal_reason is not None else None,
                     outcome="accepted_response",
-                    budget_reservation_id=authorization.reservation_id,
-                    estimated_cost_upper_bound_usd=authorization.estimated_cost_upper_bound_usd,
+                    authorization_id=authorization.reservation_id,
                 )
             )
             # Never replay an accepted response after local parsing or validation fails.

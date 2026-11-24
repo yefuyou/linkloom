@@ -72,7 +72,7 @@ def prepare(content, replies, *, source_id="meeting.txt", recorded_at=None):
     context = SemanticExtractionContext(artifact.workspace_id, FrozenRelationResolver(("uses vendor",)))
     provider = RecordedProvider(replies)
     extractor = ProviderNeutralSemanticExtractor(provider, provider_id="offline-recorded", model_id="m1-script",
-        request_guard=lambda request: ProviderRequestAuthorization.approve(request, guard_id="offline-m1", reservation_id="offline", estimated_cost_upper_bound_usd=0),
+        request_guard=lambda request: ProviderRequestAuthorization.approve(request, guard_id="offline-m1", reservation_id="offline"),
         request_guard_id="offline-m1", max_attempts=1)
     return artifact, segments, context, provider, SemanticIngestionPipeline(extractor, CandidateValidator())
 

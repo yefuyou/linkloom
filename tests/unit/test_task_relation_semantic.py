@@ -27,7 +27,7 @@ class FakeModel:
 
 def proposer(fake):
     return SemanticProposer(fake,model_id='gemini-3.8-flash',request_guard=lambda r:
-        ProviderRequestAuthorization.approve(r,guard_id='test',reservation_id='test-only',estimated_cost_upper_bound_usd=0),
+        ProviderRequestAuthorization.approve(r,guard_id='test',reservation_id='test-only'),
         guard_id='test')
 
 
@@ -171,7 +171,7 @@ def test_missing_output_is_not_interpreted_as_refuted_and_guard_binds_exact_requ
     fake=FakeModel(response_arguments(context))
     from linkloom.semantic_ingestion.extraction import ProviderRequestAuthorization
     denied=SemanticProposer(fake,model_id='gemini-3.8-flash',guard_id='right',request_guard=lambda r:
-        ProviderRequestAuthorization.approve(r,guard_id='wrong',reservation_id='test',estimated_cost_upper_bound_usd=0))
+        ProviderRequestAuthorization.approve(r,guard_id='wrong',reservation_id='test'))
     assert denied.propose(context).status=='BLOCKED' and not fake.requests
 
 

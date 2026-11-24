@@ -138,10 +138,8 @@ def _authorize_request(
             request,
             guard_id=guard_id,
             reservation_id=reservation_id,
-            estimated_cost_upper_bound_usd=0.001,
         ).request_sha256,
         reservation_id=reservation_id,
-        estimated_cost_upper_bound_usd=0.001,
         authorized=authorized,
     )
 
@@ -213,8 +211,7 @@ def test_decision_is_structured_source_grounded_and_non_authoritative() -> None:
     assert result.extraction_receipt.response_sha256
     assert result.extraction_receipt.usage.input_tokens == 12
     assert result.extraction_receipt.latency_ms >= 0
-    assert result.extraction_receipt.estimated_cost_upper_bound_usd == 0.001
-    assert result.extraction_receipt.attempts[0].budget_reservation_id == "test-reservation-1"
+    assert result.extraction_receipt.attempts[0].authorization_id == "test-reservation-1"
 
 
 def test_extractor_preserves_explicit_model_default_temperature() -> None:

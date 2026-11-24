@@ -27,8 +27,7 @@ class DecisionDiscoveryFixture(UnifiedAskFixture):
             OfflineSemanticProvider(claims), provider_id="offline-discovery",
             model_id="offline-discovery", max_attempts=1,
             request_guard=lambda request: ProviderRequestAuthorization.approve(
-                request, guard_id="offline-discovery/v1", reservation_id=uuid4().hex,
-                estimated_cost_upper_bound_usd=0.0), request_guard_id="offline-discovery/v1")
+                request, guard_id="offline-discovery/v1", reservation_id=uuid4().hex), request_guard_id="offline-discovery/v1")
         self._import_and_review(name="launch-budget.md",
             content="[2026-10-02T10:00:00Z] Alice: We decided that Launch has a budget of 50000.",
             value="50000", approve=True)

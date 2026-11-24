@@ -267,8 +267,7 @@ def _stage_two(extractor, task, segment, context, fingerprint, claim_index):
         usage=response.usage.to_dict() if isinstance(response, ModelResponse) else ModelUsage().to_dict(),
         provider_request_id=response.provider_request_id if isinstance(response, ModelResponse) else None,
         provider_response_id=response.provider_response_id if isinstance(response, ModelResponse) else None,
-        budget_reservation_id=authorization.reservation_id if authorization else None,
-        estimated_cost_upper_bound_usd=authorization.estimated_cost_upper_bound_usd if authorization else None,
+        authorization_id=authorization.reservation_id if authorization else None,
         latency_ms=(time.perf_counter() - started) * 1000, outcome=outcome, failure_code=failure,
         halt_annotations=halt, issues=list(dict.fromkeys(issues)))
     normalized = _normalized_task(task, segment, payload, issues)

@@ -17,7 +17,7 @@ def test_off_preserves_legacy_responses_and_never_enters_graph_budget(tmp_path, 
         baseline = UnifiedAskService(fixture.app, provider, graph_service=False)
         def forbidden(*args, **kwargs):
             raise AssertionError("legacy-only Ask must not enter graph budget")
-        monkeypatch.setattr("linkloom.ui.graph_investigation.graph_request_budget", forbidden)
+        monkeypatch.setattr("linkloom.ui.graph_investigation.graph_request_scope", forbidden)
         request = dict(query="Who is the current supplier?", workspace_id=fixture.workspace_ids[ATLAS],
                        subject=SUBJECT, relation=RELATION, as_of="2026-10-10")
         if case == "historical": request["as_of"] = "2026-10-06"

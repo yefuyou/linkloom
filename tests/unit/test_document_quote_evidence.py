@@ -44,7 +44,7 @@ def extract(artifact, claims, *fields, enabled=True):
     extractor = ProviderNeutralSemanticExtractor(
         provider, provider_id="offline", model_id="quote-fixture",
         request_guard=lambda request: ProviderRequestAuthorization.approve(
-            request, guard_id="test", reservation_id="test", estimated_cost_upper_bound_usd=0),
+            request, guard_id="test", reservation_id="test"),
         request_guard_id="test",
     )
     pipeline = SemanticIngestionPipeline(extractor, CandidateValidator())

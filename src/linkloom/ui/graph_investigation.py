@@ -26,8 +26,8 @@ _GRAPH_PROVIDER=ContextVar('graph_request_provider',default=None)
 
 
 @contextmanager
-def graph_request_budget():
-    # Thread/task-local; a different Ask must never inherit this reservation.
+def graph_request_scope():
+    # Thread/task-local; a different Ask must never inherit this Provider session.
     token=_GRAPH_PROVIDER.set(None)
     try:yield
     finally:_GRAPH_PROVIDER.reset(token)
@@ -183,17 +183,17 @@ def product_graph_service(app,investigation):
             with service._lock:service._provider_sessions.append(session)
             _GRAPH_PROVIDER.set(session)
             adapter=session.bind(models.planner,'graph-planning'); model_id=models.model_id
-            close=None; cost=0
+            close=None
         else:
             if service.model_factory is None or models is None:return None
             adapter=models.planner if models is not None else service.model_factory(context.question)
             model_id=models.model_id if models is not None else getattr(adapter,'model_id',None) or 'offline-graph-planner'
-            close=None;cost=0
+            close=None
         guard_id='product-graph-host'
         def guard(request):
             if context.validate_current() is not True:raise PermissionError('SOURCE_CHANGED')
             return ProviderRequestAuthorization.approve(request,guard_id=guard_id,
-                reservation_id=digest(request.to_dict()),estimated_cost_upper_bound_usd=cost)
+                reservation_id=digest(request.to_dict()))
         planner=GraphQuestionPlanner(adapter,model_id=model_id,request_guard=guard,guard_id=guard_id,alignment_review=False,grounding_required=True,mention_grounding=True)
         return (planner,close) if close else planner
     def admitted_planner_factory(context):

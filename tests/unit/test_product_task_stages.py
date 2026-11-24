@@ -56,7 +56,7 @@ def execute(rows, fields=(), *, a=None, on_call=None, admission=None):
     def guard(request):
         guards.append(request.to_dict())
         return ProviderRequestAuthorization.approve(request, guard_id='offline-stage-guard',
-            reservation_id=str(len(guards)), estimated_cost_upper_bound_usd=0)
+            reservation_id=str(len(guards)))
     extractor = ProviderNeutralSemanticExtractor(provider, provider_id='offline', model_id='offline-stages',
         request_guard=guard, request_guard_id='offline-stage-guard')
     segment = parse_source_text(a).segments[-1]
@@ -216,7 +216,7 @@ def test_revocation_inside_request_guard_prevents_external_provider_call(stage):
         if len(guards) == stage:
             admitted[0] = False
         return ProviderRequestAuthorization.approve(request, guard_id='guard',
-            reservation_id=str(len(guards)), estimated_cost_upper_bound_usd=0)
+            reservation_id=str(len(guards)))
     extractor = ProviderNeutralSemanticExtractor(provider, provider_id='offline', model_id='offline',
         request_guard=guard, request_guard_id='guard')
     with pytest.raises(PermissionError, match='revoked'):
@@ -234,7 +234,7 @@ def test_field_guard_internal_failure_is_security_failure_not_quality_fallback(e
         if request.agent_id == 'product-task-fields-stage2-v2':
             raise error
         return ProviderRequestAuthorization.approve(request, guard_id='guard',
-            reservation_id='one', estimated_cost_upper_bound_usd=0)
+            reservation_id='one')
     extractor=ProviderNeutralSemanticExtractor(provider, provider_id='offline', model_id='offline',
         request_guard=guard, request_guard_id='guard')
     with pytest.raises(PermissionError, match='authorization failed'):
@@ -283,7 +283,7 @@ def test_field_guard_budget_exhaustion_is_local_and_halts_annotation_inventory()
         if request.agent_id == 'product-task-fields-stage2-v2':
             raise AnnotationBudgetUnavailable('offline exhausted')
         return ProviderRequestAuthorization.approve(request, guard_id='guard',
-            reservation_id='one', estimated_cost_upper_bound_usd=0)
+            reservation_id='one')
     extractor=ProviderNeutralSemanticExtractor(provider, provider_id='offline', model_id='offline',
         request_guard=guard, request_guard_id='guard')
     result=SemanticIngestionPipeline(extractor, CandidateValidator()).process_segment_with_trace(

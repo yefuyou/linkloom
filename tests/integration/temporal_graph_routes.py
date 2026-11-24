@@ -87,13 +87,12 @@ class TemporalGraphDevRoutes:
             adapter=self._adapter();guard='frozen-dev-graph'
             return GraphQuestionPlanner(adapter,model_id=self.config['model_id'],guard_id=guard,
                 request_guard=lambda request:ProviderRequestAuthorization.approve(request,guard_id=guard,
-                  reservation_id=digest(request.to_dict()),estimated_cost_upper_bound_usd=0),
+                  reservation_id=digest(request.to_dict())),
                 alignment_review=self.config.get("graph_alignment_review",False),
                 grounding_required=self.config.get("graph_grounding_required",False),
                 mention_grounding=self.config.get("graph_mention_grounding",False),
-                limits=PlanningLimits(max_provider_calls=self.config.get("graph_max_provider_calls",1),max_output_tokens=self.max_output,
-                    max_input_tokens=min(self.max_input,30720),max_total_input_tokens=min(self.max_input,30720)*self.config.get("graph_max_provider_calls",1),
-                    max_total_output_tokens=self.max_output*self.config.get("graph_max_provider_calls",1)))
+                limits=PlanningLimits(max_output_tokens=self.max_output,
+                    max_input_tokens=min(self.max_input,30720)))
         from datetime import UTC,datetime
         fixed=self.config.get('query_time_fixed')
         clock=(lambda:datetime.fromisoformat(fixed+'T00:00:00+00:00')) if fixed else None
@@ -144,7 +143,7 @@ class TemporalGraphDevRoutes:
             checkpointer=InMemoryCheckpointer(),model=adapter)
         state_id='dev-'+uuid4().hex
         status=engine.start_multi_agent(RunRequest(request_id=state_id,thread_id=state_id,workflow='team_decision',
-            query=question,final_protocol='claim-proposal/v1',max_steps=self.legacy_turns,max_provider_requests=self.legacy_turns,dry_run=True))
+            query=question,final_protocol='claim-proposal/v1',max_steps=self.legacy_turns,dry_run=True))
         self._check_budget(before)
         state=engine.checkpointer.get_latest(state_id)
         final_path=root/'runtime'/'results'/status.run_id/'result.json'

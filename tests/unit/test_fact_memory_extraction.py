@@ -33,7 +33,7 @@ class Provider:
 def extractor(provider):
     return ProviderNeutralSemanticExtractor(provider, provider_id='offline', model_id='offline',
         request_guard=lambda request: ProviderRequestAuthorization.approve(request, guard_id='g',
-            reservation_id='r', estimated_cost_upper_bound_usd=0), request_guard_id='g', max_attempts=1)
+            reservation_id='r'), request_guard_id='g', max_attempts=1)
 
 
 def test_fact_prompt_and_schema_are_used_only_when_enabled(monkeypatch):

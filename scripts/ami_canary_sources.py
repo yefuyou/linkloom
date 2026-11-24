@@ -79,7 +79,7 @@ def extract_sources(sources, provider, guard, on_batch, stopped=lambda: False, t
         request_guard=guard, request_guard_id=GUARD, max_attempts=1, max_output_tokens=4096)
     service = TaskObservationDiscoveryService(extractor, source_registry=registry,
         current_source=lambda workspace, identity: current.get((workspace, identity)),
-        limits=DiscoveryLimits(max_sources=3, max_calls=3), task_profile=task_profile)
+        limits=DiscoveryLimits(max_sources=3), task_profile=task_profile)
     for meeting in MEETINGS:
         selected = [a for a in sources if a.workspace_id == meeting]
         for offset in range(0, len(selected), 3):

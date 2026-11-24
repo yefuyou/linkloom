@@ -57,8 +57,7 @@ def ambiguous_product(root,repeat_discover=False,only_one=False):
     app=ProductApplication(database_path=root/'product.sqlite',extractor=None)
     stages=[RecordedStage(s,repeat_discover,only_one) for s in ('discovery','planning','semantics')]
     transport=ScriptedGeminiTransport(stages)
-    budget=replace(limits(),max_requests=10,max_input_tokens=500000,max_output_tokens=65536,max_cost_usd=3,
-        max_seconds=90,request_timeout_seconds=10)
+    budget=replace(limits(), max_seconds=90,request_timeout_seconds=10)
     return app,compose_task_provider(app,GeminiProviderAdapter(transport),budget),transport,stages
 
 def start(base):

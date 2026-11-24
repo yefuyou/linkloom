@@ -135,7 +135,7 @@ class Harness:
             model = Model(raw); self.models.append(model)
             return GraphQuestionPlanner(model, model_id='fake', guard_id='compat', mention_grounding=mentions,
                 request_guard=lambda request: ProviderRequestAuthorization.approve(request,
-                    guard_id='compat', reservation_id='offline', estimated_cost_upper_bound_usd=0))
+                    guard_id='compat', reservation_id='offline'))
         return GraphInvestigationService(lambda workspace: store, factory)
 
     def ask_service(self, worker):
@@ -330,7 +330,7 @@ def dated_graph(h):
         h.models.append(model)
         return GraphQuestionPlanner(model, model_id='fake', guard_id='dated',
             request_guard=lambda r: ProviderRequestAuthorization.approve(r, guard_id='dated',
-                reservation_id='offline', estimated_cost_upper_bound_usd=0))
+                reservation_id='offline'))
     return workspace, store, GraphInvestigationService(lambda ws: store, factory)
 
 

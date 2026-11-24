@@ -100,7 +100,7 @@ def test_real_human_approval_receipt_projects_production_records_without_raw_rel
     claim=dict(claim_type='FACT',subject='Ada',relation='reports_to',value='Bo',temporal_status='EXPLICIT',
                valid_from='2026-04-01',valid_to=None,confidence=dict.fromkeys(('claim_type','entity','relation','temporal','overall'),.95))
     extractor=ProviderNeutralSemanticExtractor(RecordedProvider(claim),provider_id='offline',model_id='recorded',
-      request_guard=lambda r:ProviderRequestAuthorization.approve(r,guard_id='offline',reservation_id='offline',estimated_cost_upper_bound_usd=0),
+      request_guard=lambda r:ProviderRequestAuthorization.approve(r,guard_id='offline',reservation_id='offline'),
       request_guard_id='offline',max_attempts=1)
     try:
         with TemporalDecisionStore(path,source_registry=registry) as temporal:

@@ -178,8 +178,8 @@ class UnifiedAskService:
         if self.graph_service is None and self.router_provider is None:
             result, status = self._ask(payload, security=security)
         else:
-            from linkloom.ui.graph_investigation import graph_request_budget
-            with graph_request_budget():
+            from linkloom.ui.graph_investigation import graph_request_scope
+            with graph_request_scope():
                 result, status = self._ask(payload, security=security)
         if security:
             if security.get("status") == "COMPLETED":
@@ -753,7 +753,7 @@ class UnifiedAskService:
         # graph_query_status was already counted by the worker; count this attempt once.
         self.graph_service.metrics.record('legacy_fallback', context['reason'])
         # Re-enter the unchanged admission/routing path without a second graph call
-        # or a new Provider reservation. The outer graph_request_budget stays active.
+        # or a new Provider session. The outer graph_request_scope stays active.
         legacy, status = self._ask(payload, use_graph=False)
         if legacy.get('agent_run_id'):
             with self._lock:

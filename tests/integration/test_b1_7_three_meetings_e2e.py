@@ -84,8 +84,7 @@ def _server(tmp_path):
     extractor = ProviderNeutralSemanticExtractor(
         model, provider_id="e2e-offline", model_id="e2e-model",
         request_guard=lambda request: ProviderRequestAuthorization.approve(
-            request, guard_id="e2e-guard/v1", reservation_id=f"e2e-{len(model.requests) + 1}",
-            estimated_cost_upper_bound_usd=0.0),
+            request, guard_id="e2e-guard/v1", reservation_id=f"e2e-{len(model.requests) + 1}"),
         request_guard_id="e2e-guard/v1", max_attempts=1)
     app = ProductApplication(database_path=tmp_path / "product.sqlite", extractor=extractor,
                              relation_resolver=FrozenRelationResolver(("uses supplier",),

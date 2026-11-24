@@ -84,7 +84,7 @@ def app(tmp_path):
     extractor = ProviderNeutralSemanticExtractor(
         FactProvider(), provider_id="offline", model_id="offline-model",
         request_guard=lambda request: ProviderRequestAuthorization.approve(
-            request, guard_id="guard", reservation_id="r", estimated_cost_upper_bound_usd=0.0),
+            request, guard_id="guard", reservation_id="r"),
         request_guard_id="guard", max_attempts=1)
     application = ProductApplication(database_path=tmp_path / "product.sqlite", extractor=extractor)
     application.handle_post("/api/workspaces", {"name": "Personal facts"})

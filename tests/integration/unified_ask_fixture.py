@@ -483,7 +483,6 @@ class UnifiedAskFixture:
                 request,
                 guard_id="offline-fixture-guard/v1",
                 reservation_id=f"offline-fixture-reservation-{uuid4().hex[:10]}",
-                estimated_cost_upper_bound_usd=0.0,
             ),
             request_guard_id="offline-fixture-guard/v1",
             max_attempts=1,
