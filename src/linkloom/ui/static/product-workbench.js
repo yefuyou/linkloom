@@ -325,9 +325,9 @@
   /* ── 3. Ask Workbench: Truthful Execution & Trace Integration (no DOM JSON.parse) ── */
   function formatUsage(usage) {
     if (!usage || typeof usage !== "object") return t("Not reported", "未报告");
-    const inp = usage.input_tokens ?? usage.reported_input_tokens ?? usage.prompt_tokens;
-    const out = usage.output_tokens ?? usage.reported_output_tokens ?? usage.completion_tokens;
-    const tot = usage.total_tokens ?? usage.reported_total_tokens;
+    const inp = usage.input_tokens ?? usage.prompt_tokens;
+    const out = usage.output_tokens ?? usage.completion_tokens;
+    const tot = usage.total_tokens;
     if (inp == null && out == null && tot == null) return t("Not reported", "未报告");
     return `${inp ?? "?"} / ${out ?? "?"}${tot != null ? ` (total ${tot})` : ""}`;
   }
@@ -347,8 +347,11 @@
     const totalKnownZero = hasExec && routerCalls === 0 && answerCalls === 0;
     const routerUsageText = hasExec ? formatUsage(exec.router_reported_usage) : t("Not reported", "未报告");
 
-    const metrics = result.metrics || {};
-    const reservedUsd = metrics.reserved_upper_bound_usd ?? metrics.cost_reserved_usd ?? null;
+    const costs = result.telemetry?.cost || {};
+    const usd = field => (field && field.value != null ? `$${field.value}` : null);
+    const costText = [usd(costs.estimated_usd) && `${usd(costs.estimated_usd)} ${t("estimated", "估算")}`,
+      usd(costs.provider_reported_usd) && `${usd(costs.provider_reported_usd)} ${t("Provider reported", "Provider 报告")}`]
+      .filter(Boolean).join(" / ");
 
     const callBadge = !hasExec
       ? t("Provider calls: Unknown", "模型调用: 未知")
@@ -367,7 +370,7 @@
           <div class="trace-stat"><span class="trace-stat-label">${escapeHtml(t("Router calls", "Router 调用"))}</span><strong>${escapeHtml(routerCalls ?? t("Unknown", "未知"))}</strong></div>
           <div class="trace-stat"><span class="trace-stat-label">${escapeHtml(t("Answer calls", "Answer 调用"))}</span><strong>${escapeHtml(answerCalls ?? t("Unknown", "未知"))}</strong></div>
           <div class="trace-stat"><span class="trace-stat-label">${escapeHtml(t("Router reported usage", "Router 报告用量"))}</span><strong>${escapeHtml(routerUsageText)}</strong></div>
-          ${reservedUsd !== null ? `<div class="trace-stat"><span class="trace-stat-label">${escapeHtml(t("Reserved ceiling", "预留上限"))}</span><strong>${escapeHtml(`$${reservedUsd}`)}</strong></div>` : ""}
+          ${costText ? `<div class="trace-stat"><span class="trace-stat-label">${escapeHtml(t("Cost", "费用"))}</span><strong>${escapeHtml(costText)}</strong></div>` : ""}
         </div>
       `;
       const loadBtn = existingTrace.querySelector('[data-action="load-trace"]');
@@ -396,7 +399,7 @@
           <div class="trace-stat"><span class="trace-stat-label">${escapeHtml(t("Router calls", "Router 调用"))}</span><strong>${escapeHtml(routerCalls ?? t("Unknown", "未知"))}</strong></div>
           <div class="trace-stat"><span class="trace-stat-label">${escapeHtml(t("Answer calls", "Answer 调用"))}</span><strong>${escapeHtml(answerCalls ?? t("Unknown", "未知"))}</strong></div>
           <div class="trace-stat"><span class="trace-stat-label">${escapeHtml(t("Router reported usage", "Router 报告用量"))}</span><strong>${escapeHtml(routerUsageText)}</strong></div>
-          ${reservedUsd !== null ? `<div class="trace-stat"><span class="trace-stat-label">${escapeHtml(t("Reserved ceiling", "预留上限"))}</span><strong>${escapeHtml(`$${reservedUsd}`)}</strong></div>` : ""}
+          ${costText ? `<div class="trace-stat"><span class="trace-stat-label">${escapeHtml(t("Cost", "费用"))}</span><strong>${escapeHtml(costText)}</strong></div>` : ""}
         </div>
         <ol class="trace-nodes">
           ${nodes.map(n => `<li><strong>${escapeHtml(n.name)}</strong><span>${escapeHtml(n.detail)}</span></li>`).join("")}

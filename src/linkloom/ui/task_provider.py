@@ -19,6 +19,7 @@ from time import monotonic
 from uuid import uuid4
 
 from linkloom.agents.model_adapter import ModelProviderError, ModelResponse
+from linkloom.observability.pricing import estimate_cost_usd
 from linkloom.semantic_ingestion.task_relation_models import canonical_hash
 from linkloom.ui.lifecycle import BackgroundTasks, DEFAULT_SHUTDOWN_TIMEOUT, shutdown_deadline
 
@@ -159,6 +160,7 @@ class TaskProviderSession:
             self.requests += 1
             row = dict(sequence=self.requests, stage=stage, request_sha256=canonical_hash(request.to_dict()),
                 outcome='PENDING')
+            sent_at = monotonic()
             self.attempts.append(row)
             self._save()
             done, result = Event(), []
@@ -173,13 +175,22 @@ class TaskProviderSession:
 
             self._workers.start(f'task-provider-{self.root.parent.name}-{self.requests}', invoke)
             if not done.wait(min(remaining, self.limits.request_timeout_seconds)):
-                row['outcome'] = 'UNCERTAIN'
+                row.update(outcome='UNCERTAIN', code='PROVIDER_TIMEOUT_UNCERTAIN',
+                           duration_ms=round((monotonic() - sent_at) * 1000, 1))
                 return self._error('PROVIDER_TIMEOUT_UNCERTAIN', uncertain=True)
             response = result[0] if result else None
             if not isinstance(response, ModelResponse):
-                row['outcome'] = 'UNCERTAIN'
+                row.update(outcome='UNCERTAIN', code='PROVIDER_UNCERTAIN',
+                           duration_ms=round((monotonic() - sent_at) * 1000, 1))
                 return self._error('PROVIDER_UNCERTAIN', uncertain=True)
-            row.update(response_sha256=canonical_hash(response.to_dict()), usage=response.usage.to_dict(),
+            usage = response.usage
+            # Observation only: usage the Provider reported, a rate-based estimate (null when tokens are
+            # unknown) and the Provider's own bill. None of it is read back by this session.
+            row.update(response_sha256=canonical_hash(response.to_dict()), usage=usage.to_dict(),
+                duration_ms=usage.duration_ms if usage.duration_ms is not None
+                else round((monotonic() - sent_at) * 1000, 1),
+                estimated_cost_usd=estimate_cost_usd(usage.input_tokens, usage.output_tokens),
+                provider_reported_cost_usd=usage.provider_reported_cost_usd,
                 provider_request_id=response.provider_request_id, provider_response_id=response.provider_response_id)
             if response.error:
                 uncertain = (response.error.outcome == 'unknown_provider_outcome'

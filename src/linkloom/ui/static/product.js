@@ -820,6 +820,14 @@
 
   function renderBranchTrace(trace, t) {
     const na = value => value === null || value === undefined ? `<span class="trace-na">N/A</span>` : escapeHtml(value);
+    const usageLine = telemetry => {
+      if (!telemetry || !telemetry.usage) return "";
+      const value = field => field && field.value !== null && field.value !== undefined ? escapeHtml(field.value) : na(null);
+      const tag = field => field && field.value != null && field.source === "estimated" ? ` (${t("derived", "推算")})` : "";
+      const cost = telemetry.cost || {};
+      const usd = field => field && field.value != null ? `$${escapeHtml(field.value)}` : na(null);
+      return `<p class="trace-usage">${t("Run usage", "本次用量")}: ${t("input", "输入")} ${value(telemetry.usage.input_tokens)} · ${t("output", "输出")} ${value(telemetry.usage.output_tokens)} · ${t("total", "合计")} ${value(telemetry.usage.total_tokens)}${tag(telemetry.usage.total_tokens)} · ${t("cached input", "缓存输入")} ${value(telemetry.usage.cached_input_tokens)} · ${t("reasoning", "推理")} ${value(telemetry.usage.reasoning_tokens)} · ${t("Cost estimate", "估算费用")} ${usd(cost.estimated_usd)} · ${t("Provider reported cost", "Provider 报告费用")} ${usd(cost.provider_reported_usd)}</p>`;
+    };
     const attempts = task => (task.attempts || []).map(row => `<tr data-attempt="${escapeHtml(row.attempt)}"><td>${escapeHtml(row.attempt)}</td>
       <td>${na(row.requests)}</td><td>${na(row.input_tokens)} / ${na(row.output_tokens)}</td>
       <td>${row.failure ? escapeHtml(row.failure) : escapeHtml((row.attempts || []).map(item => item.outcome).join(", "))}</td></tr>`).join("");
@@ -843,6 +851,7 @@
       ${waves ? `<h3>${t("Waves (tasks in one wave ran in parallel)", "批次（同一批次并行）")}</h3><ol class="trace-waves">${waves}</ol>` : ""}
       ${tasks}
       <p>${t("Requests", "请求数")}: ${na(totals.requests)} · ${t("Tokens in / out", "输入 / 输出 Token")}: ${na(totals.input_tokens)} / ${na(totals.output_tokens)}</p>
+      ${usageLine(trace.telemetry)}
       <p>${t("Shared evidence", "共享证据")}: ${escapeHtml((board.verified_evidence || []).length)} · ${t("unreviewed retrievals", "未核验检索")}: ${escapeHtml(board.raw_retrievals || 0)} · ${t("Agent inferences", "Agent 推断")}: ${escapeHtml(board.inferences || 0)} · ${t("approved decisions", "已批准决策")}: ${escapeHtml((board.approved_decisions || []).length)}</p>
       <p>${t("Synthesizer", "汇总")}: ${na(synth.status)} · ${synth.published ? t("published", "已发布") : t("not published", "未发布")}${synth.fallback_reason ? ` · ${escapeHtml(synth.fallback_reason)}` : ""}</p>
       <p class="trace-conflict-check" data-conflict-check="${escapeHtml(synth.conflict_check || "")}">${t("Conflict check", "冲突检查")}: ${na(synth.conflict_check)}${synth.conflict_check_verified === false ? ` · ${t("not verified", "未核验")}` : ""}</p></section>`;

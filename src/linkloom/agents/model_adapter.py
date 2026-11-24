@@ -343,6 +343,9 @@ class ModelGenerationOptions:
         )
 
 
+_OPTIONAL_USAGE_FIELDS = ("cached_input_tokens", "reasoning_tokens", "provider_reported_cost_usd")
+
+
 @dataclass(frozen=True)
 class ModelUsage:
     """Normalized provider usage; unknown counts remain null."""
@@ -351,6 +354,11 @@ class ModelUsage:
     output_tokens: int | None = None
     total_tokens: int | None = None
     duration_ms: float | None = None
+    # Sub-counts of input/output tokens and the Provider's own bill. They are
+    # observations: null means the Provider did not report them.
+    cached_input_tokens: int | None = None
+    reasoning_tokens: int | None = None
+    provider_reported_cost_usd: float | None = None
 
     def __post_init__(self) -> None:
         _assert_json_safe_primitive(asdict(self), "ModelUsage")
@@ -358,6 +366,8 @@ class ModelUsage:
             ("input_tokens", self.input_tokens),
             ("output_tokens", self.output_tokens),
             ("total_tokens", self.total_tokens),
+            ("cached_input_tokens", self.cached_input_tokens),
+            ("reasoning_tokens", self.reasoning_tokens),
         ):
             _validate_optional_non_negative_integer(value, f"ModelUsage.{field_name}")
         if self.duration_ms is not None and (
@@ -369,9 +379,25 @@ class ModelUsage:
             raise ValidationError(
                 "ModelUsage.duration_ms must be a finite non-negative number or null."
             )
+        cost = self.provider_reported_cost_usd
+        if cost is not None and (
+            isinstance(cost, bool)
+            or not isinstance(cost, (int, float))
+            or not math.isfinite(cost)
+            or cost < 0
+        ):
+            raise ValidationError(
+                "ModelUsage.provider_reported_cost_usd must be a finite non-negative number or null."
+            )
 
     def to_dict(self) -> dict[str, Any]:
-        return asdict(self)
+        data = asdict(self)
+        # Unreported optional observations are omitted so older records and
+        # their hashes stay byte-identical.
+        for key in _OPTIONAL_USAGE_FIELDS:
+            if data[key] is None:
+                del data[key]
+        return data
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "ModelUsage":
@@ -379,7 +405,7 @@ class ModelUsage:
             raise ValidationError("ModelUsage must be a JSON object.")
         _reject_unsupported_fields(
             data,
-            {"input_tokens", "output_tokens", "total_tokens", "duration_ms"},
+            {"input_tokens", "output_tokens", "total_tokens", "duration_ms", *_OPTIONAL_USAGE_FIELDS},
             "ModelUsage",
         )
         return cls(
@@ -387,6 +413,9 @@ class ModelUsage:
             output_tokens=data.get("output_tokens"),
             total_tokens=data.get("total_tokens"),
             duration_ms=data.get("duration_ms"),
+            cached_input_tokens=data.get("cached_input_tokens"),
+            reasoning_tokens=data.get("reasoning_tokens"),
+            provider_reported_cost_usd=data.get("provider_reported_cost_usd"),
         )
 
 

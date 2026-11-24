@@ -17,38 +17,61 @@ def project(**options):
     return build_ask_telemetry(run_id="ask-1", workspace_id="ws-1", status="COMPLETE", **options)
 
 
-def journal(*outcomes, stage="runtime"):
+def journal(*outcomes, stage="runtime", usage=None):
     rows = []
     for sequence, outcome in enumerate(outcomes, 1):
-        row = dict(sequence=sequence, stage=stage, request_sha256="same-hash",
-                   input_reserved=150, output_reserved=100, cost_reserved_usd=0.01,
-                   outcome=outcome)
+        row = dict(sequence=sequence, stage=stage, request_sha256="same-hash", outcome=outcome)
         if outcome == "SUCCEEDED":
             row.update(response_sha256="response", usage=dict(
-                input_tokens=30, output_tokens=10, total_tokens=40, duration_ms=123))
+                usage if usage is not None else dict(input_tokens=30, output_tokens=10, total_tokens=40, duration_ms=123)))
         rows.append(row)
-    return dict(requests_reserved=len(rows), input_tokens_reserved=150 * len(rows),
-                output_tokens_reserved=100 * len(rows), cost_reserved_usd=.01 * len(rows),
-                actual_cost_usd=None, attempts=rows,
-                limits=dict(input_usd_per_million=1.0, output_usd_per_million=5.0))
+    return dict(schema_version=2, requests=len(rows), attempts=rows, failure=None,
+                limits=dict(max_seconds=5, request_timeout_seconds=1))
 
 
-def test_reported_usage_price_estimate_and_budget_are_independent():
-    budgets = {"router/router-1": journal("SUCCEEDED", stage="ask-router"),
-               "supervisor/round-0": journal("SUCCEEDED", stage="supervisor")}
-    original = deepcopy(budgets)
+def test_reported_usage_and_price_estimate_are_separate_and_summed_across_scopes():
+    journals = {"router/router-1": journal("SUCCEEDED", stage="ask-router"),
+                "supervisor/round-0": journal("SUCCEEDED", stage="supervisor")}
+    original = deepcopy(journals)
     got = project(router={"source": "llm", "attempted": True, "decision": "ROUTE",
                           "query": "private question"},
-                  provider_journals=budgets, provider_journals_complete=True, total_duration_ms=180)
+                  provider_journals=journals, provider_journals_complete=True, total_duration_ms=180)
     assert got["provider_calls"]["attempted"] == got["provider_calls"]["completed"] == 2
-    assert got["usage"]["reported_total_tokens"] == 80
-    assert got["usage"]["reserved_input_upper_bound"] == 300
-    assert got["cost"]["estimated_actual_usage_usd"] == pytest.approx(.00016)
-    assert got["cost"]["reserved_upper_bound_usd"] == .02
-    assert got["cost"]["actual_billed_usd"] is None
+    assert got["usage"]["total_tokens"] == dict(value=80, source="provider_reported", known_value=80,
+                                                unreported_requests=0)
+    assert got["usage"]["input_tokens"]["value"] == 60 and got["usage"]["duration_ms"]["value"] == 246
+    assert got["usage"]["cached_input_tokens"]["value"] is None
+    assert got["usage"]["cached_input_tokens"]["source"] == "unknown"
+    assert got["cost"]["estimated_usd"]["value"] == pytest.approx(.00016)
+    assert got["cost"]["estimated_usd"]["source"] == "estimated"
+    assert got["cost"]["provider_reported_usd"]["value"] is None
+    assert got["cost"]["provider_reported_usd"]["source"] == "unknown"
     assert got["total_duration_ms"] == 180
-    assert "private question" not in json.dumps(got)
-    assert budgets == original
+    assert "reserved" not in json.dumps(got) and "private question" not in json.dumps(got)
+    assert journals == original
+
+
+def test_two_workers_sum_exactly_without_counting_sub_counts_twice():
+    one = dict(input_tokens=100, output_tokens=40, total_tokens=140, cached_input_tokens=30,
+               reasoning_tokens=15, provider_reported_cost_usd=0.001)
+    two = dict(input_tokens=7, output_tokens=3, total_tokens=10, cached_input_tokens=2,
+               reasoning_tokens=1, provider_reported_cost_usd=0.0005)
+    got = project(provider_journals={"tasks/a/attempt-0-1": journal("SUCCEEDED", usage=one),
+                                     "tasks/b/attempt-0-1": journal("SUCCEEDED", usage=two)},
+                  provider_journals_complete=True)
+    usage = got["usage"]
+    assert [usage[key]["value"] for key in ("input_tokens", "output_tokens", "total_tokens")] == [107, 43, 150]
+    assert usage["cached_input_tokens"]["value"] == 32 and usage["reasoning_tokens"]["value"] == 16
+    assert usage["total_tokens"]["source"] == "provider_reported"
+    assert got["cost"]["provider_reported_usd"]["value"] == pytest.approx(.0015)
+    assert got["cost"]["estimated_usd"]["value"] == pytest.approx((107 + 43 * 5) / 1_000_000)
+
+
+def test_total_is_derived_once_and_tagged_estimated_when_the_provider_sent_none():
+    got = project(provider_journals={"provider": journal("SUCCEEDED", usage=dict(input_tokens=13, output_tokens=7))},
+                  provider_journals_complete=True)
+    assert got["usage"]["total_tokens"]["value"] == 20 and got["usage"]["total_tokens"]["source"] == "estimated"
+    assert got["usage"]["input_tokens"]["source"] == "provider_reported"
 
 
 def test_unknown_provider_outcome_or_pending_receipt_never_reports_zero_usage():
@@ -60,28 +83,46 @@ def test_unknown_provider_outcome_or_pending_receipt_never_reports_zero_usage():
     assert got["provider_calls"]["attempted"] is None
     assert got["provider_calls"]["pending"] == 1
     assert got["provider_calls"]["observed_attempted"] == 2
-    assert got["usage"]["reported_input_tokens"] is None
-    assert got["cost"]["estimated_actual_usage_usd"] is None
-    assert got["cost"]["known_estimated_usage_usd"] == pytest.approx(.00008)
-    assert got["cost"]["unresolved_reserved_upper_bound_usd"] == .02
-    assert got["cost"]["billing_status"] == "PARTIAL"
-    assert all(node["reported_usage"]["input_tokens"] is None for node in got["nodes"][1:])
+    assert got["usage"]["input_tokens"]["value"] is None
+    assert got["usage"]["input_tokens"]["known_value"] == 30
+    assert got["usage"]["input_tokens"]["unreported_requests"] == 2
+    assert got["cost"]["estimated_usd"]["value"] is None
+    assert got["cost"]["estimated_usd"]["known_value"] == pytest.approx(.00008)
+    assert all(node["usage"]["input_tokens"]["value"] is None for node in got["nodes"][1:])
     assert got["total_duration_ms"] is None
+
+
+def test_provider_without_usage_is_unknown_not_an_error():
+    got = project(provider_journals={"provider": journal("SUCCEEDED", usage={})}, provider_journals_complete=True)
+    assert got["provider_calls"]["completed"] == 1
+    assert got["usage"]["total_tokens"]["value"] is None and got["usage"]["total_tokens"]["source"] == "unknown"
+    assert got["cost"]["estimated_usd"] == dict(value=None, source="unknown", known_value=None, unreported_requests=1)
 
 
 def test_missing_router_journal_differs_from_confirmed_local_only_run():
     missing = project(provider_journals={"router/router-1": None})
     assert missing["provider_calls"]["attempted"] is None
-    assert missing["usage"]["reported_total_tokens"] is None
-    assert missing["cost"]["reserved_upper_bound_usd"] is None
-    assert missing["cost"]["billing_status"] == "UNKNOWN"
+    assert missing["usage"]["total_tokens"]["value"] is None
+    assert missing["cost"]["estimated_usd"]["source"] == "unknown"
     assert missing["eval_case_id"] is None
 
     local = project(provider_journals={}, provider_journals_complete=True)
     assert local["provider_calls"]["attempted"] == 0
-    assert local["usage"]["reported_total_tokens"] == 0
-    assert local["cost"]["reserved_upper_bound_usd"] == 0
+    assert local["usage"]["total_tokens"]["value"] == 0
+    assert local["cost"]["estimated_usd"]["value"] == 0
     assert local["nodes"] == []
+
+
+def test_legacy_budget_journal_reservations_are_never_usage():
+    legacy = dict(requests_reserved=1, input_tokens_reserved=150, output_tokens_reserved=100,
+                  cost_reserved_usd=.01, attempts=[dict(sequence=1, stage="runtime", request_sha256="h",
+                  input_reserved=150, output_reserved=100, cost_reserved_usd=.01, outcome="SUCCEEDED")])
+    got = project(provider_journals={"provider": legacy}, provider_journals_complete=True)
+    assert got["provider_calls"]["completed"] == 1
+    assert got["usage"]["input_tokens"]["value"] is None and got["usage"]["input_tokens"]["source"] == "unknown"
+    assert got["cost"]["estimated_usd"]["value"] is None
+    assert got["nodes"][0]["journal_format"] == "legacy"
+    assert "150" not in json.dumps(got["usage"]) and "reserved" not in json.dumps(got)
 
 
 def test_restored_worker_keeps_only_the_original_attempt_charges():
@@ -131,9 +172,10 @@ def test_tool_refs_follow_the_actual_ledger_and_runtime_turns_do_not_rebill():
     assert "private" not in json.dumps(got)
 
 
-def test_reads_the_real_budget_writer_contract_without_rewriting_receipts(tmp_path):
+def test_reads_the_real_journal_writer_contract_without_rewriting_receipts(tmp_path):
     adapter = SimpleNamespace(complete=lambda _: ModelResponse(
-        action=ModelAction.final("fixture"), usage=ModelUsage(input_tokens=13, output_tokens=7),
+        action=ModelAction.final("fixture"),
+        usage=ModelUsage(input_tokens=13, output_tokens=7, cached_input_tokens=5, provider_reported_cost_usd=0.002),
     ))
     bound = session(tmp_path, adapter)
     try:
@@ -141,10 +183,14 @@ def test_reads_the_real_budget_writer_contract_without_rewriting_receipts(tmp_pa
     finally:
         bound.session.close()
 
-    raw = (tmp_path / "budget.json").read_bytes()
+    raw = (tmp_path / "provider_journal.json").read_bytes()
+    row = json.loads(raw)["attempts"][0]
+    assert row["estimated_cost_usd"] == pytest.approx(.000048) and row["provider_reported_cost_usd"] == .002
+    assert row["duration_ms"] is not None
     got = project(provider_journals={"provider": json.loads(raw)}, provider_journals_complete=True)
-    assert got["usage"]["reported_input_tokens"] == 13
-    assert got["usage"]["reported_total_tokens"] is None  # The writer never received a total.
-    assert got["cost"]["estimated_actual_usage_usd"] == pytest.approx(.000048)
-    assert got["cost"]["reserved_upper_bound_usd"] == .1
-    assert (tmp_path / "budget.json").read_bytes() == raw
+    assert got["usage"]["input_tokens"]["value"] == 13
+    assert got["usage"]["total_tokens"] == dict(value=20, source="estimated", known_value=20, unreported_requests=0)
+    assert got["usage"]["cached_input_tokens"]["value"] == 5
+    assert got["cost"]["estimated_usd"]["value"] == pytest.approx(.000048)
+    assert got["cost"]["provider_reported_usd"]["value"] == .002
+    assert (tmp_path / "provider_journal.json").read_bytes() == raw

@@ -1009,6 +1009,10 @@ def _thinking_tokens(usage: Any, input_tokens: Any, visible: Any, total: Any) ->
     return thinking if type(thinking) is int and thinking >= 0 else None
 
 
+def _optional_count(value: Any) -> int | None:
+    return value if type(value) is int and value >= 0 else None
+
+
 def _extract_usage(response: Any, duration_ms: float) -> ModelUsage:
     usage = _first_present(response, ("usage_metadata", "usage"), {})
     if usage is None:
@@ -1035,12 +1039,17 @@ def _extract_usage(response: Any, duration_ms: float) -> ModelUsage:
     thinking = _thinking_tokens(usage, input_tokens, output_tokens, total_tokens)
     if output_tokens is not None and thinking is not None:
         output_tokens = output_tokens + thinking
+    # Sub-counts are recorded only when the response carries them.
+    cached = _optional_count(_first_present(usage, ("cached_content_token_count", "cachedContentTokenCount")))
+    reasoning = _optional_count(_first_present(usage, ("thoughts_token_count", "thoughtsTokenCount")))
     try:
         return ModelUsage(
             input_tokens=input_tokens,
             output_tokens=output_tokens,
             total_tokens=total_tokens,
             duration_ms=duration_ms,
+            cached_input_tokens=cached,
+            reasoning_tokens=reasoning,
         )
     except ValidationError as exc:
         raise _AdapterFailure(

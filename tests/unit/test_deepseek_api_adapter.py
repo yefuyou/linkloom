@@ -196,6 +196,8 @@ def test_tool_call_response_maps_id_name_and_json_arguments_without_execution():
         output_tokens=9,
         total_tokens=26,
         duration_ms=response.usage.duration_ms,
+        cached_input_tokens=3,
+        reasoning_tokens=0,
     )
     assert response.provider_metadata["prompt_cache_hit_tokens"] == 3
     assert response.provider_metadata["prompt_cache_miss_tokens"] == 14
