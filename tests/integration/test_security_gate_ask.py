@@ -221,7 +221,7 @@ def test_budgeted_security_timeout_returns_http_result_and_ignores_late_allow(de
     # the Router still caps the request itself at security_timeout_seconds. The not-dispatched case is
     # covered by test_security_budget_spent_before_dispatch_is_reported_as_not_sent.
     monkeypatch.setattr(owner, 'task_models', SimpleNamespace(execution_kind='OFFLINE', provider_limits=
-        TaskProviderLimits(1, 12000, CONFIG['security_max_output_tokens'], .03, 30, 30, .00656)))
+        TaskProviderLimits(30, 30)))
     monkeypatch.setattr(owner, 'start_orchestrated', lambda *a, **kw: pytest.fail('Ask reached LangGraph'))
     monkeypatch.setattr(owner, 'start', lambda *a, **kw: pytest.fail('Ask reached Runtime'))
     with create_http_server(None, product_app=decisions.app, investigation_service=owner,

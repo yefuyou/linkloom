@@ -22,7 +22,7 @@ NOTES = {
     "leader.md": "Mira Chen reports directly to Kai Wu",
     "risk.md": "The Cobalt B rollout risk is tracked by Pat Lee",
 }
-TOTAL = TaskProviderLimits(80, 20_000_000, 400_000, 30.0, 120, 20, .01)
+TOTAL = TaskProviderLimits(120, 20)
 
 
 def delegation(action, tasks=(), reason="test"):

@@ -393,7 +393,7 @@ def test_graph_and_legacy_share_one_provider_reservation(tmp_path, legacy_spy):
     from linkloom.ui.task_provider import TaskProviderSession, TaskProviderLimits
     h = Harness(tmp_path, 'DEV-A')
     try:
-        limits = TaskProviderLimits(1, 100000, 10000, 1, 30, 5, .001)
+        limits = TaskProviderLimits(30, 5)
         session = TaskProviderSession(tmp_path / 'shared', limits, lambda: None)
         h.service._provider_sessions.append(session)
         worker = h.worker('unknown'); original = worker.planner_factory

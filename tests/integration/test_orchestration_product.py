@@ -22,7 +22,7 @@ from tests.integration.test_product_application_flow import (
     _claim, _client, _start_product_server, _stop_product_server, _wait_source,
 )
 
-TOTAL = TaskProviderLimits(80, 20_000_000, 400_000, 30.0, 120, 20, .01)
+TOTAL = TaskProviderLimits(120, 20)
 SCOPE = dict(subject="Launch", relation="uses supplier", as_of="2025-02-20")
 SOURCE_REASON = ("Launch replaced Meridian A with Cobalt B because Meridian A could not meet "
                  "the agreed delivery schedule.")

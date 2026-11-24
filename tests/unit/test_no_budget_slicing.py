@@ -23,7 +23,7 @@ def test_limits_carry_no_per_role_budget_fields():
     names = set(OrchestrationLimits.__dataclass_fields__)
     assert not names & {"per_task", "supervisor", "comparison"}
     assert not any(hasattr(OrchestrationLimits, name) for name in ("split", "for_budget"))
-    limits = OrchestrationLimits(provider=TaskProviderLimits(20, 1_000_000, 50_000, 1.0, 60, 10, .01))
+    limits = OrchestrationLimits(provider=TaskProviderLimits(60, 10))
     assert limits.max_run_cost_usd is None  # the whole-run cost fuse is opt-in
 
 

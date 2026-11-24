@@ -96,7 +96,7 @@ def test_legacy_fallback_inherits_graph_provider_request_budget(graph_http,tmp_p
     from linkloom.agents.model_adapter import ModelAction,ModelResponse,ModelTurnRequest,ModelGenerationOptions
     demo,workspace,worker,models=graph_http
     service=demo.server.unified_ask.investigation()
-    limits=TaskProviderLimits(1,100000,10000,1,30,5,.001)
+    limits=TaskProviderLimits(30,5)
     session=TaskProviderSession(tmp_path/'shared-provider',limits,lambda:None)
     with service._lock:service._provider_sessions.append(session)
     class Inner:

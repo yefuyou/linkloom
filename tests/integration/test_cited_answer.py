@@ -127,7 +127,7 @@ def test_every_orchestration_worker_requests_a_cited_answer(tmp_path, monkeypatc
 
     monkeypatch.setattr(worker, "RuntimeEngine", Engine)
     monkeypatch.setattr(worker, "RunRequest", lambda **kwargs: kwargs)
-    limits = TaskProviderLimits(20, 1_000_000, 50_000, 1.0, 60, 10, .01)
+    limits = TaskProviderLimits(60, 10)
     deps = SimpleNamespace(root=tmp_path, run_id="run", vault=tmp_path, index=tmp_path, workspace_id="w",
         model_factory=lambda question: None, validate=lambda: None,
         limits=SimpleNamespace(provider=limits, max_steps=4, max_request_output_tokens=4096))
