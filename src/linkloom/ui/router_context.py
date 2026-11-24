@@ -397,7 +397,17 @@ def _investigation_handoff(context, route, listed):
     are kept apart. Nothing is bound to a lead: the Supervisor and Workers verify it against source text.
     """
     leads = _lead_names(context, route, listed)
-    if not leads or route.intent != "INVESTIGATION" or route.operation != "READ":
+    if not leads or route.operation != "READ":
+        return None
+    if route.intent == "RELATION_MULTIHOP":
+        # A chain with no confirmed root cannot execute on the confirmed graph. Keep its
+        # names as search leads, with workspace scope only and no invented time or binding.
+        if (route.decision == "CLARIFY" and route.reason_code == "ENTITY_NOT_FOUND"
+                and not route.candidate_ids and route.time_role == "NONE"
+                and not (context.required_as_of or context.date_spans or context.unresolved_time)):
+            return RouterAdmission("investigation", "NONE", leads=leads)
+        return None
+    if route.intent != "INVESTIGATION":
         return None
     # Only a route, or a clarification that exists solely because a named object has no candidate, may hand off.
     if route.decision == "REFUSE" or (route.decision == "CLARIFY" and route.reason_code != "ENTITY_NOT_FOUND"):

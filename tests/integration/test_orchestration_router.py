@@ -28,8 +28,10 @@ SUPPLIER_Q3 = ("Why did Launch replace Meridian A with Cobalt B? Identify the pr
 class ScriptedRouter:
     """Replies like the router contract asks for an investigation question that names an unknown object."""
 
-    def __init__(self, *, bind=False, intent="INVESTIGATION", leads=(LEAD,), mentions=None):
+    def __init__(self, *, bind=False, intent="INVESTIGATION", leads=(LEAD,), mentions=None, domain="DECISION",
+                 operation="READ", reason=None, time_role="NONE"):
         self.bind, self.intent, self.leads, self.requests = bind, intent, tuple(leads), []
+        self.domain, self.operation, self.reason, self.time_role = domain, operation, reason, time_role
         self.mentions = None if mentions is None else list(mentions)
 
     def complete(self, request):
@@ -37,10 +39,13 @@ class ScriptedRouter:
         data = json.loads(request.user_input.removeprefix(PROMPT))
         ids = [item["id"] for item in data["candidates"]][:1] if self.bind else []
         reply = dict(schema_version="router/v5", decision="ROUTE" if ids else "CLARIFY", intent=self.intent,
-            domain="DECISION", operation="READ", candidate_ids=ids, mentions=["Launch"] if ids else [],
+            domain=self.domain, operation=self.operation, candidate_ids=ids, mentions=["Launch"] if ids else [],
             unresolved_names=list(self.leads), entity_mentions=self.mentions if self.mentions is not None
             else list(self.leads) + (["Launch"] if ids else []),
-            time_text="", time_role="NONE", reason_code="NONE" if ids else "ENTITY_NOT_FOUND")
+            time_text="", time_role=self.time_role,
+            reason_code=self.reason or ("NONE" if ids else "ENTITY_NOT_FOUND"))
+        if self.reason in ("WRITE_NOT_ALLOWED", "WORKSPACE_DENIED"):
+            reply["decision"] = "REFUSE"
         return ModelResponse(action=ModelAction.final(json.dumps(reply)))
 
 
@@ -188,3 +193,56 @@ def test_an_unconfirmed_proposal_name_still_stops_where_the_run_is_not_orchestra
     result, status = ask.ask(dict(query=query, workspace_id=env.workspace_id))
     assert status == 200 and result["status"] == "NEEDS_SCOPE" and result["error"]["code"] == "NO_CONFIRMED_RECORD"
     assert not result["evidence"] and not world.supervisor_requests and not world.workers
+
+
+MULTIHOP_Q = "Trace the chain from Meridian A to whoever owns its replacement and name that owner's leader."
+
+
+def test_multihop_without_confirmed_root_or_candidates_investigates_from_sources(make_env):
+    # Router receipt fields: RELATION_MULTIHOP, CLARIFY, ENTITY_NOT_FOUND, no candidates. Offline model stand-in.
+    world = World([delegation("answer_single")], {MULTIHOP_Q: (SOURCE_REASON, LEAD, "ok")})
+    env = make_env(world)
+    router = ScriptedRouter(intent="RELATION_MULTIHOP", domain="RELATION")
+    started, final = drive(env, ask_service(env, router, "llm_first"), MULTIHOP_Q)
+    assert started["router"]["decision"] == "ROUTE" and started["router"]["entity_leads"] == [LEAD]
+    assert started["error"] is None and started["router"]["candidate_ids"] == []
+    assert final["status"] == "COMPLETED" and final["parallel_investigation"]["status"] == "COMPLETE"
+    state = trace_of(env, final["agent_run_id"])
+    assert state["entity_leads"] == [LEAD] and LEAD not in json.dumps(state["confirmed_scope"])
+    assert "subject" not in state["confirmed_scope"] and state["confirmed_scope"]["workspace_id"] == env.workspace_id
+    assert "as_of" not in state["confirmed_scope"] or state["confirmed_scope"]["as_of"] in (None, "")
+    supervisor = json.loads(world.supervisor_requests[0].user_input.split("context=", 1)[1])
+    assert supervisor["entity_leads"] == [LEAD] and LEAD not in json.dumps(supervisor["confirmed_scope"])
+    assert worker_context(world, MULTIHOP_Q)["entity_leads_unverified"] == [LEAD]
+    assert MULTIHOP_Q in world.supervisor_requests[0].user_input  # the question is not rewritten
+    assert_cited(final)
+
+
+@pytest.mark.parametrize("router_args, code", [
+    (dict(operation="WRITE_REQUEST", reason="WRITE_NOT_ALLOWED"), "WRITE_NOT_ALLOWED"),
+    (dict(reason="WORKSPACE_DENIED"), "WORKSPACE_DENIED"),
+    # A time conflict reported with an unknown name still clarifies (the existing name stop), never investigates.
+    (dict(reason="TIME_SCOPE_UNRESOLVED"), "ENTITY_NOT_FOUND"),
+])
+def test_multihop_handoff_keeps_refusals_and_scope_conflicts(make_env, router_args, code):
+    world = World([delegation("answer_single")], {})
+    env = make_env(world)
+    router = ScriptedRouter(intent="RELATION_MULTIHOP", domain="RELATION", **router_args)
+    result, status = ask_service(env, router, "llm_first").ask(dict(query=MULTIHOP_Q, workspace_id=env.workspace_id))
+    assert status == 200 and result["status"] == "NEEDS_SCOPE" and result["error"]["code"] == code
+    assert not result["evidence"] and not world.supervisor_requests and not world.workers
+
+
+def test_multihop_handoff_still_needs_orchestration_and_external_provider_permission(make_env):
+    world = World([delegation("answer_single")], {})
+    env = make_env(world)
+    off = ProductInvestigationService(env.app, model_factory=world.factory, external_provider=False)
+    env.use(off)
+    router = ScriptedRouter(intent="RELATION_MULTIHOP", domain="RELATION")
+    result, status = ask_service(env, router, "llm_first").ask(dict(query=MULTIHOP_Q, workspace_id=env.workspace_id))
+    assert status == 200 and result["error"]["code"] == "ENTITY_NOT_FOUND" and not world.supervisor_requests
+    env.use(ProductInvestigationService(env.app, model_factory=world.factory, external_provider=True,
+                                        parallel_limits=TOTAL))
+    result, status = ask_service(env, router, "llm_first").ask(dict(query=MULTIHOP_Q, workspace_id=env.workspace_id))
+    assert status == 403 and result["error"]["code"] == "EXTERNAL_PROVIDER_PERMISSION_REQUIRED"
+    assert not world.supervisor_requests and not world.workers
