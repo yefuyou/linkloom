@@ -78,14 +78,16 @@ class Env:
     def run_trace(self, run_id):
         return _client(self.base, f"/api/product/ask/runs/{run_id}/trace?workspace_id={self.workspace_id}")
 
-    def finish(self, run_id, timeout=40):
+    def finish(self, run_id, timeout=180):
+        # The run takes about 1s locally. Shared Windows runners stall for minutes at a time, so the wait is longer
+        # than the run's own max_seconds (120): a genuine hang ends as a failed run, not as a poll timeout.
         deadline = monotonic() + timeout
         while monotonic() < deadline:
             result = self.run(run_id)
             if result["status"] != "INVESTIGATING":
                 return result
             sleep(.05)
-        pytest.fail("orchestrated run did not finish")
+        pytest.fail(f"orchestrated run did not finish: {json.dumps(result.get('parallel_investigation', {}).get('trace', [])[-5:], default=str)}")
 
     def root(self, run_id):
         return self.tmp_path / "work" / "investigations" / run_id.removeprefix("ui-parallel-")
