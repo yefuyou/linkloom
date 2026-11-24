@@ -10,9 +10,9 @@ carries no text, so it cannot add a fact or a citation, and the conflict sides a
 the Reviewer already passed.
 
 Recovery: result.json is the receipt. Once it exists (accepted verdicts or a failure) the request is never sent
-again; a budget journal with requests but no receipt means a call may have been in flight, which is reported
-as UNAVAILABLE (PROVIDER_UNCERTAIN) and is not repeated. The request runs under the run's Provider hard limits
-and records its own budget.json like every other session.
+again; a Provider journal with requests but no receipt means a call may have been in flight, which is reported
+as UNAVAILABLE (PROVIDER_UNCERTAIN) and is not repeated. The request runs under the run's Provider time limits
+and records its own provider_journal.json like every other session.
 """
 from __future__ import annotations
 

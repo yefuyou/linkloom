@@ -5,6 +5,7 @@ from collections import Counter
 from collections.abc import Collection, Mapping
 from typing import Any
 
+from linkloom.observability.pricing import INPUT_USD_PER_MILLION, OUTPUT_USD_PER_MILLION
 from linkloom.observability.redaction import safe_ref
 from linkloom.runtime.models import RuntimeState
 from linkloom.ui.projection import collect_observed_evidence
@@ -128,14 +129,13 @@ def _provider_summary(journals, complete):
             complete = False
             continue
         rows = journal.get("attempts", ())
-        complete &= journal.get("requests_reserved") == len(rows)
+        complete &= journal.get("requests", journal.get("requests_reserved")) == len(rows)
         for key in reservations:
             reservations[key].append(journal.get(key))
         if journal.get("failure"):
             failures.append({"kind": "provider_session", "scope_id": scope, "failure": journal["failure"]})
-        limits = journal.get("limits") or {}
         for row in rows:
-            attempts.append(_provider_attempt(scope, row, limits))
+            attempts.append(_provider_attempt(scope, row))
 
     counts = Counter(row["status"] for row in attempts)
     observed_attempted = sum(counts[key] for key in ("SUCCEEDED", "FAILED", "WITHHELD", "UNCERTAIN"))
@@ -173,7 +173,7 @@ def _provider_summary(journals, complete):
             "unresolved_reserved_upper_bound_usd": _complete_sum(
                 [row["reserved_usd"] for row in attempts if row["estimated_usage_usd"] is None], complete,
             ),
-            "pricing_basis": "recorded_budget_token_rates" if known_count else None,
+            "pricing_basis": "observability_token_rates" if known_count else None,
             "billing_status": "KNOWN_ESTIMATE" if actual_estimate is not None else "PARTIAL" if known_count else "UNKNOWN",
             "actual_billed_usd": None,
         },
@@ -181,7 +181,7 @@ def _provider_summary(journals, complete):
     }
 
 
-def _provider_attempt(scope, row, limits):
+def _provider_attempt(scope, row):
     outcome = row.get("outcome")
     status = outcome if outcome in _PROVIDER_OUTCOMES else "UNKNOWN"
     # Reservation is written before transport. Only a usable response receipt
@@ -191,7 +191,7 @@ def _provider_attempt(scope, row, limits):
     else:
         reported = {}
     usage = {key: reported.get(key) for key in _TOKEN_FIELDS}
-    rates = (limits.get("input_usd_per_million"), limits.get("output_usd_per_million"))
+    rates = (INPUT_USD_PER_MILLION, OUTPUT_USD_PER_MILLION)
     tokens = (usage["input_tokens"], usage["output_tokens"])
     estimate = None
     pricing = None

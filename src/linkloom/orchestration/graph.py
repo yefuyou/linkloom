@@ -39,7 +39,7 @@ from linkloom.orchestration.supervisor import (
     tool_arguments,
 )
 from linkloom.orchestration.worker import (
-    HARD_FAILURES, WorkerDeps, build_worker_graph, close_session, paid_without_receipt, run_cost_usd)
+    HARD_FAILURES, WorkerDeps, build_worker_graph, close_session, paid_without_receipt)
 from linkloom.orchestration.comparison import compare_pending
 from linkloom.ui.branch_synthesis import merge_evidence, plan_comparison, resolve_pairs, synthesize_reviewed
 from linkloom.ui.task_provider import TaskProviderSession
@@ -173,8 +173,7 @@ def build_graph(deps: WorkerDeps, checkpointer):
         abort = state.get('abort_reason')
         # Each invocation (start or a resume after a restart) gets its own deadline window.
         expired = time() >= config['configurable'].get('deadline_at', state['deadline_at'])
-        over_cost = limits.max_run_cost_usd is not None and run_cost_usd(deps.root) >= limits.max_run_cost_usd
-        stop_reason = 'ABORTED' if abort else 'DEADLINE' if expired else 'RUN_COST_LIMIT' if over_cost else None
+        stop_reason = 'ABORTED' if abort else 'DEADLINE' if expired else None
         left = limits.dispatch_cap() - dispatches
         changed = {}
 
@@ -182,9 +181,9 @@ def build_graph(deps: WorkerDeps, checkpointer):
             task.update(fields)
             changed[task['id']] = task
 
-        budget_failure = 'TASK_PROVIDER_BUDGET_EXHAUSTED'
+        deadline_failure = 'TASK_PROVIDER_DEADLINE'
         for task in tasks.values():  # retry a retryable failure as a new paid attempt
-            if (task['status'] == FAILED and task.get('retryable') and task.get('failure') != budget_failure
+            if (task['status'] == FAILED and task.get('retryable') and task.get('failure') != deadline_failure
                     and task['attempt'] < limits.max_attempts
                     and not stop_reason and left > 0):
                 put(task, status=PENDING, epoch=task['epoch'] + 1, failure=None, retryable=False)

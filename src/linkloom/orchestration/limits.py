@@ -3,10 +3,8 @@
 The Supervisor model only proposes tasks. Task count, concurrency, depth, rounds, attempts, steps and deadline
 are decided here, deterministically. These are run-level stop conditions, not a money allocation: there is no
 per-role dollar, token or request slice. Every Provider session (Supervisor, Worker, comparison) runs under the
-same Provider hard limits (request format, context and output caps, request timeout) and records its own
-telemetry in budget.json. The product sets max_run_cost_usd to the user's Provider cost budget so that budget
-bounds the whole run. The fuse is soft: it sums the cost reserved in every budget.json and is read once per
-scheduler tick, so Workers already running in the same wave (up to max_concurrency) can finish and overshoot it.
+same time limits (total duration, request timeout) and records the usage it observed in its own
+provider_journal.json. Cost and token usage are observed, never used to stop a run.
 """
 from __future__ import annotations
 
@@ -18,7 +16,7 @@ from linkloom.ui.task_provider import TaskProviderLimits
 
 @dataclass(frozen=True)
 class OrchestrationLimits:
-    provider: TaskProviderLimits     # Provider hard limits shared by every session of the run
+    provider: TaskProviderLimits     # Provider time limits shared by every session of the run
     max_tasks: int = 6               # tasks of the first plan
     max_followup_tasks: int = 2      # extra tasks a review round may add on top of the first plan
     max_concurrency: int = 3
@@ -29,7 +27,6 @@ class OrchestrationLimits:
     max_request_output_tokens: int = 4096  # per-request output cap of a Worker
     deadline_seconds: float = 120.0
     confirm_over_tasks: int | None = None  # a plan with more new tasks waits for human confirmation
-    max_run_cost_usd: float | None = None  # explicit whole-run cost fuse; off by default
 
     def __post_init__(self):
         for key in ('max_tasks', 'max_concurrency', 'max_depth', 'max_attempts', 'max_steps',
@@ -46,10 +43,6 @@ class OrchestrationLimits:
         if self.confirm_over_tasks is not None and (
                 type(self.confirm_over_tasks) is not int or self.confirm_over_tasks < 0):
             raise ValueError('non-negative integer orchestration limit required: confirm_over_tasks')
-        if self.max_run_cost_usd is not None and (
-                isinstance(self.max_run_cost_usd, bool) or not isinstance(self.max_run_cost_usd, (int, float))
-                or not math.isfinite(self.max_run_cost_usd) or self.max_run_cost_usd <= 0):
-            raise ValueError('positive finite orchestration limit required: max_run_cost_usd')
 
     def to_dict(self):
         return asdict(self)
@@ -57,7 +50,7 @@ class OrchestrationLimits:
     @classmethod
     def from_dict(cls, data):
         data = dict(data)
-        data['provider'] = TaskProviderLimits(**data['provider'])
+        data['provider'] = TaskProviderLimits.from_dict(data['provider'])
         return cls(**{field.name: data[field.name] for field in fields(cls) if field.name in data})
 
     def task_cap(self):

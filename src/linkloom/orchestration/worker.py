@@ -28,7 +28,7 @@ from linkloom.runtime.models import RunRequest, RunStatus
 from linkloom.ui.backend import project_reviewer
 from linkloom.ui.projection import collect_observed_evidence, project_run_snapshot
 from linkloom.ui.lifecycle import BackgroundShutdownTimeout
-from linkloom.ui.task_provider import TaskProviderSession
+from linkloom.ui.task_provider import TaskProviderSession, journal_request_count, read_provider_journal
 
 HARD_FAILURES = frozenset({'MODEL_AUTH_REQUIRED', 'MODEL_BILLING_BLOCKED', 'TASK_SOURCE_AUTHORIZATION_CHANGED'})
 UNCERTAIN_FAILURES = frozenset({'PROVIDER_TIMEOUT_UNCERTAIN', 'PROVIDER_UNCERTAIN'})
@@ -134,23 +134,13 @@ def _read(path):
 
 
 def paid_without_receipt(root):
-    """True when a previous process reserved provider requests in this directory and left no receipt.
+    """True when a previous process sent provider requests in this directory and left no receipt.
 
-    The budget journal is fsynced before each request crosses the transport, so reserved requests with no
+    The Provider journal is fsynced before each request crosses the transport, so recorded requests with no
     receipt mean the process died while a paid call may have been in flight. Its outcome is unknown, and it
     is never sent again."""
-    journal = _read(Path(root) / 'budget.json')
-    return isinstance(journal, dict) and (journal.get('requests_reserved') or 0) > 0
-
-
-def run_cost_usd(root):
-    """Telemetry total of the estimated cost every session under root has recorded in its budget.json."""
-    total = 0.0
-    for path in Path(root).rglob('budget.json'):
-        journal = _read(path)
-        if isinstance(journal, dict):
-            total += float(journal.get('cost_reserved_usd') or 0)
-    return total
+    journal = read_provider_journal(root)
+    return journal is not None and journal_request_count(journal) > 0
 
 
 def close_session(session, timeout=1.0):
@@ -181,9 +171,9 @@ def _run(deps, task, query):
     try:
         # Run-level step count. The Runtime keeps the last step for the final answer (reserve_final_turn), so a
         # long investigation that reaches max_steps still publishes what it read.
-        steps = min(deps.limits.max_steps, limits.max_requests)  # never plan more turns than the session allows
+        steps = deps.limits.max_steps
         adapter = OutputBoundedAdapter(session.bind(deps.model_factory(task['description']), 'runtime'),
-                                        min(deps.limits.max_request_output_tokens, limits.max_output_tokens))
+                                        deps.limits.max_request_output_tokens)
         # Workers answer in team-decision-result/v1 prose with cited reads. The typed-claim host checks (confirmed
         # facts, blocked entities) do not run on this path; blocked entities are filtered from task descriptions by
         # the Supervisor. v1 prose is verified for span integrity only: its claims carry no semantic support and are

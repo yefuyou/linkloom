@@ -1,28 +1,33 @@
 """Read-only call chain of an orchestration run: the task DAG, Supervisor decisions, waves and Provider receipts.
 
-Everything comes from the LangGraph state and the budget receipts under the run directory. Task ids are
+Everything comes from the LangGraph state and the Provider journals under the run directory. Task ids are
 validated by the Supervisor contract, and every path is checked to stay inside the run directory.
 """
 from __future__ import annotations
 
 from pathlib import Path
 
-from linkloom.orchestration.files import read_json
 from linkloom.orchestration.snapshot import blackboard_summary, public_scope, task_rows
+from linkloom.ui.task_provider import journal_request_count, read_provider_journal
 
-_KEYS = ('requests_reserved', 'input_tokens_reserved', 'output_tokens_reserved', 'cost_reserved_usd')
+_KEYS = ('requests', 'input_tokens', 'output_tokens')
 
 
 def _receipt(path, root):
     path = Path(path).resolve()
     if not path.is_relative_to(root.resolve()):
         return None
-    budget = read_json(path / 'budget.json')
-    if not isinstance(budget, dict):
+    journal = read_provider_journal(path)
+    if journal is None:
         return None
-    return dict({key: budget.get(key) for key in _KEYS}, failure=budget.get('failure'),
+    rows = [row for row in journal.get('attempts', []) if isinstance(row, dict)]
+    usage = [row.get('usage') if isinstance(row.get('usage'), dict) else {} for row in rows]
+    return dict(requests=journal_request_count(journal),
+                input_tokens=sum(item.get('input_tokens') or 0 for item in usage),
+                output_tokens=sum(item.get('output_tokens') or 0 for item in usage),
+                failure=journal.get('failure'),
                 attempts=[dict(sequence=row.get('sequence'), stage=row.get('stage'), outcome=row.get('outcome'))
-                          for row in budget.get('attempts', [])])
+                          for row in rows])
 
 
 def build_trace(root, run_id, values, outcome):
