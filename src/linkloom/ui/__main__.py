@@ -66,22 +66,13 @@ def main() -> int:
         help='Configure task Provider stages. Each Ask still needs source-snapshot permission.')
     parser.add_argument('--experimental-parallel-investigation', action='store_true',
         help='Run scoped investigations on the LangGraph Supervisor/Worker orchestration (dynamic task DAG, '
-             'shared evidence, checkpointed resume) within the explicit task budgets.')
-    for name in ('requests', 'input-tokens', 'output-tokens'):
-        parser.add_argument('--task-max-' + name, type=int)
-    for name in ('cost-usd', 'seconds'):
-        parser.add_argument('--task-max-' + name, type=float)
+             'shared evidence, checkpointed resume) within the explicit task time limits.')
+    parser.add_argument('--task-max-seconds', type=float)
     parser.add_argument('--task-request-timeout-seconds', type=float)
     parser.add_argument(
         "--model",
         default=os.environ.get("LINKLOOM_SEMANTIC_MODEL", GEMINI_38_FLASH_MODEL_ID),
         help="Gemini model for explicitly enabled semantic extraction and temporal Agent runs.",
-    )
-    parser.add_argument(
-        "--estimated-cost-per-request",
-        type=float,
-        default=0.02,
-        help="Audited upper-bound estimate recorded for each provider request.",
     )
     parser.add_argument('--task-extraction-mode', choices=('legacy', 'meeting_v2', 'meeting_v3'), default='legacy',
         help='Explicit meeting inbox extraction mode; default preserves existing ingestion.')
@@ -102,15 +93,11 @@ def main() -> int:
         if not args.allow_external_provider:
             parser.error('--allow-task-investigation requires --allow-external-provider')
         try:
-            task_limits = TaskProviderLimits(args.task_max_requests, args.task_max_input_tokens,
-                args.task_max_output_tokens, args.task_max_cost_usd, args.task_max_seconds,
-                args.task_request_timeout_seconds, args.estimated_cost_per_request)
-        except ValueError as exc:
-            parser.error('Task Provider requires all explicit --task-* budgets: ' + str(exc))
-    if not math.isfinite(args.estimated_cost_per_request) or args.estimated_cost_per_request < 0:
-        parser.error("--estimated-cost-per-request must be a finite non-negative number")
+            task_limits = TaskProviderLimits(args.task_max_seconds, args.task_request_timeout_seconds)
+        except (TypeError, ValueError) as exc:
+            parser.error('Task Provider requires --task-max-seconds and --task-request-timeout-seconds: ' + str(exc))
     if args.experimental_parallel_investigation and not (task_limits and args.allow_temporal_agent):
-        parser.error('Orchestrated investigation requires task Provider budgets and --allow-temporal-agent.')
+        parser.error('Orchestrated investigation requires task Provider time limits and --allow-temporal-agent.')
     if args.offline_task_demo:
         if args.allow_external_provider or args.allow_temporal_agent or args.allow_task_investigation:
             parser.error("--offline-task-demo cannot be combined with external or temporal Agent flags")
@@ -166,7 +153,7 @@ def main() -> int:
                     request,
                     guard_id=guard_id,
                     reservation_id=f"local-provider-request-{uuid4().hex}",
-                    estimated_cost_upper_bound_usd=args.estimated_cost_per_request,
+                    estimated_cost_upper_bound_usd=0,
                 )
 
             # Task configuration is not permission to send imports. Its source

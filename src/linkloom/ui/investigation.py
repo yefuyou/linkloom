@@ -108,12 +108,11 @@ class ProductInvestigationService:
             "temporal_agent": self.model_factory is not None and not self.task_only,
             "task_provider": dict(configured=task_available, external=bool(task_live),
                 model_id=self.task_models.model_id if task_available else None,
-                budgets=asdict(self.task_models.provider_limits) if task_live else None,
+                limits=asdict(self.task_models.provider_limits) if task_live else None,
                 source_permission='PER_QUESTION_CURRENT_WORKSPACE_SNAPSHOT',
                 execution_permission='HOST_TASK_STAGES_ONLY', business_approval=False,
                 setup='Set GEMINI_API_KEY; python -m linkloom.ui --allow-external-provider --allow-task-investigation '
-                    '--task-max-requests 16 --task-max-input-tokens 500000 --task-max-output-tokens 100000 '
-                    '--task-max-cost-usd 2 --task-max-seconds 120 --task-request-timeout-seconds 30'),
+                    '--task-max-seconds 120 --task-request-timeout-seconds 30'),
             "task_execution_kinds": ([self.task_models.execution_kind]
                                       if self.task_models is not None else []),
             "message": (
@@ -299,13 +298,12 @@ class ProductInvestigationService:
             vault, index, source_names, source_versions = self._materialize_sources(root, sources)
             confirmed_fact_index = (None if task_investigation else
                                     self._confirmed_fact_index_factory(workspace_id, sources, source_versions))
-            from linkloom.ui.task_provider import _ROUTER_RESERVATION, TaskProviderSession
-            if self.external_provider and not task_investigation and graph_provider_session is None and _ROUTER_RESERVATION.get() is not None:
+            from linkloom.ui.task_provider import _ROUTER_VALIDATION, TaskProviderSession
+            if self.external_provider and not task_investigation and graph_provider_session is None and _ROUTER_VALIDATION.get() is not None:
                 if task_models is None or task_models.provider_limits is None:
-                    raise ProductApplicationError("TASK_PROVIDER_BUDGET_EXHAUSTED", "No remaining Provider budget for investigation.", status=409)
+                    raise ProductApplicationError("TASK_PROVIDER_UNAVAILABLE", "No Provider limits are configured for investigation.", status=409)
                 from linkloom.ui.graph_investigation import _GRAPH_PROVIDER
-                spent = _ROUTER_RESERVATION.get()
-                graph_provider_session = TaskProviderSession(root / 'provider', task_models.provider_limits, spent.validate)
+                graph_provider_session = TaskProviderSession(root / 'provider', task_models.provider_limits, _ROUTER_VALIDATION.get())
                 with self._lock:
                     self._provider_sessions.append(graph_provider_session)
                 _GRAPH_PROVIDER.set(graph_provider_session)
@@ -380,7 +378,7 @@ class ProductInvestigationService:
     # --- Orchestrated (LangGraph) investigations --------------------------------------------------------
 
     def orchestration_enabled(self):
-        """The Host configured orchestration budgets; a graph/router Provider reservation uses the old single path."""
+        """The Host configured orchestration time limits; a graph/router Provider session uses the old single path."""
         from linkloom.ui.graph_investigation import current_graph_provider_session
         return bool(self.parallel_limits and self.model_factory is not None and not self.task_only
                     and current_graph_provider_session() is None)
@@ -398,12 +396,11 @@ class ProductInvestigationService:
         from linkloom.orchestration.limits import OrchestrationLimits
         from linkloom.orchestration.runs import OrchestrationRun, load_record, write_record
         from linkloom.ui.task_investigation import ProductTaskSources
-        from linkloom.ui.task_provider import remaining_provider_limits
         if self.model_factory is None:
             raise ProductApplicationError("MODEL_NOT_CONFIGURED", self.config()["message"], status=503)
         if not self.orchestration_enabled():
             raise ProductApplicationError("ORCHESTRATION_UNAVAILABLE",
-                "Orchestrated investigation needs the configured task budgets.", status=409)
+                "Orchestrated investigation needs the configured task Provider.", status=409)
         if not isinstance(query, str) or not query.strip() or len(query.strip()) > 4000:
             raise ProductApplicationError("INVALID_QUERY", "Enter a question of at most 4000 characters.")
         if not isinstance(workspace_id, str) or not workspace_id.strip():
@@ -425,14 +422,9 @@ class ProductInvestigationService:
         leads = list(dict.fromkeys(str(name).strip() for name in entity_leads if str(name).strip()))
         if len(leads) > 8 or any(len(name) > 160 for name in leads):
             raise ProductApplicationError("ENTITY_LEADS_INVALID", "At most eight short entity leads are accepted.")
-        try:
-            provider = remaining_provider_limits(self.parallel_limits)
-            limits = OrchestrationLimits(provider=provider, deadline_seconds=float(provider.max_seconds),
-                                         confirm_over_tasks=self.confirm_over_tasks,
-                                         max_run_cost_usd=provider.max_cost_usd)  # the user's budget bounds the run
-        except ValueError as error:
-            raise ProductApplicationError("TASK_PROVIDER_BUDGET_EXHAUSTED",
-                "No remaining Provider budget for investigation.", status=409) from error
+        provider = self.parallel_limits
+        limits = OrchestrationLimits(provider=provider, deadline_seconds=float(provider.max_seconds),
+                                     confirm_over_tasks=self.confirm_over_tasks)
         root = self._parallel_base() / uuid4().hex[:12]
         root.mkdir(parents=True)
         run_id = "ui-parallel-" + root.name
@@ -772,8 +764,11 @@ class ProductInvestigationService:
     @staticmethod
     def _validate_task_read(preparation, state, snapshot, root):
         if preparation.manifest['execution_kind'] == 'LIVE' and snapshot.get('kind') != 'running':
-            from linkloom.ui.task_provider import validate_task_provider_receipt
-            validate_task_provider_receipt(root / 'provider' / 'budget.json', state.updated_at)
+            from linkloom.ui.task_provider import JOURNAL_NAME, LEGACY_JOURNAL_NAME, validate_task_provider_receipt
+            journal_path = root / 'provider' / JOURNAL_NAME
+            if not journal_path.exists():  # a run recorded before the journal rename
+                journal_path = root / 'provider' / LEGACY_JOURNAL_NAME
+            validate_task_provider_receipt(journal_path, state.updated_at)
         payload = snapshot.get('task_investigation')
         if payload:
             from linkloom.agents.task_relation_result import review_task_relation_result, task_relation_task_id
@@ -830,7 +825,7 @@ class ProductInvestigationService:
                 if session and snapshot['kind'] == 'running':
                     from time import monotonic
                     if monotonic() - session.started > session.limits.max_seconds:
-                        return self._task_blocked(run_id, 'TASK_PROVIDER_BUDGET_EXHAUSTED')
+                        return self._task_blocked(run_id, 'TASK_PROVIDER_DEADLINE')
                 if snapshot.get('task_investigation'):
                     state = job.backend.engine.checkpointer.get_latest(snapshot['run']['thread_id'])
                     try:
@@ -1009,13 +1004,13 @@ __all__ = ["ProductInvestigationService"]
 
 
 def _ask_telemetry(root, run_id, workspace_id, outcome, trace, snapshot, route, provider_calls_outside_run):
-    """Project #135's read-only telemetry from the run's own Provider journals (budget.json).
+    """Project #135's read-only telemetry from the run's own Provider journals (provider_journal.json, or the legacy budget.json).
 
-    Reservations, Provider-reported usage, rate-based estimates and the (unknown) bill stay separate;
+    Provider-reported usage, rate-based estimates and the (unknown) bill stay separate;
     nothing is read outside the run directory and no model is called.
     """
     from linkloom.observability.ask_telemetry import build_ask_telemetry
-    from linkloom.orchestration.files import read_json
+    from linkloom.ui.task_provider import JOURNAL_NAME, LEGACY_JOURNAL_NAME, read_provider_journal
     root = Path(root).resolve()
     journals = {}
     scopes = [('comparison', root / 'comparison')]
@@ -1023,10 +1018,10 @@ def _ask_telemetry(root, run_id, workspace_id, outcome, trace, snapshot, route, 
     scopes += [(f'tasks/{path.parent.name}/{path.name}', path) for path in sorted((root / 'tasks').glob('*/attempt-*'))]
     for scope, directory in scopes:
         directory = directory.resolve()
-        if not directory.is_relative_to(root) or not (directory / 'budget.json').exists():
+        if not directory.is_relative_to(root) or not any(
+                (directory / name).exists() for name in (JOURNAL_NAME, LEGACY_JOURNAL_NAME)):
             continue
-        journal = read_json(directory / 'budget.json')
-        journals[scope] = journal if isinstance(journal, dict) else None
+        journals[scope] = read_provider_journal(directory)
     withheld = outcome.get('status') in {'ABORTED', 'CANCELLED'} or snapshot.get('kind') == 'error'
     authorized = set() if withheld else {
         item[key] for item in snapshot.get('evidence') or () for key in ('evidence_id', 'evidence_ref') if item.get(key)}

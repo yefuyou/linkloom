@@ -204,7 +204,7 @@ class RouterProvider:
     mode: str = "llm_first"
     security_adapter: object = None
 
-    def reserve(self, app, owner, request, validate):
+    def open_session(self, app, owner, request, validate):
         models = owner.task_models
         if request.agent_id == "ask-security":
             timeout = CONFIG["security_timeout_seconds"]
@@ -212,10 +212,8 @@ class RouterProvider:
             timeout = CONFIG["gemini_router_timeout_seconds"]
         else:
             timeout = CONFIG["timeout_seconds"]
-        limits = getattr(models, "provider_limits", None) or TaskProviderLimits(
-            1, 12000, max(CONFIG["max_output_tokens"], CONFIG["security_max_output_tokens"]),
-            .03, timeout, timeout, .00656)
-        limits = replace(limits, max_requests=1, request_timeout_seconds=min(limits.request_timeout_seconds, timeout))
+        limits = getattr(models, "provider_limits", None) or TaskProviderLimits(timeout, timeout)
+        limits = replace(limits, request_timeout_seconds=min(limits.request_timeout_seconds, timeout))
         root = Path(app.repository.database_path).parent / "router-provider" / request.run_id
         session = TaskProviderSession(root, limits, validate)
         with owner._lock:

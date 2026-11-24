@@ -213,7 +213,7 @@ class UnifiedAskService:
             result["attempted"] = True
             if provider.external_provider:
                 with owner._starts.operation(request.run_id):
-                    session = provider.reserve(self.app, owner, request, validate)
+                    session = provider.open_session(self.app, owner, request, validate)
                     decision = classify(session.bind(provider.security_adapter, "ask-security"), request,
                                         record=result)
             else:
@@ -223,9 +223,9 @@ class UnifiedAskService:
             result["fallback_reason"] = str(error) if isinstance(error, RouterInvalid) else "PROVIDER_UNAVAILABLE"
             if session is not None and session.failure in {"PROVIDER_TIMEOUT_UNCERTAIN", "PROVIDER_UNCERTAIN"}:
                 result["fallback_reason"] = session.failure
-            elif session is not None and session.failure == "TASK_PROVIDER_BUDGET_EXHAUSTED":
-                # Known not sent: the session budget ran out before dispatch (same code as the Router path).
-                result["fallback_reason"] = "BUDGET_EXHAUSTED"
+            elif session is not None and session.failure == "TASK_PROVIDER_DEADLINE":
+                # Known not sent: the session's wall-clock window ended before dispatch (same code as the Router path).
+                result["fallback_reason"] = "PROVIDER_DEADLINE"
         finally:
             if session is not None:
                 session.record_validation(result)
@@ -580,8 +580,8 @@ class UnifiedAskService:
         binding needs a valid model reply whose entity_mentions hold no unknown entity; without one the
         request clarifies."""
         from linkloom.ui.structured_router import RouterInvalid, request_for, route_with_adapter
+        from linkloom.ui.task_provider import pass_router_source_validation
         from linkloom.ui.router_context import blocked_entity_reason, handoff_blocker
-        from linkloom.ui.task_provider import pass_router_reservation
         from linkloom.ui.lifecycle import BackgroundWorkStopped
         provider = self.router_provider
         owner = self.investigation()
@@ -622,7 +622,7 @@ class UnifiedAskService:
             attempted = True
             if provider.external_provider:
                 with owner._starts.operation(request.run_id):
-                    session = provider.reserve(self.app, owner, request, validate_snapshot)
+                    session = provider.open_session(self.app, owner, request, validate_snapshot)
                     route = route_with_adapter(session.bind(provider.adapter, 'ask-router'), request, context,
                                                record=reply_record)
             else:
@@ -636,22 +636,22 @@ class UnifiedAskService:
             validate_sources()
             if str(error) == "EVIDENCE_INVALID":
                 return self._router_stop(run, None, "EVIDENCE_INVALID", http=409)
-            with pass_router_reservation(session):
+            with pass_router_source_validation(session):
                 result, status = stop(str(error), attempted)
                 result["router"].update(reply_record)
                 return result, status
         except (ImportError, OSError, ValueError):
             # Optional local retrieval can fail without any usable catalogue.
             validate_sources()
-            with pass_router_reservation(session):
+            with pass_router_source_validation(session):
                 return stop('RETRIEVAL_UNAVAILABLE', attempted)
         finally:
             if session is not None:
                 session.record_validation(reply_record)
         if value_only and route.decision == "ROUTE" and not route.entity_mentions:
-            with pass_router_reservation(session):
+            with pass_router_source_validation(session):
                 return stop('ENTITY_MENTIONS_MISSING', attempted)
-        with pass_router_reservation(session):
+        with pass_router_source_validation(session):
             result, status = self._execute_router(run, payload, context, route)
             result["router"].update(reply_record)
             return result, status
@@ -804,7 +804,7 @@ class UnifiedAskService:
         if config.get('external_provider'):
             if payload.get('allow_external_provider') is not True:
                 return self._failure(result, 'EXTERNAL_PROVIDER_PERMISSION_REQUIRED',
-                    'Authorize this question to send the selected workspace source snapshot within the displayed budgets.',
+                    'Authorize this question to send the selected workspace source snapshot',
                     category='permission', status='BLOCKED'), 403
             from linkloom.semantic_ingestion.task_relation_models import canonical_hash
             authorization = dict(workspace_id=run.workspace_id, snapshot_hash=context['snapshot_hash'],

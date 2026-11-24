@@ -155,7 +155,7 @@ class GraphInvestigationService:
 
 
 def product_graph_service(app,investigation):
-    """Compose with existing Host model/Provider budgets, never discover credentials."""
+    """Compose with existing Host model/Provider configuration, never discover credentials."""
     def store_factory(workspace):
         if app._workspace_id()!=workspace: raise PermissionError('CURRENT_WORKSPACE_CHANGED')
         def authorized(ws,source,version):
@@ -171,7 +171,7 @@ def product_graph_service(app,investigation):
         if service.task_only:return None
         models=service.task_models
         if service.external_provider:
-            # Live graph planning must have the existing Host's explicit Provider budget.
+            # Live graph planning must have the existing Host's explicit Provider configuration.
             if models is None or models.execution_kind!='LIVE':return None
             from linkloom.ui.task_provider import TaskProviderSession
             root=Path(app.repository.database_path).parent/'graph-provider'/uuid4().hex
@@ -179,11 +179,11 @@ def product_graph_service(app,investigation):
                 if context.validate_current() is not True:raise PermissionError('SOURCE_CHANGED')
             session=TaskProviderSession(root,models.provider_limits,validate_provider)
             # Existing Host owns the session through async legacy completion/shutdown.
-            # A failed decomposition never grants a new per-question budget.
+            # A failed decomposition never opens a second Provider session for the question.
             with service._lock:service._provider_sessions.append(session)
             _GRAPH_PROVIDER.set(session)
             adapter=session.bind(models.planner,'graph-planning'); model_id=models.model_id
-            close=None; cost=models.provider_limits.request_cost_upper_bound_usd
+            close=None; cost=0
         else:
             if service.model_factory is None or models is None:return None
             adapter=models.planner if models is not None else service.model_factory(context.question)

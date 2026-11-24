@@ -233,7 +233,7 @@ def restore_task_preparation(sources, manifest, *, relation_path=None):
             lambda: (sources.validate_current() or SemanticSourceSnapshot.from_context(context)),
             ReadOnlyAdapter(), model_id=manifest['model_id'],
             policy=SemanticCallPolicy(**manifest.get('semantic_policy', dict(
-                execution_kind=manifest['execution_kind'], max_cost_usd=0, request_cost_upper_bound_usd=0))))
+                execution_kind=manifest['execution_kind']))))
     raw = TaskContextSnapshot(sources.workspace_id, observations, sources.artifacts, sources.registry)
     tools = TaskRelationTools(sources.workspace_id, lambda: (sources.validate_current() or raw),
         relation_path=relation_path, semantic_analysis=semantic, inspection_plan=plan,
@@ -260,7 +260,7 @@ def prepare_task_investigation(question, sources, models, root, *, relation_path
         sources.validate_current()
         return ProviderRequestAuthorization.approve(request, guard_id=guard_id,
             reservation_id=canonical_hash(request.to_dict()),
-            estimated_cost_upper_bound_usd=models.provider_limits.request_cost_upper_bound_usd if provider_session else 0)
+            estimated_cost_upper_bound_usd=0)
 
     def stage_adapter(adapter, stage):
         return provider_session.bind(adapter, stage) if provider_session else adapter
@@ -352,8 +352,6 @@ def prepare_task_investigation(question, sources, models, root, *, relation_path
         queries = list(_proposal_queries(planning.plan))
     semantic = None
     semantic_policy = SemanticCallPolicy(models.execution_kind,
-        max_cost_usd=models.provider_limits.max_cost_usd if provider_session else 0,
-        request_cost_upper_bound_usd=models.provider_limits.request_cost_upper_bound_usd if provider_session else 0,
         live_authorized=provider_session is not None)
     if queries:
         semantic_context = replace(context, queries=tuple(queries))

@@ -416,8 +416,8 @@ def route_with_adapter(adapter, request, context, record=None):
         code = response.error.code
         if response.error.details.get("reason") == "TASK_SOURCE_AUTHORIZATION_CHANGED":
             raise RouterInvalid("EVIDENCE_INVALID")
-        if response.error.details.get("reason") == "TASK_PROVIDER_BUDGET_EXHAUSTED":
-            raise RouterInvalid("BUDGET_EXHAUSTED")
+        if response.error.details.get("reason") == "TASK_PROVIDER_DEADLINE":
+            raise RouterInvalid("PROVIDER_DEADLINE")
         if code in {"MODEL_RESPONSE_MALFORMED", "MODEL_RESPONSE_UNSUPPORTED", "MODEL_TOOL_CALL_PARSE_FAILED"}:
             record_invalid(record, "schema_invalid")
             raise RouterInvalid("ROUTER_SCHEMA_INVALID")
