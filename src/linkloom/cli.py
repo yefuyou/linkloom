@@ -194,7 +194,6 @@ def _add_agent_run_arguments(
         help="Path to P4 trace directory.",
     )
     parser.add_argument("--max-steps", type=int, default=12, help="Maximum total agent steps.")
-    parser.add_argument("--max-provider-requests", type=int, default=0)
     parser.add_argument("--memory-root", type=Path, default=None, help="Path to memory storage.")
 
 
@@ -241,7 +240,6 @@ def build_parser() -> argparse.ArgumentParser:
     run_ask_parser.add_argument("--checkpoint", type=Path, required=True, help="Path to checkpoint directory.")
     run_ask_parser.add_argument("--pause-after", type=str, choices=["retrieve_context"], default=None, help="Pause after a step.")
     run_ask_parser.add_argument("--max-steps", type=int, default=12, help="Max steps limit.")
-    run_ask_parser.add_argument("--max-provider-requests", type=int, default=0, help="Max provider requests limit.")
 
     run_ask_parser.add_argument("--trace", type=Path, default=DEFAULT_TRACE_DIR, help="Path to trace directory.")
     run_ask_parser.add_argument("--memory-root", type=Path, default=None, help="Path to memory storage.")
@@ -253,7 +251,6 @@ def build_parser() -> argparse.ArgumentParser:
     run_connect_parser.add_argument("--checkpoint", type=Path, required=True, help="Path to checkpoint directory.")
     run_connect_parser.add_argument("--pause-after", type=str, choices=["retrieve_context"], default=None, help="Pause after a step.")
     run_connect_parser.add_argument("--max-steps", type=int, default=12, help="Max steps limit.")
-    run_connect_parser.add_argument("--max-provider-requests", type=int, default=0, help="Max provider requests limit.")
     run_connect_parser.add_argument("--trace", type=Path, default=DEFAULT_TRACE_DIR, help="Path to trace directory.")
     run_connect_parser.add_argument("--memory-root", type=Path, default=None, help="Path to memory storage.")
 
@@ -409,7 +406,6 @@ def main(argv: list[str] | None = None) -> int:
                     index_path=None,
                     dry_run=True,
                     max_steps=args.max_steps,
-                    max_provider_requests=args.max_provider_requests,
                 )
                 engine = RuntimeEngine(
                     vault_root=args.vault,
@@ -491,7 +487,6 @@ def main(argv: list[str] | None = None) -> int:
                     index_path=None,
                     dry_run=True,
                     max_steps=args.max_steps,
-                    max_provider_requests=args.max_provider_requests,
                     task_plan=task_plan,
                     final_protocol=getattr(
                         args, "final_protocol", "team-decision-result/v1",

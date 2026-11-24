@@ -425,7 +425,6 @@ def _start(engine: RuntimeEngine, environment: dict[str, object], thread_id: str
             workflow="team_decision",
             query=environment["case"]["question"],
             max_steps=8,
-            max_provider_requests=8,
             dry_run=True,
         )
     )
@@ -536,7 +535,6 @@ def test_team_decision_rejects_a_claim_ref_omitted_from_the_final_model_request(
             workflow="team_decision",
             query="bounded context visibility",
             max_steps=11,
-            max_provider_requests=11,
             dry_run=True,
         )
     )
@@ -571,7 +569,6 @@ def test_aer_002_allows_a_bounded_multi_note_trajectory_through_the_production_r
             workflow="team_decision",
             query=environment["case"]["question"],
             max_steps=8,
-            max_provider_requests=8,
             dry_run=True,
         )
     )

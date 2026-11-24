@@ -122,8 +122,7 @@ def test_runtime_backend_projects_a_real_team_decision_run_without_source_writes
         engine=engine,
         workspace=WorkspacePresentationContext(display_name="Test project", document_count=1),
         max_steps=3,
-        max_provider_requests=3,
-    )
+        )
 
     started = backend.start("Which model provider did the team approve?")
     deadline = time.monotonic() + 60
@@ -181,8 +180,7 @@ def test_runtime_backend_routes_unfamiliar_goal_to_bounded_model_plan(
     backend = RuntimeRunBackend(
         engine=engine,
         workspace=WorkspacePresentationContext(display_name="Test project", document_count=1),
-        max_steps=8, max_provider_requests=8,
-    )
+        max_steps=8, )
 
     started = backend.start(goal)
     deadline = time.monotonic() + 30

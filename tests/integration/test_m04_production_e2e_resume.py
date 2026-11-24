@@ -184,11 +184,10 @@ def engine(env, provider, boundary=None):
 
 def start(runtime, **kwargs):
     max_steps = kwargs.pop("max_steps", 12)
-    max_provider_requests = kwargs.pop("max_provider_requests", 8)
     return runtime.start_multi_agent(RunRequest(
         request_id="m04-request", thread_id="m04-thread", workflow="ask",
         query="shared", max_steps=max_steps,
-        max_provider_requests=max_provider_requests, **kwargs,
+        **kwargs,
     ))
 
 
@@ -386,11 +385,11 @@ def test_v2_grouped_proposal_cold_resume_is_admitted_by_production_graph(environ
     assert result["fallback_used"] is False
 
 
-def test_durable_final_resume_reuses_final_with_zero_provider_budget(environment):
+def test_durable_final_resume_reuses_final_without_a_new_provider_request(environment):
     before = PolicyProvider()
     first = engine(environment, before, "response_durable_final")
     with pytest.raises(ProcessCrash):
-        start(first, max_provider_requests=2)
+        start(first)
     durable, _ = facts(environment, first)
     assert len(before.requests) == 2
     assert durable.model_executions[-1].status == "response_durable"
@@ -414,7 +413,7 @@ def test_durable_final_resume_reuses_final_with_zero_step_budget(environment):
     before = PolicyProvider(read=True)
     first = engine(environment, before, "response_durable_final")
     with pytest.raises(ProcessCrash):
-        start(first, max_steps=3, max_provider_requests=8)
+        start(first, max_steps=3)
     durable, _ = facts(environment, first)
     assert len(before.requests) == 3
     assert durable.model_executions[-1].status == "response_durable"
@@ -436,29 +435,11 @@ def test_durable_final_resume_reuses_final_with_zero_step_budget(environment):
     assert environment[4][-1].error is None
 
 
-def test_resume_needing_next_turn_rejects_zero_provider_budget(environment):
-    before = PolicyProvider()
-    first = engine(environment, before, "tool_result_durable")
-    with pytest.raises(ProcessCrash):
-        start(first, max_provider_requests=1)
-    assert len(before.requests) == len(environment[3]) == 1
-
-    after = PolicyProvider()
-    restarted = engine(environment, after)
-    restarted.resume_multi_agent("m04-thread")
-    state, result = facts(environment, restarted)
-    assert not after.requests
-    assert len(environment[3]) == 1
-    assert environment[4][-1].error["code"] == "MODEL_PROVIDER_BUDGET_EXHAUSTED"
-    assert result["fallback_used"] is True
-    assert state.tool_ledger[0].status == "completed"
-
-
 def test_resume_needing_next_turn_rejects_zero_step_budget(environment):
     before = PolicyProvider()
     first = engine(environment, before, "tool_result_durable")
     with pytest.raises(ProcessCrash):
-        start(first, max_steps=1, max_provider_requests=8)
+        start(first, max_steps=1)
     assert len(before.requests) == len(environment[3]) == 1
 
     after = PolicyProvider()

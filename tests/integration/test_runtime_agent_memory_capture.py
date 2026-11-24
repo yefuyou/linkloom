@@ -144,7 +144,6 @@ def _runtime_fixture(
         workflow="team_decision",
         query="Which supplier was selected for the Atlas project?",
         max_steps=3,
-        max_provider_requests=3,
         dry_run=True,
     )
     return vault, store, engine, request
@@ -255,7 +254,6 @@ def test_runtime_capture_failure_does_not_fail_successful_team_decision(tmp_path
         workflow="team_decision",
         query="Which supplier was selected for the Atlas project?",
         max_steps=3,
-        max_provider_requests=3,
         dry_run=True,
     )
 

@@ -134,7 +134,7 @@ def _runtime_state(run_id: str, root: Path) -> tuple[RuntimeState, ModelArtifact
             index_sha256="0" * 64,
             vault_root_fingerprint="fixture-root",
         ),
-        policy=PolicySnapshot(max_steps=12, max_provider_requests=8),
+        policy=PolicySnapshot(max_steps=12),
         termination=TerminationState(status="running", sequence=1),
         created_at="2026-08-30T00:00:00Z",
         updated_at="2026-08-30T00:00:00Z",

@@ -133,7 +133,7 @@ def _state() -> RuntimeState:
             index_sha256="c" * 64,
             vault_root_fingerprint=VAULT_FINGERPRINT,
         ),
-        policy=PolicySnapshot(max_steps=4, max_provider_requests=4),
+        policy=PolicySnapshot(max_steps=4),
     )
 
 

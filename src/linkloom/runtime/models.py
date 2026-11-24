@@ -222,7 +222,6 @@ class PolicySnapshot:
     write_capability: bool = False
     network_capability: bool = False
     max_steps: int = 12
-    max_provider_requests: int = 0
 
     def __post_init__(self) -> None:
         _assert_json_safe_primitive(asdict(self), "PolicySnapshot")
@@ -239,8 +238,8 @@ class PolicySnapshot:
                     "network_capability": self.network_capability,
                 },
             )
-        if self.max_steps < 1 or self.max_provider_requests < 0:
-            raise ValidationError("Policy limits must be max_steps >= 1 and provider requests >= 0.")
+        if self.max_steps < 1:
+            raise ValidationError("Policy limits must be max_steps >= 1.")
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -258,8 +257,9 @@ class PolicySnapshot:
             policy_version=str(data.get("policy_version", "p2-readonly-v1")),
             write_capability=bool(data.get("write_capability", False)),
             network_capability=bool(data.get("network_capability", False)),
+            # Checkpoints written before the request quota was removed may carry
+            # max_provider_requests; it is ignored and never drives a decision.
             max_steps=int(data.get("max_steps", 12)),
-            max_provider_requests=int(data.get("max_provider_requests", 0)),
         )
 
 
@@ -394,7 +394,6 @@ class RunRequest:
     vault_root: str | None = None
     index_path: str | None = None
     max_steps: int = 12
-    max_provider_requests: int = 0
     interrupt_policy: str = "clarify_only"
     dry_run: bool = True
     caller: str = "cli"
@@ -429,8 +428,8 @@ class RunRequest:
             )
         if not self.query.strip():
             raise ValidationError("query cannot be empty.", details={"request_id": self.request_id})
-        if self.max_steps < 1 or self.max_provider_requests < 0:
-            raise ValidationError("RunRequest limits must be max_steps >= 1 and provider requests >= 0.")
+        if self.max_steps < 1:
+            raise ValidationError("RunRequest max_steps must be >= 1.")
         if self.interrupt_policy != "clarify_only":
             raise ValidationError("P2 interrupt_policy must be 'clarify_only'.")
         if self.planning_mode not in {"template", "model"}:
@@ -488,8 +487,8 @@ class RunRequest:
             thread_id=data.get("thread_id"),
             vault_root=data.get("vault_root"),
             index_path=data.get("index_path"),
+            # Legacy persisted requests may carry max_provider_requests; ignored.
             max_steps=int(data.get("max_steps", 12)),
-            max_provider_requests=int(data.get("max_provider_requests", 0)),
             interrupt_policy=str(data.get("interrupt_policy", "clarify_only")),
             dry_run=bool(data.get("dry_run", True)),
             caller=str(data.get("caller", "cli")),

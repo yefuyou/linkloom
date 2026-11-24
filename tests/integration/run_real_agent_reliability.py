@@ -275,7 +275,7 @@ def _runtime_case(public: dict[str, Any], root: Path) -> dict[str, Any]:
     status = engine.start_multi_agent(RunRequest(
         request_id="rar-budget", thread_id="rar-budget", workflow="team_decision",
         query=public["query"], final_protocol="claim-proposal/v1", max_steps=limit,
-        max_provider_requests=limit, dry_run=True,
+        dry_run=True,
     ))
     state = engine.checkpointer.get_latest("rar-budget")
     records = state.tool_ledger if state else []

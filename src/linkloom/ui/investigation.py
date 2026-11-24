@@ -336,7 +336,6 @@ class ProductInvestigationService:
                     display_name=str(workspace["name"]), document_count=len(sources)
                 ),
                 max_steps=max_steps,
-                max_provider_requests=max_steps,
                 # A source investigation answers with Typed Claims; the Host checks
                 # them deterministically and projects them without re-parsing text.
                 final_protocol=("claim-proposal/v1" if temporal_scope is not None or source_run and not preparation

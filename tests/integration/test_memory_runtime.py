@@ -123,8 +123,7 @@ def test_runtime_multi_agent_memory_injection(m03_root: Path):
         workflow="ask",
         query="test query",
         thread_id="t1",
-        max_provider_requests=8,
-    )
+        )
     status = engine.start_multi_agent(req)
     assert status.status == "completed"
 

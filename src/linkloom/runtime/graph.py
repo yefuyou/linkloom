@@ -393,7 +393,6 @@ class RuntimeEngine:
         run_id = f"run_p2_{uuid.uuid4().hex[:12]}"
         run_policy = ReadOnlyPolicy(
             max_steps=request.max_steps,
-            max_provider_requests=request.max_provider_requests,
         )
         
         tracer = OptionalTracer(self.trace_dir, run_id, thread_id)
@@ -501,38 +500,18 @@ class RuntimeEngine:
                 status="failed",
                 error=error_env.to_dict(),
             )
-        if request.max_provider_requests <= 0:
-            error_env = ErrorEnvelope(
-                code="MODEL_PROVIDER_BUDGET_EXHAUSTED",
-                category="budget",
-                message="Multi-agent execution requires a positive model request budget.",
-            )
-            tracer.emit("run.failed", "failed", error=error_env)
-            tracer.write_manifest(
-                complete=False,
-                source_index_sha256="0" * 64,
-                incomplete_reason="model request budget exhausted",
-            )
-            return RunStatus(
-                run_id=run_id,
-                thread_id=thread_id,
-                status="failed",
-                error=error_env.to_dict(),
-            )
-
         if (request.planning_mode == "model" and request.task_plan is None
-                and (request.max_provider_requests < 6 or request.max_steps < 5)):
-            # The plan proposal is a Provider request of its own. Reserve it
-            # inside the caller's run budget before any network-capable call.
+                and request.max_steps < 5):
+            # The model-planned path needs steps for two search/read hops and Final.
             error_env = ErrorEnvelope(
-                code="MODEL_PLAN_BUDGET_INSUFFICIENT",
-                category="budget",
-                message="Model planning needs room for proposal, two search/read hops and Final.",
+                code="MODEL_PLAN_STEPS_INSUFFICIENT",
+                category="validation",
+                message="Model planning needs at least 5 steps for two search/read hops and Final.",
             )
             tracer.emit("run.failed", "failed", error=error_env)
             tracer.write_manifest(
                 complete=False, source_index_sha256="0" * 64,
-                incomplete_reason="model plan budget insufficient",
+                incomplete_reason="model plan steps insufficient",
             )
             return RunStatus(
                 run_id=run_id, thread_id=thread_id, status="failed",
@@ -562,28 +541,25 @@ class RuntimeEngine:
                 if not callable(propose):
                     raise ValidationError("The configured model has no plan proposal capability.")
                 raw_plan = propose(request.query)
-                proposal_requests = 1
                 try:
                     plan = validate_model_proposed_plan(
                         raw_plan, user_query=request.query,
                         max_steps=request.max_steps,
                     )
                 except ValidationError as plan_error:
-                    # A rejected JSON object can be repaired once only after
-                    # reserving the proposal, repair, complete read path, and
-                    # Final. The model receives structured validator feedback;
-                    # Runtime still validates the replacement from scratch.
+                    # A rejected JSON object can be repaired once. The model
+                    # receives structured validator feedback; Runtime still
+                    # validates the replacement from scratch.
                     if not isinstance(raw_plan, dict):
                         raise
                     max_repair_subgoals = min(
                         4,
-                        (request.max_provider_requests - 3) // 2,
                         (request.max_steps - 1) // 2,
                     )
                     if max_repair_subgoals < 2:
                         raise ValidationError(
-                            "Model plan repair has no remaining full-run budget.",
-                            details={"reason": "plan_repair_budget_exhausted"},
+                            "Model plan repair has no room within max_steps.",
+                            details={"reason": "plan_repair_steps_insufficient"},
                         ) from plan_error
                     repair = getattr(self.model, "repair_task_plan", None)
                     if not callable(repair):
@@ -595,7 +571,7 @@ class RuntimeEngine:
                         "message": plan_error.message,
                         "details": {
                             **plan_error.details,
-                            "max_subgoals_within_run_budget": max_repair_subgoals,
+                            "max_subgoals_within_max_steps": max_repair_subgoals,
                         },
                     }
                     tracer.emit("plan.repair_requested", "started", attributes={
@@ -605,48 +581,31 @@ class RuntimeEngine:
                         "proposal_provider_requests": 2,
                     })
                     revised = repair(request.query, raw_plan, validation_feedback)
-                    proposal_requests = 2
                     plan = validate_model_proposed_plan(
                         revised, user_query=request.query,
                         max_steps=request.max_steps,
                     )
-                if request.max_provider_requests < (
-                    2 * len(plan.subgoals) + 1 + proposal_requests
-                ):
-                    raise ValidationError(
-                        "Model plan exceeds the Provider budget including its proposal."
-                    )
-                # Persist the remaining loop allowance. The proposal has
-                # already used one Provider call and must not be available
-                # again after a cold resume.
-                request = replace(
-                    request, task_plan=plan.to_dict(),
-                    max_provider_requests=(
-                        request.max_provider_requests - proposal_requests
-                    ),
-                )
+                request = replace(request, task_plan=plan.to_dict())
                 tracer.emit("plan.validated", "ok", attributes={
                     "plan_origin": "model_generated",
                     "subgoal_count": len(plan.subgoals),
-                    "proposal_provider_requests": proposal_requests,
-                    "remaining_provider_requests": request.max_provider_requests,
                     "plan_sha256": hashlib.sha256(json.dumps(
                         plan.to_dict(), ensure_ascii=False, sort_keys=True,
                     ).encode("utf-8")).hexdigest(),
                 })
             except Exception as exc:
-                repair_budget_stop = (
+                repair_steps_stop = (
                     isinstance(exc, ValidationError)
-                    and exc.details.get("reason") == "plan_repair_budget_exhausted"
+                    and exc.details.get("reason") == "plan_repair_steps_insufficient"
                 )
                 code = (
-                    "PLAN_REPAIR_BUDGET_EXHAUSTED" if repair_budget_stop
+                    "PLAN_REPAIR_STEPS_INSUFFICIENT" if repair_steps_stop
                     else "MODEL_PLAN_REJECTED" if isinstance(exc, ValidationError)
                     else "MODEL_PLAN_OUTCOME_UNKNOWN" if isinstance(exc, ProviderOutcomeUnknownError)
                     else "MODEL_PLAN_PROVIDER_ERROR"
                 )
                 error_env = ErrorEnvelope(
-                    code=code, category=("budget" if repair_budget_stop else
+                    code=code, category=("validation" if repair_steps_stop else
                                          "provider" if isinstance(exc, ProviderOutcomeUnknownError) else "agent"),
                     message="The model plan could not be safely accepted.",
                     details={"reason": str(exc) if isinstance(exc, ValidationError)
@@ -687,7 +646,6 @@ class RuntimeEngine:
             source=source_context,
             policy=ReadOnlyPolicy(
                 max_steps=request.max_steps,
-                max_provider_requests=request.max_provider_requests,
             ).to_snapshot(),
             created_at=time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
             updated_at=time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
@@ -948,8 +906,7 @@ class RuntimeEngine:
             raise ValidationError("The persisted run request is unavailable or invalid.") from None
         if (request.workflow != state.workflow
                 or request.thread_id not in (None, thread_id)
-                or request.max_steps != state.policy.max_steps
-                or request.max_provider_requests != state.policy.max_provider_requests):
+                or request.max_steps != state.policy.max_steps):
             raise ValidationError("The persisted run request does not match the checkpoint.")
         try:
             if (calculate_fingerprint(self.vault_root) != state.source.vault_root_fingerprint

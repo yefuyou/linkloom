@@ -170,7 +170,7 @@ def run_case(public, root):
         trace_dir=root/'traces', checkpointer=InMemoryCheckpointer(), model=model)
     status = engine.start_multi_agent(RunRequest(request_id='bounded_mh', thread_id='bounded_mh',
         workflow='team_decision', query=public['query'], final_protocol='claim-proposal/v1',
-        max_steps=20, max_provider_requests=20, dry_run=True))
+        max_steps=20, dry_run=True))
     state = engine.checkpointer.get_latest('bounded_mh')
     records = state.tool_ledger if state else []
     calls, binding_ok, hop, quotes = [], True, None, []

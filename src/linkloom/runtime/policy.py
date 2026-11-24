@@ -16,7 +16,6 @@ class ReadOnlyPolicy:
     write_capability: bool = False
     network_capability: bool = False
     max_steps: int = 12
-    max_provider_requests: int = 0
 
     def __post_init__(self) -> None:
         if self.write_capability is not False:
@@ -33,11 +32,6 @@ class ReadOnlyPolicy:
             raise ValidationError(
                 f"max_steps must be at least 1, got {self.max_steps}.",
                 details={"max_steps": self.max_steps},
-            )
-        if self.max_provider_requests < 0:
-            raise ValidationError(
-                f"max_provider_requests must be non-negative, got {self.max_provider_requests}.",
-                details={"max_provider_requests": self.max_provider_requests},
             )
 
     def check_can_write(self) -> None:
@@ -63,7 +57,6 @@ class ReadOnlyPolicy:
             write_capability=self.write_capability,
             network_capability=self.network_capability,
             max_steps=self.max_steps,
-            max_provider_requests=self.max_provider_requests,
         )
 
     def to_dict(self) -> dict[str, Any]:
@@ -72,5 +65,4 @@ class ReadOnlyPolicy:
             "write_capability": self.write_capability,
             "network_capability": self.network_capability,
             "max_steps": self.max_steps,
-            "max_provider_requests": self.max_provider_requests,
         }

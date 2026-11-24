@@ -60,7 +60,7 @@ def _run(tmp_path, monkeypatch, build, *, cited=True, search=True):
                            model=Scripted(), memory_enabled=False, decision_memory_enabled=False)
     result = engine.start_multi_agent(RunRequest(request_id="cited", thread_id="cited",
         workflow="team_decision", query="Why was Meridian A replaced?", max_steps=3,
-        max_provider_requests=3, reserve_final_turn=True, cited_answer=cited))
+        reserve_final_turn=True, cited_answer=cited))
     if result.status == "completed":
         artifact = json.loads((engine.checkpoint_dir / result.result_ref).read_text(encoding="utf-8"))
         return result, artifact["result"]["team_decision"]

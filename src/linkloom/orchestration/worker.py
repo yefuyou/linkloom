@@ -185,7 +185,7 @@ def _run(deps, task, query):
         thread = f"{deps.run_id}-{task['id']}-{task['epoch']}-{task['attempt']}"
         status = engine.start_multi_agent(RunRequest(request_id=thread, thread_id=thread, query=query,
             workflow='team_decision', task_plan=None, planning_mode='template', max_steps=steps,
-            max_provider_requests=steps, dry_run=True, caller='product_ui', reserve_final_turn=True,
+            dry_run=True, caller='product_ui', reserve_final_turn=True,
             cited_answer=True))
     except Exception as exc:
         error = str(exc) if isinstance(exc, ValueError) and str(exc).isupper() else 'WORKER_RUNTIME_FAILED'

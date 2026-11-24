@@ -81,7 +81,7 @@ def test_relation_revoked_after_observed_query_cannot_revive_through_compaction(
     engine._context_runtime_config = ContextRuntimeConfig(history_soft_bytes=1)
     from linkloom.runtime.models import RunRequest
     status = engine.start_multi_agent(RunRequest(request_id="revoked-context", workflow="task_relations",
-        query="Which plan is current?", max_steps=3, max_provider_requests=3))
+        query="Which plan is current?", max_steps=3))
     assert status.status == "failed" and model.call_count == 3
     state = engine.checkpointer.get_latest(status.thread_id)
     result = json.loads((tmp_path / "checkpoints" / state.result_ref).read_text(encoding="utf8"))

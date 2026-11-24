@@ -132,7 +132,6 @@ def _run(root: Path, *, omit_unknown_fields: bool):
             workflow="team_decision",
             query="Who is the accountable owner of Cobalt B in Atlas?",
             max_steps=3,
-            max_provider_requests=3,
             dry_run=True,
         )
     )
@@ -244,7 +243,7 @@ def test_explicit_typed_final_protocol_runs_generic_claims_through_runtime_and_r
         thread_id=f"generic-typed-{reverse_relation}",
         workflow="team_decision",
         query="For Juniper Orbit, identify its recorded steward and that person's direct leader.",
-        max_steps=4, max_provider_requests=4, dry_run=True,
+        max_steps=4, dry_run=True,
         final_protocol="claim-proposal/v1",
     ))
     state = engine.checkpointer.get_latest(status.thread_id)

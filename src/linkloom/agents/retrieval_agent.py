@@ -1271,33 +1271,13 @@ class RetrievalAgent:
                 self.prompt_profile, self.memory_hints, self.final_protocol,
                 self.cited_answer,
             )
-            consumed_provider_requests = max(
-                self.initial_state.usage.provider_requests,
-                len(self.initial_state.model_executions),
-            )
-            remaining_provider_requests = (
-                self.initial_state.policy.max_provider_requests
-                - consumed_provider_requests
-            )
             durable_final_reuse = (
                 self.resume_model_loop
                 and self._has_durable_final(self.initial_state, task, self.agent_id)
             )
-            if remaining_provider_requests <= 0 and not durable_final_reuse:
-                return self._failed_result(
-                    task,
-                    usage,
-                    self._safe_error(
-                        "MODEL_PROVIDER_BUDGET_EXHAUSTED",
-                        "budget",
-                        "The retrieval model request budget is exhausted.",
-                    ),
-                    [],
-                )
             max_steps = min(
                 task.max_steps,
                 self.initial_state.policy.max_steps,
-                remaining_provider_requests,
             )
             if self.resume_model_loop:
                 spent = [record for record in self.initial_state.model_executions
@@ -1323,9 +1303,9 @@ class RetrievalAgent:
                     task,
                     usage,
                     self._safe_error(
-                        "MODEL_PROVIDER_BUDGET_EXHAUSTED",
+                        "MODEL_MAX_STEPS_EXCEEDED",
                         "budget",
-                        "The retrieval model request budget is exhausted.",
+                        "The retrieval model step limit is exhausted.",
                     ),
                     [],
                 )

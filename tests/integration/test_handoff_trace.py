@@ -65,7 +65,7 @@ def _model_agent(run_id: str, root: Path, query: str = "q") -> RetrievalAgent:
             index_sha256="0" * 64,
             vault_root_fingerprint="fixture-root",
         ),
-        policy=PolicySnapshot(max_steps=12, max_provider_requests=8),
+        policy=PolicySnapshot(max_steps=12),
         termination=TerminationState(status="running", sequence=1),
         created_at="2026-08-30T00:00:00Z",
         updated_at="2026-08-30T00:00:00Z",
@@ -179,7 +179,6 @@ def test_runtime_multi_agent_persists_state_and_jsonl_trace(m03_root: Path):
             workflow="ask",
             query="Scanner",
             vault_root=str(vault_root),
-            max_provider_requests=8,
             dry_run=True,
         )
     )

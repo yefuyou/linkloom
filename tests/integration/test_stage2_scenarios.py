@@ -59,7 +59,7 @@ def run(tmp_path, query, notes=None, *, max_steps=20):
                            trace_dir=root / "traces", checkpointer=InMemoryCheckpointer(), model=model)
     status = engine.start_multi_agent(RunRequest(
         request_id="s2", thread_id="s2", workflow="team_decision", query=query, final_protocol="claim-proposal/v1",
-        max_steps=max_steps, max_provider_requests=max_steps, dry_run=True, reserve_final_turn=True))
+        max_steps=max_steps, dry_run=True, reserve_final_turn=True))
     state = engine.checkpointer.get_latest("s2")
     path = root / "runtime" / "results" / status.run_id / "result.json"
     payload = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}

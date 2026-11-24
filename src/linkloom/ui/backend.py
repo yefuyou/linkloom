@@ -59,19 +59,17 @@ class RuntimeRunBackend:
         engine: RuntimeEngine,
         workspace: WorkspacePresentationContext,
         max_steps: int = 8,
-        max_provider_requests: int = 8,
         final_protocol: str = "team-decision-result/v1",
         planning_mode: str | None = None,
         workflow: str = "team_decision",
     ) -> None:
         if not isinstance(engine, RuntimeEngine):
             raise TypeError("RuntimeRunBackend requires a RuntimeEngine.")
-        if max_steps < 1 or max_provider_requests < 1:
-            raise ValueError("RuntimeRunBackend requires positive execution limits.")
+        if max_steps < 1:
+            raise ValueError("RuntimeRunBackend requires a positive max_steps.")
         self.engine = engine
         self.workspace = workspace
         self.max_steps = max_steps
-        self.max_provider_requests = max_provider_requests
         self.final_protocol = final_protocol
         self.planning_mode = planning_mode
         if workflow not in {"team_decision", "task_relations"}:
@@ -149,7 +147,6 @@ class RuntimeRunBackend:
                         "model" if callable(getattr(self.engine.model, "propose_task_plan", None)) else "template"
                     ),
                     max_steps=self.max_steps,
-                    max_provider_requests=self.max_provider_requests,
                     dry_run=True,
                     caller="product_ui",
                     final_protocol=self.final_protocol,
@@ -208,7 +205,7 @@ class RuntimeRunBackend:
         if self.workflow == "task_relations":
             from linkloom.ui.task_result import project_task_snapshot
             snapshot = project_task_snapshot(job.query, self.workspace, status, state, artifact)
-            snapshot['metrics'].update(max_model_turns=self.max_steps, max_provider_requests=self.max_provider_requests)
+            snapshot['metrics'].update(max_model_turns=self.max_steps)
             snapshot["run"]["runtime_id"] = snapshot["run"]["id"]
             snapshot["run"]["id"] = job.ui_run_id
             return snapshot
@@ -249,7 +246,7 @@ class RuntimeRunBackend:
                 snapshot["planning"] = {
                     "origin": "model" if request.get("planning_mode") == "model" else "rules",
                     "validated": True,
-                    "provider_requests": self.max_provider_requests - request["max_provider_requests"],
+                    "provider_requests": 1 if request.get("planning_mode") == "model" else 0,
                 }
         snapshot["run"]["runtime_id"] = snapshot["run"]["id"]
         snapshot["run"]["id"] = job.ui_run_id
