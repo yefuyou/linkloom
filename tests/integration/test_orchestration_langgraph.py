@@ -266,7 +266,10 @@ def test_failed_and_abstained_tasks_keep_other_results_as_partial(tmp_path):
     assert "succ" in owners and not owners & {"owner", "risk"}
 
 
-def test_provider_deadline_failure_keeps_receipt_and_does_not_retry_or_review(tmp_path):
+def test_provider_deadline_failure_keeps_receipt_and_does_not_retry_or_review(tmp_path, monkeypatch):
+    # A strictly advancing clock, so the result does not depend on the OS clock resolution (Windows ~15.6 ms).
+    ticks = iter(range(1, 10**6))
+    monkeypatch.setattr("linkloom.ui.task_provider.monotonic", lambda: next(ticks) * 1e-3)
     world = World([delegation("answer_single"), delegation("delegate", [("again", GOAL, [])])],
                   {GOAL: (FACT["succ"], "Meridian A", "ok")})
     limits = run_limits(max_tasks=3, max_rounds=1, max_attempts=2)
