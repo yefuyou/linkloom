@@ -475,7 +475,8 @@ async function setup(storage = new Map()) {
   assert.match(traceHtml, /data-task="t2"[^>]*><summary><strong>t2<\/strong> · accepted · after t1/);
   assert.match(traceHtml, /t2 ∥ &lt;img/, "tasks of one wave are shown together");
   assert.match(traceHtml, /WORKER_RUNTIME_FAILED/);
-  assert.match(traceHtml, /not a bill/);
+  assert.match(traceHtml, /never limit a run/);
+  assert.doesNotMatch(traceHtml, /Reserved ceiling|reservation|not a bill/);
   assert.match(traceHtml, /Names to verify in sources \(not confirmed\)/);
   assert.match(traceHtml, /Shared evidence: 1/);
   traceUi.setTrace({error: {code: "TRACE_NOT_FOUND", message: "No call chain <b>x</b>"}});
