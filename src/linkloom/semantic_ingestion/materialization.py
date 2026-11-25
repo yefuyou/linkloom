@@ -34,8 +34,8 @@ from linkloom.semantic_ingestion.candidate_models import (
     TemporalResolution,
 )
 from linkloom.semantic_ingestion.candidate_persistence import (
-    SOURCE_CANDIDATE_PAYLOAD_VERSIONS,
-    deserialize_candidate as deserialize_source_candidate,
+    SourceCandidateIntegrityError,
+    load_source_candidate,
     serialize_candidate as serialize_source_candidate,
 )
 from linkloom.semantic_ingestion.materializable import (
@@ -1528,16 +1528,16 @@ def _candidate_view_from_row(
         ) from error
     payload_json = str(row["payload_json"])
     if source_kind is CandidateSourceKind.SOURCE_INGESTION:
-        if str(row["payload_version"]) not in SOURCE_CANDIDATE_PAYLOAD_VERSIONS:
-            raise MaterializationBlockedError(
-                "CANDIDATE_INVALID", "source-ingestion candidate payload version is unsupported"
+        try:
+            candidate, encoded, fingerprint = load_source_candidate(
+                payload_json,
+                expected_fingerprint=str(row["candidate_fingerprint"]),
+                expected_candidate_id=str(row["candidate_id"]),
+                expected_workspace_id=str(row["workspace_id"]),
+                expected_payload_version=str(row["payload_version"]),
             )
-        candidate = deserialize_source_candidate(payload_json)
-        if str(row["payload_version"]) != json.loads(payload_json)["record_version"]:
-            raise MaterializationBlockedError(
-                "CANDIDATE_INVALID", "source candidate payload version does not match its row"
-            )
-        encoded, fingerprint = serialize_source_candidate(candidate)
+        except SourceCandidateIntegrityError as error:
+            raise MaterializationBlockedError("CANDIDATE_INVALID", str(error)) from error
         raw_reasons = json.loads(str(row["validation_reasons_json"]))
         if not isinstance(raw_reasons, list) or any(not isinstance(item, str) for item in raw_reasons):
             raise MaterializationBlockedError("CANDIDATE_INVALID", "candidate validation reasons are malformed")

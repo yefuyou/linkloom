@@ -319,18 +319,28 @@ class ExtractionAttempt:
         }
         if not isinstance(data, dict):
             raise ValueError("ExtractionAttempt has missing or unsupported fields")
-        # Records written before the cost bound was removed carry
-        # budget_reservation_id and estimated_cost_upper_bound_usd. They stay
-        # readable; the cost bound is dropped and never drives a decision.
+        # Exactly two shapes are accepted. Current records carry
+        # authorization_id. Records written before the cost bound was removed
+        # carry both budget_reservation_id and estimated_cost_upper_bound_usd
+        # and no authorization_id; the cost bound is validated, then dropped.
         legacy = {"budget_reservation_id", "estimated_cost_upper_bound_usd"}
         keys = set(data)
-        if keys - legacy == expected | {"authorization_id"}:
-            pass
-        elif keys - legacy == expected and "authorization_id" not in keys:
-            pass
+        if keys == expected | {"authorization_id"}:
+            authorization_id = data["authorization_id"]
+        elif keys == expected | legacy:
+            authorization_id = data["budget_reservation_id"]
+            cost = data["estimated_cost_upper_bound_usd"]
+            if cost is not None and (
+                isinstance(cost, bool)
+                or not isinstance(cost, (int, float))
+                or not math.isfinite(cost)
+                or cost < 0
+            ):
+                raise ValueError("estimated_cost_upper_bound_usd must be non-negative or null")
+            if (authorization_id is None) != (cost is None):
+                raise ValueError("legacy reservation id and cost bound must both be set or both null")
         else:
             raise ValueError("ExtractionAttempt has missing or unsupported fields")
-        authorization_id = data.get("authorization_id", data.get("budget_reservation_id"))
         return cls(
             attempt_number=data["attempt_number"],
             request_sha256=data["request_sha256"],

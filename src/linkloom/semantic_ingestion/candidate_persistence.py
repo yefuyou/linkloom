@@ -233,6 +233,89 @@ def deserialize_candidate(payload_json: str) -> CandidateDecisionFact:
     )
 
 
+class SourceCandidateIntegrityError(ValueError):
+    """The stored source-ingestion candidate failed an integrity or compatibility check."""
+
+
+# Compatibility rule: an existing record_version must never change its
+# serialized shape. Any future incompatible serialization change must introduce
+# a new record_version instead of silently altering one that is already stored.
+_LEGACY_ATTEMPT_KEYS = frozenset({"budget_reservation_id", "estimated_cost_upper_bound_usd"})
+
+
+def _canonical_json(value: object) -> str:
+    return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"), allow_nan=False)
+
+
+def _attempt_dicts(payload: dict[str, object]) -> list[dict[str, object]]:
+    try:
+        attempts = payload["candidate"]["extraction_receipt"]["attempts"]  # type: ignore[index]
+    except (KeyError, TypeError) as error:
+        raise SourceCandidateIntegrityError("stored candidate receipt is malformed") from error
+    if not isinstance(attempts, list) or any(not isinstance(item, dict) for item in attempts):
+        raise SourceCandidateIntegrityError("stored candidate attempts are malformed")
+    return attempts
+
+
+def load_source_candidate(
+    payload_json: str,
+    *,
+    expected_fingerprint: str,
+    expected_candidate_id: str,
+    expected_workspace_id: str,
+    expected_payload_version: str,
+) -> tuple[CandidateDecisionFact, str, str]:
+    """Verify a stored payload against its persisted fingerprint, then adapt it.
+
+    Returns (candidate, stored_payload_json, stored_fingerprint). The stored
+    payload and fingerprint are the persisted originals, never recomputed from
+    the adapted object, so historical receipts keep pointing at the same bytes.
+    """
+    if not isinstance(payload_json, str):
+        raise SourceCandidateIntegrityError("stored candidate payload is not text")
+    if hashlib.sha256(payload_json.encode("utf-8")).hexdigest() != expected_fingerprint:
+        raise SourceCandidateIntegrityError("persisted candidate integrity check failed")
+    try:
+        raw = json.loads(payload_json)
+    except json.JSONDecodeError as error:
+        raise SourceCandidateIntegrityError("stored candidate payload is invalid JSON") from error
+    if not isinstance(raw, dict) or raw.get("record_version") not in SOURCE_CANDIDATE_PAYLOAD_VERSIONS:
+        raise SourceCandidateIntegrityError("source-ingestion candidate payload version is unsupported")
+    if raw["record_version"] != expected_payload_version:
+        raise SourceCandidateIntegrityError("source candidate payload version does not match its row")
+    try:
+        if _canonical_json(raw) != payload_json:
+            raise SourceCandidateIntegrityError("persisted candidate integrity check failed")
+        attempts = _attempt_dicts(raw)
+        shapes = {
+            "legacy" if _LEGACY_ATTEMPT_KEYS <= set(item) else "current" for item in attempts
+        }
+        if len(shapes) > 1 or any(
+            ("authorization_id" in item) == bool(_LEGACY_ATTEMPT_KEYS & set(item)) for item in attempts
+        ):
+            raise SourceCandidateIntegrityError("stored candidate attempts mix incompatible shapes")
+        try:
+            candidate = deserialize_candidate(payload_json)
+        except (ValueError, KeyError, TypeError) as error:
+            raise SourceCandidateIntegrityError(str(error)) from error
+    except (KeyError, TypeError) as error:
+        raise SourceCandidateIntegrityError("stored candidate payload is malformed") from error
+    if candidate.candidate_id != expected_candidate_id or candidate.workspace_id != expected_workspace_id:
+        raise SourceCandidateIntegrityError("persisted candidate identity does not match its row")
+    reencoded, refingerprint = serialize_candidate(candidate)
+    if "legacy" in shapes:
+        # Only the receipt-attempt rename/removal may differ from today's format.
+        normalised = json.loads(payload_json)
+        for item in _attempt_dicts(normalised):
+            item["authorization_id"] = item.pop("budget_reservation_id")
+            item.pop("estimated_cost_upper_bound_usd")
+        if _canonical_json(normalised) != reencoded:
+            raise SourceCandidateIntegrityError("persisted candidate integrity check failed")
+    elif reencoded != payload_json or refingerprint != expected_fingerprint:
+        raise SourceCandidateIntegrityError("persisted candidate integrity check failed")
+    return candidate, payload_json, expected_fingerprint
+
+
 def retain_first_task_capture(candidate: CandidateDecisionFact, previous_json: str) -> CandidateDecisionFact:
     """Keep the first immutable receipt/time on a semantically identical task retry."""
     previous = deserialize_candidate(previous_json)
