@@ -388,7 +388,7 @@ def test_revoking_legacy_evidence_on_reopen_never_replays_old_answer(tmp_path, l
     finally: h.close()
 
 
-def test_graph_and_legacy_share_one_provider_reservation(tmp_path, legacy_spy):
+def test_graph_and_legacy_share_one_provider_session_without_request_quota(tmp_path, legacy_spy):
     from linkloom.ui.graph_investigation import _GRAPH_PROVIDER
     from linkloom.ui.task_provider import TaskProviderSession, TaskProviderLimits
     h = Harness(tmp_path, 'DEV-A')
@@ -406,6 +406,6 @@ def test_graph_and_legacy_share_one_provider_reservation(tmp_path, legacy_spy):
         actual, status = finish(h.ask_service(worker), h.payload())
         assert status == 200 and actual['graph_status'] == 'UNKNOWN'
         assert actual['status'] == 'INSUFFICIENT' and actual['decided_by'] == 'graph'
-        assert session.requests == 1 and session.failure == 'TASK_PROVIDER_BUDGET_EXHAUSTED'
-        assert len(legacy_spy) == 1 and all(m.call_count == 0 for m in h.legacy_models)
+        assert session.requests == 1 and session.failure is None
+        assert len(legacy_spy) == 1
     finally: h.close()

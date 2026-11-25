@@ -35,7 +35,7 @@ from tests.integration.test_m3q_provider_host import ScriptedGeminiTransport, lo
 from tests.m3p_support import product_http
 from tests.integration.test_product_application_flow import _client
 from tests.integration.test_inspect_ledger_cold_process import _fresh_cold_read
-from tests.unit.test_m3q_provider_budget import limits
+from tests.unit.test_task_provider_session import limits
 from tests.unit.test_task_observation_discovery import claim
 
 

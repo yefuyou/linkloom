@@ -9,7 +9,7 @@ from linkloom.agents.model_adapter import ModelAction, ModelResponse, ModelUsage
 from linkloom.agents.providers.deepseek_api import DeepSeekProviderAdapter
 from linkloom.ui.router_context import RouteCandidate, RouterContext, bind_candidate, time_context
 from linkloom.ui.structured_router import CONFIG, RouterInvalid, normalize_mention, request_for, route_with_adapter, validate_output
-from linkloom.ui.task_provider import TaskProviderLimits, TaskProviderSession, pass_router_reservation
+from linkloom.ui.task_provider import TaskProviderLimits, TaskProviderSession, pass_router_source_validation
 
 
 def context(query='联调报告现在谁负责', selected=None, *, second=False):
@@ -58,18 +58,18 @@ def test_gemini_router_uses_supported_wire_deadline_and_bounded_session(
         monkeypatch.setenv("GEMINI_API_KEY", "offline-placeholder")
         monkeypatch.setattr("linkloom.ui.router_provider.build_gemini_sdk_client", build)
         router = configured_router()
-        upstream = TaskProviderLimits(21, 400_000, 60_000, .35, *upstream_timing, .01) if upstream_timing else None
+        upstream = TaskProviderLimits(*upstream_timing) if upstream_timing else None
         owner = SimpleNamespace(task_models=SimpleNamespace(provider_limits=upstream),
                                 _lock=Lock(), _provider_sessions=[])
         app = SimpleNamespace(repository=SimpleNamespace(database_path=tmp_path / "product.sqlite"))
         ctx = context()
         request = request_for(ctx)
-        session = router.reserve(app, owner, request, lambda: None)
+        session = router.open_session(app, owner, request, lambda: None)
         try:
             result = route_with_adapter(session.bind(router.adapter, "ask-router"), request, ctx)
             assert result.decision == "ROUTE"
             assert (session.limits.max_seconds, session.limits.request_timeout_seconds) == expected
-            assert session.limits.max_requests == session.requests == 1
+            assert session.requests == 1
             assert captured == ["15"]
         finally:
             session.close()
@@ -189,25 +189,23 @@ def test_deepseek_json_request_uses_fixed_model_and_no_tools():
     assert 'tools' not in client.payload and client.payload['max_tokens'] == CONFIG['max_output_tokens']
 
 
-def test_remaining_limits_are_request_local_and_cannot_restart_after_uncertain_send(tmp_path):
-    limits = TaskProviderLimits(4, 40000, 4000, .3, 30, 6, .01)
-    initial = TaskProviderSession(tmp_path/'router', limits, lambda: None)
-    initial.requests, initial.input_tokens, initial.output_tokens, initial.cost = 1, 8000, 512, .02
+def test_router_session_does_not_reduce_the_following_session_and_validation_is_shared(tmp_path):
+    limits = TaskProviderLimits(30, 6)
+    calls = []
+    router = TaskProviderSession(tmp_path/'router', limits, lambda: calls.append('router'))
+    router.requests = 99
     try:
-        with pass_router_reservation(initial):
-            child = TaskProviderSession(tmp_path/'graph', limits, lambda: None)
-            assert child.limits.max_requests == 3 and child.limits.max_input_tokens == 32000
-            assert child.limits.max_output_tokens == 3488 and child.limits.max_cost_usd == pytest.approx(.28)
-            assert child.limits.max_seconds <= limits.max_seconds
+        with pass_router_source_validation(router):
+            child = TaskProviderSession(tmp_path/'graph', limits, lambda: calls.append('child'))
+            from linkloom.ui.task_provider import _ROUTER_VALIDATION
+            assert _ROUTER_VALIDATION.get() == router.validate
+            assert child.limits == limits and child.requests == 0
             child.close()
-            initial.failure = 'PROVIDER_TIMEOUT_UNCERTAIN'
-            with pytest.raises(ValueError, match='TASK_PROVIDER_BUDGET_EXHAUSTED'):
-                TaskProviderSession(tmp_path/'retry', limits, lambda: None)
         unrelated = TaskProviderSession(tmp_path/'unrelated', limits, lambda: None)
         assert unrelated.limits == limits
         unrelated.close()
     finally:
-        initial.close()
+        router.close()
 
 def test_host_recovers_original_mention_under_width_case_and_space_normalization():
     ctx = context('ＢＵＩＬＤ   Review status?')

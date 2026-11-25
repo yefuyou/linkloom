@@ -12,7 +12,7 @@ from tests.m3p_support import product_http,cold_read
 from tests.m3s1_support import SOURCE,QUESTION,saved_attempt,saved_arguments
 from tests.integration.test_m3q_provider_host import ScriptedGeminiTransport,poll,loopback_only
 from tests.integration.test_product_application_flow import _client
-from tests.unit.test_m3q_provider_budget import limits
+from tests.unit.test_task_provider_session import limits
 from tests.unit.test_task_relation_question_planner import step,arguments
 
 class RecordedStage:

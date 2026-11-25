@@ -17,7 +17,7 @@ from linkloom.tools.contracts import ToolCall
 from tests.m3p_support import product_http, cold_read
 from tests.integration.test_m3q_provider_host import ScriptedGeminiTransport, poll
 from tests.integration.test_product_application_flow import _client
-from tests.unit.test_m3q_provider_budget import limits
+from tests.unit.test_task_provider_session import limits
 from tests.unit.test_task_observation_discovery import claim
 from tests.unit.test_task_relation_question_planner import arguments, step
 

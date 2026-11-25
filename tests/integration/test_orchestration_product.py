@@ -151,12 +151,12 @@ def assert_pinned(env, result):
         assert item["quote"] in source["source"]["content"]
 
 
-def assert_within_budget(env, run_id):
+def assert_usage_observed(env, run_id):
+    """The trace reports what the Providers did; nothing is compared against a limit."""
     _, traced = env.run_trace(run_id)
     totals = traced["result"]["totals"]
-    for key, limit in (("requests_reserved", TOTAL.max_requests), ("input_tokens_reserved", TOTAL.max_input_tokens),
-                       ("output_tokens_reserved", TOTAL.max_output_tokens), ("cost_reserved_usd", TOTAL.max_cost_usd)):
-        assert 0 < totals[key] <= limit, (key, totals)
+    assert set(totals) == {"requests", "input_tokens", "output_tokens"}, totals
+    assert totals["requests"] > 0 and all(isinstance(value, int) and value >= 0 for value in totals.values()), totals
 
 
 def test_single_question_needs_no_extra_worker(make_env):
@@ -189,7 +189,7 @@ def test_independent_tasks_run_in_parallel_and_share_verified_evidence(make_env)
     answer, evidence = assert_cited(result)
     assert len(answer["answers"]) == 2 and len(evidence) == 2
     assert_pinned(env, result)
-    assert_within_budget(env, result["agent_run_id"])
+    assert_usage_observed(env, result["agent_run_id"])
 
 
 def test_dependent_task_receives_only_the_verified_upstream_results(make_env):
@@ -268,8 +268,8 @@ def test_inspect_trace_and_cold_read_show_dag_evidence_and_answer(make_env):
     trace = traced["result"]
     assert status == 200 and trace["source"] == "LIVE" and trace["status"] == "COMPLETE"
     assert [task["id"] for task in trace["tasks"]] == ["succ", "owner", "leader"]
-    assert all(task["attempts"] and task["attempts"][0]["requests_reserved"] >= 3 for task in trace["tasks"])
-    assert [item["round"] for item in trace["supervisor"]] == ["round-0"] and trace["totals"]["requests_reserved"] > 9
+    assert all(task["attempts"] and task["attempts"][0]["requests"] >= 3 for task in trace["tasks"])
+    assert [item["round"] for item in trace["supervisor"]] == ["round-0"] and trace["totals"]["requests"] > 9
     assert {event["event"] for event in trace["events"]} >= {"supervisor_decision", "wave_dispatched",
                                                              "worker_finished", "synthesized"}
     assert trace["synthesizer"]["published"] is True and "blocked_entities" not in json.dumps(trace)
@@ -446,17 +446,8 @@ def test_a_result_the_reviewer_does_not_accept_is_a_gap_and_other_results_stay(m
     assert_cited(result)
 
 
-def test_product_run_carries_the_user_cost_budget_as_the_whole_run_fuse(make_env):
-    world = World([delegation("answer_single")], {WHY: (SOURCE_REASON, "Meridian A", "ok")})
-    env = make_env(world)
-    run_id, _ = started(env, WHY)
-    from linkloom.orchestration.runs import load_record
-    record = load_record(env.root(run_id))
-    assert record["limits"]["max_run_cost_usd"] == TOTAL.max_cost_usd
-
-
-def test_unmatched_question_is_budgeted_like_any_orchestrated_run(make_env):
-    """NO_MATCH falls through to a source investigation: same Provider limits, same totals, no extra pool."""
+def test_unmatched_question_is_observed_like_any_orchestrated_run(make_env):
+    """NO_MATCH falls through to a source investigation: same Provider limits, same observed totals."""
     question = "Who attended the budget review?"
     world = World([delegation("answer_single")], {question: (SOURCE_REASON, "Meridian A", "ok")})
     env = make_env(world)
@@ -465,4 +456,4 @@ def test_unmatched_question_is_budgeted_like_any_orchestrated_run(make_env):
     assert status == 202, payload
     run_id = payload["result"]["agent_run_id"]
     env.finish(run_id)
-    assert_within_budget(env, run_id)
+    assert_usage_observed(env, run_id)

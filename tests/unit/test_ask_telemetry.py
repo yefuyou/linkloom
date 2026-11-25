@@ -9,7 +9,7 @@ import pytest
 from linkloom.agents.model_adapter import ModelAction, ModelResponse, ModelUsage
 from linkloom.observability.ask_telemetry import build_ask_telemetry
 from linkloom.runtime.models import AttemptRecord, ModelExecutionRecord, ToolExecutionRecord
-from tests.unit.test_m3q_provider_budget import request, session
+from tests.unit.test_task_provider_session import request, session
 from tests.unit.test_runtime_checkpoint import _sample_state
 
 

@@ -188,7 +188,7 @@ def test_untrusted_workspace_invalid_input_and_no_consent_never_send(decisions):
     assert gate.requests == []
 
 
-def test_authorized_classifier_is_one_budgeted_call_before_capability(decisions):
+def test_authorized_classifier_is_one_call_before_capability(decisions):
     gate = Gate('SECRET_OR_POLICY_OVERRIDE')
     ask = service(decisions, gate, 'cascade', external_provider=True)
     owner = decisions.configure_agent()
@@ -198,12 +198,12 @@ def test_authorized_classifier_is_one_budgeted_call_before_capability(decisions)
     assert result['security_gate']['decision'] == 'BLOCK'
     assert len(owner._provider_sessions) == 1
     session = owner._provider_sessions[0]
-    assert session.requests == session.limits.max_requests == 1
+    assert session.requests == 1
     assert session.attempts[0]['stage'] == 'ask-security' and session.attempts[0]['outcome'] == 'SUCCEEDED'
     assert not session.pending_task_ids()
 
 
-def test_budgeted_security_timeout_returns_http_result_and_ignores_late_allow(decisions, monkeypatch):
+def test_security_timeout_returns_http_result_and_ignores_late_allow(decisions, monkeypatch):
     monkeypatch.setitem(CONFIG, 'security_timeout_seconds', .2)
     release = Event()
 
@@ -217,9 +217,9 @@ def test_budgeted_security_timeout_returns_http_result_and_ignores_late_allow(de
     router = ScriptedRouter(lambda _: pytest.fail('The timed-out Ask reached the Router'))
     owner = decisions.configure_agent()
     # Precondition: the request must be dispatched before it can time out. Give the session's total
-    # budget headroom (as configured task budgets do) so slow CI setup cannot consume it before dispatch;
+    # time headroom (as configured task limits do) so slow CI setup cannot consume it before dispatch;
     # the Router still caps the request itself at security_timeout_seconds. The not-dispatched case is
-    # covered by test_security_budget_spent_before_dispatch_is_reported_as_not_sent.
+    # covered by test_security_deadline_spent_before_dispatch_is_reported_as_not_sent.
     monkeypatch.setattr(owner, 'task_models', SimpleNamespace(execution_kind='OFFLINE', provider_limits=
         TaskProviderLimits(30, 30)))
     monkeypatch.setattr(owner, 'start_orchestrated', lambda *a, **kw: pytest.fail('Ask reached LangGraph'))
@@ -249,7 +249,7 @@ def test_budgeted_security_timeout_returns_http_result_and_ignores_late_allow(de
                 session.complete(gate, 'ask-security', gate.requests[0])
             release.set()
             session.close(timeout=2)
-            receipt = json.loads((session.root / 'budget.json').read_text(encoding='utf8'))
+            receipt = json.loads((session.root / 'provider_journal.json').read_text(encoding='utf8'))
             assert receipt['failure'] == 'PROVIDER_TIMEOUT_UNCERTAIN'
             assert [attempt['outcome'] for attempt in receipt['attempts']] == ['UNCERTAIN']
             assert receipt['attempts'][0].get('response_sha256') is None
@@ -280,7 +280,7 @@ def test_truncated_security_reply_clarifies_and_is_persisted_separately(decision
     gate = result['security_gate']
     assert gate['fallback_reason'] == 'SECURITY_OUTPUT_TRUNCATED'
     session, = owner._provider_sessions
-    with (session.root / 'budget.json').open(encoding='utf8') as stream:
+    with (session.root / 'provider_journal.json').open(encoding='utf8') as stream:
         attempt, = json.load(stream)['attempts']
     assert attempt['invalid_response_counts'] == gate['invalid_response_counts']
     assert attempt['invalid_response_counts']['truncated'] == 1
@@ -327,7 +327,7 @@ def test_allow_uses_at_most_one_security_and_one_existing_router_send(decisions)
     assert result['status'] == 'COMPLETED' and result['evidence']
     assert len(gate.requests) == len(router.requests) == 1
     assert [s.attempts[0]['stage'] for s in owner._provider_sessions] == ['ask-security', 'ask-router']
-    assert all(s.requests == s.limits.max_requests == 1 for s in owner._provider_sessions)
+    assert all(s.requests == 1 for s in owner._provider_sessions)
     assert [(s.limits.max_seconds, s.limits.request_timeout_seconds) for s in owner._provider_sessions] == [
         (15, 15), (6, 6),
     ]
@@ -369,17 +369,17 @@ def test_default_rule_mode_without_any_router_is_unchanged(decisions):
     assert 'security_gate' not in result
 
 
-def test_security_budget_spent_before_dispatch_is_reported_as_not_sent(decisions, monkeypatch):
-    """Setup that outlasts the whole security budget sends nothing and says so; it is not 'unavailable'."""
+def test_security_deadline_spent_before_dispatch_is_reported_as_not_sent(decisions, monkeypatch):
+    """Setup that outlasts the whole security deadline sends nothing and says so; it is not 'unavailable'."""
     import linkloom.ui.task_provider as task_provider
     monkeypatch.setitem(CONFIG, 'security_timeout_seconds', .05)
     original = task_provider.TaskProviderSession.__init__
 
     def slow_setup(self, root, limits, validate):
-        def validate_after_budget():
+        def validate_after_deadline():
             sleep(.1)
             return validate()
-        original(self, root, limits, validate_after_budget)
+        original(self, root, limits, validate_after_deadline)
 
     monkeypatch.setattr(task_provider.TaskProviderSession, '__init__', slow_setup)
     gate = Gate()
@@ -391,9 +391,9 @@ def test_security_budget_spent_before_dispatch_is_reported_as_not_sent(decisions
                                   workspace_id=decisions.app._workspace_id(), allow_external_provider=True))
     assert status == 200 and result['error']['code'] == 'MODEL_UNAVAILABLE'
     security = result['security_gate']
-    assert security['status'] == 'INCOMPLETE' and security['fallback_reason'] == 'BUDGET_EXHAUSTED'
+    assert security['status'] == 'INCOMPLETE' and security['fallback_reason'] == 'PROVIDER_DEADLINE'
     session, = owner._provider_sessions
-    receipt = json.loads((session.root / 'budget.json').read_text(encoding='utf8'))
-    assert receipt['failure'] == 'TASK_PROVIDER_BUDGET_EXHAUSTED'
-    assert receipt['requests_reserved'] == 0 and receipt['attempts'] == []
+    receipt = json.loads((session.root / 'provider_journal.json').read_text(encoding='utf8'))
+    assert receipt['failure'] == 'TASK_PROVIDER_DEADLINE'
+    assert receipt['requests'] == 0 and receipt['attempts'] == []
     assert not gate.requests and not router.requests

@@ -190,7 +190,7 @@ def test_authorized_router_has_one_bounded_send_and_verified_decision(decisions)
     assert status==200 and result['status']=='COMPLETED' and result['router']['domain']=='DECISION', result
     assert result['conclusions'] and result['evidence'] and result['receipts'] and len(model.requests)==1
     session=owner._provider_sessions[-1]
-    assert session.requests==1 and session.limits.max_requests==1 and session.failure is None
+    assert session.requests==1 and session.failure is None
     assert session.attempts[0]['stage']=='ask-router' and session.attempts[0]['outcome']=='SUCCEEDED'
 
 def test_cascade_asks_the_model_for_ordinary_questions_and_stops_on_an_unusable_reply(decisions):

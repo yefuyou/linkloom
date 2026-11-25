@@ -10,7 +10,7 @@ from linkloom.agents.providers import GeminiProviderAdapter, GEMINI_38_FLASH_MOD
 from linkloom.ui.task_provider import compose_task_provider
 from tests.m3p_support import product_case, product_http, QUESTION, cold_read, TEXTS, ScriptedStage
 from tests.integration.test_product_application_flow import _client
-from tests.unit.test_m3q_provider_budget import limits
+from tests.unit.test_task_provider_session import limits
 
 
 @pytest.fixture(autouse=True)
@@ -134,8 +134,7 @@ def provider_product(root):
     stages[1] = SourceBoundPlanningStage()
     transport = ScriptedGeminiTransport(stages)
     provider = GeminiProviderAdapter(transport)
-    budget = replace(limits(), max_requests=16, max_input_tokens=500000,
-        max_output_tokens=100000, max_cost_usd=2, max_seconds=60, request_timeout_seconds=10)
+    budget = replace(limits(), max_seconds=60, request_timeout_seconds=10)
     service = compose_task_provider(app, provider, budget)
     return app, service, transport, stages, ws
 
@@ -145,23 +144,8 @@ def empty_provider_product(root):
     app = ProductApplication(database_path=root / 'product.sqlite', extractor=None)
     stages = [ScriptedStage(s) for s in ('discovery', 'planning', 'semantics')]
     transport = ScriptedGeminiTransport(stages)
-    budget = replace(limits(), max_requests=16, max_input_tokens=500000,
-        max_output_tokens=100000, max_cost_usd=2, max_seconds=120, request_timeout_seconds=30)
+    budget = replace(limits(), max_seconds=120, request_timeout_seconds=30)
     return app, compose_task_provider(app, GeminiProviderAdapter(transport), budget), transport
-
-
-def test_explicit_product_discovery_output_exceeding_budget_never_reaches_provider(tmp_path):
-    app, service, transport, _, ws = provider_product(tmp_path)
-    service.task_models = replace(service.task_models,
-        provider_limits=replace(service.task_models.provider_limits, max_output_tokens=3000))
-    try:
-        with product_http(app, service) as base:
-            _, body = ask_request(base, ws, authorized=True)
-            result = poll(base, ws, body['result'])
-            assert result['status']=='BLOCKED', result
-            assert not transport.requests
-    finally:
-        app.close()
 
 
 def test_cold_read_rejects_dual_field_and_role_binding_tamper(tmp_path):
@@ -447,7 +431,7 @@ def test_live_hot_and_cold_reads_require_complete_provider_receipts(tmp_path, da
             run_id = result['agent_run_id']
             directory = tmp_path / 'work' / 'investigations'
             pointer = json.loads((directory / (run_id + '.json')).read_text(encoding='utf8'))
-            journal = directory / pointer['root'] / 'provider' / 'budget.json'
+            journal = directory / pointer['root'] / 'provider' / 'provider_journal.json'
             if damage == 'missing':
                 journal.rename(journal.with_suffix('.unavailable'))
             elif damage == 'malformed':
@@ -455,7 +439,7 @@ def test_live_hot_and_cold_reads_require_complete_provider_receipts(tmp_path, da
             else:
                 budget = json.loads(journal.read_text(encoding='utf8'))
                 if damage == 'counters':
-                    budget['requests_reserved'] -= 1
+                    budget['requests'] -= 1
                 else:
                     budget['attempts'][-1]['outcome'] = damage
                     budget['failure'] = None
@@ -490,14 +474,11 @@ def test_http_preserves_unconfirmed_semantic_states_without_unlocking_p4(tmp_pat
         app.close()
 
 
-@pytest.mark.parametrize('mode', ['discovery_timeout', 'semantics_timeout', 'budget', 'reviewer'])
+@pytest.mark.parametrize('mode', ['discovery_timeout', 'semantics_timeout', 'reviewer'])
 def test_normal_http_failures_never_release_successful_partial_or_old_trace(tmp_path, mode):
     app, service, transport, stages, ws = provider_product(tmp_path)
     if mode.endswith('timeout'):
         transport.fail_stage = 'emit_semantic_candidates' if mode.startswith('discovery') else 'AUTHORIZED_SNAPSHOT_JSON'
-    elif mode == 'budget':
-        service.task_models = replace(service.task_models,
-            provider_limits=replace(service.task_models.provider_limits, max_requests=5))
     else:
         transport.invalid_final = True
     try:

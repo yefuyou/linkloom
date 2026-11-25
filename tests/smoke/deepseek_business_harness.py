@@ -180,7 +180,6 @@ def _run_case(
             workflow="team_decision",
             query=case.user_question,
             max_steps=case.max_model_turns,
-            max_provider_requests=case.max_provider_requests,
             dry_run=True,
         )
     )

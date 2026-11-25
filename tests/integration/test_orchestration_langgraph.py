@@ -266,20 +266,20 @@ def test_failed_and_abstained_tasks_keep_other_results_as_partial(tmp_path):
     assert "succ" in owners and not owners & {"owner", "risk"}
 
 
-def test_provider_hard_cap_failure_keeps_receipt_and_does_not_retry_or_review(tmp_path):
+def test_provider_deadline_failure_keeps_receipt_and_does_not_retry_or_review(tmp_path):
     world = World([delegation("answer_single"), delegation("delegate", [("again", GOAL, [])])],
                   {GOAL: (FACT["succ"], "Meridian A", "ok")})
     limits = run_limits(max_tasks=3, max_rounds=1, max_attempts=2)
-    limits = replace(limits, provider=replace(limits.provider, max_cost_usd=.001))
+    limits = replace(limits, provider=replace(limits.provider, max_seconds=1e-9, request_timeout_seconds=1e-9))
     orchestrator, _ = build(tmp_path, world, limits=limits)
 
     result = orchestrator.start(GOAL)
 
     assert result["status"] == "UNKNOWN"
     task, = result["tasks"].values()
-    assert task["failure"] == "TASK_PROVIDER_BUDGET_EXHAUSTED"
+    assert task["failure"] == "TASK_PROVIDER_DEADLINE"
     assert task["attempt"] == result["dispatches"] == 1
-    assert world.supervisor_requests == [] and world.workers == []  # the cap blocked every request, nothing paid
+    assert world.supervisor_requests == [] and world.workers == []  # the expired deadline blocked every request, nothing paid
 
 
 def test_every_task_failing_gives_unknown(tmp_path):
@@ -402,7 +402,7 @@ def test_host_blocks_entities_outside_the_authorized_scope_and_unverified_depend
 def test_limits_come_from_the_host_not_the_model():
     limits = _limits(max_tasks=4, max_followup_tasks=2, max_rounds=2, max_attempts=2)
     assert limits.task_cap() == 6 and limits.dispatch_cap() == 12
-    assert limits.provider is TOTAL  # every session shares the run's Provider hard limits
+    assert limits.provider is TOTAL  # every session shares the run's Provider time limits
 
 
 def test_reducers_are_monotonic_and_never_overwrite_accepted_results():
@@ -533,7 +533,7 @@ def test_a_timed_out_provider_call_is_uncertain_and_its_session_stops_accepting_
     try:
         receipt = worker_module._run(deps, dict(id="t", description=Q_SUCC, epoch=0, attempt=1), Q_SUCC)
         assert receipt["failure"] == "PROVIDER_TIMEOUT_UNCERTAIN"  # the in-flight outcome is never guessed
-        budget = json.loads((worker_module.attempt_dir(deps, dict(id="t", epoch=0, attempt=1)) / "budget.json")
+        budget = json.loads((worker_module.attempt_dir(deps, dict(id="t", epoch=0, attempt=1)) / "provider_journal.json")
                             .read_text(encoding="utf-8"))
         assert budget["attempts"][0]["outcome"] == "UNCERTAIN" and budget["failure"] == "PROVIDER_TIMEOUT_UNCERTAIN"
         assert len(_provider_threads()) == 1  # still blocked inside the model, but owned and not accepting more

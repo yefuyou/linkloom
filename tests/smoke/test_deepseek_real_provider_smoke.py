@@ -1331,7 +1331,6 @@ def run_real_deepseek_smoke(settings: RealSettings | None = None) -> Path:
                 workflow="team_decision",
                 query=USER_QUESTION,
                 max_steps=BUDGET.max_model_turns,
-                max_provider_requests=BUDGET.max_provider_requests,
                 dry_run=True,
             )
         )

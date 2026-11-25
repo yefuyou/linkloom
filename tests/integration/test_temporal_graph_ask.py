@@ -90,7 +90,7 @@ def test_reopening_graph_answer_rechecks_source_and_never_reuses_invalidated_ans
     assert len(models)==1
 
 
-def test_legacy_fallback_inherits_graph_provider_request_budget(graph_http,tmp_path):
+def test_legacy_fallback_shares_graph_provider_session_without_request_quota(graph_http,tmp_path):
     from linkloom.ui.graph_investigation import _GRAPH_PROVIDER,current_graph_provider_session
     from linkloom.ui.task_provider import TaskProviderSession,TaskProviderLimits
     from linkloom.agents.model_adapter import ModelAction,ModelResponse,ModelTurnRequest,ModelGenerationOptions
@@ -119,8 +119,7 @@ def test_legacy_fallback_inherits_graph_provider_request_budget(graph_http,tmp_p
     result=polled['result']
     assert result['status']!='COMPLETED'
     assert session.requests==1 and inner.calls==1
-    assert session.failure=='TASK_PROVIDER_BUDGET_EXHAUSTED'
-    assert demo.relation_models[-1].call_count==0
+    assert session.failure is None
     assert current_graph_provider_session() is None
 
 

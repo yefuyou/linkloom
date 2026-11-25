@@ -60,9 +60,9 @@ def test_e3_dependent_task_is_dispatched_only_after_both_upstream_tasks_are_acce
     assert {"succ", "owner"} <= accepted
 
 
-# ---------------------------------------------------------------- E4 supplementary task identity and budget
+# ---------------------------------------------------------------- E4 supplementary task identity and journal
 
-def test_e4_supplementary_task_has_a_new_id_reason_round_and_its_own_budget_record(tmp_path):
+def test_e4_supplementary_task_has_a_new_id_reason_round_and_its_own_provider_journal(tmp_path):
     tasks = dict(TASKS)
     tasks[Q_OWNER] = (FACT["owner"], "Cobalt B", GAP)
     world = World([delegation("delegate", [("owner", Q_OWNER, [])]),
@@ -77,12 +77,12 @@ def test_e4_supplementary_task_has_a_new_id_reason_round_and_its_own_budget_reco
     assert spawned["depth"] == 2 and spawned["attempt"] == 1 and spawned["status"] == ACCEPTED
     assert result["dispatches"] == 2 and decision_log(result)[1][:2] == (1, "delegate")
     # each paid call has its own receipt: one for the review decision, one for the spawned Worker
-    receipt = json.loads((deps.root / "tasks" / "risk" / "attempt-0-1" / "budget.json").read_text(encoding="utf-8"))
-    assert receipt["requests_reserved"] >= 3 and receipt["attempts"]
-    review = json.loads((deps.root / "supervisor" / "round-1" / "budget.json").read_text(encoding="utf-8"))
-    assert review["requests_reserved"] == 1
+    receipt = json.loads((deps.root / "tasks" / "risk" / "attempt-0-1" / "provider_journal.json").read_text(encoding="utf-8"))
+    assert receipt["requests"] >= 3 and receipt["attempts"]
+    review = json.loads((deps.root / "supervisor" / "round-1" / "provider_journal.json").read_text(encoding="utf-8"))
+    assert review["requests"] == 1
     # the first Worker's receipt is a different file: the spawn did not reuse or overwrite it
-    assert (deps.root / "tasks" / "owner" / "attempt-0-1" / "budget.json").is_file()
+    assert (deps.root / "tasks" / "owner" / "attempt-0-1" / "provider_journal.json").is_file()
     assert deps.limits.dispatch_cap() >= result["dispatches"]
 
 
@@ -384,8 +384,8 @@ def test_e7_the_comparison_is_one_recorded_request_under_the_run_provider_limits
     world = World([delegation("delegate", [("a", Q_SUCC, []), ("b", Q_OWNER, [])]), delegation("stop")], TASKS)
     orchestrator, deps = build(tmp_path, world)
     orchestrator.start(GOAL)
-    receipt = json.loads((deps.root / "comparison" / "budget.json").read_text(encoding="utf-8"))
-    assert receipt["requests_reserved"] == 1 and receipt["attempts"]
+    receipt = json.loads((deps.root / "comparison" / "provider_journal.json").read_text(encoding="utf-8"))
+    assert receipt["requests"] == 1 and receipt["attempts"]
     assert receipt["limits"] == asdict(deps.limits.provider)  # no per-role slice
     assert OrchestrationLimits.from_dict(deps.limits.to_dict()) == deps.limits
 
@@ -473,7 +473,7 @@ def test_e10_known_limitation_a_reworded_blocked_name_is_not_caught_by_the_super
         lg._propose([("a", text, [])], blocked=[["Orchid Labs", "WORKSPACE_DENIED"]])
 
 
-# ---------------------------------------------------------------- E12 Worker turn budget and Final-only turn
+# ---------------------------------------------------------------- E12 Worker step limit and Final-only turn
 
 class LingeringModel(lg.WorkerModel):
     """Keeps asking for tools on the turn where it could answer, so the reserved Final turn must be used."""
@@ -538,9 +538,9 @@ def test_scenario_e_long_investigation_keeps_tools_until_the_last_step_then_publ
     assert [request.final_only for request in turns] == [False] * (steps - 1) + [True]
     assert all(request.available_tools for request in turns[:-1]) and turns[-1].available_tools == []
     assert result["status"] == "PARTIAL" and result["dispatches"] == 1  # no retry, no review loop
-    receipt = json.loads((deps.root / "tasks" / "task-1" / "attempt-0-1" / "budget.json").read_text(encoding="utf-8"))
+    receipt = json.loads((deps.root / "tasks" / "task-1" / "attempt-0-1" / "provider_journal.json").read_text(encoding="utf-8"))
     hashes = [row["request_sha256"] for row in receipt["attempts"]]
-    assert receipt["requests_reserved"] == steps == len(hashes) == len(set(hashes))  # one charge per request
+    assert receipt["requests"] == steps == len(hashes) == len(set(hashes))  # one journal row per request
     assert all(row["outcome"] == "SUCCEEDED" and row["usage"] for row in receipt["attempts"])
 
 
@@ -555,10 +555,8 @@ def test_e12_the_reserved_final_turn_has_no_tools_and_earlier_turns_do(tmp_path,
     assert [bool(request.available_tools) for request in turns] == [True, True, True, False]
     assert turns[3].available_tools == []  # the Final turn declares no function at all
     assert result["status"] == "COMPLETE" and result["tasks"]["task-1"]["status"] == ACCEPTED
-    provider = deps.limits.provider
-    receipt = json.loads((deps.root / "tasks" / "task-1" / "attempt-0-1" / "budget.json").read_text(encoding="utf-8"))
-    assert receipt["requests_reserved"] == 4 <= provider.max_requests
-    assert receipt["output_tokens_reserved"] <= provider.max_output_tokens
+    receipt = json.loads((deps.root / "tasks" / "task-1" / "attempt-0-1" / "provider_journal.json").read_text(encoding="utf-8"))
+    assert receipt["requests"] == 4
 
 
 def test_e12_supervisor_turn_requires_a_tool_call_and_is_not_a_final_only_turn(tmp_path):
@@ -570,21 +568,11 @@ def test_e12_supervisor_turn_requires_a_tool_call_and_is_not_a_final_only_turn(t
     assert supervisor.generation_options.require_tool_call is True
     (worker,) = world.workers
     assert worker.calls == 3 and result["status"] == "COMPLETE"  # an on-time Final needs no reserved turn
-    receipt = json.loads((deps.root / "tasks" / "task-1" / "attempt-0-1" / "budget.json").read_text(encoding="utf-8"))
-    assert receipt["requests_reserved"] == 3
+    receipt = json.loads((deps.root / "tasks" / "task-1" / "attempt-0-1" / "provider_journal.json").read_text(encoding="utf-8"))
+    assert receipt["requests"] == 3
 
 
-def test_explicit_run_cost_fuse_stops_dispatch_and_default_is_off(tmp_path):
-    questions = [Q_SUCC, Q_OWNER]
-    plan = delegation("delegate", [("a", questions[0], []), ("b", questions[1], ["a"])])
-    world = World([plan, delegation("stop")], TASKS)
-    orchestrator, _ = build(tmp_path, world, limits=run_limits(max_tasks=2, max_rounds=1, max_run_cost_usd=.03))
-    result = orchestrator.start(GOAL)
-    assert result["tasks"]["a"]["status"] == ACCEPTED
-    assert result["tasks"]["b"]["status"] == "skipped" and result["tasks"]["b"]["failure"] == "RUN_COST_LIMIT"
-
-
-def test_scenario_f_worker_path_runs_without_coordinator_reviewer_agent_or_budget_slices(tmp_path, monkeypatch):
+def test_scenario_f_worker_path_runs_without_coordinator_reviewer_agent_or_role_slices(tmp_path, monkeypatch):
     """Call chain: Worker -> RuntimeEngine -> SingleAgentModelLoop + one deterministic verification."""
     from linkloom.agents import coordinator, runtime_adapter
 
