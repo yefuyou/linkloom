@@ -46,6 +46,8 @@ class UnifiedAskService:
         self.router_provider = router_provider
         self.slot_embedder = slot_embedder
         self._runs: dict[str, tuple[_AskRun, ProductInvestigationService]] = {}
+        # Slots excluded from the last trusted index per workspace, with their isolation diagnostics.
+        self.unverified_slots: dict[str, list[dict[str, Any]]] = {}
         self._lock = Lock()
         self._graph_runs = {}
         self._graph_fallbacks: dict[str, dict[str, str]] = {}
@@ -96,8 +98,16 @@ class UnifiedAskService:
                         for record in records
                         if record.subject and record.relation})
         trusted = []
+        unverified = []
         for subject, relation in slots:
             view = self.app.recover_decision(subject, relation, _workspace_id=workspace_id)
+            if view.get("unverifiable"):
+                # One unverifiable reviewed decision removes the whole slot from the
+                # trusted index (current and historical values). It is reported as
+                # not yet verified, never as non-existent.
+                unverified.append({"subject": subject, "relation": relation,
+                                   "isolated_candidates": list(view["isolated_candidates"])})
+                continue
             history = view["history"]
             last_effective_at = max(record.valid_from for record in records
                                     if record.subject and record.relation
@@ -106,8 +116,13 @@ class UnifiedAskService:
             if last_effective_at > datetime.fromisoformat(view["as_of"]):
                 # Approved scheduled slots are trusted identities too. Query
                 # validity still uses the request date, never this index date.
-                history = self.app.recover_decision(subject, relation, last_effective_at.isoformat(),
-                                                   _workspace_id=workspace_id)["history"]
+                scheduled = self.app.recover_decision(subject, relation, last_effective_at.isoformat(),
+                                                      _workspace_id=workspace_id)
+                if scheduled.get("unverifiable"):
+                    unverified.append({"subject": subject, "relation": relation,
+                                       "isolated_candidates": list(scheduled["isolated_candidates"])})
+                    continue
+                history = scheduled["history"]
             if not history:
                 continue
             trusted.append({"workspace_id": workspace_id, "reviewed": True,
@@ -140,6 +155,7 @@ class UnifiedAskService:
                             "values": list(dict.fromkeys(record.value for record in records)),
                             "reference_values": [], "decision_ids": [record.undated_decision_id for record in records],
                             "current_value": None, "effective_time_unknown": True})
+        self.unverified_slots[workspace_id] = unverified
         return trusted
 
     @staticmethod
@@ -542,13 +558,17 @@ class UnifiedAskService:
         slots = self._trusted_slots(workspace_id) if slots is None else slots
         known = {normalize_mention(name) for slot in slots
                  for name in (slot["subject"], *slot.get("subject_aliases", []))}
+        # Subjects with an unverifiable reviewed decision are leads to check in the
+        # original sources, reported as unverified rather than missing.
+        unverified = tuple((item["subject"], "DECISION_UNVERIFIED")
+                           for item in self.unverified_slots.get(workspace_id, ()))
         other_workspaces = ((item["name"], "WORKSPACE_DENIED")
                             for item in self.app.repository.list_workspaces()
                             if item["workspace_id"] != workspace_id)
         proposals = ((item["subject"], "NO_CONFIRMED_RECORD") for item in self.app._supporting_proposals()
                      if item["subject"] and item["source"]["active"])
-        return tuple(sorted({(name, reason) for name, reason in (*other_workspaces, *proposals)
-                             if normalize_mention(name) not in known},
+        return tuple(sorted({*unverified, *((name, reason) for name, reason in (*other_workspaces, *proposals)
+                                            if normalize_mention(name) not in known)},
                             key=lambda fact: (fact[1] != "WORKSPACE_DENIED", fact[0])))
 
     def _router_context(self, run, payload, snapshot_hash, *, query_time=None):

@@ -237,6 +237,14 @@ class SourceCandidateIntegrityError(ValueError):
     """The stored source-ingestion candidate failed an integrity or compatibility check."""
 
 
+class SourceCandidateVersionError(SourceCandidateIntegrityError):
+    """The stored payload version is not supported."""
+
+
+class SourceCandidateIdentityError(SourceCandidateIntegrityError):
+    """The stored candidate identity does not match its row."""
+
+
 # Compatibility rule: an existing record_version must never change its
 # serialized shape. Any future incompatible serialization change must introduce
 # a new record_version instead of silently altering one that is already stored.
@@ -280,9 +288,9 @@ def load_source_candidate(
     except json.JSONDecodeError as error:
         raise SourceCandidateIntegrityError("stored candidate payload is invalid JSON") from error
     if not isinstance(raw, dict) or raw.get("record_version") not in SOURCE_CANDIDATE_PAYLOAD_VERSIONS:
-        raise SourceCandidateIntegrityError("source-ingestion candidate payload version is unsupported")
+        raise SourceCandidateVersionError("source-ingestion candidate payload version is unsupported")
     if raw["record_version"] != expected_payload_version:
-        raise SourceCandidateIntegrityError("source candidate payload version does not match its row")
+        raise SourceCandidateVersionError("source candidate payload version does not match its row")
     try:
         if _canonical_json(raw) != payload_json:
             raise SourceCandidateIntegrityError("persisted candidate integrity check failed")
@@ -301,7 +309,7 @@ def load_source_candidate(
     except (KeyError, TypeError) as error:
         raise SourceCandidateIntegrityError("stored candidate payload is malformed") from error
     if candidate.candidate_id != expected_candidate_id or candidate.workspace_id != expected_workspace_id:
-        raise SourceCandidateIntegrityError("persisted candidate identity does not match its row")
+        raise SourceCandidateIdentityError("persisted candidate identity does not match its row")
     reencoded, refingerprint = serialize_candidate(candidate)
     if "legacy" in shapes:
         # Only the receipt-attempt rename/removal may differ from today's format.
