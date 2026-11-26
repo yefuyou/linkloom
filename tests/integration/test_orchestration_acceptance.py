@@ -554,6 +554,13 @@ def test_e12_the_reserved_final_turn_has_no_tools_and_earlier_turns_do(tmp_path,
     assert [request.final_only for request in turns] == [False, False, False, True]
     assert [bool(request.available_tools) for request in turns] == [True, True, True, False]
     assert turns[3].available_tools == []  # the Final turn declares no function at all
+    from linkloom.agents.providers.gemini_api import build_gemini_request
+
+    configs = [build_gemini_request(request, configured_model_id="gemini-3.8-flash")["config"] for request in turns]
+    assert [config["max_output_tokens"] for config in configs] == [4096, 4096, 4096, 8192]
+    assert all("thinking_config" not in config for config in configs)
+    assert configs[-1]["tool_config"]["function_calling_config"]["mode"] == "NONE"
+
     assert result["status"] == "COMPLETE" and result["tasks"]["task-1"]["status"] == ACCEPTED
     receipt = json.loads((deps.root / "tasks" / "task-1" / "attempt-0-1" / "provider_journal.json").read_text(encoding="utf-8"))
     assert receipt["requests"] == 4

@@ -24,13 +24,15 @@ class OrchestrationLimits:
     max_rounds: int = 2              # Supervisor reviews after the first plan
     max_attempts: int = 1            # attempts per task; a retry is a new attempt
     max_steps: int = 8               # model turns of one Worker; the last one is reserved for the final answer
-    max_request_output_tokens: int = 4096  # per-request output cap of a Worker
+    max_request_output_tokens: int = 4096  # per-request output cap during Worker tool use
     deadline_seconds: float = 120.0
     confirm_over_tasks: int | None = None  # a plan with more new tasks waits for human confirmation
 
+    max_final_output_tokens: int = 8192  # reserved Worker Final, including provider reasoning
+
     def __post_init__(self):
         for key in ('max_tasks', 'max_concurrency', 'max_depth', 'max_attempts', 'max_steps',
-                    'max_request_output_tokens'):
+                    'max_request_output_tokens', 'max_final_output_tokens'):
             value = getattr(self, key)
             if type(value) is not int or value < 1:
                 raise ValueError('positive integer orchestration limit required: ' + key)

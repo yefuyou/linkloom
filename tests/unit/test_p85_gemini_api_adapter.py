@@ -1649,3 +1649,31 @@ def test_http_402_prepayment_exhaustion_is_terminal_billing_failure():
     assert response.error.details["retry_classification"] is None
     assert response.error.details["http_status"] == 402
     assert response.error.details["provider_error_code"] == "RESOURCE_EXHAUSTED"
+
+@pytest.mark.parametrize("final_only,expected", [(False, 4096), (True, 8192)])
+def test_orchestrated_worker_output_ceiling_on_gemini_wire(final_only, expected):
+    from linkloom.orchestration.limits import OrchestrationLimits
+    from linkloom.orchestration.worker import OutputBoundedAdapter
+    from linkloom.ui.task_provider import TaskProviderLimits
+
+    captured = []
+
+    def capture(request):
+        captured.append(json.loads(request.content))
+        return httpx.Response(200, json={"candidates": [
+            {"content": {"parts": [{"text": "offline"}]}, "finishReason": "STOP"}
+        ]})
+
+    request = _request(final_only=final_only, generation_options=ModelGenerationOptions(),
+                       **({"available_tools": []} if final_only else {}))
+    limits = OrchestrationLimits(provider=TaskProviderLimits(240, 45))
+    with build_gemini_sdk_client("synthetic-no-network", http_options_kwargs={
+        "client_args": {"transport": httpx.MockTransport(capture)},
+    }) as sdk:
+        provider = GeminiProviderAdapter(GeminiSDKClientBridge(sdk))
+        OutputBoundedAdapter(provider, limits.max_request_output_tokens,
+                             limits.max_final_output_tokens).complete(request)
+
+    [body] = captured
+    assert body["generationConfig"]["maxOutputTokens"] == expected
+    assert "thinkingConfig" not in body["generationConfig"]

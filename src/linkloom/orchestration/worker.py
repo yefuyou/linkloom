@@ -52,16 +52,18 @@ class WorkerDeps:
 
 
 class OutputBoundedAdapter:
-    """Caps one request's output tokens at the Provider per-request limit, never raises the model's own limit."""
+    """Select the per-request generation ceiling for tool use or the reserved Final."""
 
-    def __init__(self, adapter, output_limit):
+    def __init__(self, adapter, output_limit, final_output_limit):
         self.adapter = adapter
         self.output_limit = output_limit
+        self.final_output_limit = final_output_limit
         self.capability = getattr(adapter, 'capability', None)
 
     def complete(self, request):
         options = request.generation_options
-        output = min(options.max_output_tokens or self.output_limit, self.output_limit)
+        limit = self.final_output_limit if request.final_only else self.output_limit
+        output = min(options.max_output_tokens or limit, limit)
         return self.adapter.complete(replace(request, generation_options=replace(options, max_output_tokens=output)))
 
 
@@ -193,7 +195,7 @@ def _run(deps, task, query):
         # long investigation that reaches max_steps still publishes what it read.
         steps = deps.limits.max_steps
         adapter = OutputBoundedAdapter(session.bind(deps.model_factory(task['description']), 'runtime'),
-                                        deps.limits.max_request_output_tokens)
+                                        deps.limits.max_request_output_tokens, deps.limits.max_final_output_tokens)
         # Workers answer in team-decision-result/v1 prose with cited reads. The typed-claim host checks (confirmed
         # facts, blocked entities) do not run on this path; blocked entities are filtered from task descriptions by
         # the Supervisor. v1 prose is verified for span integrity only: its claims carry no semantic support and are

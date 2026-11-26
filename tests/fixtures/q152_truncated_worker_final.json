@@ -1,0 +1,13 @@
+{
+  "run_id": "ui-parallel-5b30015d8b25",
+  "max_output_tokens": 4096,
+  "finish_reason": "length",
+  "usage": {
+    "duration_ms": 28666.127,
+    "input_tokens": 4645,
+    "output_tokens": 4092,
+    "reasoning_tokens": 3928,
+    "total_tokens": 8737
+  },
+  "final": "```json\n{\n  \"schema_version\": \"team-decision-result/v1\",\n  \"decision\": {\n    \"value\": null,\n    \"status\": \"insufficient_evidence\",\n    \"evidence_refs\": []\n  },\n  \"rationale\": [\n    {\n      \"point\": \"plan_replacement: Cobalt B\",\n      \"evidence_refs\": [\n        \"ev_v2_d71927c086120ac4c0e1143319641c6845726ec758353774941ff847c512ec71\",\n        \"ev_v2_"
+}
