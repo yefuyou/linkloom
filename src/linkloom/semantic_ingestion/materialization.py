@@ -1548,6 +1548,16 @@ def _candidate_from_row(
     return candidate
 
 
+def _candidate_validation_reasons(row: dict[str, object]) -> list[str]:
+    try:
+        reasons = json.loads(str(row["validation_reasons_json"]))
+    except json.JSONDecodeError as error:
+        raise CandidateIntegrityError("candidate validation reasons are malformed") from error
+    if not isinstance(reasons, list) or any(not isinstance(item, str) for item in reasons):
+        raise CandidateIntegrityError("candidate validation reasons are malformed")
+    return reasons
+
+
 def _candidate_view_from_row(
     row: dict[str, object],
 ) -> tuple[
@@ -1574,9 +1584,7 @@ def _candidate_view_from_row(
             )
         except SourceCandidateIntegrityError as error:
             raise _source_integrity_error(error) from error
-        raw_reasons = json.loads(str(row["validation_reasons_json"]))
-        if not isinstance(raw_reasons, list) or any(not isinstance(item, str) for item in raw_reasons):
-            raise CandidateIntegrityError("candidate validation reasons are malformed")
+        raw_reasons = _candidate_validation_reasons(row)
         try:
             result = CandidateValidationResult(
                 outcome=CandidateOutcome(str(row["validation_state"])),
@@ -1630,9 +1638,7 @@ def _candidate_view_from_row(
             fingerprint = hashlib.sha256(encoded.encode("utf-8")).hexdigest()
         else:
             encoded, fingerprint = serialize_agent_candidate(candidate)
-        raw_reasons = json.loads(str(row["validation_reasons_json"]))
-        if not isinstance(raw_reasons, list) or any(not isinstance(item, str) for item in raw_reasons):
-            raise CandidateIntegrityError("candidate validation reasons are malformed")
+        raw_reasons = _candidate_validation_reasons(row)
         try:
             outcome = CandidateOutcome(str(row["validation_state"]))
         except ValueError as error:

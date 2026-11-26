@@ -15,12 +15,15 @@ from linkloom.semantic_ingestion.materialization import (
     MaterializationBlockedError,
     _candidate_from_row,
 )
+from linkloom.ui.product import _ISOLATED
 from linkloom.ui.router_context import build_context
 from linkloom.ui.unified_ask import UnifiedAskService
 from tests.integration.test_pending_source_conflicts import _candidate_id, _review
 from tests.integration.test_product_application_flow import (
     _claim, _client, _start_product_server, _stop_product_server, _wait_source,
 )
+
+from tests.unit.test_agent_memory_candidate import _build, _environment
 
 AS_OF = "2026-10-20"
 
@@ -56,6 +59,16 @@ def _corrupt(app, candidate_id):
     connection.execute(
         "UPDATE semantic_candidate SET payload_json = replace(payload_json, ?, ?) WHERE candidate_id = ?",
         ('"record_version"', '"record_version "', candidate_id))
+    connection.commit()
+
+
+def _corrupt_validation_reasons(app, candidate_id, reasons):
+    connection = app.store._connection
+    connection.execute("DROP TRIGGER semantic_candidate_payload_immutable")
+    connection.execute(
+        "UPDATE semantic_candidate SET validation_reasons_json = ? WHERE candidate_id = ?",
+        (reasons, candidate_id),
+    )
     connection.commit()
 
 
@@ -96,13 +109,17 @@ def test_good_decision_survives_corrupt_decision(product):
     assert recovered["unverifiable"] is False and recovered["isolated_candidates"] == []
 
 
-def test_corrupt_latest_decision_never_falls_back_to_earlier_value(product):
+@pytest.mark.parametrize("corruption", [_corrupt, pytest.param(
+    lambda app, candidate_id: _corrupt_validation_reasons(app, candidate_id, '{'),
+    id="validation-reasons",
+)])
+def test_corrupt_latest_decision_never_falls_back_to_earlier_value(product, corruption):
     base, app = product([_claim_for("Launch", "Birchline"), _claim_for("Launch", "Cedar")])
     _decide(base, "a.md", "01", "Alice", "Birchline", "Launch")
     latest = _decide(base, "b.md", "05", "Bob", "Cedar", "Launch")
     workspace = app._workspace_id()
     assert app.recover_decision("Launch", "uses supplier", AS_OF)["effective"]["value"] == "Cedar"
-    _corrupt(app, latest)
+    corruption(app, latest)
     recovered = app.recover_decision("Launch", "uses supplier", AS_OF)
     assert recovered["status"] == "AUTHORIZATION_OR_SOURCE_UNVERIFIED"
     assert recovered["unverifiable"] is True
@@ -112,10 +129,14 @@ def test_corrupt_latest_decision_never_falls_back_to_earlier_value(product):
     assert _service(app)._trusted_slots(workspace) == []
 
 
-def test_query_on_corrupt_slot_reports_unverified_not_missing(product):
+@pytest.mark.parametrize("corruption", [_corrupt, pytest.param(
+    lambda app, candidate_id: _corrupt_validation_reasons(app, candidate_id, '{}'),
+    id="validation-reasons",
+)])
+def test_query_on_corrupt_slot_reports_unverified_not_missing(product, corruption):
     base, app, bad, _ = _two_slots(product)
     workspace = app._workspace_id()
-    _corrupt(app, bad)
+    corruption(app, bad)
     service = _service(app)
     slots = service._trusted_slots(workspace)
     assert [item["subject"].casefold() for item in service.unverified_slots[workspace]] == ["launch"]
@@ -130,7 +151,11 @@ def test_query_on_corrupt_slot_reports_unverified_not_missing(product):
     assert any(fact[1] == "DECISION_UNVERIFIED" for fact in context.blocked_entities)
 
 
-def test_good_supporting_only_survives_corrupt_one(product):
+@pytest.mark.parametrize("corruption", [_corrupt, pytest.param(
+    lambda app, candidate_id: _corrupt_validation_reasons(app, candidate_id, '[1]'),
+    id="validation-reasons",
+)])
+def test_good_supporting_only_survives_corrupt_one(product, corruption):
     base, app = product([_claim_for("Launch", "Birchline", claim_type="PROPOSAL"),
                          _claim_for("Launch", "Cedar", claim_type="PROPOSAL")])
     _import(base, "a.md", "01", "Alice", "Birchline", subject="Launch", verb="We propose to use")
@@ -139,7 +164,7 @@ def test_good_supporting_only_survives_corrupt_one(product):
     assert len(rows) == 2
     values = {row["candidate_id"]: json.loads(row["payload_json"])["candidate"]["value"] for row in rows}
     bad = next(key for key, value in values.items() if value == "Birchline")
-    _corrupt(app, bad)
+    corruption(app, bad)
     recovered = app.recover_decision("Launch", "uses supplier", AS_OF)
     assert [item["value"] for item in recovered["proposals"]] == ["Cedar"]
     assert [item["candidate_id"] for item in recovered["isolated_candidates"]] == [bad]
@@ -176,10 +201,14 @@ def test_many_corrupt_candidates_do_not_break_context_build(product):
     assert {item["candidate_id"] for item in apollo["isolated_candidates"]} == set(broken[1:])
 
 
-def test_other_workspace_is_never_read_or_reported(product):
+@pytest.mark.parametrize("corruption", [_corrupt, pytest.param(
+    lambda app, candidate_id: _corrupt_validation_reasons(app, candidate_id, '{'),
+    id="validation-reasons",
+)])
+def test_other_workspace_is_never_read_or_reported(product, corruption):
     base, app, bad, _ = _two_slots(product)
     first = app._workspace_id()
-    _corrupt(app, bad)
+    corruption(app, bad)
     assert app.materializer.get_candidate("not-a-workspace", bad) is None
     _client(base, "/api/workspaces", method="POST", data={"name": "Other"})
     second = app._workspace_id()
@@ -252,3 +281,35 @@ def test_failure_categories_raise_typed_errors(product):
             _candidate_from_row({**row, **override})
         assert caught.value.reason_code == "CANDIDATE_INVALID"
         assert isinstance(caught.value, MaterializationBlockedError)
+
+@pytest.mark.parametrize("reasons", ["{", "{}", "[1]"], ids=["invalid-json", "object", "non-string"])
+@pytest.mark.parametrize("source_kind", ["SOURCE_INGESTION", "AGENT_RESULT"])
+def test_malformed_validation_reasons_are_typed_and_isolated(product, source_kind, reasons):
+    if source_kind == "SOURCE_INGESTION":
+        _, app, candidate_id, _ = _two_slots(product)
+        workspace = app._workspace_id()
+    else:
+        _, app = product([])
+        candidate = _build(_environment()).candidate
+        assert candidate is not None
+        workspace = candidate.workspace_id
+        candidate_id = candidate.candidate_id
+        app.materializer.capture(candidate, expected_workspace_id=workspace)
+
+    row = app.store.get_semantic_candidate_row(workspace, candidate_id)
+    assert row["candidate_source_kind"] == source_kind
+    assert app.materializer.get_candidate(workspace, candidate_id).candidate_id == candidate_id
+    _corrupt_validation_reasons(app, candidate_id, reasons)
+
+    with pytest.raises(CandidateIntegrityError, match="candidate validation reasons are malformed"):
+        app.materializer.get_candidate(workspace, candidate_id)
+
+    isolated = []
+    assert app._get_candidate_isolated(workspace, candidate_id, "DECISION", isolated) is _ISOLATED
+    assert isolated == [{
+        "candidate_id": candidate_id,
+        "workspace_id": workspace,
+        "role": "DECISION",
+        "reason_code": "CANDIDATE_INVALID",
+        "error_type": "CandidateIntegrityError",
+    }]
