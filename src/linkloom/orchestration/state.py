@@ -71,6 +71,8 @@ class OrchestratorState(TypedDict, total=False):
     confirmed_scope: dict[str, Any]
     entity_leads: list[str]
     deadline_at: float
+    required_items: dict[str, str]
+    judgments: list[dict]
     # Task graph and blackboard
     tasks: Annotated[dict[str, dict], merge_tasks]
     rows: Annotated[dict[str, dict], merge_first]

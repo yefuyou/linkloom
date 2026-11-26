@@ -30,6 +30,7 @@ from langgraph.graph import END, START, StateGraph
 from langgraph.types import Command, Send, interrupt
 
 from linkloom.orchestration import blackboard
+from linkloom.orchestration.coverage import required_items, review_operands, validated_judgments
 from linkloom.orchestration.files import write_json
 from linkloom.orchestration.state import (
     ABSTAINED, ACCEPTED, FAILED, PENDING, RUNNING, SKIPPED, TERMINAL, OrchestratorState,
@@ -62,15 +63,19 @@ def _read(path):
 def _context(state):
     """What a model may see of the Host input. The Host's own deny list names other workspaces; it stays out."""
     scope = {key: value for key, value in (state.get('confirmed_scope') or {}).items() if key != 'blocked_entities'}
-    return dict(confirmed_scope=scope, entity_leads=list(state.get('entity_leads') or []))
+    return dict(confirmed_scope=scope, entity_leads=list(state.get('entity_leads') or []),
+                required_items=dict(state.get('required_items') or {}))
 
 
-def _summary(state):
+def _summary(state, operands=()):
     rows = state.get('rows') or {}
     out = []
     for task_id, task in (state.get('tasks') or {}).items():
         item = dict(id=task_id, description=task['description'], depends_on=task['depends_on'],
-                    status=task['status'], failure=task.get('failure'))
+                    status=task['status'], failure=task.get('failure'), item_ids=task.get('item_ids', []))
+        claims = [claim for claim in operands if claim['branch'] == task_id]
+        if claims:
+            item['review_claim_citations'] = claims
         if task_id in rows:
             item['verified_decision'] = rows[task_id]['conclusion']['decision']['value']
             item['gaps'] = blackboard.gaps_of(rows[task_id])
@@ -98,7 +103,10 @@ def build_graph(deps: WorkerDeps, checkpointer):
             saved = dict(payload=None, error='SUPERVISOR_FAILED', failure='PROVIDER_UNCERTAIN')
             write_json(root / 'proposal.json', saved)
             return saved
-        context = dict(user_goal=state['query'], **_context(state), tasks=_summary(state),
+        rows = state.get('rows') or {}
+        ordered = [rows[t] for t in state['tasks'] if t in rows]
+        operands = review_operands(deps, state, merge_evidence(ordered))
+        context = dict(user_goal=state['query'], **_context(state), tasks=_summary(state, operands.values()),
                        limits=dict(max_tasks=limits.max_tasks if round_number == 0 else limits.task_cap(),
                                    max_depth=limits.max_depth),
                        round=round_number)
@@ -136,11 +144,27 @@ def build_graph(deps: WorkerDeps, checkpointer):
             # a review that cannot be trusted adds no paid work.
             action, reason, new = (ANSWER_SINGLE, str(exc), single_task(state['query'], 'HOST_FALLBACK_' + str(exc))) \
                 if not existing else (STOP, str(exc), {})
+        else:
+            if state.get('required_items'):
+                judgments = saved['payload'].get('judgments')
+                if isinstance(judgments, list) and len(judgments) <= 64:
+                    update['judgments'] = judgments
         event = dict(event='supervisor_decision', round=round_number, action=action, reason=reason,
                      tasks=sorted(new))
         update['trace'] = [event]
         if action == STOP:
             return Command(update=update, goto='synthesize')
+        items = state.get('required_items') or {}
+        payload = saved.get('payload')
+        payload = payload if isinstance(payload, dict) else {}
+        if round_number == 0:
+            items = required_items(payload.get('required_items'))
+            if items:
+                update['required_items'] = items
+        if items:
+            for task in new.values():
+                proposed = list(items) if action == ANSWER_SINGLE else task['item_ids']
+                task['item_ids'] = list(dict.fromkeys(key for key in proposed if key in items))
         update['tasks'] = new
         threshold = limits.confirm_over_tasks
         if action == DELEGATE and threshold is not None and len(new) > threshold:
@@ -236,7 +260,11 @@ def build_graph(deps: WorkerDeps, checkpointer):
         plan = plan_comparison(reviewed, {task_id: task['depends_on'] for task_id, task in tasks.items()})
         verdicts, reason = compare_pending(deps, plan)
         comparison = resolve_pairs(plan, verdicts, reason or 'COMPARISON_FAILED')
+        items = state.get('required_items') or {}
+        operands = review_operands(deps, state, merged)
+        coverage = validated_judgments(operands, state.get('judgments'))
         answer = synthesize_reviewed(reviewed, gaps, 0, merged, questions, source_check=deps.validate,
+                                     items=items, coverage=coverage, expected_coverage=tuple(operands),
                                      review_id=f'{deps.run_id}-aggregate', comparison=comparison)
         status = answer['status'] if answer.get('published') else 'UNKNOWN'
         return dict(status=status, answer=answer, trace=[dict(event='synthesized', status=status)])

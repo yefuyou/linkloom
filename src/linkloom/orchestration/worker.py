@@ -104,6 +104,18 @@ def build_branch_row(name, question, status, checkpoint_dir, checkpointer, works
                       evidence=[{key: item[key] for key in ('source_id', 'source_version', 'line_start',
                                                             'line_end', 'quote_sha256')}
                                 for item in evidence])
+    # Each existing rationale entry carries its own Reviewer-checked references.
+    # The Worker encodes its assigned item ID in the point field without changing the runtime schema.
+    evidence_refs = {item['ref']: item for item in evidence}
+    claims = []
+    for position, point in enumerate(team['rationale'], 1):
+        item_id, separator, fact = point['point'].partition(':')
+        refs = point['evidence_refs']
+        if separator and item_id and fact.strip() and refs and all(ref in evidence_refs for ref in refs):
+            claims.append(dict(item_id=item_id, claim_id=f'{name}:{position}', fact=fact.strip(),
+                               evidence=[evidence_refs[ref] for ref in refs]))
+    if claims:
+        conclusion['item_claims'] = claims
     return dict(run=dict(branch=name, run_id=status.run_id, thread_id=status.thread_id,
                          review_id=review['review_id']), evidence=evidence, conclusion=conclusion)
 
@@ -115,6 +127,14 @@ def render_query(task, upstream, context):
         structured['confirmed_scope'] = context['confirmed_scope']
     if context.get('entity_leads'):
         structured['entity_leads_unverified'] = context['entity_leads']
+    if task.get('item_ids'):
+        items = context.get('required_items', {})
+        structured['required_items'] = {key: items[key] for key in task['item_ids'] if key in items}
+        structured['final_coverage_instruction'] = (
+            'In Final rationale, give one point per actual supported answer as '
+            '"item_id: atomic answer value". Use the exact assigned ID before the colon. '
+            'Include evidence_refs specific to that point. Omit unanswered items. '
+            'Use the answer value alone, without explanation or additional facts.')
     if upstream:
         structured['verified_upstream_results'] = upstream
     if not structured:

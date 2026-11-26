@@ -1,0 +1,273 @@
+{
+  "run_id": "ui-parallel-6135165be798",
+  "status": "PARTIAL",
+  "tasks": [
+    {
+      "id": "task-1",
+      "status": "abstained",
+      "description": "Which plan replaced Meridian A, who owns it, who is that owner's direct leader, and when did the replacement take effect?",
+      "depends_on": [],
+      "failure": "NO_DECISION"
+    },
+    {
+      "id": "task-2",
+      "status": "accepted",
+      "description": "Search workspace ws_11e91839aa4d4963990e6345c7ba9fbd for 'Meridian A' and related terms (e.g., 'Meridian', plan replacements, migrations, deprecations) to determine which plan replaced Meridian A, when the replacement took effect, and who owns the replacement plan.",
+      "depends_on": [],
+      "failure": null
+    },
+    {
+      "id": "task-3",
+      "status": "accepted",
+      "description": "Using the replacement plan and owner identified in task-2, search workspace ws_11e91839aa4d4963990e6345c7ba9fbd for organizational charts, team rosters, management structures, or profile records to determine who that owner's direct leader is.",
+      "depends_on": [
+        "task-2"
+      ],
+      "failure": null
+    }
+  ],
+  "rows": [
+    {
+      "run": {
+        "branch": "task-1",
+        "run_id": "run_p4_b684d598735f",
+        "thread_id": "ui-parallel-6135165be798-task-1-0-1",
+        "review_id": "review_8aa6afd5"
+      },
+      "evidence": [],
+      "conclusion": {
+        "question": "Which plan replaced Meridian A, who owns it, who is that owner's direct leader, and when did the replacement take effect?",
+        "decision": {
+          "value": null,
+          "status": "insufficient_evidence"
+        },
+        "unresolved_items": [],
+        "uncertainty": {
+          "status": "insufficient_evidence",
+          "statement": null
+        },
+        "evidence": []
+      }
+    },
+    {
+      "run": {
+        "branch": "task-2",
+        "run_id": "run_p4_48ffe142db0a",
+        "thread_id": "ui-parallel-6135165be798-task-2-0-1",
+        "review_id": "review_a13f9e01"
+      },
+      "evidence": [
+        {
+          "id": "citation-1",
+          "ordinal": 1,
+          "ref": "ev_v2_b7c50f0497522951b405840d402bd3e7809094b0fa7d1e8ea3060e9424d27bd0",
+          "label": "src_42344163c1ef4e3b8af7adf53fb96971.md · line 1",
+          "relative_path": "src_42344163c1ef4e3b8af7adf53fb96971.md",
+          "line_start": 1,
+          "line_end": 1,
+          "supports": [
+            "Final decision"
+          ],
+          "source": {
+            "preview_kind": "quote",
+            "quote": "[2025-02-11T10:00:00Z] Alice: Cobalt B replaced Meridian A on 2025-02-14.",
+            "lines": [],
+            "fallback_reason": "Full source preview is unavailable; showing the verified excerpt."
+          },
+          "source_id": "src_42344163c1ef4e3b8af7adf53fb96971",
+          "source_version": "artifact_v1_f1d6d055163b4077d11b97ebed3cfef456d9bb3585e9a1e49ec13d20898c0de7",
+          "source_name": "meeting-1.md",
+          "content_sha256": "efe43b7ba7ad6a487f5372ecd7de42796c0bb4d404bf64b9e44464422dddbf47",
+          "quote_sha256": "efe43b7ba7ad6a487f5372ecd7de42796c0bb4d404bf64b9e44464422dddbf47"
+        },
+        {
+          "id": "citation-2",
+          "ordinal": 2,
+          "ref": "ev_v2_d71927c086120ac4c0e1143319641c6845726ec758353774941ff847c512ec71",
+          "label": "src_58bb0892dfea4edba97a14b81ce0985b.md · line 1",
+          "relative_path": "src_58bb0892dfea4edba97a14b81ce0985b.md",
+          "line_start": 1,
+          "line_end": 1,
+          "supports": [
+            "Final decision"
+          ],
+          "source": {
+            "preview_kind": "quote",
+            "quote": "[2025-02-15T10:00:00Z] Alice: Launch replaced Meridian A with Cobalt B because Meridian A could not meet the agreed delivery schedule..",
+            "lines": [],
+            "fallback_reason": "Full source preview is unavailable; showing the verified excerpt."
+          },
+          "source_id": "src_58bb0892dfea4edba97a14b81ce0985b",
+          "source_version": "artifact_v1_317cdd83a77589b8d1dec05a30aa540486a02be2e600e115ebe755f43130883e",
+          "source_name": "meeting-5.md",
+          "content_sha256": "086ec4a4c60355adb6d317d50e9ff460981f096e430e1e9011b7429a5601a87a",
+          "quote_sha256": "086ec4a4c60355adb6d317d50e9ff460981f096e430e1e9011b7429a5601a87a"
+        },
+        {
+          "id": "citation-3",
+          "ordinal": 3,
+          "ref": "ev_v2_8737033c9e331b00f953fb55d0c0d56741b18e2a6add5dab9f04ea6a0168820a",
+          "label": "src_9d8620e9acd6464c9fe13dec0b7583a2.md · line 1",
+          "relative_path": "src_9d8620e9acd6464c9fe13dec0b7583a2.md",
+          "line_start": 1,
+          "line_end": 1,
+          "supports": [
+            "Final decision"
+          ],
+          "source": {
+            "preview_kind": "quote",
+            "quote": "[2025-02-12T10:00:00Z] Alice: Mira Chen is the accountable owner of Cobalt B.",
+            "lines": [],
+            "fallback_reason": "Full source preview is unavailable; showing the verified excerpt."
+          },
+          "source_id": "src_9d8620e9acd6464c9fe13dec0b7583a2",
+          "source_version": "artifact_v1_c41e1c5631d01989527d9e4ab4e5fbbeef078410e880b4cc8b240f8f882d68a2",
+          "source_name": "meeting-2.md",
+          "content_sha256": "58b92a071da76e32faa17b7f150733c12990198f2e9257712b152e6faa580f3a",
+          "quote_sha256": "58b92a071da76e32faa17b7f150733c12990198f2e9257712b152e6faa580f3a"
+        }
+      ],
+      "conclusion": {
+        "question": "Search workspace ws_11e91839aa4d4963990e6345c7ba9fbd for 'Meridian A' and related terms (e.g., 'Meridian', plan replacements, migrations, deprecations) to determine which plan replaced Meridian A, when the replacement took effect, and who owns the replacement plan.",
+        "decision": {
+          "value": "As of 2025-02-15, Cobalt B replaced Meridian A, the replacement took effect on 2025-02-14, and Mira Chen is the accountable owner of Cobalt B.",
+          "status": "approved"
+        },
+        "unresolved_items": [],
+        "uncertainty": {
+          "status": "none",
+          "statement": null
+        },
+        "evidence": [
+          {
+            "source_id": "src_42344163c1ef4e3b8af7adf53fb96971",
+            "source_version": "artifact_v1_f1d6d055163b4077d11b97ebed3cfef456d9bb3585e9a1e49ec13d20898c0de7",
+            "line_start": 1,
+            "line_end": 1,
+            "quote_sha256": "efe43b7ba7ad6a487f5372ecd7de42796c0bb4d404bf64b9e44464422dddbf47"
+          },
+          {
+            "source_id": "src_58bb0892dfea4edba97a14b81ce0985b",
+            "source_version": "artifact_v1_317cdd83a77589b8d1dec05a30aa540486a02be2e600e115ebe755f43130883e",
+            "line_start": 1,
+            "line_end": 1,
+            "quote_sha256": "086ec4a4c60355adb6d317d50e9ff460981f096e430e1e9011b7429a5601a87a"
+          },
+          {
+            "source_id": "src_9d8620e9acd6464c9fe13dec0b7583a2",
+            "source_version": "artifact_v1_c41e1c5631d01989527d9e4ab4e5fbbeef078410e880b4cc8b240f8f882d68a2",
+            "line_start": 1,
+            "line_end": 1,
+            "quote_sha256": "58b92a071da76e32faa17b7f150733c12990198f2e9257712b152e6faa580f3a"
+          }
+        ]
+      }
+    },
+    {
+      "run": {
+        "branch": "task-3",
+        "run_id": "run_p4_b07e88c71f26",
+        "thread_id": "ui-parallel-6135165be798-task-3-0-1",
+        "review_id": "review_54ebbbf0"
+      },
+      "evidence": [
+        {
+          "id": "citation-1",
+          "ordinal": 1,
+          "ref": "ev_v2_8737033c9e331b00f953fb55d0c0d56741b18e2a6add5dab9f04ea6a0168820a",
+          "label": "src_9d8620e9acd6464c9fe13dec0b7583a2.md · line 1",
+          "relative_path": "src_9d8620e9acd6464c9fe13dec0b7583a2.md",
+          "line_start": 1,
+          "line_end": 1,
+          "supports": [
+            "Final decision"
+          ],
+          "source": {
+            "preview_kind": "quote",
+            "quote": "[2025-02-12T10:00:00Z] Alice: Mira Chen is the accountable owner of Cobalt B.",
+            "lines": [],
+            "fallback_reason": "Full source preview is unavailable; showing the verified excerpt."
+          },
+          "source_id": "src_9d8620e9acd6464c9fe13dec0b7583a2",
+          "source_version": "artifact_v1_c41e1c5631d01989527d9e4ab4e5fbbeef078410e880b4cc8b240f8f882d68a2",
+          "source_name": "meeting-2.md",
+          "content_sha256": "58b92a071da76e32faa17b7f150733c12990198f2e9257712b152e6faa580f3a",
+          "quote_sha256": "58b92a071da76e32faa17b7f150733c12990198f2e9257712b152e6faa580f3a"
+        },
+        {
+          "id": "citation-2",
+          "ordinal": 2,
+          "ref": "ev_v2_f9680c944736e1eaeffa263f46af868991db65e6d3d7af4afc886ac2e3098e17",
+          "label": "src_c863d8d181614a31bd2b643c08c568bf.md · line 1",
+          "relative_path": "src_c863d8d181614a31bd2b643c08c568bf.md",
+          "line_start": 1,
+          "line_end": 1,
+          "supports": [
+            "Final decision"
+          ],
+          "source": {
+            "preview_kind": "quote",
+            "quote": "[2025-02-13T10:00:00Z] Alice: Mira Chen reports directly to Kai Wu.",
+            "lines": [],
+            "fallback_reason": "Full source preview is unavailable; showing the verified excerpt."
+          },
+          "source_id": "src_c863d8d181614a31bd2b643c08c568bf",
+          "source_version": "artifact_v1_a7478d9b51c1a7fe193eb043ba8e41beec917bd406d87bc7f349e720b5654467",
+          "source_name": "meeting-3.md",
+          "content_sha256": "29ad887e730ae445e3297bf3cb8914ad0d9737e085263d5600ca9b422413797d",
+          "quote_sha256": "29ad887e730ae445e3297bf3cb8914ad0d9737e085263d5600ca9b422413797d"
+        }
+      ],
+      "conclusion": {
+        "question": "Using the replacement plan and owner identified in task-2, search workspace ws_11e91839aa4d4963990e6345c7ba9fbd for organizational charts, team rosters, management structures, or profile records to determine who that owner's direct leader is.",
+        "decision": {
+          "value": "As of 2025-02-13, Kai Wu is the direct leader of Mira Chen, who is the accountable owner of Cobalt B.",
+          "status": "approved"
+        },
+        "unresolved_items": [],
+        "uncertainty": {
+          "status": "none",
+          "statement": null
+        },
+        "evidence": [
+          {
+            "source_id": "src_9d8620e9acd6464c9fe13dec0b7583a2",
+            "source_version": "artifact_v1_c41e1c5631d01989527d9e4ab4e5fbbeef078410e880b4cc8b240f8f882d68a2",
+            "line_start": 1,
+            "line_end": 1,
+            "quote_sha256": "58b92a071da76e32faa17b7f150733c12990198f2e9257712b152e6faa580f3a"
+          },
+          {
+            "source_id": "src_c863d8d181614a31bd2b643c08c568bf",
+            "source_version": "artifact_v1_a7478d9b51c1a7fe193eb043ba8e41beec917bd406d87bc7f349e720b5654467",
+            "line_start": 1,
+            "line_end": 1,
+            "quote_sha256": "29ad887e730ae445e3297bf3cb8914ad0d9737e085263d5600ca9b422413797d"
+          }
+        ]
+      }
+    }
+  ],
+  "sources": {
+    "src_42344163c1ef4e3b8af7adf53fb96971.md": {
+      "source_id": "src_42344163c1ef4e3b8af7adf53fb96971",
+      "source_version": "artifact_v1_f1d6d055163b4077d11b97ebed3cfef456d9bb3585e9a1e49ec13d20898c0de7",
+      "content": "[2025-02-11T10:00:00Z] Alice: Cobalt B replaced Meridian A on 2025-02-14."
+    },
+    "src_58bb0892dfea4edba97a14b81ce0985b.md": {
+      "source_id": "src_58bb0892dfea4edba97a14b81ce0985b",
+      "source_version": "artifact_v1_317cdd83a77589b8d1dec05a30aa540486a02be2e600e115ebe755f43130883e",
+      "content": "[2025-02-15T10:00:00Z] Alice: Launch replaced Meridian A with Cobalt B because Meridian A could not meet the agreed delivery schedule.."
+    },
+    "src_9d8620e9acd6464c9fe13dec0b7583a2.md": {
+      "source_id": "src_9d8620e9acd6464c9fe13dec0b7583a2",
+      "source_version": "artifact_v1_c41e1c5631d01989527d9e4ab4e5fbbeef078410e880b4cc8b240f8f882d68a2",
+      "content": "[2025-02-12T10:00:00Z] Alice: Mira Chen is the accountable owner of Cobalt B."
+    },
+    "src_c863d8d181614a31bd2b643c08c568bf.md": {
+      "source_id": "src_c863d8d181614a31bd2b643c08c568bf",
+      "source_version": "artifact_v1_a7478d9b51c1a7fe193eb043ba8e41beec917bd406d87bc7f349e720b5654467",
+      "content": "[2025-02-13T10:00:00Z] Alice: Mira Chen reports directly to Kai Wu."
+    }
+  }
+}

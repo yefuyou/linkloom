@@ -457,3 +457,85 @@ def test_unmatched_question_is_observed_like_any_orchestrated_run(make_env):
     run_id = payload["result"]["agent_run_id"]
     env.finish(run_id)
     assert_usage_observed(env, run_id)
+
+
+def test_existing_supervisor_review_completes_item_coverage(make_env, monkeypatch):
+    from dataclasses import replace
+
+    from linkloom.agents.model_adapter import ModelAction
+    from linkloom.tools.contracts import ToolCall
+    from tests.integration.test_orchestration_langgraph import WorkerModel
+
+    plan = delegation("answer_single")
+    plan["required_items"] = [
+        {"id": "Q1", "question": Q_SUCC},
+        {"id": "Q2", "question": Q_OWNER},
+    ]
+    followup = delegation("delegate", [("succ", Q_SUCC, []), ("owner", Q_OWNER, ["succ"])])
+    for index, task in enumerate(followup["tasks"], 1):
+        task["item_ids"] = [f"Q{index}"]
+    world = World([plan, followup, delegation("stop")],
+                  {**TASKS, GOAL: (FACT["succ"], "Meridian A", "abstain")})
+    complete = WorkerModel.complete
+
+    def final_with_items(worker, request):
+        reply = complete(worker, request)
+        if reply.action and reply.action.kind == "final" and worker.description in (Q_SUCC, Q_OWNER):
+            query = json.loads(request.user_input.rsplit("team_decision_request=", 1)[1])["query"]
+            context = json.loads(query.split("investigation_context=", 1)[1])
+            [item_id] = context["required_items"]
+            final = json.loads(reply.action.final_answer)
+            final["rationale"] = [{"point": item_id + ": " + worker.fact,
+                                   "evidence_refs": final["evidence_refs"]}]
+            return replace(reply, action=ModelAction.final(json.dumps(final)))
+        return reply
+
+    monkeypatch.setattr(WorkerModel, "complete", final_with_items)
+    factory = world.factory
+
+    def with_coverage(text):
+        model = factory(text)
+        original = model.complete
+
+        def review(request):
+            reply = original(request)
+            if request.agent_id != "orchestration-supervisor":
+                return reply
+            context = json.loads(request.user_input.split("context=", 1)[1])
+            if context["round"] != 2:
+                return reply
+            claims = [claim for task in context["tasks"] for claim in task.get("review_claim_citations", [])]
+            assert {claim["item_id"] for claim in claims} == {"Q1", "Q2"}
+            assert all(claim["source_version"] and claim["quote_sha256"] for claim in claims)
+            judgments = [{**{key: claim[key] for key in ("item_id", "claim_id", "citation_id")},
+                          "supporting_quote": claim["quote"], "verdict": "SUPPORTS",
+                          "explanation": "The cited meeting states the answer."} for claim in claims]
+            call = reply.action.tool_call
+            return replace(reply, action=ModelAction.tool(ToolCall(
+                call.call_id, call.tool_id, {**call.arguments, "judgments": judgments})))
+
+        def capture_error(request):
+            try:
+                return review(request)
+            except Exception as error:
+                world.coverage_error = error
+                raise
+
+        model.complete = capture_error
+        return model
+
+    monkeypatch.setattr(world, "factory", with_coverage)
+    env = make_env(world)
+    decisions = env.app.store.list_decisions(env.workspace_id)
+    _, result = started(env)
+    assert env.app.store.list_decisions(env.workspace_id) == decisions
+    parallel = result["parallel_investigation"]
+    assert not hasattr(world, "coverage_error"), repr(getattr(world, "coverage_error", None))
+    assert parallel["status"] == "COMPLETE" and result["status"] == "COMPLETED"
+    assert parallel["tasks"][0]["failure"] == "NO_DECISION"
+    assert parallel["answer"]["unknowns"] == []
+    assert {item["item_id"]: item["value"] for item in result["conclusions"]} == {
+        "Q1": FACT["succ"], "Q2": FACT["owner"]}
+    assert {item["support"] for item in result["conclusions"]} == {"CITATION_VERIFIED"}
+    assert len(world.supervisor_requests) == 3 and not world.comparison_requests
+    assert len(world.workers) == 3 and all(worker.calls == 3 for worker in world.workers)

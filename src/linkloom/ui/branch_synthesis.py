@@ -165,7 +165,39 @@ def _conflict_check(answers, pairs):
                 uncompared=sorted(a['branch'] for a in answers if a['branch'] not in compared))
 
 
-def _compose(rows, gaps, unstarted, evidence_index, questions, comparison=None):
+def _compose_coverage(items, coverage, expected):
+    answers, unknowns, conflicts = [], [], []
+    keys = {(row['item_id'], row['claim_id'], row['citation_id']) for row in coverage}
+    for item_id, question in items.items():
+        rows = [row for row in coverage if row['item_id'] == item_id]
+        supported = {}
+        contradictory = []
+        for row in rows:
+            verdict = row['verdict']
+            if verdict == 'SUPPORTS':
+                value = ' '.join(row['fact'].casefold().split())
+                supported.setdefault(value, []).append(row)
+            elif verdict == 'CONTRADICTS':
+                contradictory.append(row)
+        if contradictory or len(supported) > 1:
+            sides = [dict(branch=row['branch'], question=question, value=row['fact'],
+                          citations=[row['citation_id']], verdict=row['verdict'])
+                     for row in rows if row['verdict'] in ('SUPPORTS', 'CONTRADICTS')]
+            conflicts.append(dict(item_id=item_id, subject=None, relation=None, sides=sides))
+            unknowns.append(dict(_unknown('ITEM_CONFLICT', question), item_id=item_id))
+        elif not supported or any(key[0] == item_id and key not in keys for key in expected):
+            unknowns.append(dict(_unknown('ITEM_NOT_VERIFIED', question), item_id=item_id))
+        else:
+            matches = next(iter(supported.values()))
+            first = matches[0]
+            citations = sorted({row['citation_id'] for row in matches}, key=lambda c: int(c.split('-')[1]))
+            answers.append(dict(item_id=item_id, branch=first['branch'], question=question,
+                                text=first['fact'], citations=citations, support='CITATION_VERIFIED'))
+    return dict(status=_status(answers, unknowns, conflicts, len(items)), answers=answers,
+                conflicts=conflicts, unknowns=unknowns, answer_coverage=coverage)
+
+
+def _compose(rows, gaps, unstarted, evidence_index, questions, comparison=None, *, items=None, coverage=(), expected_coverage=()):
     # questions is a list in branch-N order (two-branch caller) or a {task id: question} mapping (N tasks).
     named = dict(questions) if isinstance(questions, dict) else {}
     questions = [] if named else list(questions or ())
@@ -203,6 +235,14 @@ def _compose(rows, gaps, unstarted, evidence_index, questions, comparison=None):
         unknowns.append(_unknown('BRANCH_UNSTARTED', questions[int(name[7:]) - 1] if name else None, name))
     pairs = comparison if comparison is not None else resolve_pairs(plan_comparison(rows))
     conflicts = _conflicts(answers, pairs)
+    if items:
+        draft = _compose_coverage(items, coverage, expected_coverage)
+        draft['conflicts'].extend(conflicts)
+        draft['status'] = _status(draft['answers'], draft['unknowns'], draft['conflicts'], len(items))
+        draft['conflict_check'] = _conflict_check(answers, pairs)
+        if any('item_id' in conflict for conflict in draft['conflicts']):
+            draft['conflict_check'].update(status=CONFLICT, verified=True)
+        return draft
     return dict(
         status=_status(answers, unknowns, conflicts, len(rows) + len(gaps) + unstarted),
         answers=answers, conflicts=conflicts, unknowns=unknowns, conflict_check=_conflict_check(answers, pairs))
@@ -224,9 +264,9 @@ def _text(draft):
     return '\n'.join(lines)
 
 
-def synthesize(rows, gaps, unstarted, evidence_index, questions=None, comparison=None):
+def synthesize(rows, gaps, unstarted, evidence_index, questions=None, comparison=None, **coverage):
     """Pure and deterministic: the same input gives an equal result. comparison is resolve_pairs output."""
-    draft = _compose(rows, gaps, unstarted, evidence_index, questions, comparison)
+    draft = _compose(rows, gaps, unstarted, evidence_index, questions, comparison, **coverage)
     draft['text'] = _text(draft)
     return draft
 
@@ -310,11 +350,11 @@ def _fallback(status, draft, evidence_index, reason):
 
 
 def synthesize_reviewed(rows, gaps, unstarted, evidence_index, questions=None, source_check=None,
-                        review_id='aggregate-review', comparison=None):
+                        review_id='aggregate-review', comparison=None, **coverage):
     """Synthesize, review the aggregate, and fall back instead of ever raising."""
     draft = None
     try:
-        draft = synthesize(rows, gaps, unstarted, evidence_index, questions, comparison)
+        draft = synthesize(rows, gaps, unstarted, evidence_index, questions, comparison, **coverage)
         reason = _review(draft, rows, evidence_index, source_check, review_id) if draft['answers'] else None
     except Exception:
         reason = 'AGGREGATE_SYNTHESIS_FAILED'

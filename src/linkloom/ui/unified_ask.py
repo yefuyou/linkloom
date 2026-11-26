@@ -1044,6 +1044,10 @@ class UnifiedAskService:
                 status={"RUNNING": "INVESTIGATING", "COMPLETE": "COMPLETED", "PARTIAL": "PARTIAL",
                         "UNKNOWN": "UNKNOWN", "CANCELLED": "CANCELLED"}.get(parallel["status"], "FAILED"),
                 error=deepcopy(snapshot["error"]))
+            answer = parallel.get("answer") or {}
+            if answer.get("published") and "answer_coverage" in answer:
+                result["conclusions"] = [dict(kind="ANSWER_COVERAGE", value=item["text"], **item)
+                                         for item in answer["answers"]]
             if parallel["status"] in ("PARTIAL", "UNKNOWN"):
                 unknowns = (parallel.get("answer") or {}).get("unknowns") or []
                 result["uncertainty"] = {"unknown_fields": [row.get("question") or row.get("branch") for row in unknowns],
