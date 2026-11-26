@@ -141,6 +141,18 @@ existing model loop, not another LLM Agent.
 | Identity/scope violation or tool permission denial | Terminate. In an ordered multi-call proposal, denial prevents later calls and a subsequent Final; it cannot be relabeled as evidence insufficiency. |
 | Repeated uncorrected schema/tool errors, invalid outputs or checkpoint/ledger failures | Terminate without an accepted answer. |
 
+Verification scope: `team-decision-result/v1` prose answers (including orchestrated Worker answers) are
+binding-only. The Host checks that each cited ref is an intact verified read, not what the prose says about it.
+Semantic checks (object-in-quote, confirmed-fact and claim-vs-claim conflict, blocked entities) apply to typed
+claims only. Even a typed claim is `SUPPORTED` only when a Host-confirmed structured fact states its relation,
+direction, subject, object and polarity at the claimed time. A real citation with no matching confirmed fact is
+`CITATION_VERIFIED` (reason `SEMANTIC_SUPPORT_NOT_VERIFIED`): the Final is accepted, the claim is recorded as
+`UNVERIFIED` (`typed_claims[].support`, `source_investigation.facts[].support`), the source investigation reports
+`evidence_level=CITATION_VERIFIED_UNCONFIRMED` with `unverified_claim_count`, and the UI says the citation is verified
+but the relationship was not independently confirmed. A confirmed fact that contradicts the claim (other object,
+reversed direction, negation) still rejects it. `reports_to` is a weak reporting relation and never proves a direct
+leader.
+
 Partial guidance is not partial acceptance: `RetrievalAgent` validates the
 Final against successful observed reads and supported claim relations, then
 Reviewer and product projection apply their existing checks. Unread search
@@ -173,7 +185,8 @@ establish an accepted product answer.
   unknown provider outcomes require verification instead of silent replay.
 
 Grounding checks evidence provenance and supported claim forms. They do not
-prove arbitrary natural-language reasoning or general factual accuracy.
+prove arbitrary natural-language reasoning or general factual accuracy, and a verified citation is not semantic
+support (see Verification scope).
 
 ## Source anchors
 
@@ -228,3 +241,17 @@ without calling F/G or the model. Current Evidence Catalog membership is require
 even if retained text/version is unchanged. Invalid source or lifecycle state
 returns no old quotes, relations or trace. Temporal/source-relation jobs keep
 their prior process-local product lifecycle.
+
+## Security without a security model
+
+Question wording is not an authorization signal. With no security adapter
+configured (rules mode), a prompt-injection or write request is stopped only by
+the model's WRITE_REQUEST operation, the read-only Tool ACL and the Host's
+workspace checks. `ask_admission.leaks_protected_text` additionally blocks Ask
+results (`trace`, `inspect`, `continue_run`, `ask`) that contain a configured
+provider key or a 48-character run of the Host prompts. Task, review and
+evidence endpoints return stored Runtime artifacts, not fresh agent text, and are
+not passed through this filter. The `semantic_support` flag (`UNVERIFIED`) for a
+claim whose citation is real but not Host-confirmed is surfaced in the
+source-relations investigation; other consumers receive the approved decision
+without it.

@@ -83,8 +83,7 @@ def _sample_runtime_state(
             write_capability=False,
             network_capability=False,
             max_steps=12,
-            max_provider_requests=0,
-        ),
+            ),
         error=error,
         created_at="2026-08-16T10:00:00Z",
         updated_at="2026-08-16T10:00:01Z",
@@ -333,7 +332,7 @@ def test_run_status_summary() -> None:
 
 
 def test_readonly_policy_enforcement() -> None:
-    policy = ReadOnlyPolicy(max_steps=5, max_provider_requests=0)
+    policy = ReadOnlyPolicy(max_steps=5)
     snapshot = policy.to_snapshot()
     assert snapshot.write_capability is False
     assert snapshot.network_capability is False
@@ -342,3 +341,16 @@ def test_readonly_policy_enforcement() -> None:
     # Cannot enable write capability in ReadOnlyPolicy
     with pytest.raises(ValidationError):
         ReadOnlyPolicy(write_capability=True)  # type: ignore[call-arg]
+
+
+def test_legacy_checkpoint_request_quota_keys_are_ignored_on_read():
+    snapshot = PolicySnapshot.from_dict({
+        "policy_version": "p2-readonly-v1", "write_capability": False, "network_capability": False,
+        "max_steps": 7, "max_provider_requests": 0,
+    })
+    assert snapshot == PolicySnapshot(max_steps=7)
+    assert "max_provider_requests" not in snapshot.to_dict()
+    request = RunRequest.from_dict({
+        "request_id": "legacy", "workflow": "ask", "query": "q", "max_steps": 7, "max_provider_requests": 0,
+    })
+    assert request.max_steps == 7 and "max_provider_requests" not in request.to_dict()

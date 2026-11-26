@@ -27,7 +27,7 @@ def graph_http(tmp_path,monkeypatch):
           outputs=[dict(step='leader',field='node')])
         model=Model(raw);models.append(model)
         return GraphQuestionPlanner(model,model_id='fake',guard_id='http',request_guard=lambda r:
-          ProviderRequestAuthorization.approve(r,guard_id='http',reservation_id='local',estimated_cost_upper_bound_usd=0))
+          ProviderRequestAuthorization.approve(r,guard_id='http',reservation_id='local'))
     worker=GraphInvestigationService(lambda ws:store,factory)
     demo.server.unified_ask.graph_service=worker
     try:yield demo,workspace,worker,models
@@ -36,7 +36,7 @@ def graph_http(tmp_path,monkeypatch):
 
 def test_ordinary_ask_new_wording_reaches_model_graph_before_old_question_grammar(graph_http,monkeypatch):
     demo,workspace,worker,models=graph_http
-    monkeypatch.setattr('linkloom.ui.unified_ask.plan_relation_investigation',lambda q:(_ for _ in ()).throw(AssertionError('old grammar called')))
+    monkeypatch.setattr('linkloom.ui.unified_ask.UnifiedAskService._source_request',lambda *a,**k:(_ for _ in ()).throw(AssertionError('old source path called')))
     status,body=request_json(demo.base_url,'/api/product/ask',method='POST',data=dict(
         query='联调这摊活找谁接、这位同事直接向哪位汇报？',workspace_id=workspace,as_of='2026-04-01'))
     result=body['result']
@@ -67,10 +67,11 @@ def test_planning_failure_and_unknown_try_legacy_but_preserve_unanswered_graph(g
     worker.planner_factory=lambda context:GraphQuestionPlanner(Model(dict(applicable=True,as_of='',refusal_reasons=[],steps=[
       dict(id='s',input_node=next(n for n in context.nodes if n.kind=='project').node_id,input_step='',edge_type='owner_of',direction='in',as_of='')],
       outputs=[dict(step='s',field='node')])),model_id='fake',guard_id='local',request_guard=lambda r:
-      ProviderRequestAuthorization.approve(r,guard_id='local',reservation_id='local',estimated_cost_upper_bound_usd=0))
+      ProviderRequestAuthorization.approve(r,guard_id='local',reservation_id='local'))
     status,body=request_json(demo.base_url,'/api/product/ask',method='POST',data=dict(query='负责人',workspace_id=workspace,as_of='2026-05-01'))
-    assert status==200 and body['result']['graph_status']=='UNKNOWN'
-    # New contract: UNKNOWN attempts legacy; this wording has no legacy plan.
+    # UNKNOWN attempts legacy; no wording template refuses it, so the source investigation starts.
+    assert status==202 and body['result']['path']=='SOURCE_RELATION_INVESTIGATION',body
+    poll_product_ask(demo,body['result']['agent_run_id'],workspace)
     counts={r['reason']:r['count'] for r in worker.metrics.snapshot() if r['name']=='legacy_fallback'}
     assert counts=={'GRAPH_PLANNING_OUTPUT_INVALID':1,'GRAPH_INSUFFICIENT_UNKNOWN':1}
 
@@ -89,13 +90,13 @@ def test_reopening_graph_answer_rechecks_source_and_never_reuses_invalidated_ans
     assert len(models)==1
 
 
-def test_legacy_fallback_inherits_graph_provider_request_budget(graph_http,tmp_path):
+def test_legacy_fallback_shares_graph_provider_session_without_request_quota(graph_http,tmp_path):
     from linkloom.ui.graph_investigation import _GRAPH_PROVIDER,current_graph_provider_session
     from linkloom.ui.task_provider import TaskProviderSession,TaskProviderLimits
     from linkloom.agents.model_adapter import ModelAction,ModelResponse,ModelTurnRequest,ModelGenerationOptions
     demo,workspace,worker,models=graph_http
     service=demo.server.unified_ask.investigation()
-    limits=TaskProviderLimits(1,100000,10000,1,30,5,.001)
+    limits=TaskProviderLimits(30,5)
     session=TaskProviderSession(tmp_path/'shared-provider',limits,lambda:None)
     with service._lock:service._provider_sessions.append(session)
     class Inner:
@@ -118,8 +119,7 @@ def test_legacy_fallback_inherits_graph_provider_request_budget(graph_http,tmp_p
     result=polled['result']
     assert result['status']!='COMPLETED'
     assert session.requests==1 and inner.calls==1
-    assert session.failure=='TASK_PROVIDER_BUDGET_EXHAUSTED'
-    assert demo.relation_models[-1].call_count==0
+    assert session.failure is None
     assert current_graph_provider_session() is None
 
 

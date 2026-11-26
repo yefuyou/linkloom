@@ -254,8 +254,7 @@ class ExtractionAttempt:
     latency_ms: float
     failure_code: str | None = None
     outcome: str = "accepted_response"
-    budget_reservation_id: str | None = None
-    estimated_cost_upper_bound_usd: float | None = None
+    authorization_id: str | None = None
 
     def __post_init__(self) -> None:
         if (
@@ -285,22 +284,11 @@ class ExtractionAttempt:
             "preflight_blocked",
         }:
             raise ValueError("unsupported attempt outcome")
-        if self.budget_reservation_id is not None and (
-            not isinstance(self.budget_reservation_id, str)
-            or not self.budget_reservation_id.strip()
+        if self.authorization_id is not None and (
+            not isinstance(self.authorization_id, str)
+            or not self.authorization_id.strip()
         ):
-            raise ValueError("budget_reservation_id must be non-empty text or null")
-        if self.estimated_cost_upper_bound_usd is not None and (
-            isinstance(self.estimated_cost_upper_bound_usd, bool)
-            or not isinstance(self.estimated_cost_upper_bound_usd, (int, float))
-            or not math.isfinite(self.estimated_cost_upper_bound_usd)
-            or self.estimated_cost_upper_bound_usd < 0
-        ):
-            raise ValueError("estimated_cost_upper_bound_usd must be non-negative or null")
-        if (self.budget_reservation_id is None) != (
-            self.estimated_cost_upper_bound_usd is None
-        ):
-            raise ValueError("budget reservation and cost upper bound must be recorded together")
+            raise ValueError("authorization_id must be non-empty text or null")
 
     def to_dict(self) -> dict[str, object]:
         return {
@@ -313,8 +301,7 @@ class ExtractionAttempt:
             "latency_ms": self.latency_ms,
             "failure_code": self.failure_code,
             "outcome": self.outcome,
-            "budget_reservation_id": self.budget_reservation_id,
-            "estimated_cost_upper_bound_usd": self.estimated_cost_upper_bound_usd,
+            "authorization_id": self.authorization_id,
         }
 
     @classmethod
@@ -329,10 +316,30 @@ class ExtractionAttempt:
             "latency_ms",
             "failure_code",
             "outcome",
-            "budget_reservation_id",
-            "estimated_cost_upper_bound_usd",
         }
-        if not isinstance(data, dict) or set(data) != expected:
+        if not isinstance(data, dict):
+            raise ValueError("ExtractionAttempt has missing or unsupported fields")
+        # Exactly two shapes are accepted. Current records carry
+        # authorization_id. Records written before the cost bound was removed
+        # carry both budget_reservation_id and estimated_cost_upper_bound_usd
+        # and no authorization_id; the cost bound is validated, then dropped.
+        legacy = {"budget_reservation_id", "estimated_cost_upper_bound_usd"}
+        keys = set(data)
+        if keys == expected | {"authorization_id"}:
+            authorization_id = data["authorization_id"]
+        elif keys == expected | legacy:
+            authorization_id = data["budget_reservation_id"]
+            cost = data["estimated_cost_upper_bound_usd"]
+            if cost is not None and (
+                isinstance(cost, bool)
+                or not isinstance(cost, (int, float))
+                or not math.isfinite(cost)
+                or cost < 0
+            ):
+                raise ValueError("estimated_cost_upper_bound_usd must be non-negative or null")
+            if (authorization_id is None) != (cost is None):
+                raise ValueError("legacy reservation id and cost bound must both be set or both null")
+        else:
             raise ValueError("ExtractionAttempt has missing or unsupported fields")
         return cls(
             attempt_number=data["attempt_number"],
@@ -344,8 +351,7 @@ class ExtractionAttempt:
             latency_ms=data["latency_ms"],
             failure_code=data["failure_code"],
             outcome=data["outcome"],
-            budget_reservation_id=data["budget_reservation_id"],
-            estimated_cost_upper_bound_usd=data["estimated_cost_upper_bound_usd"],
+            authorization_id=authorization_id,
         )
 
 
@@ -442,13 +448,6 @@ class ExtractionReceipt:
     @property
     def latency_ms(self) -> float:
         return sum(attempt.latency_ms for attempt in self.attempts)
-
-    @property
-    def estimated_cost_upper_bound_usd(self) -> float:
-        return sum(
-            attempt.estimated_cost_upper_bound_usd or 0.0
-            for attempt in self.attempts
-        )
 
     def to_dict(self) -> dict[str, object]:
         return {

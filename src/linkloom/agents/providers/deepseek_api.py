@@ -9,6 +9,7 @@ from __future__ import annotations
 
 from collections.abc import Mapping
 from copy import deepcopy
+from dataclasses import replace
 import json
 import logging
 import re
@@ -460,6 +461,11 @@ def _extract_usage(response: Any, duration_ms: float) -> tuple[ModelUsage, dict[
                 details={"reason": "invalid_usage"},
             )
         breakdown["reasoning_tokens"] = reasoning_tokens
+    usage = replace(
+        usage,
+        cached_input_tokens=breakdown.get("prompt_cache_hit_tokens"),
+        reasoning_tokens=breakdown.get("reasoning_tokens"),
+    )
     return usage, breakdown
 
 

@@ -104,9 +104,10 @@ def test_timestamp_in_claim_fails_final_validation(saved_claims, bad_claims):
 
     # The RetrievalAgent maps this ValidationError to TEAM_DECISION_CONTRACT_ERROR.
     with pytest.raises(
-        ValidationError, match=r"ClaimProposal relation or temporal scope is not supported by its quote\."
-    ):
+        ValidationError, match=r"ClaimProposal failed Host evidence verification\."
+    ) as error:
         validate(proposed)
+    assert error.value.details["reason"] == "MESSAGE_TIME_AS_VALID_ON"
 
     accepted = validate(corrected)
     assert accepted.decision["status"] == "approved"

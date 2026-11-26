@@ -31,11 +31,10 @@ class DiscoveryLimits:
     max_sources: int = 8
     max_chars: int = 8000
     max_bytes: int = 16000
-    max_calls: int = 3
 
     def __post_init__(self):
         for name, ceiling in (("max_sources", 64), ("max_chars", 16000),
-                              ("max_bytes", 24000), ("max_calls", 64)):
+                              ("max_bytes", 24000)):
             if type(getattr(self, name)) is not int or not 1 <= getattr(self, name) <= ceiling:
                 raise ValueError(f"{name} must be between 1 and {ceiling}")
 
@@ -194,8 +193,6 @@ class TaskObservationDiscoveryService:
                 parsed = parse_source_text(artifact)
                 if not self._current(artifact, parsed.segments):
                     reason = "SOURCE_CHANGED_OR_UNAVAILABLE"
-                elif len(extractions) >= self.limits.max_calls:
-                    reason = "CALL_BUDGET_EXHAUSTED"
             if reason:
                 source_row("UNPROCESSED", reason)
                 complete = False

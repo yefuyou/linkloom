@@ -84,8 +84,7 @@ def _server(tmp_path):
     extractor = ProviderNeutralSemanticExtractor(
         model, provider_id="e2e-offline", model_id="e2e-model",
         request_guard=lambda request: ProviderRequestAuthorization.approve(
-            request, guard_id="e2e-guard/v1", reservation_id=f"e2e-{len(model.requests) + 1}",
-            estimated_cost_upper_bound_usd=0.0),
+            request, guard_id="e2e-guard/v1", reservation_id=f"e2e-{len(model.requests) + 1}"),
         request_guard_id="e2e-guard/v1", max_attempts=1)
     app = ProductApplication(database_path=tmp_path / "product.sqlite", extractor=extractor,
                              relation_resolver=FrozenRelationResolver(("uses supplier",),
@@ -179,11 +178,11 @@ def test_three_meetings_import_review_evolution_ask_and_source(tmp_path):
         assert current["receipts"][0]["authorization_type"] == "HUMAN_APPROVAL"
         status, earlier = ask("2026-10-05 银杏项目用哪个支付网关？", as_of="2026-10-05")
         assert status == 200 and earlier["conclusions"][0]["value"] == "Halden"
-        # Causal question: needs a bounded investigation; without a configured agent it is
-        # refused honestly instead of answered from the lookup.
+        # A causal question is not routed by wording: without a selector model the deterministic reviewed
+        # lookup answers it and no Agent or provider is started.
         status, causal = ask("联调报告延期是不是因为银杏项目换了支付网关供应商？为什么？")
-        assert causal["path"] == "AGENT" and status == 503
-        assert causal["error"]["code"] == "AGENT_NOT_CONFIGURED" and causal["conclusions"] == []
+        assert status == 200 and causal["path"] == "DETERMINISTIC" and causal["status"] == "COMPLETED"
+        assert causal["conclusions"][0]["value"] == "Wrenwell"
         assert len(model.requests) == calls_after_import
 
         # 6. Click source: the cited quote is an exact range of meeting B's immutable version.

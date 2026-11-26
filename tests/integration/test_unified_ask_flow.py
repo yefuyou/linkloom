@@ -137,13 +137,7 @@ def test_current_answer_keeps_unreviewed_cedar_proposal_out_of_effective_conclus
     assert "Cedar" not in {item["value"] for item in result["conclusions"]}
 
 
-def test_unknown_task_and_date_mismatch_request_scope_without_starting_agent(ask_fixture):
-    status, payload = _ask(ask_fixture, "Summarize this workspace", as_of=CURRENT_AS_OF)
-    result = _result(payload)
-    assert status == 200
-    assert result["status"] == "NEEDS_SCOPE"
-    assert result["error"]["code"] == "TASK_UNCLASSIFIED"
-
+def test_date_mismatch_requests_scope_without_starting_agent(ask_fixture):
     status, payload = _ask(
         ask_fixture,
         f"What supplier was Launch using on {HISTORICAL_AS_OF}?",

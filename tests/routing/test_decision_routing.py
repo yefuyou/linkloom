@@ -197,11 +197,11 @@ def test_a_rule_bound_question_makes_no_selector_call_and_a_broken_selector_cann
     # The rules already bind the single slot, so no semantic disambiguation is needed: no model call,
     # and an invalid or failing selector can never turn the answerable question into CLARIFY.
     question = "Which platform is Juniper using now, not the one that changed?"
-    assert classify_task(question)["intent"] == "INVESTIGATION"
+    assert classify_task(question)["intent"] == "CURRENT"
     for provider in (Selector(RuntimeError("down")), Selector("not json")):
         result = route_question(question, [slot()], RESOLVER, workspace_id="one", provider_factory=lambda: provider)
         assert provider.requests == [] and result["llm_attempted"] is False and result["llm_error"] is None
-        assert result["route"] == "INVESTIGATION" and result["scope"]["subject"] == "Juniper"
+        assert result["route"] == "CURRENT" and result["scope"]["subject"] == "Juniper"
 
 
 def test_llm_cannot_invent_a_date():
@@ -216,11 +216,11 @@ def test_llm_cannot_invent_a_date():
         assert result["route"] == "CLARIFY" and result["decided_by"] == "fallback"
 
 
-def test_model_current_intent_is_honored_when_investigation_words_misfire():
+def test_model_current_intent_is_honored_for_change_wording():
     inputs = ambiguous_slots()
     identifier = inputs[0]["slot_id"]
     question = "Which platform are we using now since it changed?"
-    assert classify_task(question)["intent"] == "INVESTIGATION"
+    assert classify_task(question)["intent"] == "CURRENT"
     provider = Selector(json.dumps(dict(intent="CURRENT", slot_id=identifier, as_of=None, entity_mentions=[])))
     result = route_question(question, inputs, RESOLVER,
                             workspace_id="one", provider_factory=lambda: provider)
@@ -251,7 +251,7 @@ def test_multiple_explicit_topics_and_unresolved_dates_remain_clarifications():
 def test_numeric_changes_are_not_date_ranges():
     question = "为什么 Juniper 从 60000 调到 70000？"
     assert resolve_query_date(question, None) == (None, None)
-    assert classify_task(question)["intent"] == "INVESTIGATION"
+    assert classify_task(question)["intent"] == "CURRENT"
 
 
 GUARDS = [json.loads(line) for line in Path(__file__).with_name("relation_guard.jsonl").read_text(
@@ -259,9 +259,9 @@ GUARDS = [json.loads(line) for line in Path(__file__).with_name("relation_guard.
 
 
 @pytest.mark.parametrize("case", GUARDS, ids=lambda item: item["id"])
-def test_original_relation_and_task_dispatch_never_enter_slot_router(case, monkeypatch):
+def test_explicit_task_domain_dispatch_never_enters_slot_router(case, monkeypatch):
     def forbidden(*args, **kwargs):
-        raise AssertionError("legacy relation/task dispatch entered the decision slot router")
+        raise AssertionError("explicit task domain dispatch entered the decision slot router")
     app = SimpleNamespace(repository=SimpleNamespace(database_path=":memory:"),
                           _store_lock=RLock(), _workspace_id=lambda: "one")
     service = unified_ask.UnifiedAskService(app, lambda: None)
@@ -306,7 +306,8 @@ def test_unrecorded_chinese_value_does_not_hide_the_recorded_value_anchor(questi
     item = slot()
     item["values"] = ["石英", "青玉", "Quartz"]
     result = route_question(question, [item], RESOLVER, workspace_id="one")
-    assert result["route"] == "INVESTIGATION" and result["scope"]["subject"] == "Juniper"
+    # Rules mode keeps the deterministic lookup; only a selector model can choose INVESTIGATION.
+    assert result["route"] == "CURRENT" and result["scope"]["subject"] == "Juniper"
     other = dict(slot("Willow", value="Jasper"), values=["花岗岩"])
     result = route_question(question, [item, other], RESOLVER, workspace_id="one")
     assert result["scope"] is None and result["route"] == "CLARIFY"

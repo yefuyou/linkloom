@@ -35,7 +35,7 @@ from tests.integration.test_m3q_provider_host import ScriptedGeminiTransport, lo
 from tests.m3p_support import product_http
 from tests.integration.test_product_application_flow import _client
 from tests.integration.test_inspect_ledger_cold_process import _fresh_cold_read
-from tests.unit.test_m3q_provider_budget import limits
+from tests.unit.test_task_provider_session import limits
 from tests.unit.test_task_observation_discovery import claim
 
 
@@ -258,8 +258,7 @@ def _prepare_joint_product(root):
     # starts; it is the same immutable v2 ref F will build from the source.
     transport = JointTransport(stages, observations[0].observation_id)
     # Exact existing P2-A HTTP fixture budget; no integration budget increase.
-    budget = replace(limits(), max_requests=10, max_input_tokens=500000,
-                     max_output_tokens=65536, max_cost_usd=3, max_seconds=90,
+    budget = replace(limits(), max_seconds=90,
                      request_timeout_seconds=10)
     service = compose_task_provider(app, GeminiProviderAdapter(transport), budget)
     service.task_relation_paths = {workspace: sidecar}

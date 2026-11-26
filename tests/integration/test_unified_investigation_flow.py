@@ -46,13 +46,15 @@ def test_product_ask_executes_real_source_runtime(demo, query, outcome, answer):
     assert result["metrics"]["read_count"] >= 2
 
 
-def test_source_permission_uncertain_budget_and_unsupported(demo):
-    for query in ("谁负责琥珀线路？其直属领导是谁？",
+def test_source_permission_uncertain_budget_and_new_phrasings(demo):
+    for index, query in enumerate(("谁负责琥珀线路？其直属领导是谁？",
                   "哪个项目对应 Copper Meadow 这个别名、谁负责该项目，以及负责人的直属领导是谁？",
-                  "Who is the direct leader of the owner of " + "A" * 550 + "?"):
+                  "Who is the direct leader of the owner of " + "A" * 550 + "?")):
+        # No wording template refuses a phrasing: each question starts a source investigation.
         status, body = ask(demo, query)
-        assert status == 200 and body["result"]["error"]["code"] == "UNSUPPORTED_QUERY"
-        assert demo.relation_models == []
+        assert status == 202 and body["result"]["path"] == "SOURCE_RELATION_INVESTIGATION", body
+        poll_product_ask(demo, body["result"]["agent_run_id"], demo.app._workspace_id())
+        assert len(demo.relation_models) == index + 1
     demo.configure_agent(external_provider=True)
     assert ask(demo, THREE)[0] == 403
     assert demo.relation_models == []
@@ -103,23 +105,21 @@ def test_exposed_hold_g_conflict_regression(tmp_path, monkeypatch, source_order)
 
 
 def test_actual_three_hop_ledger_binds_only_previous_verified_reads(demo):
-    from linkloom.runtime.task_plan import assess_task_plan, verified_dependency_entities
-
     _, body = ask(demo, THREE)
     run_id = body["result"]["agent_run_id"]
     _, body = poll_product_ask(demo, run_id, demo.app._workspace_id())
     assert body["result"]["status"] == "COMPLETED"
     job = demo.service._jobs[run_id]
     state = job.backend.engine.checkpointer.get_latest(body["result"]["source_investigation"]["thread_id"])
-    plan = job.task_plan
-    assert len(plan.subgoals) == 3
-    for record in state.tool_ledger:
-        if record.tool_id == "search_notes":
-            context = record.arguments["source_context"]
-            prior = [r for r in state.tool_ledger if r.sequence < record.sequence]
-            assessment = assess_task_plan(plan, prior, run_id=record.run_id, task_id=record.task_id,
-                agent_id=record.agent_id, expected_workspace_id=demo.app._workspace_id())
-            verified_dependency_entities(plan, assessment, context["subgoal_id"], context["dependency_entities"])
+    assert body["result"]["source_investigation"]["plan"] is None  # no Host template plan
+    assert len(body["result"]["source_investigation"]["facts"]) == 3
+    searches = [record for record in state.tool_ledger if record.tool_id == "search_notes"]
+    assert len(searches) >= 3
+    for record in searches[1:]:
+        # Every follow-up search uses an entity copied from an earlier verified read.
+        quotes = [r.result["value"]["quote"] for r in state.tool_ledger
+                  if r.sequence < record.sequence and r.tool_id == "read_verified_note" and r.status == "completed"]
+        assert any(record.arguments["query"] in quote for quote in quotes)
     demo.select_workspace("Other")
     status, body = request_json(demo.base_url, f"/api/product/ask/runs/{run_id}?workspace_id={demo.app._workspace_id()}")
     assert status == 409
@@ -193,8 +193,9 @@ def test_repeated_two_and_three_hop_completion_timings(demo, monkeypatch, record
 
 
 def test_relation_date_scope_and_explicit_decision_do_not_silently_change_path(demo):
+    # An explicit decision scope keeps the decision path; it never turns into a source run.
     _, body = ask(demo, TWO, subject="Launch", relation="uses supplier")
-    assert body["result"]["error"]["code"] == "TASK_SCOPE_CONFLICT"
+    assert body["result"]["error"]["code"] == "DECISION_SCOPE_NO_MATCH"
     _, body = ask(demo, TWO, as_of="2026-10-06T12:00:00Z")
     assert body["result"]["error"]["code"] == "DATE_SCOPE_REQUIRED"
     assert demo.relation_models == []
@@ -213,7 +214,10 @@ def test_three_hop_conflict_preserves_alias_and_owner_and_source_change_invalida
     result = body["result"]
     assert result["status"] == "INSUFFICIENT"
     assert result["uncertainty"]["status"] == "conflicting_evidence"
-    assert {f["predicate"] for f in result["source_investigation"]["facts"]} == {"alias_of_project", "owner_of_project"}
+    # Both sides of the reporting conflict stay visible, each with its own citation.
+    assert {f["predicate"] for f in result["source_investigation"]["facts"]} == {
+        "alias_of_project", "owner_of_project", "reports_to"}
+    assert [len(refs) for refs in result["source_investigation"]["conflicts"].values()] == [2]
     assert result["source_investigation"]["answer"] is None
     assert len(result["evidence"]) >= 4
     evidence = result["evidence"][0]

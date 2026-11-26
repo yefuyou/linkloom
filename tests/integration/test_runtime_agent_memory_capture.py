@@ -63,7 +63,7 @@ def _decision_json(evidence_ref: str) -> str:
 
 
 def _team_decision_model(
-    *, fabricated_ref: bool = False, ungrounded_value: bool = False
+    *, fabricated_ref: bool = False
 ) -> FakeModelAdapter:
     step_errors: list[str] = []
 
@@ -96,8 +96,6 @@ def _team_decision_model(
         if fabricated_ref:
             ref = "ev_v2_fabricated"
         result = json.loads(_decision_json(ref))
-        if ungrounded_value:
-            result["decision"]["value"] = "Contoso"
         return ModelAction.final(json.dumps(result))
 
     def capture_step_error(step):
@@ -146,7 +144,6 @@ def _runtime_fixture(
         workflow="team_decision",
         query="Which supplier was selected for the Atlas project?",
         max_steps=3,
-        max_provider_requests=3,
         dry_run=True,
     )
     return vault, store, engine, request
@@ -257,7 +254,6 @@ def test_runtime_capture_failure_does_not_fail_successful_team_decision(tmp_path
         workflow="team_decision",
         query="Which supplier was selected for the Atlas project?",
         max_steps=3,
-        max_provider_requests=3,
         dry_run=True,
     )
 
@@ -282,7 +278,8 @@ def test_runtime_capture_failure_does_not_fail_successful_team_decision(tmp_path
 def test_runtime_does_not_capture_when_grounding_or_reviewer_fails(
     tmp_path, monkeypatch, failure: str
 ):
-    model = _team_decision_model(ungrounded_value=failure == "grounding")
+    # Grounding failure: the Final cites an evidence ID no verified read returned.
+    model = _team_decision_model(fabricated_ref=failure == "grounding")
     vault, store, engine, request = _runtime_fixture(tmp_path, model)
     if failure == "reviewer":
         monkeypatch.setattr(

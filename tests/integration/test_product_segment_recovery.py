@@ -70,7 +70,6 @@ def app_for(tmp_path, provider):
         provider, provider_id="offline-test", model_id="offline-test-model",
         request_guard=lambda request: ProviderRequestAuthorization.approve(
             request, guard_id="offline-guard", reservation_id="offline-reservation",
-            estimated_cost_upper_bound_usd=0.0,
         ),
         request_guard_id="offline-guard", max_attempts=1,
     )
@@ -122,7 +121,6 @@ def test_targeted_recovery_receipts_and_complete_flow(tmp_path):
             ReplayProvider(), provider_id="offline-replay", model_id="offline-replay-model",
             request_guard=lambda request: ProviderRequestAuthorization.approve(
                 request, guard_id="replay-guard", reservation_id="replay-reservation",
-                estimated_cost_upper_bound_usd=0.0,
             ), request_guard_id="replay-guard", max_attempts=1,
         )
         artifact = app._source_artifact(source)

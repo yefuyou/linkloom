@@ -183,7 +183,6 @@ def _start(engine: RuntimeEngine, environment: dict[str, object], thread_id: str
         workflow="team_decision",
         query=environment["case"]["question"],
         max_steps=3,
-        max_provider_requests=3,
         dry_run=True,
     ))
 

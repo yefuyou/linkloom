@@ -306,7 +306,6 @@ def test_memory_live_001_runtime_uses_memory_then_reads_source_before_grounded_f
             workflow="team_decision",
             query=QUERY,
             max_steps=8,
-            max_provider_requests=8,
             dry_run=True,
         ))
         state = engine.checkpointer.get_latest(status.thread_id)

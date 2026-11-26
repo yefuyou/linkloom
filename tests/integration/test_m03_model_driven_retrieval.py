@@ -71,7 +71,6 @@ def _run_engine(
     request_id: str,
     query: str = "model-driven",
     max_steps: int = 12,
-    max_provider_requests: int = 8,
 ):
     vault_root, index_path = _synthetic_fixture(test_root)
     checkpoint_root = test_root / "checkpoints"
@@ -90,7 +89,6 @@ def _run_engine(
             workflow="ask",
             query=query,
             max_steps=max_steps,
-            max_provider_requests=max_provider_requests,
             dry_run=True,
         )
     )
@@ -387,7 +385,7 @@ def test_prior_read_failure_remains_authoritative_after_later_empty_search(
             index_sha256="0" * 64,
             vault_root_fingerprint="fixture-root",
         ),
-        policy=PolicySnapshot(max_steps=8, max_provider_requests=8),
+        policy=PolicySnapshot(max_steps=8),
         termination=TerminationState(status="running", sequence=1),
         created_at="2026-08-31T00:00:00Z",
         updated_at="2026-08-31T00:00:00Z",
@@ -497,7 +495,6 @@ def test_missing_model_fails_closed_without_hidden_deterministic_fallback(m03_ro
             request_id="m03-no-model",
             workflow="ask",
             query="model-driven",
-            max_provider_requests=8,
             dry_run=True,
         )
     )
@@ -539,39 +536,23 @@ def test_runtime_unknown_tool_terminates_without_fabricating_ledger(m03_root: Pa
     assert result["agent_tasks"][0]["status"] == "failed"
 
 
-def test_model_request_budget_stops_without_an_extra_model_or_tool_call(m03_root: Path):
+def test_model_loop_runs_until_max_steps_with_no_request_count_quota(m03_root: Path):
     def always_search(request: ModelTurnRequest) -> ModelAction:
         return _search_action(request, {**SEARCH_ARGS, "query": f"model-driven turn {request.sequence}"})
 
-    model = FakeModelAdapter([always_search, always_search, always_search])
+    model = FakeModelAdapter([always_search] * 8)
     status, state, result, _, _ = _run_engine(
         m03_root,
         model,
-        request_id="m03-model-budget",
-        max_steps=4,
-        max_provider_requests=2,
-    )
+        request_id="m03-model-steps",
+        max_steps=6,
+        )
 
     assert status.status == "completed"
     assert state is not None and result is not None
-    assert model.call_count == 2
-    assert len(state.tool_ledger) == 2
+    # The task step guard (max_steps=3) is the only bound; the old request quota of 2 is gone.
+    assert result["agent_tasks"][0]["max_steps"] == 3
+    assert model.call_count == 3
+    assert len(state.tool_ledger) == 3
     assert result["fallback_used"] is True
     assert result["agent_tasks"][0]["status"] == "failed"
-
-
-def test_zero_provider_budget_fails_before_model_invocation(m03_root: Path):
-    model = _policy_a()
-    status, state, result, _, _ = _run_engine(
-        m03_root,
-        model,
-        request_id="m03-zero-budget",
-        max_provider_requests=0,
-    )
-
-    assert status.status == "failed"
-    assert status.error is not None
-    assert status.error["code"] == "MODEL_PROVIDER_BUDGET_EXHAUSTED"
-    assert model.call_count == 0
-    assert state is None
-    assert result is None

@@ -34,8 +34,10 @@ from linkloom.semantic_ingestion.candidate_models import (
     TemporalResolution,
 )
 from linkloom.semantic_ingestion.candidate_persistence import (
-    SOURCE_CANDIDATE_PAYLOAD_VERSIONS,
-    deserialize_candidate as deserialize_source_candidate,
+    SourceCandidateIdentityError,
+    SourceCandidateIntegrityError,
+    SourceCandidateVersionError,
+    load_source_candidate,
     serialize_candidate as serialize_source_candidate,
 )
 from linkloom.semantic_ingestion.materializable import (
@@ -249,6 +251,40 @@ class MaterializationBlockedError(RuntimeError):
         super().__init__(message)
         self.reason_code = reason_code
         self.reason_codes = tuple(reason_codes) or (reason_code,)
+
+
+class CandidateRecordError(MaterializationBlockedError):
+    """A single persisted candidate failed an integrity or compatibility check.
+
+    Only subclasses of this error may be isolated to one record. Database and
+    programming errors are never CandidateRecordError.
+    """
+
+    def __init__(self, message: str) -> None:
+        super().__init__("CANDIDATE_INVALID", message)
+
+
+class CandidateIntegrityError(CandidateRecordError):
+    """Payload, fingerprint or validation state does not match the stored row."""
+
+
+class CandidateVersionUnsupportedError(CandidateRecordError):
+    """The stored candidate uses a version or source kind this build cannot read."""
+
+
+class CandidateIdentityMismatchError(CandidateRecordError):
+    """The stored candidate's identity (id or workspace) differs from its row."""
+
+
+ISOLATABLE_CANDIDATE_ERRORS: tuple[type[BaseException], ...] = (CandidateRecordError,)
+
+
+def _source_integrity_error(error: SourceCandidateIntegrityError) -> CandidateRecordError:
+    if isinstance(error, SourceCandidateVersionError):
+        return CandidateVersionUnsupportedError(str(error))
+    if isinstance(error, SourceCandidateIdentityError):
+        return CandidateIdentityMismatchError(str(error))
+    return CandidateIntegrityError(str(error))
 
 
 class MaterializationPolicy:
@@ -1258,7 +1294,7 @@ class SemanticDecisionMaterializer:
             actual_fingerprint != str(row["candidate_fingerprint"])
             or encoded != str(row["payload_json"])
         ):
-            raise MaterializationBlockedError("CANDIDATE_INVALID", "persisted candidate integrity check failed")
+            raise CandidateIntegrityError("persisted candidate integrity check failed")
         return view, actual_fingerprint
 
     def _source_verified(self, candidate: MaterializableDecisionCandidate) -> bool:
@@ -1506,10 +1542,20 @@ def _candidate_from_row(
         or candidate.candidate_id != str(row["candidate_id"])
         or candidate.workspace_id != str(row["workspace_id"])
     ):
-        raise MaterializationBlockedError(
-            "CANDIDATE_INVALID", "persisted candidate integrity check failed"
+        raise CandidateIntegrityError(
+            "persisted candidate integrity check failed"
         )
     return candidate
+
+
+def _candidate_validation_reasons(row: dict[str, object]) -> list[str]:
+    try:
+        reasons = json.loads(str(row["validation_reasons_json"]))
+    except json.JSONDecodeError as error:
+        raise CandidateIntegrityError("candidate validation reasons are malformed") from error
+    if not isinstance(reasons, list) or any(not isinstance(item, str) for item in reasons):
+        raise CandidateIntegrityError("candidate validation reasons are malformed")
+    return reasons
 
 
 def _candidate_view_from_row(
@@ -1523,24 +1569,22 @@ def _candidate_view_from_row(
     try:
         source_kind = CandidateSourceKind(str(row["candidate_source_kind"]))
     except (KeyError, ValueError) as error:
-        raise MaterializationBlockedError(
-            "CANDIDATE_INVALID", "persisted candidate source kind is unsupported"
+        raise CandidateVersionUnsupportedError(
+            "persisted candidate source kind is unsupported"
         ) from error
     payload_json = str(row["payload_json"])
     if source_kind is CandidateSourceKind.SOURCE_INGESTION:
-        if str(row["payload_version"]) not in SOURCE_CANDIDATE_PAYLOAD_VERSIONS:
-            raise MaterializationBlockedError(
-                "CANDIDATE_INVALID", "source-ingestion candidate payload version is unsupported"
+        try:
+            candidate, encoded, fingerprint = load_source_candidate(
+                payload_json,
+                expected_fingerprint=str(row["candidate_fingerprint"]),
+                expected_candidate_id=str(row["candidate_id"]),
+                expected_workspace_id=str(row["workspace_id"]),
+                expected_payload_version=str(row["payload_version"]),
             )
-        candidate = deserialize_source_candidate(payload_json)
-        if str(row["payload_version"]) != json.loads(payload_json)["record_version"]:
-            raise MaterializationBlockedError(
-                "CANDIDATE_INVALID", "source candidate payload version does not match its row"
-            )
-        encoded, fingerprint = serialize_source_candidate(candidate)
-        raw_reasons = json.loads(str(row["validation_reasons_json"]))
-        if not isinstance(raw_reasons, list) or any(not isinstance(item, str) for item in raw_reasons):
-            raise MaterializationBlockedError("CANDIDATE_INVALID", "candidate validation reasons are malformed")
+        except SourceCandidateIntegrityError as error:
+            raise _source_integrity_error(error) from error
+        raw_reasons = _candidate_validation_reasons(row)
         try:
             result = CandidateValidationResult(
                 outcome=CandidateOutcome(str(row["validation_state"])),
@@ -1550,8 +1594,8 @@ def _candidate_view_from_row(
                 provenance_valid=True,
             )
         except (ValueError, KeyError) as error:
-            raise MaterializationBlockedError(
-                "CANDIDATE_INVALID", "persisted source candidate validation state is malformed"
+            raise CandidateIntegrityError(
+                "persisted source candidate validation state is malformed"
             ) from error
         view = MaterializableDecisionCandidate.from_source_validation(
             result, candidate_fingerprint=fingerprint
@@ -1561,8 +1605,8 @@ def _candidate_view_from_row(
             "agent-memory-candidate/v1",
             "agent-memory-candidate/v2",
         }:
-            raise MaterializationBlockedError(
-                "CANDIDATE_INVALID", "Agent candidate payload version is unsupported"
+            raise CandidateVersionUnsupportedError(
+                "Agent candidate payload version is unsupported"
             )
         from linkloom.agents.memory_candidate_persistence import (
             deserialize_candidate as deserialize_agent_candidate,
@@ -1572,8 +1616,8 @@ def _candidate_view_from_row(
         candidate = deserialize_agent_candidate(payload_json)
         payload_record_version = json.loads(payload_json).get("record_version")
         if str(row["payload_version"]) != payload_record_version:
-            raise MaterializationBlockedError(
-                "CANDIDATE_INVALID", "Agent candidate payload version does not match its row"
+            raise CandidateIntegrityError(
+                "Agent candidate payload version does not match its row"
             )
         if payload_record_version == "agent-memory-candidate/v1":
             # Keep historical row identity intact while the persistence reader
@@ -1588,25 +1632,23 @@ def _candidate_view_from_row(
                 allow_nan=False,
             )
             if encoded != payload_json:
-                raise MaterializationBlockedError(
-                    "CANDIDATE_INVALID", "persisted legacy candidate is not canonical JSON"
+                raise CandidateIntegrityError(
+                    "persisted legacy candidate is not canonical JSON"
                 )
             fingerprint = hashlib.sha256(encoded.encode("utf-8")).hexdigest()
         else:
             encoded, fingerprint = serialize_agent_candidate(candidate)
-        raw_reasons = json.loads(str(row["validation_reasons_json"]))
-        if not isinstance(raw_reasons, list) or any(not isinstance(item, str) for item in raw_reasons):
-            raise MaterializationBlockedError("CANDIDATE_INVALID", "candidate validation reasons are malformed")
+        raw_reasons = _candidate_validation_reasons(row)
         try:
             outcome = CandidateOutcome(str(row["validation_state"]))
         except ValueError as error:
-            raise MaterializationBlockedError(
-                "CANDIDATE_INVALID", "persisted Agent candidate validation state is malformed"
+            raise CandidateIntegrityError(
+                "persisted Agent candidate validation state is malformed"
             ) from error
         expected_state = CandidateOutcome.UNRESOLVED if raw_reasons else CandidateOutcome.ACCEPTED
         if outcome is not expected_state:
-            raise MaterializationBlockedError(
-                "CANDIDATE_INVALID", "Agent candidate validation state does not match its reasons"
+            raise CandidateIntegrityError(
+                "Agent candidate validation state does not match its reasons"
             )
         view = MaterializableDecisionCandidate.from_agent_candidate(
             candidate,

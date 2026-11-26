@@ -514,8 +514,7 @@ def scoped_extractor(budget, adapter, namespace, sample_for_segment, *, save_ext
         if budget.state["blocked"]:
             resource_unavailable(STAGE_AGENTS.get(request.agent_id, "stage1"), "Shared validation budget is stopped")
         return ProviderRequestAuthorization.approve(request, guard_id=guard_id,
-            reservation_id=f'shared-{budget.state["requests"] + 1}',
-            estimated_cost_upper_bound_usd=MAX_USD - budget.state["charged_upper_bound_usd"])
+            reservation_id=f'shared-{budget.state["requests"] + 1}')
     class ScopedExtractor(ProviderNeutralSemanticExtractor):
         def extract(self, segment, context):
             sample_id = sample_for_segment(segment)

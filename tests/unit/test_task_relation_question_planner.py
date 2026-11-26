@@ -1,5 +1,5 @@
 from copy import deepcopy
-from dataclasses import replace
+from dataclasses import asdict, replace
 
 import pytest
 
@@ -38,7 +38,7 @@ def arguments(*steps):
 def planner(fake, **kwargs):
     return InvestigationPlanner(fake, model_id='fake-planner', guard_id='contract',
         request_guard=lambda request: ProviderRequestAuthorization.approve(request,
-            guard_id='contract', reservation_id='offline-only', estimated_cost_upper_bound_usd=0),
+            guard_id='contract', reservation_id='offline-only'),
         **kwargs)
 
 
@@ -136,12 +136,12 @@ def test_relation_and_subgoal_and_fanout_budgets():
         assert planner(FakeModel(arguments(*revision_steps())), limits=limits).plan(snapshot()).status == 'OUTPUT_INVALID'
 
 
-def test_total_call_reservation_includes_invalid_outputs_without_retry():
+def test_invalid_output_does_not_cap_later_planning_calls():
     fake = FakeModel(dict(invalid=True))
-    session = planner(fake, limits=PlanningLimits(max_provider_calls=1))
+    session = planner(fake)
     assert session.plan(snapshot()).status == 'OUTPUT_INVALID'
-    assert session.plan(snapshot()).status == 'BLOCKED'
-    assert len(fake.requests) == 1
+    assert session.plan(snapshot()).status == 'OUTPUT_INVALID'
+    assert len(fake.requests) == 2
 
 
 def test_replan_preserves_goal_completed_step_and_exact_host_receipt():
@@ -253,7 +253,7 @@ def test_source_change_during_provider_call_does_not_publish_plan():
 def test_exact_request_guard_rejects_wrong_hash_and_wrong_guard():
     for guard in (lambda request: ProviderRequestAuthorization('contract', '0' * 64, 'fake', 0),
                   lambda request: ProviderRequestAuthorization.approve(request, guard_id='other',
-                      reservation_id='fake', estimated_cost_upper_bound_usd=0)):
+                      reservation_id='fake')):
         fake = FakeModel(arguments(step()))
         session = InvestigationPlanner(fake, model_id='fake-planner', request_guard=guard, guard_id='contract')
         assert session.plan(snapshot()).status == 'BLOCKED' and not fake.requests
@@ -269,12 +269,18 @@ def test_single_final_text_or_wrong_function_never_becomes_a_plan():
     assert result.untrusted_output['tool_calls'][0]['tool_id'] == 'write_database'
 
 
-@pytest.mark.parametrize('limits', [PlanningLimits(max_total_input_tokens=1),
-                                  PlanningLimits(max_total_output_tokens=1)])
-def test_total_token_reservation_blocks_before_call(limits):
-    fake = FakeModel(arguments(step()))
-    assert planner(fake, limits=limits).plan(snapshot()).status == 'BLOCKED'
-    assert not fake.requests
+def test_cumulative_calls_and_usage_never_block_a_request():
+    fake = FakeModel(dict(invalid=True))
+    session = planner(fake)
+    for _ in range(6):
+        assert session.plan(snapshot()).status == 'OUTPUT_INVALID'
+    assert len(fake.requests) == 6
+
+
+def test_legacy_planning_limits_with_removed_totals_still_load():
+    limits = PlanningLimits.from_dict(dict(asdict(PlanningLimits()), max_provider_calls=3,
+                                           max_total_input_tokens=73728, max_total_output_tokens=12288))
+    assert limits == PlanningLimits()
 
 
 def test_replan_rejects_duplicate_completed_work_and_rechecks_old_receipts():
@@ -354,19 +360,34 @@ def test_provider_exception_is_charged_and_not_retried():
     fake = BrokenFake({})
     result = planner(fake).plan(snapshot())
     assert result.status == 'PROVIDER_FAILED' and result.provider_calls == 1
-    assert result.budget['calls_reserved'] == len(fake.requests) == 1
+    assert result.session_usage['provider_calls'] == len(fake.requests) == 1
 
 
-def test_provider_output_over_reservation_stops_session():
-    class OverBudgetFake(FakeModel):
+def test_provider_exception_latches_session_and_never_resends():
+    class BrokenFake(FakeModel):
+        def complete(self, request):
+            self.requests.append(request)
+            raise RuntimeError('timeout after send')
+    fake = BrokenFake({})
+    session = planner(fake)
+    assert session.plan(snapshot()).errors == ('PROVIDER_EXCEPTION',)
+    assert session.plan(snapshot()).errors == ('PROVIDER_UNCERTAIN',)
+    assert len(fake.requests) == 1
+
+
+def test_large_reported_usage_is_observed_and_does_not_fail_the_response():
+    class HugeUsageFake(FakeModel):
         def complete(self, request):
             response = super().complete(request)
-            return replace(response, usage=ModelUsage(output_tokens=5000))
-    fake = OverBudgetFake(arguments(step()))
+            return replace(response, usage=ModelUsage(input_tokens=10**9, output_tokens=10**9, total_tokens=2 * 10**9))
+    fake = HugeUsageFake(arguments(step()))
     session = planner(fake)
-    assert session.plan(snapshot()).errors == ('PROVIDER_USAGE_EXCEEDED_RESERVATION',)
-    assert session.plan(snapshot()).errors == ('SESSION_BUDGET_EXHAUSTED',)
-    assert len(fake.requests) == 1
+    first = session.plan(snapshot())
+    assert first.status == 'PLANNED' and first.usage.total_tokens == 2 * 10**9
+    fake.arguments = arguments(relation('identity', 'SAME_TASK'))
+    second = session.plan(snapshot(), previous=first.plan, gaps=('check identity',))
+    assert second.status == 'PLANNED' and second.usage.total_tokens == 2 * 10**9
+    assert len(fake.requests) == 2
 
 
 def test_plan_carries_limits_and_rejected_output_for_diagnostics():
@@ -376,13 +397,12 @@ def test_plan_carries_limits_and_rejected_output_for_diagnostics():
     assert invalid.untrusted_output['tool_calls'][0]['arguments'] == {'approved': True}
 
 
-def test_snapshot_output_token_budget_also_limits_request_and_reservation():
+def test_snapshot_output_token_limit_also_limits_the_request():
     context = snapshot()
     context = replace(context, limits=replace(context.limits, max_output_tokens=128))
     fake = FakeModel(arguments(step()))
     result = planner(fake).plan(context)
     assert fake.requests[0].generation_options.max_output_tokens == 128
-    assert result.budget['output_tokens_reserved'] == 128
     assert result.plan.limits.max_output_tokens == 128
 
 
@@ -390,7 +410,7 @@ def test_guard_cannot_mutate_schema_after_authorizing_request():
     fake = FakeModel(arguments(step()))
     def mutating_guard(request):
         permit = ProviderRequestAuthorization.approve(request, guard_id='contract',
-                    reservation_id='before-mutation', estimated_cost_upper_bound_usd=0)
+                    reservation_id='before-mutation')
         request.available_tools[0].input_schema['description'] = 'unauthorized mutation'
         return permit
     session = InvestigationPlanner(fake, model_id='fake-planner', guard_id='contract', request_guard=mutating_guard)
@@ -412,16 +432,3 @@ def test_run_identity_distinguishes_sessions_and_survives_replan():
     assert first_fake.requests[1].turn_id != first_fake.requests[0].turn_id
 
 
-def test_provider_error_with_over_budget_usage_exhausts_session():
-    from linkloom.agents.model_adapter import ModelProviderError
-    class OverBudgetError(FakeModel):
-        def complete(self, request):
-            self.requests.append(request)
-            return ModelResponse(error=ModelProviderError('MODEL_TIMEOUT', 'timeout', 'Timed out.'),
-                                 usage=ModelUsage(output_tokens=5000))
-    fake = OverBudgetError({})
-    session = planner(fake)
-    result = session.plan(snapshot())
-    assert result.errors == ('PROVIDER_USAGE_EXCEEDED_RESERVATION',)
-    assert session.plan(snapshot()).errors == ('SESSION_BUDGET_EXHAUSTED',)
-    assert len(fake.requests) == 1

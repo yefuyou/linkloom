@@ -124,7 +124,6 @@ def _start_product_server(tmp_path, claims, *, provider_enabled=True):
                 request,
                 guard_id="product-test-guard/v1",
                 reservation_id=f"product-test-reservation-{provider.requests + 1}",
-                estimated_cost_upper_bound_usd=0.001,
             ),
             request_guard_id="product-test-guard/v1",
             max_attempts=1,

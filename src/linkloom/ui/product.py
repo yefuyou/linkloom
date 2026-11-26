@@ -5,6 +5,8 @@ from __future__ import annotations
 from datetime import UTC, date, datetime
 import hashlib
 import json
+import logging
+from collections import deque
 from pathlib import Path, PurePosixPath, PureWindowsPath
 import re
 import sqlite3
@@ -44,6 +46,7 @@ from linkloom.semantic_ingestion.extraction import (
 from linkloom.semantic_ingestion.materialization import (
     CandidateReviewResolution,
     CandidateWorkflowState,
+    ISOLATABLE_CANDIDATE_ERRORS,
     MaterializationBlockedError,
     SemanticDecisionMaterializer,
 )
@@ -53,6 +56,9 @@ from linkloom.semantic_ingestion.document_text import parse_source_text
 from linkloom.semantic_ingestion.validation import CandidateValidator
 from linkloom.ui.configuration import GEMINI_CONFIGURATION_HELP, OFFLINE_HELP
 
+
+_LOGGER = logging.getLogger(__name__)
+_ISOLATED = object()
 
 MAX_SOURCE_BYTES = 256 * 1024
 DEFAULT_PRODUCT_RELATION_RESOLVER = FrozenRelationResolver(
@@ -976,6 +982,8 @@ class ProductApplication:
             check_same_thread=False,
         )
         self.materializer = SemanticDecisionMaterializer(self.store)
+        # Recent candidates isolated by recover_decision (most recent last).
+        self.candidate_isolation_diagnostics: deque[dict[str, str]] = deque(maxlen=200)
         from linkloom.ui.revalidation import DecisionRevalidation
         self.revalidation = DecisionRevalidation(self)
         if not read_only:
@@ -1357,6 +1365,27 @@ class ProductApplication:
             "results": [self._decision_payload(record) for record, _ in ranked],
         }
 
+    def _get_candidate_isolated(
+        self, workspace_id: str, candidate_id: str, role: str, isolated: list[dict[str, str]],
+    ) -> Any:
+        """Read one candidate; an integrity/compatibility failure isolates only that record.
+
+        Returns the module sentinel _ISOLATED after recording a diagnostic. Database
+        and other errors are not CandidateRecordError and propagate unchanged.
+        """
+        try:
+            return self.materializer.get_candidate(workspace_id, candidate_id)
+        except ISOLATABLE_CANDIDATE_ERRORS as error:
+            entry = {"candidate_id": candidate_id, "workspace_id": workspace_id, "role": role,
+                     "reason_code": error.reason_code, "error_type": type(error).__name__}
+            if entry not in isolated:
+                isolated.append(entry)
+                self.candidate_isolation_diagnostics.append(dict(entry, message=str(error)))
+                _LOGGER.warning(
+                    "candidate isolated candidate_id=%s workspace_id=%s role=%s reason_code=%s error_type=%s",
+                    candidate_id, workspace_id, role, error.reason_code, type(error).__name__)
+            return _ISOLATED
+
     def recover_decision(
         self, subject: str, relation: str, as_of: object = None,
         *, _workspace_id: str | None = None,
@@ -1376,6 +1405,9 @@ class ProductApplication:
             and record.memory_state in {DecisionMemoryState.ACTIVE, DecisionMemoryState.SUPERSEDED}
         )
 
+        isolated: list[dict[str, str]] = []
+        unverifiable_decisions: set[str] = set()
+
         def promoted(record: DecisionRecord) -> dict[str, Any] | None:
             # A decision confirmed first with unknown time and later given a reviewed
             # date: content and date authority come from its undated receipts.
@@ -1391,7 +1423,11 @@ class ProductApplication:
             payload = self._decision_payload(record)
             if not payload["evidence"] or not all(item["verified"] for item in payload["evidence"]):
                 return None
-            candidate = self.materializer.get_candidate(workspace_id, str(confirmation.candidate_id))
+            candidate = self._get_candidate_isolated(
+                workspace_id, str(confirmation.candidate_id), "DECISION", isolated)
+            if candidate is _ISOLATED:
+                unverifiable_decisions.add(record.decision_id)
+                return None
             if (not isinstance(candidate, CandidateDecisionFact) or candidate.workspace_id != workspace_id
                     or candidate.value != record.value or candidate.source_episode_id != record.source_episode_id
                     or candidate.evidence_ref not in {item["evidence_ref"] for item in payload["evidence"]}):
@@ -1415,7 +1451,11 @@ class ProductApplication:
             if not payload["evidence"] or not all(item["verified"] for item in payload["evidence"]):
                 return None
             receipt = receipts[0]
-            candidate = self.materializer.get_candidate(workspace_id, str(receipt["candidate_id"]))
+            candidate = self._get_candidate_isolated(
+                workspace_id, str(receipt["candidate_id"]), "DECISION", isolated)
+            if candidate is _ISOLATED:
+                unverifiable_decisions.add(record.decision_id)
+                return None
             if (not isinstance(candidate, CandidateDecisionFact)
                     or str(receipt["workspace_id"]) != workspace_id
                     or str(receipt["decision_id"]) != record.decision_id
@@ -1445,7 +1485,8 @@ class ProductApplication:
             workspace_id, workflow_state=CandidateWorkflowState.SUPPORTING_ONLY.value,
             candidate_source_kind="SOURCE_INGESTION",
         ):
-            candidate = self.materializer.get_candidate(workspace_id, str(row["candidate_id"]))
+            candidate = self._get_candidate_isolated(
+                workspace_id, str(row["candidate_id"]), "SUPPORTING_ONLY", isolated)
             if not isinstance(candidate, CandidateDecisionFact) or candidate.claim_type.value != "PROPOSAL":
                 continue
             if (candidate.subject is None or candidate.relation is None
@@ -1474,7 +1515,8 @@ class ProductApplication:
                 CandidateWorkflowState.CONFLICT.value,
             }:
                 continue
-            candidate = self.materializer.get_candidate(workspace_id, str(row["candidate_id"]))
+            candidate = self._get_candidate_isolated(
+                workspace_id, str(row["candidate_id"]), "SOURCE_CLAIM", isolated)
             if (not isinstance(candidate, CandidateDecisionFact)
                 or candidate.claim_type.value != "DECISION"
                 or candidate.subject is None or candidate.relation is None
@@ -1527,8 +1569,15 @@ class ProductApplication:
                 "evidence": item["evidence"],
                 "reason_status": "NOT_SOURCE_VERIFIED",
             })
+        # A reviewed decision whose candidate cannot be verified makes the whole
+        # slot unverifiable: no current or earlier value may stand in for it.
+        unverifiable = bool(unverifiable_decisions)
+        if unverifiable:
+            effective, reviewed_history, transitions = [], [], []
         distinct_values = {item["value"] for item in effective}
-        if len(distinct_values) > 1:
+        if unverifiable:
+            status = "AUTHORIZATION_OR_SOURCE_UNVERIFIED"
+        elif len(distinct_values) > 1:
             status = "CONFLICT"
         elif lookup.records and not effective:
             status = "AUTHORIZATION_OR_SOURCE_UNVERIFIED"
@@ -1567,6 +1616,8 @@ class ProductApplication:
             "proposals": proposals,
             "source_conflicts": source_conflicts,
             "pending_conflicts": pending_conflicts,
+            "unverifiable": unverifiable,
+            "isolated_candidates": isolated,
         }
 
     def verify_temporal_claim(
@@ -1869,9 +1920,10 @@ class ProductApplication:
             candidate_source_kind="SOURCE_INGESTION",
         )
         result: list[dict[str, Any]] = []
+        isolated: list[dict[str, str]] = []
         for row in rows:
             candidate_id = str(row["candidate_id"])
-            candidate = self.materializer.get_candidate(workspace_id, candidate_id)
+            candidate = self._get_candidate_isolated(workspace_id, candidate_id, "SUPPORTING_ONLY", isolated)
             if (
                 not isinstance(candidate, CandidateDecisionFact)
                 or candidate.claim_type.value != "PROPOSAL"

@@ -208,8 +208,8 @@ def run(split):
     if split=='D3':require((ROOT/'D3/execution-freeze.json').exists(),'D3_EXECUTION_SEAL_REQUIRED')
     config=read(ROOT/'config.json');inputs={g:Inputs(split,g) for g in (('D','D2') if split=='DEV' else ('D3',))};first=next(iter(inputs.values()));first.verify(strong_assets=True)
     cases=list(first.public_cases());count=len(cases);previous=0 if split=='DEV' else read(ROOT/'budget-dev.json')['reserved_usd']
-    from linkloom.runtime.team_decision_planner import plan_relation_investigation,plan_team_decision_query
-    hits=sum(int(any(plan_relation_investigation(q) or plan_team_decision_query(q) for q in [p['question']]+(['As of '+p['as_of']+', '+p['question']] if p.get('as_of') else []))) for _,_,p in cases)
+    # No wording template gates the legacy route any more: every case may enter it.
+    hits=len(cases)
     limits=matrix_budget(count,hits,config,previous);remaining,allocation,max_calls,upper=(limits[k] for k in ('remaining','allocation','max_calls','upper'))
     require(split=='D3' or (count==40 and hits==0),'FULL_DEV_MATRIX_OR_LEGACY_PREFLIGHT_CHANGED')
     require(read(ROOT/('token-preflight-dev.json' if split=='DEV' else 'D3/token-preflight.json'))['max_tokens']<=6144,'INPUT_TOKEN_CAP')

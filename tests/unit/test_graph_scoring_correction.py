@@ -46,16 +46,14 @@ def test_d11_decision_identity_does_not_substitute_for_verified_content():
     assert not s('D11',wrong,dict(status='FOUND'),dict(fixture_id='graph-dev-meetings'),[])['correct']
 
 
-def test_legacy_replacement_effective_date_uses_grounded_claim_not_background():
+def test_legacy_replacement_effective_date_uses_cited_source_date_not_background():
     from graph_eval_date_score import DateParityScorer
-    from linkloom.agents.claim_grounding import _claim_facts
     s=scorer();s.__class__=DateParityScorer
     s.truth.add(('new plan','supersedes','old plan'))
     actual=dict(status='FOUND',values=['new plan'],relations=[dict(subject='New Plan',edge_type='supersedes',target='Old Plan')],
         evidence=['m1.md'],verified_by='legacy-runtime-reviewer',answer='On 2025-02-14 New Plan replaced Old Plan.')
     expected=dict(status='FOUND',values=dict(plan='new plan',effective_date='2025-02-14'))
     docs=[dict(path='m1.md',content='On 2025-02-14 New Plan replaced Old Plan.')]
-    assert _claim_facts(actual['answer'])
     assert s('B01',actual,expected,dict(fixture_id='meridian'),docs)['correct']
     wrong=deepcopy(actual);wrong['answer']='On 2025-02-15 New Plan replaced Old Plan.'
     assert not s('B01',wrong,expected,dict(fixture_id='meridian'),docs)['correct']

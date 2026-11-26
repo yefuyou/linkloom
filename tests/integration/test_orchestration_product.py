@@ -22,7 +22,7 @@ from tests.integration.test_product_application_flow import (
     _claim, _client, _start_product_server, _stop_product_server, _wait_source,
 )
 
-TOTAL = TaskProviderLimits(80, 20_000_000, 400_000, 30.0, 120, 20, .01)
+TOTAL = TaskProviderLimits(120, 20)
 SCOPE = dict(subject="Launch", relation="uses supplier", as_of="2025-02-20")
 SOURCE_REASON = ("Launch replaced Meridian A with Cobalt B because Meridian A could not meet "
                  "the agreed delivery schedule.")
@@ -78,14 +78,16 @@ class Env:
     def run_trace(self, run_id):
         return _client(self.base, f"/api/product/ask/runs/{run_id}/trace?workspace_id={self.workspace_id}")
 
-    def finish(self, run_id, timeout=40):
+    def finish(self, run_id, timeout=180):
+        # The run takes about 1s locally. Shared Windows runners stall for minutes at a time, so the wait is longer
+        # than the run's own max_seconds (120): a genuine hang ends as a failed run, not as a poll timeout.
         deadline = monotonic() + timeout
         while monotonic() < deadline:
             result = self.run(run_id)
             if result["status"] != "INVESTIGATING":
                 return result
             sleep(.05)
-        pytest.fail("orchestrated run did not finish")
+        pytest.fail(f"orchestrated run did not finish: {json.dumps(result.get('parallel_investigation', {}).get('trace', [])[-5:], default=str)}")
 
     def root(self, run_id):
         return self.tmp_path / "work" / "investigations" / run_id.removeprefix("ui-parallel-")
@@ -149,12 +151,12 @@ def assert_pinned(env, result):
         assert item["quote"] in source["source"]["content"]
 
 
-def assert_within_budget(env, run_id):
+def assert_usage_observed(env, run_id):
+    """The trace reports what the Providers did; nothing is compared against a limit."""
     _, traced = env.run_trace(run_id)
     totals = traced["result"]["totals"]
-    for key, limit in (("requests_reserved", TOTAL.max_requests), ("input_tokens_reserved", TOTAL.max_input_tokens),
-                       ("output_tokens_reserved", TOTAL.max_output_tokens), ("cost_reserved_usd", TOTAL.max_cost_usd)):
-        assert 0 < totals[key] <= limit, (key, totals)
+    assert set(totals) == {"requests", "input_tokens", "output_tokens"}, totals
+    assert totals["requests"] > 0 and all(isinstance(value, int) and value >= 0 for value in totals.values()), totals
 
 
 def test_single_question_needs_no_extra_worker(make_env):
@@ -187,7 +189,7 @@ def test_independent_tasks_run_in_parallel_and_share_verified_evidence(make_env)
     answer, evidence = assert_cited(result)
     assert len(answer["answers"]) == 2 and len(evidence) == 2
     assert_pinned(env, result)
-    assert_within_budget(env, result["agent_run_id"])
+    assert_usage_observed(env, result["agent_run_id"])
 
 
 def test_dependent_task_receives_only_the_verified_upstream_results(make_env):
@@ -266,8 +268,8 @@ def test_inspect_trace_and_cold_read_show_dag_evidence_and_answer(make_env):
     trace = traced["result"]
     assert status == 200 and trace["source"] == "LIVE" and trace["status"] == "COMPLETE"
     assert [task["id"] for task in trace["tasks"]] == ["succ", "owner", "leader"]
-    assert all(task["attempts"] and task["attempts"][0]["requests_reserved"] >= 3 for task in trace["tasks"])
-    assert [item["round"] for item in trace["supervisor"]] == ["round-0"] and trace["totals"]["requests_reserved"] > 9
+    assert all(task["attempts"] and task["attempts"][0]["requests"] >= 3 for task in trace["tasks"])
+    assert [item["round"] for item in trace["supervisor"]] == ["round-0"] and trace["totals"]["requests"] > 9
     assert {event["event"] for event in trace["events"]} >= {"supervisor_decision", "wave_dispatched",
                                                              "worker_finished", "synthesized"}
     assert trace["synthesizer"]["published"] is True and "blocked_entities" not in json.dumps(trace)
@@ -442,3 +444,98 @@ def test_a_result_the_reviewer_does_not_accept_is_a_gap_and_other_results_stay(m
     assert tasks["owner"]["status"] == "failed" and tasks["owner"]["failure"] == "WORKER_REVIEW_FAILED"
     assert tasks["succ"]["status"] == "accepted" and FACT["owner"] not in json.dumps(result["evidence"])
     assert_cited(result)
+
+
+def test_unmatched_question_is_observed_like_any_orchestrated_run(make_env):
+    """NO_MATCH falls through to a source investigation: same Provider limits, same observed totals."""
+    question = "Who attended the budget review?"
+    world = World([delegation("answer_single")], {question: (SOURCE_REASON, "Meridian A", "ok")})
+    env = make_env(world)
+    status, payload = _client(env.base, "/api/product/ask", method="POST",
+                              data=dict(query=question, workspace_id=env.workspace_id))
+    assert status == 202, payload
+    run_id = payload["result"]["agent_run_id"]
+    env.finish(run_id)
+    assert_usage_observed(env, run_id)
+
+
+def test_existing_supervisor_review_completes_item_coverage(make_env, monkeypatch):
+    from dataclasses import replace
+
+    from linkloom.agents.model_adapter import ModelAction
+    from linkloom.tools.contracts import ToolCall
+    from tests.integration.test_orchestration_langgraph import WorkerModel
+
+    plan = delegation("answer_single")
+    plan["required_items"] = [
+        {"id": "Q1", "question": Q_SUCC},
+        {"id": "Q2", "question": Q_OWNER},
+    ]
+    followup = delegation("delegate", [("succ", Q_SUCC, []), ("owner", Q_OWNER, ["succ"])])
+    for index, task in enumerate(followup["tasks"], 1):
+        task["item_ids"] = [f"Q{index}"]
+    world = World([plan, followup, delegation("stop")],
+                  {**TASKS, GOAL: (FACT["succ"], "Meridian A", "abstain")})
+    complete = WorkerModel.complete
+
+    def final_with_items(worker, request):
+        reply = complete(worker, request)
+        if reply.action and reply.action.kind == "final" and worker.description in (Q_SUCC, Q_OWNER):
+            query = json.loads(request.user_input.rsplit("team_decision_request=", 1)[1])["query"]
+            context = json.loads(query.split("investigation_context=", 1)[1])
+            [item_id] = context["required_items"]
+            final = json.loads(reply.action.final_answer)
+            final["rationale"] = [{"point": item_id + ": " + worker.fact,
+                                   "evidence_refs": final["evidence_refs"]}]
+            return replace(reply, action=ModelAction.final(json.dumps(final)))
+        return reply
+
+    monkeypatch.setattr(WorkerModel, "complete", final_with_items)
+    factory = world.factory
+
+    def with_coverage(text):
+        model = factory(text)
+        original = model.complete
+
+        def review(request):
+            reply = original(request)
+            if request.agent_id != "orchestration-supervisor":
+                return reply
+            context = json.loads(request.user_input.split("context=", 1)[1])
+            if context["round"] != 2:
+                return reply
+            claims = [claim for task in context["tasks"] for claim in task.get("review_claim_citations", [])]
+            assert {claim["item_id"] for claim in claims} == {"Q1", "Q2"}
+            assert all(claim["source_version"] and claim["quote_sha256"] for claim in claims)
+            judgments = [{**{key: claim[key] for key in ("item_id", "claim_id", "citation_id")},
+                          "supporting_quote": claim["quote"], "verdict": "SUPPORTS",
+                          "explanation": "The cited meeting states the answer."} for claim in claims]
+            call = reply.action.tool_call
+            return replace(reply, action=ModelAction.tool(ToolCall(
+                call.call_id, call.tool_id, {**call.arguments, "judgments": judgments})))
+
+        def capture_error(request):
+            try:
+                return review(request)
+            except Exception as error:
+                world.coverage_error = error
+                raise
+
+        model.complete = capture_error
+        return model
+
+    monkeypatch.setattr(world, "factory", with_coverage)
+    env = make_env(world)
+    decisions = env.app.store.list_decisions(env.workspace_id)
+    _, result = started(env)
+    assert env.app.store.list_decisions(env.workspace_id) == decisions
+    parallel = result["parallel_investigation"]
+    assert not hasattr(world, "coverage_error"), repr(getattr(world, "coverage_error", None))
+    assert parallel["status"] == "COMPLETE" and result["status"] == "COMPLETED"
+    assert parallel["tasks"][0]["failure"] == "NO_DECISION"
+    assert parallel["answer"]["unknowns"] == []
+    assert {item["item_id"]: item["value"] for item in result["conclusions"]} == {
+        "Q1": FACT["succ"], "Q2": FACT["owner"]}
+    assert {item["support"] for item in result["conclusions"]} == {"CITATION_VERIFIED"}
+    assert len(world.supervisor_requests) == 3 and not world.comparison_requests
+    assert len(world.workers) == 3 and all(worker.calls == 3 for worker in world.workers)

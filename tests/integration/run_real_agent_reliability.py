@@ -36,30 +36,18 @@ if str(REPO / "src") not in sys.path:
 if str(INTEGRATION) not in sys.path:
     sys.path.insert(0, str(INTEGRATION))
 from decision_discovery_fixture import DecisionDiscoveryFixture  # noqa: E402
-from run_bounded_multihop import SourceOnlyController  # noqa: E402
+from run_bounded_multihop import SourceOnlyController, conflict_free_values, read_facts  # noqa: E402
 from unified_ask_fixture import (  # noqa: E402
     ATLAS,
     OTHER,
     poll_product_ask,
     request_json,
 )
-from linkloom.agents.claim_grounding import (  # noqa: E402
-    ClaimSupportStatus,
-    assess_claim_text,
-)
 from linkloom.agents.model_adapter import FakeModelAdapter, ModelAction  # noqa: E402
 from linkloom.runtime.checkpoint import InMemoryCheckpointer  # noqa: E402
 from linkloom.runtime.errors import ValidationError  # noqa: E402
 from linkloom.runtime.graph import RuntimeEngine  # noqa: E402
 from linkloom.runtime.models import RunRequest  # noqa: E402
-from linkloom.runtime.task_plan import (  # noqa: E402
-    TaskPlan,
-    assess_task_plan,
-    verified_dependency_entities,
-    verified_plan_conflict_refs,
-    verified_plan_subgoal_values,
-)
-from linkloom.runtime.team_decision_planner import plan_relation_investigation  # noqa: E402
 from linkloom.scanner import scan_vault  # noqa: E402
 from linkloom.tools.contracts import ToolCall  # noqa: E402
 from linkloom.ui.scope_discovery import resolve_query_date  # noqa: E402
@@ -75,8 +63,6 @@ PUBLIC_FORBIDDEN_KEYS = {
     "exact_facts",
     "rubric",
 }
-_ENTITY = r"[A-Za-z0-9㐀-鿿][A-Za-z0-9㐀-鿿 ._'’&/-]*?"
-_DATE = r"[0-9]{4}-[0-9]{2}-[0-9]{2}"
 
 
 def _read_json(path: Path) -> dict[str, Any]:
@@ -165,96 +151,31 @@ def _case_documents(case: dict[str, Any]) -> list[dict[str, Any]]:
     return valid
 
 
-def _date_scope(query: str) -> str | None:
-    match = re.search(_DATE, query)
-    return match.group(0) if match else None
-
-
-def _clean_sentence(text: str) -> str:
-    return re.sub(r"^\[[^\]]+\]\s*[^:]+:\s*", "", text.strip()).strip()
-
-
-def _facts_from_documents(case: dict[str, Any]) -> list[dict[str, str]]:
-    facts: list[dict[str, str]] = []
-    date_scope = _date_scope(str(case.get("query", "")))
-    for document in _case_documents(case):
-        for raw_line in str(document["content"]).splitlines():
-            line = _clean_sentence(raw_line)
-            date_match = re.search(_DATE, line)
-            if date_scope and date_match and date_match.group(0) != date_scope:
-                continue
-            alias = re.search(rf"^(?P<alias>{_ENTITY})\s+is the team alias for\s+(?P<target>{_ENTITY})\.?$", line, re.I)
-            owner = re.search(rf"^(?P<owner>{_ENTITY})\s+is the accountable owner of\s+(?P<project>{_ENTITY})\.?$", line, re.I)
-            leader = re.search(rf"^(?P<owner>{_ENTITY})\s+reports directly to\s+(?P<leader>{_ENTITY})\.?$", line, re.I)
-            if alias:
-                facts.append({"relation": "alias", "subject": alias["alias"].strip(), "value": alias["target"].strip(), "source": document["path"]})
-            elif owner:
-                facts.append({"relation": "owner", "subject": owner["project"].strip(), "value": owner["owner"].strip(), "source": document["path"]})
-            elif leader:
-                facts.append({"relation": "leader", "subject": leader["owner"].strip(), "value": leader["leader"].strip(), "source": document["path"]})
-    return facts
-
-
 def _norm(value: str) -> str:
     return " ".join(value.casefold().split())
 
 
-def _root_entity(plan: TaskPlan) -> str | None:
-    first = plan.subgoals[0].question
-    for pattern in (
-        rf"^Which project does (?P<entity>{_ENTITY}) alias",
-        rf"^Who owns (?P<entity>{_ENTITY})\??$",
-        rf"^谁负责\s*(?P<entity>{_ENTITY})\s*[?？]",
-        rf"^(?P<entity>{_ENTITY})\s*项目负责人的直属领导是谁",
-        rf"^As of {_DATE}, who owns (?P<entity>{_ENTITY})",
-    ):
-        match = re.search(pattern, first, re.I)
-        if match:
-            return match.group("entity").strip()
-    return None
-
-
 def deterministic_relation(case: dict[str, Any]) -> dict[str, Any]:
+    """A: the same fake reader over every public document at once, without the Runtime."""
     started = time.perf_counter()
-    query = str(case["query"])
-    plan = plan_relation_investigation(query)
-    if plan is None:
+    reader = SourceOnlyController()
+    for document in _case_documents(case):
+        for fact in read_facts({"evidence_id": document["path"], "quote": document["content"]}):
+            if fact not in reader.facts:
+                reader.facts.append(fact)
+    final = reader.final(str(case["query"]))
+    claims, uncertainty = final["claims"], final.get("uncertainty") or {}
+    if not claims and uncertainty.get("unknown_fields") == ["answer"]:
         return _baseline_row("A", case, outcome="unsupported", reason="planning_failed", started=started)
-    facts = _facts_from_documents(case)
-    root = _root_entity(plan)
-    values: list[str] = []
-    sources: list[str] = []
-    conflict = False
-    if plan.subgoals[0].relation_path == ("alias_of_project",):
-        aliases = [item for item in facts if item["relation"] == "alias" and _norm(item["subject"]) == _norm(root or "")]
-        if len({ _norm(item["value"]) for item in aliases }) != 1:
-            conflict = bool(aliases)
-        if aliases and not conflict:
-            project = aliases[0]["value"]
-            values.append(project); sources.append(aliases[0]["source"])
-            owners = [item for item in facts if item["relation"] == "owner" and _norm(item["subject"]) == _norm(project)]
-        else:
-            owners = []
-    else:
-        owners = [item for item in facts if item["relation"] == "owner" and _norm(item["subject"]) == _norm(root or "")]
-    if len({ _norm(item["value"]) for item in owners }) > 1:
-        conflict = True
-    if owners and not conflict:
-        owner = owners[0]["value"]
-        values.append(owner); sources.append(owners[0]["source"])
-        leaders = [item for item in facts if item["relation"] == "leader" and _norm(item["subject"]) == _norm(owner)]
-        if len({ _norm(item["value"]) for item in leaders }) > 1:
-            conflict = True
-        if leaders and not conflict:
-            values.append(leaders[0]["value"]); sources.append(leaders[0]["source"])
-    if conflict:
+    if uncertainty.get("status") == "conflicting_evidence":
         return _baseline_row("A", case, outcome="refusal", reason="conflicting_evidence", started=started)
-    if not owners:
+    if not claims:
         return _baseline_row("A", case, outcome="refusal", reason="evidence_insufficient", started=started)
-    complete = len(values) == len(plan.subgoals)
+    complete = not uncertainty
     return _baseline_row("A", case, outcome="complete" if complete else "partial",
-                         reason=None if complete else "evidence_insufficient", facts=values,
-                         sources=sources, started=started, citation_valid=True,
+                         reason=None if complete else "evidence_insufficient", facts=conflict_free_values(claims),
+                         sources=[ref for claim in claims for ref in claim["evidence_ids"]],
+                         started=started, citation_valid=True,
                          claim_supported=True, verified_read_dependency=False,
                          search_count=0, read_count=0, model_turns=0)
 
@@ -287,9 +208,6 @@ def _baseline_row(baseline: str, case: dict[str, Any], *, outcome: str,
 def one_pass_summary(case: dict[str, Any]) -> dict[str, Any]:
     """B: one lexical retrieval and an explicitly unverified summary."""
     started = time.perf_counter()
-    plan = plan_relation_investigation(str(case["query"]))
-    if plan is None:
-        return _baseline_row("B", case, outcome="unsupported", reason="planning_failed", started=started)
     documents = _case_documents(case)
     terms = [term.casefold() for term in re.findall(r"[A-Za-z0-9㐀-鿿]+", str(case["query"])) if len(term) > 1]
     ranked = sorted(documents, key=lambda item: sum(item["content"].casefold().count(term) for term in terms), reverse=True)
@@ -319,10 +237,6 @@ def _runtime_case(public: dict[str, Any], root: Path) -> dict[str, Any]:
     """C: existing SourceOnlyController + Runtime, with caller limits."""
     from run_bounded_multihop import run_case as existing_run_case
 
-    if plan_relation_investigation(str(public["query"])) is None:
-        return _baseline_row("C", public, outcome="unsupported", reason="planning_failed",
-                             started=time.perf_counter())
-
     # Keep the established runner as the source of truth for the ordinary
     # (max_steps=12) path.  The small copied path below is only needed to
     # exercise the explicitly published budget-insufficient development case.
@@ -347,10 +261,7 @@ def _runtime_case(public: dict[str, Any], root: Path) -> dict[str, Any]:
         actual["provider_uncertainty"] = False
         return actual
 
-    plan = plan_relation_investigation(str(public["query"]))
     started = time.perf_counter()
-    if plan is None:
-        return _baseline_row("C", public, outcome="unsupported", reason="planning_failed", started=started)
     run_root = root / ("run_" + uuid4().hex[:12])
     vault = run_root / "vault"
     vault.mkdir(parents=True)
@@ -363,8 +274,8 @@ def _runtime_case(public: dict[str, Any], root: Path) -> dict[str, Any]:
                            trace_dir=run_root / "traces", checkpointer=InMemoryCheckpointer(), model=model)
     status = engine.start_multi_agent(RunRequest(
         request_id="rar-budget", thread_id="rar-budget", workflow="team_decision",
-        query=public["query"], task_plan=plan.to_dict(), max_steps=limit,
-        max_provider_requests=limit, dry_run=True,
+        query=public["query"], final_protocol="claim-proposal/v1", max_steps=limit,
+        dry_run=True,
     ))
     state = engine.checkpointer.get_latest("rar-budget")
     records = state.tool_ledger if state else []

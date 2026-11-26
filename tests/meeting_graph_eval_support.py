@@ -199,7 +199,7 @@ def build_meetings(fixture,database_path,*,recorded_at):
                     temporal_status='NOT_STATED',valid_from=None,valid_to=None,
                     confidence=dict.fromkeys(('claim_type','entity','relation','temporal','overall'),.95))
                 provider=ProviderNeutralSemanticExtractor(_GivenCandidates([claim]),provider_id='given-fixture-no-model',model_id='given',
-                    request_guard=lambda r:ProviderRequestAuthorization.approve(r,guard_id='given',reservation_id='given',estimated_cost_upper_bound_usd=0),
+                    request_guard=lambda r:ProviderRequestAuthorization.approve(r,guard_id='given',reservation_id='given'),
                     request_guard_id='given',max_attempts=1)
                 segment=DocumentTextSegment(span.ordinal,span.message_id,span.segment_id,span.quote,span)
                 result=SemanticIngestionPipeline(provider,CandidateValidator()).process_segment(segment,artifact,

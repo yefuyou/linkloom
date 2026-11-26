@@ -111,15 +111,20 @@ def test_over_limit_uses_complete_large_windows_and_reports_every_utterance():
     assert covered == set(range(25)) and len(result.windows) == len(adapter.requests)
 
 
-def test_call_cap_and_oversize_utterance_fail_before_any_call():
+def test_oversize_utterance_fails_before_any_call_and_many_windows_are_not_refused():
     adapter = Adapter()
     config = TaskExtractionConfig(task_extraction_mode="meeting_v2", max_input_bytes=32768, window_body_bytes=100)
     with pytest.raises(ValueError, match="complete utterance"):
         extractor(adapter, config=config).extract(source([("X", "x" * 40000)]), ROSTER)
-    with pytest.raises(ValueError, match="call limit"):
-        extractor(adapter, config=replace(config, window_body_bytes=20000, max_calls=1)).extract(
-            source([("X", "x" * 18000) for _ in range(3)]), ROSTER)
     assert not adapter.requests
+
+
+def test_legacy_max_calls_key_is_ignored_and_window_count_is_not_gated():
+    legacy = {"task_extraction_mode": "meeting_v2", "max_input_bytes": 32768, "window_body_bytes": 20000, "max_calls": 1}
+    config = TaskExtractionConfig.from_dict(legacy)
+    assert not hasattr(config, "max_calls")
+    result = extractor(Adapter(), config=config).extract(source([("X", "x" * 18000) for _ in range(3)]), ROSTER)
+    assert len(result.windows) > 1
 
 
 @pytest.mark.parametrize("raw,kind", [("2037-04-05", "ABSOLUTE_DATE"), ("two hours later", "RELATIVE_TIME"),

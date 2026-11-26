@@ -409,8 +409,7 @@ def execute_worker(out, variant, pricing):
     guard = "es2002-task-field-sample/v1"
     extractor = ProviderNeutralSemanticExtractor(provider, provider_id="gemini", model_id=MODEL,
         request_guard=lambda request: ProviderRequestAuthorization.approve(request,
-            guard_id=guard, reservation_id=f'sample-{budget.state["requests"] + 1}',
-            estimated_cost_upper_bound_usd=MAX_USD - budget.state["charged_upper_bound_usd"]),
+            guard_id=guard, reservation_id=f'sample-{budget.state["requests"] + 1}'),
         request_guard_id=guard, max_attempts=1, max_output_tokens=MAX_OUTPUT)
     pipeline = SemanticIngestionPipeline(extractor, CandidateValidator())
     artifacts = {mid: RawArtifact(workspace_id="es2002-field-sample", artifact_id=mid,

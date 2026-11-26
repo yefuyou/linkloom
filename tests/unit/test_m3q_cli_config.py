@@ -21,14 +21,20 @@ def test_task_configuration_does_not_send_imports_or_model_requests(tmp_path, mo
     monkeypatch.setenv('GEMINI_API_KEY', 'offline-test-placeholder')
     monkeypatch.setattr(sys, 'argv', ['linkloom.ui', '--database', str(tmp_path / 'product.sqlite'),
         '--allow-external-provider', '--allow-task-investigation',
-        '--task-max-requests', '16', '--task-max-input-tokens', '500000',
-        '--task-max-output-tokens', '100000', '--task-max-cost-usd', '2',
         '--task-max-seconds', '120', '--task-request-timeout-seconds', '30'])
     assert cli.main() == 0
     assert captured['product_app'].extractor is None
     assert captured['investigation_service'].config()['task_investigation']
     assert captured['options']['http_options_kwargs']['retry_options'] == {'attempts': 1}
     assert captured['options']['http_options_kwargs']['timeout'] == 30000
+
+
+@pytest.mark.parametrize('flag', ['--task-max-requests', '--task-max-input-tokens', '--task-max-output-tokens',
+                                  '--task-max-cost-usd'])
+def test_removed_budget_flags_are_rejected(tmp_path, monkeypatch, flag):
+    monkeypatch.setattr(sys, 'argv', ['linkloom.ui', '--database', str(tmp_path / 'product.sqlite'), flag, '1'])
+    with pytest.raises(SystemExit):
+        cli.main()
 
 
 @pytest.mark.parametrize('args', [[], ['--allow-external-provider']])

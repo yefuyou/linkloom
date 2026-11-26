@@ -66,7 +66,7 @@ def revise(app, *, content=NEW_CONTENT, text=NEW_TEXT, owner='王芳', deadline=
         provider = RecordedProvider(claim)
         extractor = ProviderNeutralSemanticExtractor(provider, provider_id='offline', model_id='revision-review',
             request_guard=lambda request: ProviderRequestAuthorization.approve(request, guard_id='test',
-                reservation_id='test', estimated_cost_upper_bound_usd=0), request_guard_id='test', max_attempts=1)
+                reservation_id='test'), request_guard_id='test', max_attempts=1)
         pipeline = SemanticIngestionPipeline(extractor, CandidateValidator())
         context = SemanticExtractionContext(app.workspace, FrozenRelationResolver(('uses vendor',)))
         results = [result for segment in segments for result in pipeline.process_segment(segment, artifact, context)]

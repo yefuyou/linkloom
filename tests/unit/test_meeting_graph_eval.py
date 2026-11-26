@@ -30,8 +30,8 @@ def test_latest_scope_excludes_bounded_graph_and_preserves_three_repetitions():
     class Budget:
         def preflight(self,i,o):calls.append((i,o));return .01
     result=preflight(Inputs(),Budget(),dict(legacy_max_turns=12,input_token_caps=dict(legacy_only=8192,graph_only=6144),max_output_tokens=1024))
-    assert result['executions']==9 and result['legacy_call_cap']==36 and result['graph_call_cap']==3
-    assert calls==[(36*8192+3*6144,39*1024)]
+    assert result['executions']==9 and result['legacy_call_cap']==72 and result['graph_call_cap']==3
+    assert calls==[(72*8192+3*6144,75*1024)]
 
 
 def test_score_requires_values_and_evidence_and_counts_extra_relationships():

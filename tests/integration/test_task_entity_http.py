@@ -389,6 +389,25 @@ def test_new_routes_reject_wrong_methods_over_http(http, method):
     assert status == 405 and value["error"]["code"] == "METHOD_NOT_ALLOWED"
 
 
+@pytest.mark.parametrize("method", ["POST", "PUT", "DELETE"])
+def test_wrong_method_reply_consumes_request_body_before_closing(http, method):
+    # Unread request bytes at close time make Windows reset the connection
+    # before the client can read the 405 response.
+    import socket
+    from urllib.parse import urlsplit
+    body = b'{"padding": "' + b"x" * 4000 + b'"}'
+    target = PREFIX + "/tasks?" + urlencode({"workspace_id": http.workspace})
+    parts = urlsplit(http.base)
+    with socket.create_connection((parts.hostname, parts.port), timeout=3) as sock:
+        sock.sendall((f"{method} {target} HTTP/1.1\r\nHost: {parts.netloc}\r\n"
+            f"Content-Type: application/json\r\nContent-Length: {len(body)}\r\n\r\n").encode() + body)
+        data = b""
+        while chunk := sock.recv(65536):
+            data += chunk
+    assert data.startswith(b"HTTP/1.") and b" 405 " in data.split(b"\r\n", 1)[0]
+    assert b"METHOD_NOT_ALLOWED" in data
+
+
 @pytest.mark.parametrize("headers,expected", [
     ({"Origin": "https://untrusted.invalid"}, 403), ({"Host": "untrusted.invalid"}, 421),
     ({"Origin": "http://["}, 403),

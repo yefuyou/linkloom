@@ -55,7 +55,7 @@ def run(rows, a=None, *, product=True, segment_index=-1):
     provider = FakeModel({'claims': deepcopy(rows)})
     extractor = ProviderNeutralSemanticExtractor(provider, provider_id='offline', model_id='field-test',
         request_guard=lambda request: ProviderRequestAuthorization.approve(request,
-            guard_id='offline-only', reservation_id='one', estimated_cost_upper_bound_usd=0),
+            guard_id='offline-only', reservation_id='one'),
         request_guard_id='offline-only', max_attempts=1)
     segment = parse_source_text(a).segments[segment_index]
     pipeline = SemanticIngestionPipeline(extractor, CandidateValidator())
@@ -265,7 +265,7 @@ def test_product_persistence_raw_deadline_merge_and_undo_without_filling_year(tm
     provider = ByText(None)
     extractor = ProviderNeutralSemanticExtractor(provider, provider_id='offline', model_id='product-field',
         request_guard=lambda r: ProviderRequestAuthorization.approve(r, guard_id='offline-only',
-            reservation_id='fixture', estimated_cost_upper_bound_usd=0), request_guard_id='offline-only')
+            reservation_id='fixture'), request_guard_id='offline-only')
     path = tmp_path / 'product.sqlite'
     app = ProductApplication(database_path=path, extractor=extractor)
     store = None

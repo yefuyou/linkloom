@@ -142,7 +142,7 @@ def test_real_runtime_enforces_required_capacity_before_model_requests(tmp_path,
     engine = engine_for(tmp_path, tools_for(count), model)
     engine._context_runtime_config = ContextRuntimeConfig()
     status = engine.start_multi_agent(RunRequest(request_id="capacity", workflow="task_relations",
-        query="Inspect all declared evidence.", max_steps=3, max_provider_requests=3))
+        query="Inspect all declared evidence.", max_steps=3))
     assert status.status == ("completed" if count == 6 else "failed")
     assert model.call_count == (3 if count == 6 else 0)
 

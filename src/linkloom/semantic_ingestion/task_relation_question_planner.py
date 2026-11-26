@@ -403,14 +403,17 @@ class InvestigationPlanner:
             raise ValueError('explicit supported operation set required')
         self.supported_operations = supported_operations
         self.host_capabilities = deepcopy(host_capabilities)
-        self._calls = self._input = self._output = 0
+        self._calls = 0
+        # Set after a provider call raised: the paid outcome is unknown, so no
+        # further request may be sent in this session (replay safety, not a quota).
+        self._provider_uncertain = False
         self._goal = self._workspace = None
         self._latest = None
         self._lock = Lock()
         self._run_id = 'investigation-' + uuid4().hex
 
     def plan_graph(self, context, *, alignment_review=False, grounding_required=False, mention_grounding=False):
-        """Graph profile shares this session's exact-request guard and budgets."""
+        """Graph profile shares this session's exact-request guard."""
         from linkloom.temporal_graph.planning import plan_graph_session
         if not self._lock.acquire(blocking=False):
             return {'status': 'BLOCKED', 'reason': 'PLANNING_SESSION_BUSY', 'plan': None}
@@ -419,9 +422,8 @@ class InvestigationPlanner:
         finally:
             self._lock.release()
 
-    def _budget(self):
-        return dict(calls_reserved=self._calls, input_tokens_reserved=self._input,
-                    output_tokens_reserved=self._output, limits=asdict(self.limits))
+    def _session_usage(self):
+        return dict(provider_calls=self._calls, limits=asdict(self.limits))
 
     def plan(self, context, *, discovery=None, previous=None, verified_results=(), gaps=(), unavailable_operations=()):
         if not self._lock.acquire(blocking=False):
@@ -482,7 +484,7 @@ class InvestigationPlanner:
     def _plan(self, context, discovery, previous, verified_results, gaps, unavailable_operations):
         errors = _admit(context)
         if errors:
-            return PlanningResult('BLOCKED', errors=tuple(sorted(errors)), budget=self._budget())
+            return PlanningResult('BLOCKED', errors=tuple(sorted(errors)), session_usage=self._session_usage())
         try:
             if (not isinstance(unavailable_operations, tuple)
                     or not set(unavailable_operations) <= self.supported_operations):
@@ -493,7 +495,7 @@ class InvestigationPlanner:
             previous_input = _model_previous_plan(previous, context)
         except Exception as exc:
             return PlanningResult('BLOCKED', errors=(str(exc) if isinstance(exc, ValueError)
-                                                    else 'HOST_RESULT_VERIFICATION_FAILED',), budget=self._budget())
+                                                    else 'HOST_RESULT_VERIFICATION_FAILED',), session_usage=self._session_usage())
         payload = context.model_input()
         payload.pop('queries')
         effective_limits = replace(self.limits,
@@ -527,49 +529,39 @@ class InvestigationPlanner:
         size = len(json.dumps(request.to_dict(), ensure_ascii=False).encode('utf8')) + 1024
         if (size > self.limits.max_input_tokens or size > context.limits.max_input_bytes
                 or size > context.limits.max_input_tokens):
-            return replace(base, errors=('INPUT_BUDGET_EXCEEDED',), budget=self._budget())
-        if (self._calls >= self.limits.max_provider_calls
-                or self._input + size > self.limits.max_total_input_tokens
-                or self._output + effective_limits.max_output_tokens > self.limits.max_total_output_tokens):
-            return replace(base, errors=('SESSION_BUDGET_EXHAUSTED',), budget=self._budget())
+            return replace(base, errors=('REQUEST_TOO_LARGE',), session_usage=self._session_usage())
+        if self._provider_uncertain:
+            return replace(base, errors=('PROVIDER_UNCERTAIN',), session_usage=self._session_usage())
         try:
             guard_request = deepcopy(request)
             permit = self.request_guard(guard_request)
             guard_unchanged = canonical_hash(guard_request.to_dict()) == digest
         except Exception:
-            return replace(base, errors=('REQUEST_GUARD_FAILED',), budget=self._budget())
+            return replace(base, errors=('REQUEST_GUARD_FAILED',), session_usage=self._session_usage())
         if (not isinstance(permit, ProviderRequestAuthorization) or not permit.authorized
                 or permit.guard_id != self.guard_id or permit.request_sha256 != digest or not guard_unchanged):
-            return replace(base, errors=('EXACT_REQUEST_NOT_AUTHORIZED',), budget=self._budget())
+            return replace(base, errors=('EXACT_REQUEST_NOT_AUTHORIZED',), session_usage=self._session_usage())
         if _admit(context):
-            return replace(base, errors=('CONTEXT_CHANGED_BEFORE_CALL',), budget=self._budget())
+            return replace(base, errors=('CONTEXT_CHANGED_BEFORE_CALL',), session_usage=self._session_usage())
         try:
             self._replan_state(context, previous, verified_results, gaps)
         except Exception:
-            return replace(base, errors=('RESULT_CHANGED_BEFORE_CALL',), budget=self._budget())
+            return replace(base, errors=('RESULT_CHANGED_BEFORE_CALL',), session_usage=self._session_usage())
         if canonical_hash(request.to_dict()) != digest:
-            return replace(base, errors=('EXACT_REQUEST_CHANGED_BEFORE_CALL',), budget=self._budget())
+            return replace(base, errors=('EXACT_REQUEST_CHANGED_BEFORE_CALL',), session_usage=self._session_usage())
         self._calls += 1
-        self._input += size
-        self._output += effective_limits.max_output_tokens
         self._goal, self._workspace = context.question, context.workspace_id
-        base = replace(base, provider_calls=1, budget=self._budget())
+        base = replace(base, provider_calls=1, session_usage=self._session_usage())
         try:
             response = self.adapter.complete(request)
         except Exception:
+            self._provider_uncertain = True
             return replace(base, status='PROVIDER_FAILED', errors=('PROVIDER_EXCEPTION',))
         if not isinstance(response, ModelResponse):
             return replace(base, status='OUTPUT_INVALID', errors=('TYPED_MODEL_RESPONSE_REQUIRED',))
         base = replace(base, usage=response.usage, response_sha256=canonical_hash(response.to_dict()),
                        actual_model_version=response.provider_metadata.get('model_version'),
                        untrusted_output=_public_output(response))
-        if ((response.usage.input_tokens or 0) > size
-                or (response.usage.output_tokens or 0) > effective_limits.max_output_tokens
-                or (response.usage.total_tokens or 0) > size + effective_limits.max_output_tokens):
-            # Known usage applies even to errors and stale-context responses.
-            self._calls = self.limits.max_provider_calls
-            return replace(base, status='OUTPUT_INVALID', errors=('PROVIDER_USAGE_EXCEEDED_RESERVATION',),
-                           budget=self._budget())
         if _admit(context):
             return replace(base, errors=('CONTEXT_CHANGED_DURING_CALL',))
         try:

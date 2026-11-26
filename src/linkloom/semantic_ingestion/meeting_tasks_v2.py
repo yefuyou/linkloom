@@ -5,7 +5,7 @@ whole message span. It never guesses character offsets, hashes or source version
 """
 from __future__ import annotations
 
-from dataclasses import asdict, dataclass, replace
+from dataclasses import asdict, dataclass, fields, replace
 import hashlib
 import json
 import re
@@ -137,17 +137,21 @@ class TaskExtractionConfig:
     max_input_bytes: int = 192 * 1024
     window_body_bytes: int = 48 * 1024
     overlap_messages: int = 2
-    max_calls: int = 32
     max_output_tokens: int = 32768
 
     def __post_init__(self):
         if self.task_extraction_mode not in {"legacy", "meeting_v2"}:
             raise ValueError("Unknown task_extraction_mode")
         for name, lower, upper in (("max_input_bytes", 32768, 262144), ("window_body_bytes", 1, 262144),
-                ("overlap_messages", 0, 32), ("max_calls", 1, 60), ("max_output_tokens", 1024, 32768)):
+                ("overlap_messages", 0, 32), ("max_output_tokens", 1024, 32768)):
             value = getattr(self, name)
             if type(value) is not int or not lower <= value <= upper:
                 raise ValueError("Invalid Host limit: " + name)
+
+    @classmethod
+    def from_dict(cls, data):
+        names = {f.name for f in fields(cls)}
+        return cls(**{key: value for key, value in dict(data).items() if key in names})
 
 
 @dataclass(frozen=True)
@@ -344,8 +348,6 @@ class MeetingTaskExtractor:
                 if low == len(segments):
                     break
                 left = max(left + 1, low - self.config.overlap_messages)
-        if len(windows) > self.config.max_calls:
-            raise ValueError("Meeting windows exceed Host call limit; no requests made")
         candidates, rejected, responses, coverage = [], [], [], True
         for index, (left, right) in enumerate(windows):
             text = prompt(left, right)

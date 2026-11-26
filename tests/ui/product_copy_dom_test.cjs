@@ -26,7 +26,7 @@ async function open(locale, {ready = false, external = false, task = false, sour
   const decision={decision_id:'d',subject:'Project',relation:'uses supplier',value:'Approved supplier',status:'CURRENT',memory_state:'ACTIVE',valid_from:'2026-10-01',evidence:[],authorization:{receipt_id:'RECEIPT_A'}};
   const config = {workspace_id:'w', scopes:[], investigation_context:{source_count:1,sources:[{name:sourceName,version:'VERSION_X'}]},
     agent:{available:task, external_provider:external, task_investigation:task, task_provider:{model_id:'MODEL_INTERNAL',
-      budgets:{max_requests:16,max_input_tokens:5000,max_output_tokens:1000,max_cost_usd:2,max_seconds:120}}}};
+      budgets:{max_requests:16,max_input_tokens:5000,max_output_tokens:1000,max_cost_usd:2,max_seconds:120}}}};  // legacy config keys must be ignored
   async function fetch(path, options = {}) {
     if (options.method) writes.push(path);
     if (sourceError && sourceError !== 'MALFORMED_SOURCE' && path === '/api/sources') return {ok:false,status:404,json:async()=>({error:{code:sourceError === true ? 'SOURCE_NOT_FOUND' : sourceError,message:'RAW_PRIVATE_STACK'}})};
@@ -107,10 +107,10 @@ async function open(locale, {ready = false, external = false, task = false, sour
     assert.ok(form.includes('id="ask-external" type="checkbox"'));
     assert.ok(!form.includes('id="ask-external" type="checkbox" checked'));
     assert.ok(form.includes(zh?'外部 AI':'external AI provider'));
-    assert.ok(form.includes(zh?'有上限的模型费用':'bounded model costs'));
-    assert.ok(form.indexOf('USD 2') < form.indexOf('id="ask-submit-button"'));
+    assert.ok(form.includes(zh?'产生模型费用':'incur model costs'));
+    assert.ok(!/USD \d|Token limits|Token 上限|bounded|有上限/.test(form), 'no budget or ceiling wording in the Ask form');
     assert.ok(!form.slice(form.indexOf('<details id="ask-advanced"'), form.indexOf('</details>', form.indexOf('<details id="ask-advanced"'))).includes('ask-external'), 'authorization stays outside advanced options');
-    assert.ok(form.includes('<details>') && form.includes('MODEL_INTERNAL'));
+    assert.ok(form.includes('MODEL_INTERNAL'));
   }
-  console.log('PASS: bilingual Sources/Review/Decision Memory/Ask, single titles, escaped unchanged data, raw status preservation, visible cost and unchecked per-question permission');
+  console.log('PASS: bilingual Sources/Review/Decision Memory/Ask, single titles, escaped unchanged data, raw status preservation, no budget wording and unchecked per-question permission');
 })().catch(e=>{console.error(e);process.exitCode=1;});

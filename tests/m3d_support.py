@@ -9,7 +9,7 @@ from linkloom.ui.product import ProductApplication
 from linkloom.ui.task_provider import compose_task_provider
 from tests.integration.test_m3q_provider_host import ScriptedGeminiTransport, poll
 from tests.integration.test_product_application_flow import _client
-from tests.unit.test_m3q_provider_budget import limits
+from tests.unit.test_task_provider_session import limits
 from tests.unit.test_task_field_binding import grounded
 from tests.unit.test_task_observation_discovery import claim
 from tests.unit.test_task_relation_question_planner import arguments, step
@@ -73,8 +73,7 @@ def combined_product(root, case):
     app = ProductApplication(database_path=root/'product.sqlite', extractor=None)
     stages = [CombinedStage(stage, case) for stage in ('discovery', 'planning', 'semantics')]
     transport = ScriptedGeminiTransport(stages)
-    budget = replace(limits(), max_requests=12, max_input_tokens=500000,
-        max_output_tokens=65536, max_cost_usd=3, max_seconds=120, request_timeout_seconds=30)
+    budget = replace(limits(), max_seconds=120, request_timeout_seconds=30)
     return app, compose_task_provider(app, GeminiProviderAdapter(transport), budget), transport, stages
 
 
@@ -126,7 +125,7 @@ def verify_case(case, result, prep_root, prep):
         assert final['steps'][0] == first['steps'][0]
         receipt, = final['verified_results']
         assert receipt['step_id'] == 'locate' and receipt['outcome'] == 'UNKNOWN'
-        assert audited['reservation']['input_tokens_upper_bound'] <= 24000
+        assert audited['request_info']['request_bytes'] + 1024 <= 24000
         kinds = audited['request']['available_tools'][0]['input_schema']['properties']['steps']['items']['properties']['kind']['enum']
         assert 'discover' not in kinds
         steps = {s['step_id']: s for s in result['task_review']['steps']}

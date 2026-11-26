@@ -192,7 +192,7 @@ for (const entry of graphEntries) test(`${entry}: graph answer opens each exact 
   const ui = await setup(entry);
   assert.match(ui.page.textContent, /Bo/);
   assert.match(ui.page.textContent, /Owner → work/);
-  assert.match(ui.page.textContent, /Person → direct manager/);
+  assert.match(ui.page.textContent, /Person → reports to/);
   const buttons = ui.page.querySelectorAll('[data-action="inspect-evidence"]');
   assert.equal(buttons.length, 2);
   for (const [index, expected] of [evidence, graphOwnerEvidence].entries()) {

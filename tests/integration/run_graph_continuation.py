@@ -90,11 +90,8 @@ def run(number):
     inputs={g:Inputs(number,g) for g in ('D','D2')};marker=inputs['D'].verify();config=read(inputs['D'].dependencies['configuration']);public_cases=cases()
     output=ROOT/f'results-r{number}';output.mkdir(exist_ok=False)
     previous_reserved=sum(read(p)['reserved_usd'] for p in config['previous_budget_ledgers']);remaining=1-previous_reserved
-    from linkloom.runtime.team_decision_planner import plan_relation_investigation,plan_team_decision_query
-    legacy_hits=0
-    for _,_,public in public_cases:
-        questions=[public['question']]+(['As of '+public['as_of']+', '+public['question']] if public.get('as_of') else [])
-        legacy_hits+=int(any(plan_relation_investigation(q) or plan_team_decision_query(q) for q in questions))
+    # No wording template gates the legacy route any more: every case may enter it.
+    legacy_hits=len(public_cases)
     max_calls=120+legacy_hits*3*config['legacy_max_turns'];token_cap=config['input_token_caps']['graph_only'];cap=(max_calls*token_cap*.15+max_calls*1024*.6)/1e6
     if cap>remaining*.8:raise BudgetExceeded('FULL_MATRIX_WOULD_EXCEED_REMAINING_BUDGET')
     key=os.environ.get('DEEPSEEK_API_KEY','')

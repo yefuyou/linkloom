@@ -63,18 +63,6 @@ def decide_recovery(
             "READ_PARENT_EVIDENCE", terminal_code,
             "Read an evidence_id returned by the parent search before making a dependent search.",
         )
-    if progress.reason_code == "VERIFIED_SOURCE_CONFLICT" and progress.conflicted_subgoals:
-        slots = ", ".join(progress.conflicted_subgoals)
-        if len(slots) > 120:
-            slots = f"{len(progress.conflicted_subgoals)} verified subgoals"
-        refs = sorted(progress.conflict_evidence_ids)
-        cited = ", ".join(refs) if len(refs) <= 2 else "the verified read evidence IDs"
-        return RecoveryDecision(
-            "FINAL_CONFLICT", "VERIFIED_SOURCE_CONFLICT",
-            f"Verified current sources conflict for subgoal(s) {slots}. "
-            f"Stop tools. Produce Final with conflicting_evidence, cite both supporting sources from {cited}, "
-            "and leave disputed dependent conclusions unknown.",
-        )
     if progress.consecutive_tool_errors >= 2:
         return RecoveryDecision("TERMINATE", "REPEATED_TOOL_ERROR")
     if progress.consecutive_schema_errors >= 2:

@@ -169,8 +169,6 @@ def priced_usage(attempt):
     input_tokens, output_tokens = usage.get('input_tokens'), usage.get('output_tokens')
     if input_tokens is None or output_tokens is None:
         return None
-    if input_tokens > attempt['input_reserved'] or output_tokens > attempt['output_reserved']:
-        return None
     return (input_tokens*INPUT_RATE + output_tokens*OUTPUT_RATE)/1e6
 
 
@@ -265,8 +263,7 @@ def main():
                 if remaining+1e-10 < reserves[ordinal]:
                     failure='CAMPAIGN_BUDGET_EXHAUSTED'
                     break
-                limits=TaskProviderLimits(1,sizes[ordinal],CONFIG['max_output_tokens'],remaining,
-                    CONFIG['timeout_seconds'],CONFIG['timeout_seconds'],.000000001,INPUT_RATE,OUTPUT_RATE)
+                limits=TaskProviderLimits(CONFIG['timeout_seconds'],CONFIG['timeout_seconds'])
                 session=TaskProviderSession(run_dir/'provider'/f'{arm}-{repeat}-{ordinal+1:02d}',limits,validate)
                 try:
                     start=perf_counter()
@@ -276,17 +273,17 @@ def main():
                     total=duration+elapsed if arm=='cascade' or fallback else duration
                     record(case,repeat,arm,p,total,reason=reason,attempted=attempted,fallback=fallback,added=total-elapsed)
                 finally:
-                    spent+=session.cost
+                    spent+=reserves[ordinal]*bool(session.requests)
                     for attempt in session.attempts:
                         estimate=priced_usage(attempt)
-                        charged+=attempt['cost_reserved_usd'] if estimate is None else estimate
+                        charged+=reserves[ordinal] if estimate is None else estimate
                     calls+=session.requests
                     attempts.extend(session.attempts)
                     session.close()
                 if reason=='PROVIDER_MODEL_MISMATCH':
                     failure=reason
-                if session.failure in {'PROVIDER_TIMEOUT_UNCERTAIN','PROVIDER_UNCERTAIN','TASK_PROVIDER_BUDGET_EXHAUSTED',
-                                       'PROVIDER_USAGE_EXCEEDED','TASK_SOURCE_AUTHORIZATION_CHANGED'}:
+                if session.failure in {'PROVIDER_TIMEOUT_UNCERTAIN','PROVIDER_UNCERTAIN','TASK_PROVIDER_DEADLINE',
+                                       'TASK_SOURCE_AUTHORIZATION_CHANGED'}:
                     failure=session.failure
                 save('partial.json',dict(rows=rows,provider_failure=failure,request_count=calls,reserved_usd=spent,charged_upper_usd=charged))
                 if failure:

@@ -14,7 +14,7 @@ def public_case():
     return {key: value for key, value in case.items() if key not in {'id', 'tags', 'expected'}}
 
 
-@pytest.mark.parametrize('attack', ['foreign_source', 'invented_dependency', 'changed_source'])
+@pytest.mark.parametrize('attack', ['foreign_source', 'changed_source'])
 def test_runtime_rejects_an_attack_on_the_actual_hop_boundary(tmp_path, monkeypatch, attack):
     original = demo.SourceOnlyController
 
@@ -29,8 +29,6 @@ def test_runtime_rejects_an_attack_on_the_actual_hop_boundary(tmp_path, monkeypa
                 context = dict(arguments['source_context'])
                 if attack == 'foreign_source':
                     context['vault_root_fingerprint'] = 'root_other_workspace'
-                if attack == 'invented_dependency' and context['dependency_entities']:
-                    context['dependency_entities'] = {'owner': 'Invented Person'}
                 arguments['source_context'] = context
             if attack == 'changed_source' and call.tool_id == 'read_verified_note':
                 next(tmp_path.glob('run_*/vault/n1.md')).write_text('The source was changed.', encoding='utf-8')
@@ -49,12 +47,15 @@ def test_runtime_rejects_an_attack_on_the_actual_hop_boundary(tmp_path, monkeypa
 
 
 def test_real_loop_records_parent_read_before_dependent_search(tmp_path):
+    # No plan or template reaches the Runtime: the fake follows the entity it read.
     result = demo.run_case(public_case(), tmp_path)
     assert result['run_status'] == 'completed'
     assert result['values'] == ['mira cole', 'owen park']
     assert result['citation_valid'] and result['bindings_verified']
-    leader_search = next(row for row in result['calls'] if row['tool'] == 'search_notes' and row['hop'] == 'leader')
-    assert leader_search['dependencies'] == {'owner': 'Mira Cole'}
+    assert {claim['predicate'] for claim in result['typed_claims']} == {'owner_of_project', 'reports_to'}
+    # No confirmed structured fact backs these source-only claims: real citations, not semantic support.
+    assert {claim['support'] for claim in result['typed_claims']} == {'UNVERIFIED'}
+    leader_search = next(row for row in result['calls'] if row['tool'] == 'search_notes' and row['hop'] == 'Mira Cole')
     assert any(row['tool'] == 'read_verified_note' and row['source'] == 'n1.md'
                and row['sequence'] < leader_search['sequence'] for row in result['calls'])
 
@@ -78,15 +79,10 @@ def test_final_cannot_smuggle_a_source_supported_but_unread_or_offchain_fact(tmp
                 return action
             assert self.extra is not None
             final = json.loads(action.final_answer)
-            unrelated = 'Yara Wells is the accountable owner of Other Bay'
-            if attack == 'offchain_claim':
-                final['rationale'] = [{'point': final['decision']['value'],
-                                      'evidence_refs': list(final['decision']['evidence_refs'])}]
-                final['decision']['value'] = unrelated
-            else:
-                final['decision']['value'] += '; ' + unrelated
-            final['decision']['evidence_refs'].append(self.extra['evidence_id'])
-            final['evidence_refs'].append(self.extra['evidence_id'])
+            # A source-supported fact that is unread, or read but off the question's chain.
+            final['claims'].append({'subject': 'Other Bay', 'predicate': 'owner_of_project',
+                'object': 'Yara Wells', 'evidence_ids': [self.extra['evidence_id']],
+                'quote': 'Yara Wells is the accountable owner of Other Bay', 'valid_on': None, 'temporal_kind': None})
             return ModelAction.final(json.dumps(final))
 
     monkeypatch.setattr(demo, 'SourceOnlyController', SmugglingController)

@@ -12,7 +12,7 @@ from tests.m3p_support import product_http,cold_read
 from tests.m3s1_support import SOURCE,QUESTION,saved_attempt,saved_arguments
 from tests.integration.test_m3q_provider_host import ScriptedGeminiTransport,poll,loopback_only
 from tests.integration.test_product_application_flow import _client
-from tests.unit.test_m3q_provider_budget import limits
+from tests.unit.test_task_provider_session import limits
 from tests.unit.test_task_relation_question_planner import step,arguments
 
 class RecordedStage:
@@ -57,8 +57,7 @@ def ambiguous_product(root,repeat_discover=False,only_one=False):
     app=ProductApplication(database_path=root/'product.sqlite',extractor=None)
     stages=[RecordedStage(s,repeat_discover,only_one) for s in ('discovery','planning','semantics')]
     transport=ScriptedGeminiTransport(stages)
-    budget=replace(limits(),max_requests=10,max_input_tokens=500000,max_output_tokens=65536,max_cost_usd=3,
-        max_seconds=90,request_timeout_seconds=10)
+    budget=replace(limits(), max_seconds=90,request_timeout_seconds=10)
     return app,compose_task_provider(app,GeminiProviderAdapter(transport),budget),transport,stages
 
 def start(base):

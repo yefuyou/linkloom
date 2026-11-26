@@ -1,154 +1,80 @@
 """Human-scoped semantic admission, without an intent model or execution loop."""
 from __future__ import annotations
 
-from contextlib import contextmanager
-from contextvars import ContextVar
+import os
 import re
 
-from linkloom.semantic_ingestion.text_scopes import unquoted_text
 from linkloom.semantic_ingestion.task_relation_models import canonical_hash
 from linkloom.ui.product import ProductApplicationError
 from linkloom.ui.task_investigation import ProductTaskSources
 
 DOMAINS = ('tasks', 'source_relations')
-# A legacy shortcut must explicitly refer to records, not just contain a task
-# word. Unfamiliar wording uses an explicit domain and never needs this grammar.
-_RECORD_REFERENCE = re.compile(r'会议|消息|文档|原文|记录|\b(meetings?|messages?|documents?|sources?|records?)\b', re.I)
 _GREETING = re.compile(r'[\s!！?？,.，。]*(?:(?:你好|您好|谢谢|hello|hi|hey|thanks|thank you)[\s!！?？,.，。]*)+', re.I)
-# Explicit commands/polite requests, not historical mentions of a change.
-# This is an operation boundary, never a positive semantic intent classifier.
-_CLAUSE = re.compile(r'[.;!?。；！？,，]|\b(?:and|then)\s+|(?:并且|然后|并)', re.I)
-_EN_POLITE = re.compile(r'^(?:(?:please|kindly|(?:can|could|would|will)\s+you|'
-    r'i\s+(?:want|need)(?:\s+you)?\s+to|i[\x27’]d\s+like(?:\s+you)?\s+to)[,\s]+)+', re.I)
-_EN_WRITE = re.compile(
-    r'^(?:edit|modify|archive|update|complete|assign|reassign|cancel|close|reopen|remove|move|approve|reject|delete|rename|upload|download|email|send|save|write)\s+|'
-    r'^(?:change|set)\s+(?!in\b|of\b|between\b|over\b|to\b)|'
-    r'^finish\s+(?:(?:the|this|that|these|those|my|our|all)\s+)?tasks?\b|'
-    r'^mark\s+(?:(?:the|this|that|these|those|my|our|all)\s+)?(?:tasks?|it)\b|'
-    r'^mark\s+(?:complete|completed|done)\b|'
-    r'^mark\s+(?:(?:the|this|that|these|those|all|my|our)\s+|(?:tasks?|it)\b)'
-    r'.{0,120}\b(?:complete|completed|done)\b', re.I)
-_EN_REPORT = re.compile(r'^update\s+(?:me|us)\b', re.I)
-_ZH_POLITE = re.compile(r'^(?:(?:请[你问]?|烦请|麻烦你?|劳驾|帮我|替我|帮忙|我想|我要|可否|能否|能不能|可以帮我|能帮我)[，,\s]*)+')
-_ZH_ACTION = re.compile(r'编辑|修改|更新|归档|改成|改为|改到|改至|改给|设置为?|设为|标记|标为|标成|完成|关闭|重开|取消|撤销|分配|指派|移动|移除|批准|删除|重命名|发送|上传|下载|改写|保存修改')
-_ZH_HISTORY = re.compile(r'^(?:(?:为|成)?(?:已完成|完成))?(?:前|后|过|的|了)')
-_ZH_NOMINAL = re.compile(r'^(?:记录|内容|历史|情况|状态|时间|原因|依据|证据|差异|次数|日期|日志)')
-_ZH_READ_OPERATION = r'(?:列出来|列出|说明|比较|展示|解释|核对|查看|对比|查询)(?:一下|出来|给我|下)?[吧吗呢，,\s]*'
-_ZH_READ_END = re.compile(_ZH_READ_OPERATION + r'$')
-_ZH_READ_CHAIN = re.compile(_ZH_READ_OPERATION + r'(?:(?:并且|并|然后|再)' + _ZH_READ_OPERATION + r')*$')
-_FOREIGN_SCOPE = re.compile(r'\b(?:external|foreign|other|another|different|private)\s+workspace\b|'
-    r'\bworkspace\s+(?:outside|beta|other than)\b|跨工作区|其他工作区|外部工作区|别的工作区',re.I)
-_OVERRIDE_COMMAND = re.compile(r'^(?:ignore|override|bypass)\b.*\b(?:instructions?|rules?|polic(?:y|ies)|checks?|permissions?|isolation)\b|'
-    r'^(?:忽略|绕过|无视|跳过).*(?:指令|规则|权限|校验|隔离)',re.I)
-_SECRET_COMMAND = re.compile(r'^(?:read|show|reveal|print|give|send|extract)\s+(?:(?:me|us)\s+)?(?:(?:the|your|our)\s+)?'
-    r'(?:system prompt|api[ _-]?key|password|credentials?|secrets?)\b|'
-    r'^(?:读取|展示|显示|输出|告诉我|发给我)\s*(?:系统提示词|API[ _-]?key|密钥|口令|密码)',re.I)
+# No natural-language keyword rule decides authorization. Authority comes only from structured checks (Tool ACL, workspace
+# id equality, the configured security model, structured reason codes) and output protection.
+_PROTECTED_ENV = ("GEMINI_API_KEY", "GOOGLE_API_KEY", "OPENAI_API_KEY", "DEEPSEEK_API_KEY",
+                  "LINKLOOM_JEV_API_KEY", "TYPESAFE_API_KEY")
+_FRAGMENT_CHARS = 48
+_SKIPPED_KEYS = frozenset({"query"})  # the user's own text is echoed back and is not a host secret
 
 
-def _chinese_write_request(text):
-    text = _ZH_POLITE.sub('', text)
-    if not (text.startswith(('把', '将')) or _ZH_ACTION.match(text)):
-        return False
-    for action in _ZH_ACTION.finditer(text):
-        suffix = text[action.end():]
-        if _ZH_HISTORY.match(suffix):
+def _compact(text):
+    return " ".join(text.split())
+
+
+def _protected_prompts():
+    from linkloom.agents.team_decision import team_decision_final_instruction
+    from linkloom.ui import security_gate, structured_router
+    return [_compact(text) for text in (security_gate.PROMPT, structured_router.PROMPT,
+                                        team_decision_final_instruction())]
+
+
+def _strings(value, key=None):
+    if isinstance(value, str):
+        if key not in _SKIPPED_KEYS:
+            yield value
+    elif isinstance(value, dict):
+        for name, item in value.items():
+            yield from _strings(item, name)
+    elif isinstance(value, (list, tuple)):
+        for item in value:
+            yield from _strings(item)
+
+
+def leaks_protected_text(value):
+    """Structural output protection: True when host-held text appears verbatim in a result.
+
+    Protected text is configured API key values and long verbatim runs of the host system prompts.
+    This is an exact-match comparison against values the host owns, not a wordlist over the question."""
+    keys = [item for item in (os.environ.get(name, "").strip() for name in _PROTECTED_ENV) if len(item) >= 8]
+    prompts = None
+    for text in _strings(value):
+        if any(key in text for key in keys):
+            return True
+        compact = _compact(text)
+        if len(compact) < _FRAGMENT_CHARS:
             continue
-        # In a read request, 修改记录/更新内容/编辑历史 are noun phrases.
-        # A conjunction can join read actions too. Later mutation verbs are
-        # independently checked by this loop, never hidden by a read suffix.
-        if ((_ZH_NOMINAL.match(suffix) or _ZH_READ_CHAIN.fullmatch(suffix.strip()))
-                and _ZH_READ_END.search(text)):
-            continue
-        return True
-    return False
-
-
-# Scope a valid model ALLOW to one public Ask. A configured classifier failure
-# stops in Ask. Without a configured classifier the legacy rules still apply.
-_MODEL_ALLOWED = ContextVar("linkloom_model_safety_allowed", default=False)
-
-
-@contextmanager
-def model_safety_scope():
-    token = _MODEL_ALLOWED.set(False)
-    try:
-        yield
-    finally:
-        _MODEL_ALLOWED.reset(token)
-
-
-def accept_model_safety(security):
-    if security.get("status") == "COMPLETED" and security.get("decision") == "ALLOW":
-        _MODEL_ALLOWED.set(True)
-
-
-def _secret_request(query):
-    # Kept after a model ALLOW: Agent rationale/uncertainty text is not
-    # structurally filtered, so a system prompt request still needs this rule.
-    for clause in _CLAUSE.split(query):
-        text = clause.strip(' ,，')
-        if _SECRET_COMMAND.search(_EN_POLITE.sub('', text)) or _SECRET_COMMAND.search(_ZH_POLITE.sub('', text)):
+        prompts = _protected_prompts() if prompts is None else prompts
+        if any(compact[i:i + _FRAGMENT_CHARS] in prompt
+               for i in range(len(compact) - _FRAGMENT_CHARS + 1) for prompt in prompts):
             return True
     return False
-
-
-def _rule_restricted(visible):
-    if _MODEL_ALLOWED.get():
-        return _secret_request(visible)
-    return _FOREIGN_SCOPE.search(visible) is not None or _write_request(visible)
-
-
-def _write_request(query):
-    for clause in _CLAUSE.split(query):
-        text = clause.strip(' ,，')
-        english = _EN_POLITE.sub('', text)
-        chinese = _ZH_POLITE.sub('',text)
-        if ((_EN_WRITE.search(english) and not _EN_REPORT.match(english)) or _chinese_write_request(text)
-                or _OVERRIDE_COMMAND.search(english) or _OVERRIDE_COMMAND.search(chinese)
-                or _SECRET_COMMAND.search(english) or _SECRET_COMMAND.search(chinese)):
-            return True
-    return False
-
-
-def refers_to_records(query, *, relationships=False):
-    return (_RECORD_REFERENCE.search(query) is not None or
-            (relationships and re.search(r'项目|\bproject\b', query, re.I) is not None))
 
 
 def admission_restriction(query):
-    visible = unquoted_text(query)
-    if _rule_restricted(visible):
-        return ('INVESTIGATION_SCOPE_DENIED',
-                'Only read-only investigation of this workspace is supported; instructions cannot grant sources, tools or write access.')
+    """Format check only: an empty greeting is not a question. Wording never denies a question."""
     if _GREETING.fullmatch(query):
         return ('INVESTIGATION_QUESTION_REQUIRED', 'Enter a question about the selected records before starting an investigation.')
     return None
 
 
-def legacy_denial_reason(query):
-    """Translate a legacy admission denial; never used to choose a model route."""
-    visible = unquoted_text(query)
-    if _MODEL_ALLOWED.get():
-        return "SECRET_OR_POLICY_OVERRIDE" if _secret_request(visible) else "POLICY_BLOCKED"
-    if _FOREIGN_SCOPE.search(visible):
-        return "WORKSPACE_DENIED"
-    for clause in _CLAUSE.split(visible):
-        english = _EN_POLITE.sub('', clause.strip(' ,，'))
-        chinese = _ZH_POLITE.sub('', clause.strip(' ,，'))
-        if any(p.search(text) for p in (_OVERRIDE_COMMAND, _SECRET_COMMAND) for text in (english, chinese)):
-            return "SECRET_OR_POLICY_OVERRIDE"
-    return "WRITE_NOT_ALLOWED" if _write_request(visible) else "POLICY_BLOCKED"
+def router_safety_reason(*, operation=None, reason=None, host_reason=None):
+    """Union of structured host and model denial codes; a model can only remove authority.
 
-
-def router_safety_reason(query, *, operation=None, reason=None, host_reason=None, keyword_rules=True):
-    """Union of host and model denials; a model can only remove authority.
-
-    keyword_rules=False is only for the provider worker thread, which cannot see
-    the Ask safety scope; route_with_adapter re-checks on the Ask thread."""
+    The question text is never inspected: write refusal is the model's WRITE_REQUEST operation plus the
+    read-only Tool ACL, workspace refusal is the Host's blocked-entity result, and secret refusal is the
+    model's reason code plus output protection (leaks_protected_text)."""
     signals = {value for value in (reason, host_reason) if isinstance(value, str)}
-    restriction = admission_restriction(query) if keyword_rules else None
-    if restriction and restriction[0] == "INVESTIGATION_SCOPE_DENIED":
-        signals.add(legacy_denial_reason(query))
     if operation == "WRITE_REQUEST":
         signals.add("WRITE_NOT_ALLOWED")
     for code in ("WORKSPACE_DENIED", "SECRET_OR_POLICY_OVERRIDE", "WRITE_NOT_ALLOWED",

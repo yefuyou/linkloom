@@ -3125,7 +3125,6 @@ def execute_real_case(
             workflow="team_decision",
             query=case.user_question,
             max_steps=case_budget.max_model_turns,
-            max_provider_requests=case_budget.max_provider_requests,
             dry_run=True,
         ))
     state = runtime.checkpointer.get_latest(status.thread_id)

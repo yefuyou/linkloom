@@ -17,7 +17,7 @@ from linkloom.tools.contracts import ToolCall
 from tests.m3p_support import product_http, cold_read
 from tests.integration.test_m3q_provider_host import ScriptedGeminiTransport, poll
 from tests.integration.test_product_application_flow import _client
-from tests.unit.test_m3q_provider_budget import limits
+from tests.unit.test_task_provider_session import limits
 from tests.unit.test_task_observation_discovery import claim
 from tests.unit.test_task_relation_question_planner import arguments, step
 
@@ -63,8 +63,7 @@ def run_product(root, rows):
     app = ProductApplication(database_path=root / 'product.sqlite', extractor=None)
     stages = [IdentityStage(s, rows) for s in ('discovery', 'planning', 'semantics')]
     transport = ScriptedGeminiTransport(stages)
-    budget = replace(limits(), max_requests=10, max_input_tokens=500000,
-        max_output_tokens=65536, max_cost_usd=3, max_seconds=90, request_timeout_seconds=10)
+    budget = replace(limits(), max_seconds=90, request_timeout_seconds=10)
     service = compose_task_provider(app, GeminiProviderAdapter(transport), budget)
     return app, service, transport, stages
 

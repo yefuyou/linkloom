@@ -52,9 +52,10 @@ def test_ambiguous_reserved_attempt_cannot_rebill_after_crash(tmp_path):
     assert "SEMANTIC_OUTCOME_UNKNOWN" in result["errors"] and len(model.requests) == 1
 
 
-def test_inner_budget_and_provider_failure_are_separate(tmp_path):
-    bound, call, model, _ = prepared(tmp_path / "budget", policy=SemanticCallPolicy("FAKE", max_requests=0))
-    assert "SEMANTIC_REQUEST_BUDGET_EXHAUSTED" in bound.execute(call)["errors"]
+def test_missing_provider_and_provider_failure_are_separate(tmp_path):
+    bound, call, model, _ = prepared(tmp_path / "missing")
+    bound.owner.adapter = None
+    assert "SEMANTIC_PROVIDER_NOT_CONFIGURED" in bound.execute(call)["errors"]
     assert not model.requests
     class Failed(FakeModel):
         def complete(self, request):
@@ -68,6 +69,12 @@ def test_inner_budget_and_provider_failure_are_separate(tmp_path):
     assert result["execution"]["cost_usd"] is None
     bound.execute(call)
     assert len(model.requests) == 1
+
+
+def test_saved_policy_with_removed_quota_keys_loads_and_does_not_gate():
+    policy = SemanticCallPolicy.from_dict(dict(execution_kind="FAKE", max_requests=0, max_cost_usd=0.0,
+        request_cost_upper_bound_usd=5.0, max_input_tokens=32768, max_output_tokens=8192))
+    assert policy == SemanticCallPolicy("FAKE")
 
 
 def test_new_live_semantic_policy_is_not_enabled():

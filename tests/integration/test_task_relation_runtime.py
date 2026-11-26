@@ -66,7 +66,7 @@ def execute(root, tools, model=None, *, steps=3):
     model = model or script(tools.workspace_id)
     engine = engine_for(root, tools, model)
     status = engine.start_multi_agent(RunRequest(request_id="m3b", workflow="task_relations",
-        query="这些任务是否同一任务，计划截止日期如何修订？", max_steps=steps, max_provider_requests=steps))
+        query="这些任务是否同一任务，计划截止日期如何修订？", max_steps=steps))
     state = engine.checkpointer.get_latest(status.thread_id)
     result = json.loads((root / "checkpoints" / state.result_ref).read_text(encoding="utf8")) if state and state.result_ref else None
     return status, state, result, model

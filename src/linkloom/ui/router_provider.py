@@ -14,7 +14,7 @@ from linkloom.agents.providers.gemini_api import (
 from linkloom.ui.structured_router import (
     CAPABILITY, CONFIG, INTENTS, PROMPT, SAFETY, TIME_ROLES, _reject_constant, _unique_object, routing_domain,
 )
-from linkloom.ui.ask_admission import admission_restriction, legacy_denial_reason, router_safety_reason
+from linkloom.ui.ask_admission import router_safety_reason
 from linkloom.ui.task_provider import TaskProviderLimits, TaskProviderSession
 
 
@@ -104,8 +104,7 @@ def _route_text(message, context, *, diagnostics=False):
         proposed_operation = args.pop("operation")
         candidate = args.pop("candidate_id")
         query = context["question"]
-        safety = router_safety_reason(query, operation=proposed_operation, reason=args["reason_code"],
-                                      keyword_rules=False)
+        safety = router_safety_reason(operation=proposed_operation, reason=args["reason_code"])
         if safety:
             args["reason_code"] = safety
         op = ("WRITE_REQUEST" if safety == "WRITE_NOT_ALLOWED" else
@@ -205,7 +204,7 @@ class RouterProvider:
     mode: str = "llm_first"
     security_adapter: object = None
 
-    def reserve(self, app, owner, request, validate):
+    def open_session(self, app, owner, request, validate):
         models = owner.task_models
         if request.agent_id == "ask-security":
             timeout = CONFIG["security_timeout_seconds"]
@@ -213,10 +212,8 @@ class RouterProvider:
             timeout = CONFIG["gemini_router_timeout_seconds"]
         else:
             timeout = CONFIG["timeout_seconds"]
-        limits = getattr(models, "provider_limits", None) or TaskProviderLimits(
-            1, 12000, max(CONFIG["max_output_tokens"], CONFIG["security_max_output_tokens"]),
-            .03, timeout, timeout, .00656)
-        limits = replace(limits, max_requests=1, request_timeout_seconds=min(limits.request_timeout_seconds, timeout))
+        limits = getattr(models, "provider_limits", None) or TaskProviderLimits(timeout, timeout)
+        limits = replace(limits, request_timeout_seconds=min(limits.request_timeout_seconds, timeout))
         root = Path(app.repository.database_path).parent / "router-provider" / request.run_id
         session = TaskProviderSession(root, limits, validate)
         with owner._lock:

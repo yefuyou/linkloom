@@ -57,7 +57,6 @@ def create_reviewed_change(tmp_path, artifact, registry, project, before, after)
         model_id="m2-script",
         request_guard=lambda request: ProviderRequestAuthorization.approve(
             request, guard_id="offline-m2", reservation_id="offline",
-            estimated_cost_upper_bound_usd=0,
         ),
         request_guard_id="offline-m2",
         max_attempts=1,

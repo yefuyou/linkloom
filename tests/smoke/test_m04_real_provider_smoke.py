@@ -308,7 +308,7 @@ def run_scenario(client, model, diagnostics=None):
     runtime = RuntimeEngine(vault, index, root / "checkpoints", trace_dir=root / "traces", model=adapter)
     status = runtime.start_multi_agent(RunRequest(
         request_id="gate-a", thread_id="gate-a", workflow="ask", query=PROMPT,
-        max_provider_requests=2, max_steps=4, dry_run=True,
+        max_steps=4, dry_run=True,
     ))
     state = runtime.checkpointer.get_latest("gate-a")
     _capture_runtime_progress(diagnostics, state)

@@ -1,13 +1,14 @@
-"""Per-question Provider reservations at the existing complete(request) seam.
+"""Per-question Provider journal at the existing complete(request) seam.
 
 No planning, tools, business approvals or model retries live here. A failed or
-uncertain attempt terminates the question, including other task stages.
+uncertain attempt terminates the question, including other task stages. The
+session records what the Provider actually reported; it never limits spend.
 """
 from __future__ import annotations
 
 from contextlib import contextmanager
 from contextvars import ContextVar
-from dataclasses import asdict, dataclass, replace
+from dataclasses import asdict, dataclass, fields, replace
 from datetime import datetime, UTC
 import json
 import math
@@ -17,80 +18,82 @@ from threading import Event, Lock
 from time import monotonic
 from uuid import uuid4
 
-from linkloom.agents.model_adapter import ModelProviderError, ModelResponse, ModelUsage
+from linkloom.agents.model_adapter import ModelProviderError, ModelResponse
+from linkloom.observability.pricing import estimate_cost_usd
 from linkloom.semantic_ingestion.task_relation_models import canonical_hash
 from linkloom.ui.lifecycle import BackgroundTasks, DEFAULT_SHUTDOWN_TIMEOUT, shutdown_deadline
+
+JOURNAL_NAME = 'provider_journal.json'
+LEGACY_JOURNAL_NAME = 'budget.json'
+JOURNAL_SCHEMA_VERSION = 2
 
 
 @dataclass(frozen=True)
 class TaskProviderLimits:
-    max_requests: int
-    max_input_tokens: int
-    max_output_tokens: int
-    max_cost_usd: float
+    """Wall-clock bounds of one Provider session. Cost and token usage are observed, never limited."""
     max_seconds: float
     request_timeout_seconds: float
-    request_cost_upper_bound_usd: float
-    input_usd_per_million: float = 1.0
-    output_usd_per_million: float = 5.0
 
     def __post_init__(self):
-        for key in ('max_requests', 'max_input_tokens', 'max_output_tokens'):
-            value = getattr(self, key)
-            if type(value) is not int or value < 1:
-                raise ValueError('positive integer task budget required: ' + key)
-        for key in ('max_cost_usd', 'max_seconds', 'request_timeout_seconds', 'request_cost_upper_bound_usd',
-                    'input_usd_per_million', 'output_usd_per_million'):
+        for key in ('max_seconds', 'request_timeout_seconds'):
             value = getattr(self, key)
             if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value) or value <= 0:
-                raise ValueError('positive finite task budget required: ' + key)
+                raise ValueError('positive finite task duration required: ' + key)
         if self.request_timeout_seconds > self.max_seconds:
-            raise ValueError('task request timeout exceeds total duration budget')
+            raise ValueError('task request timeout exceeds total duration')
 
-    def reservation_cost(self, input_tokens, output_tokens):
-        return max(self.request_cost_upper_bound_usd,
-                   (input_tokens * self.input_usd_per_million
-                    + output_tokens * self.output_usd_per_million) / 1_000_000)
+    @classmethod
+    def from_dict(cls, data):
+        """Build limits from a stored dict; keys of the removed budget fields are ignored."""
+        return cls(**{field.name: data[field.name] for field in fields(cls) if field.name in data})
 
 
-_ROUTER_RESERVATION = ContextVar("ask_router_reservation", default=None)
+_ROUTER_VALIDATION = ContextVar("ask_router_source_validation", default=None)
 
 
 @contextmanager
-def pass_router_reservation(session):
-    token = _ROUTER_RESERVATION.set(session)
+def pass_router_source_validation(session):
+    """Hand the Router session's source-authorization check to the investigation that follows it.
+
+    Only the validate() callable travels. Nothing the Router session recorded (usage, time, requests) is
+    visible to or charged against the investigation session.
+    """
+    token = _ROUTER_VALIDATION.set(None if session is None else session.validate)
     try:
         yield
     finally:
-        _ROUTER_RESERVATION.reset(token)
+        _ROUTER_VALIDATION.reset(token)
 
 
-def remaining_provider_limits(limits):
-    spent = _ROUTER_RESERVATION.get()
-    if spent is None:
-        return limits
-    seconds = limits.max_seconds - (monotonic() - spent.started)
-    if spent.failure or seconds <= 0:
-        raise ValueError("TASK_PROVIDER_BUDGET_EXHAUSTED")
-    try:
-        return replace(limits, max_requests=limits.max_requests-spent.requests,
-            max_input_tokens=limits.max_input_tokens-spent.input_tokens,
-            max_output_tokens=limits.max_output_tokens-spent.output_tokens,
-            max_cost_usd=limits.max_cost_usd-spent.cost, max_seconds=seconds,
-            request_timeout_seconds=min(limits.request_timeout_seconds, seconds))
-    except ValueError as exc:
-        raise ValueError("TASK_PROVIDER_BUDGET_EXHAUSTED") from exc
+def read_provider_journal(directory):
+    """Return the Provider journal of a session directory, or None.
+
+    Reads the current provider_journal.json and, read-only, the legacy budget.json of historical runs.
+    """
+    for name in (JOURNAL_NAME, LEGACY_JOURNAL_NAME):
+        try:
+            data = json.loads((Path(directory) / name).read_text(encoding='utf8'))
+        except (OSError, ValueError):
+            continue
+        if isinstance(data, dict):
+            return data
+    return None
+
+
+def journal_request_count(journal):
+    """Number of Provider requests a journal says were sent (current and legacy field names)."""
+    count = journal.get('requests', journal.get('requests_reserved'))
+    return count if type(count) is int else 0
 
 
 class TaskProviderSession:
     def __init__(self, root, limits, validate):
-        self.root, self.limits, self.validate = Path(root), remaining_provider_limits(limits), validate
+        self.root, self.limits, self.validate = Path(root), limits, validate
         self.root.mkdir(parents=True, exist_ok=True)
         self.started = monotonic()
         self.started_at = datetime.now(UTC).isoformat()
         self.failure = None
-        self.requests = self.input_tokens = self.output_tokens = 0
-        self.cost = 0.0
+        self.requests = 0
         self.attempts = []
         self.lock = Lock()
         self._workers = BackgroundTasks()
@@ -108,7 +111,7 @@ class TaskProviderSession:
         self._workers.wait(deadline)
 
     def bind(self, adapter, stage):
-        return _BudgetedTaskAdapter(self, adapter, stage)
+        return _JournaledTaskAdapter(self, adapter, stage)
 
     def record_validation(self, record):
         fields = {key: record[key] for key in ("provider_reply", "invalid_response_counts") if key in record}
@@ -119,13 +122,11 @@ class TaskProviderSession:
                     self._save()
 
     def _save(self):
-        # Fsync reservations before crossing the transport. No credentials,
-        # original quotes or provider continuation are copied into this journal.
-        with (self.root / 'budget.json').open('w', encoding='utf8') as stream:
-            json.dump(dict(limits=asdict(self.limits), requests_reserved=self.requests,
-                started_at=self.started_at,
-                input_tokens_reserved=self.input_tokens, output_tokens_reserved=self.output_tokens,
-                cost_reserved_usd=round(self.cost, 8), actual_cost_usd=None,
+        # Fsync the journal before crossing the transport so a crash leaves a PENDING row behind.
+        # No credentials, original quotes or provider continuation are copied into this journal.
+        with (self.root / JOURNAL_NAME).open('w', encoding='utf8') as stream:
+            json.dump(dict(schema_version=JOURNAL_SCHEMA_VERSION, limits=asdict(self.limits),
+                requests=self.requests, started_at=self.started_at,
                 elapsed_seconds=round(monotonic() - self.started, 3), failure=self.failure,
                 attempts=self.attempts), stream, ensure_ascii=False, indent=2)
             stream.flush()
@@ -154,21 +155,12 @@ class TaskProviderSession:
             except Exception:
                 return self._error('TASK_SOURCE_AUTHORIZATION_CHANGED')
             remaining = self.limits.max_seconds - (monotonic() - self.started)
-            # One byte per token plus conservative framing/schema allowance.
-            size = len(json.dumps(request.to_dict(), ensure_ascii=False).encode('utf8')) + 4096
-            output = request.generation_options.max_output_tokens
-            cost = self.limits.reservation_cost(size, output)
-            if (self.requests >= self.limits.max_requests
-                    or self.input_tokens + size > self.limits.max_input_tokens
-                    or self.output_tokens + output > self.limits.max_output_tokens
-                    or self.cost + cost > self.limits.max_cost_usd + 1e-10 or remaining <= 0):
-                return self._error('TASK_PROVIDER_BUDGET_EXHAUSTED')
+            if remaining <= 0:
+                return self._error('TASK_PROVIDER_DEADLINE')
             self.requests += 1
-            self.input_tokens += size
-            self.output_tokens += output
-            self.cost += cost
             row = dict(sequence=self.requests, stage=stage, request_sha256=canonical_hash(request.to_dict()),
-                input_reserved=size, output_reserved=output, cost_reserved_usd=cost, outcome='PENDING')
+                outcome='PENDING')
+            sent_at = monotonic()
             self.attempts.append(row)
             self._save()
             done, result = Event(), []
@@ -183,13 +175,22 @@ class TaskProviderSession:
 
             self._workers.start(f'task-provider-{self.root.parent.name}-{self.requests}', invoke)
             if not done.wait(min(remaining, self.limits.request_timeout_seconds)):
-                row['outcome'] = 'UNCERTAIN'
+                row.update(outcome='UNCERTAIN', code='PROVIDER_TIMEOUT_UNCERTAIN',
+                           duration_ms=round((monotonic() - sent_at) * 1000, 1))
                 return self._error('PROVIDER_TIMEOUT_UNCERTAIN', uncertain=True)
             response = result[0] if result else None
             if not isinstance(response, ModelResponse):
-                row['outcome'] = 'UNCERTAIN'
+                row.update(outcome='UNCERTAIN', code='PROVIDER_UNCERTAIN',
+                           duration_ms=round((monotonic() - sent_at) * 1000, 1))
                 return self._error('PROVIDER_UNCERTAIN', uncertain=True)
-            row.update(response_sha256=canonical_hash(response.to_dict()), usage=response.usage.to_dict(),
+            usage = response.usage
+            # Observation only: usage the Provider reported, a rate-based estimate (null when tokens are
+            # unknown) and the Provider's own bill. None of it is read back by this session.
+            row.update(response_sha256=canonical_hash(response.to_dict()), usage=usage.to_dict(),
+                duration_ms=usage.duration_ms if usage.duration_ms is not None
+                else round((monotonic() - sent_at) * 1000, 1),
+                estimated_cost_usd=estimate_cost_usd(usage.input_tokens, usage.output_tokens),
+                provider_reported_cost_usd=usage.provider_reported_cost_usd,
                 provider_request_id=response.provider_request_id, provider_response_id=response.provider_response_id)
             if response.error:
                 uncertain = (response.error.outcome == 'unknown_provider_outcome'
@@ -201,10 +202,6 @@ class TaskProviderSession:
                     return replace(failure, finish_reason=response.finish_reason, usage=response.usage,
                                    provider_metadata=response.provider_metadata)
                 return failure
-            if ((response.usage.input_tokens or 0) > size or (response.usage.output_tokens or 0) > output
-                    or (response.usage.total_tokens or 0) > size + output):
-                row['outcome'] = 'FAILED'
-                return self._error('PROVIDER_USAGE_EXCEEDED')
             try:
                 self.validate()
             except Exception:
@@ -212,13 +209,13 @@ class TaskProviderSession:
                 return self._error('TASK_SOURCE_AUTHORIZATION_CHANGED')
             if monotonic() - self.started >= self.limits.max_seconds:
                 row['outcome'] = 'WITHHELD'
-                return self._error('TASK_PROVIDER_BUDGET_EXHAUSTED')
+                return self._error('TASK_PROVIDER_DEADLINE')
             row['outcome'] = 'SUCCEEDED'
             self._save()
             return response
 
 
-class _BudgetedTaskAdapter:
+class _JournaledTaskAdapter:
     def __init__(self, session, adapter, stage):
         self.session, self.adapter, self.stage = session, adapter, stage
         self.capability = getattr(adapter, 'capability', None)
@@ -228,64 +225,32 @@ class _BudgetedTaskAdapter:
 
 
 def validate_task_provider_receipt(path, completed_at):
-    """Require durable successful reservations before releasing a LIVE result."""
-    budget = json.loads(Path(path).read_text(encoding='utf8'))
-    if budget['failure'] is not None or not budget['attempts']:
+    """Require a durable, structurally complete journal of successful requests before releasing a LIVE result."""
+    journal = json.loads(Path(path).read_text(encoding='utf8'))
+    if journal['failure'] is not None or not journal['attempts']:
         raise ValueError('TASK_PROVIDER_RECEIPT_INCOMPLETE')
-    _validate_provider_budget(budget, completed_at, require_success=True)
+    _validate_provider_journal(journal, completed_at, require_success=True)
 
 
-def _validate_provider_budget(budget, completed_at, *, require_success=False):
-    limits = TaskProviderLimits(**budget['limits'])
-    attempts = budget['attempts']
-    if (not isinstance(attempts, list)
-            or type(budget['requests_reserved']) is not int
-            or budget['requests_reserved'] != len(attempts) or len(attempts) > limits.max_requests):
+def _validate_provider_journal(journal, completed_at, *, require_success=False):
+    limits = TaskProviderLimits.from_dict(journal['limits'])
+    attempts = journal['attempts']
+    if (not isinstance(attempts, list) or journal_request_count(journal) != len(attempts)):
         raise ValueError('TASK_PROVIDER_RECEIPT_INCOMPLETE')
-    input_reserved = output_reserved = 0
-    cost_reserved = 0.0
     for sequence, row in enumerate(attempts, 1):
         outcome = row['outcome']
         if (outcome not in ('SUCCEEDED', 'FAILED', 'PENDING', 'UNCERTAIN', 'WITHHELD')
                 or (require_success and outcome != 'SUCCEEDED') or type(row['sequence']) is not int
                 or row['sequence'] != sequence
-                or any(type(row[key]) is not int or row[key] < 1
-                       for key in ('input_reserved', 'output_reserved'))
                 or not isinstance(row['stage'], str) or not row['stage']
                 or any(not isinstance(row[key], str) or len(row[key]) != 64
                        or any(c not in '0123456789abcdef' for c in row[key])
                        for key in (('request_sha256', 'response_sha256') if outcome == 'SUCCEEDED'
                                    else ('request_sha256',)))):
             raise ValueError('TASK_PROVIDER_RECEIPT_INCOMPLETE')
-        cost = row['cost_reserved_usd']
-        minimum_cost = max(limits.request_cost_upper_bound_usd,
-            (row['input_reserved'] * limits.input_usd_per_million
-             + row['output_reserved'] * limits.output_usd_per_million) / 1_000_000)
-        if (isinstance(cost, bool) or not isinstance(cost, (int, float))
-                or not math.isfinite(cost) or cost + 1e-10 < minimum_cost):
-            raise ValueError('TASK_PROVIDER_RECEIPT_BUDGET_INVALID')
-        if outcome == 'SUCCEEDED':
-            usage = ModelUsage.from_dict(row['usage'])
-            if ((usage.input_tokens or 0) > row['input_reserved']
-                    or (usage.output_tokens or 0) > row['output_reserved']
-                    or (usage.total_tokens or 0) > row['input_reserved'] + row['output_reserved']):
-                raise ValueError('TASK_PROVIDER_RECEIPT_USAGE_INVALID')
-        input_reserved += row['input_reserved']
-        output_reserved += row['output_reserved']
-        cost_reserved += cost
-    if (type(budget['input_tokens_reserved']) is not int
-            or type(budget['output_tokens_reserved']) is not int
-            or budget['input_tokens_reserved'] != input_reserved
-            or budget['output_tokens_reserved'] != output_reserved
-            or input_reserved > limits.max_input_tokens or output_reserved > limits.max_output_tokens
-            or isinstance(budget['cost_reserved_usd'], bool)
-            or not isinstance(budget['cost_reserved_usd'], (int, float))
-            or not math.isclose(budget['cost_reserved_usd'], cost_reserved, rel_tol=0, abs_tol=1e-8)
-            or cost_reserved > limits.max_cost_usd + 1e-10):
-        raise ValueError('TASK_PROVIDER_RECEIPT_BUDGET_INVALID')
     elapsed = (datetime.fromisoformat(completed_at.replace('Z', '+00:00')) -
-               datetime.fromisoformat(budget['started_at'])).total_seconds()
-    measured = budget['elapsed_seconds']
+               datetime.fromisoformat(journal['started_at'])).total_seconds()
+    measured = journal['elapsed_seconds']
     # Runtime checkpoints use whole seconds; a subsecond run can therefore have
     # a truncated completion stamp just before its precise start stamp.
     if (elapsed < -1 or elapsed > limits.max_seconds
@@ -300,7 +265,7 @@ def compose_task_provider(app, provider, limits, *, enable_temporal=False, paral
     from linkloom.ui.investigation import ProductInvestigationService
     from linkloom.ui.task_investigation import TaskInvestigationModels
     if not isinstance(provider, GeminiProviderAdapter) or not isinstance(limits, TaskProviderLimits):
-        raise ValueError('explicit Gemini adapter and task budgets required')
+        raise ValueError('explicit Gemini adapter and task provider limits required')
     models = TaskInvestigationModels(provider, provider, provider,
         execution_kind='LIVE', provider_id='gemini', model_id=provider.model_id, provider_limits=limits)
     return ProductInvestigationService(app, model_factory=lambda _question: provider,

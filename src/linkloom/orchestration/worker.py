@@ -1,7 +1,8 @@
 """Worker subgraph: one task, own session, own Runtime checkpoint, own result.
 
-A Worker wraps the existing RuntimeEngine.start_multi_agent and the existing Reviewer projection
-(build_branch_row). Failure and abstention are task statuses, never exceptions that stop other Workers.
+A Worker wraps RuntimeEngine.start_multi_agent (team_decision: SingleAgentModelLoop over the ToolRuntime and
+its ledger, then one deterministic evidence verification) and projects the verified result (build_branch_row).
+Its turn count is the run-level max_steps; the last step is reserved for the final answer. Failure and abstention are task statuses, never exceptions that stop other Workers.
 
 Recovery responsibility: the LangGraph checkpoint decides which tasks still need a Worker. The Runtime
 checkpoint under tasks/<id>/attempt-<n>/runtime is only this Worker's execution record. Two small receipts
@@ -27,7 +28,7 @@ from linkloom.runtime.models import RunRequest, RunStatus
 from linkloom.ui.backend import project_reviewer
 from linkloom.ui.projection import collect_observed_evidence, project_run_snapshot
 from linkloom.ui.lifecycle import BackgroundShutdownTimeout
-from linkloom.ui.task_provider import TaskProviderSession
+from linkloom.ui.task_provider import TaskProviderSession, journal_request_count, read_provider_journal
 
 HARD_FAILURES = frozenset({'MODEL_AUTH_REQUIRED', 'MODEL_BILLING_BLOCKED', 'TASK_SOURCE_AUTHORIZATION_CHANGED'})
 UNCERTAIN_FAILURES = frozenset({'PROVIDER_TIMEOUT_UNCERTAIN', 'PROVIDER_UNCERTAIN'})
@@ -51,16 +52,18 @@ class WorkerDeps:
 
 
 class OutputBoundedAdapter:
-    """Caps one request's output tokens at the Worker's slice, never raises the model's own limit."""
+    """Select the per-request generation ceiling for tool use or the reserved Final."""
 
-    def __init__(self, adapter, output_limit):
+    def __init__(self, adapter, output_limit, final_output_limit):
         self.adapter = adapter
         self.output_limit = output_limit
+        self.final_output_limit = final_output_limit
         self.capability = getattr(adapter, 'capability', None)
 
     def complete(self, request):
         options = request.generation_options
-        output = min(options.max_output_tokens or self.output_limit, self.output_limit)
+        limit = self.final_output_limit if request.final_only else self.output_limit
+        output = min(options.max_output_tokens or limit, limit)
         return self.adapter.complete(replace(request, generation_options=replace(options, max_output_tokens=output)))
 
 
@@ -103,6 +106,18 @@ def build_branch_row(name, question, status, checkpoint_dir, checkpointer, works
                       evidence=[{key: item[key] for key in ('source_id', 'source_version', 'line_start',
                                                             'line_end', 'quote_sha256')}
                                 for item in evidence])
+    # Each existing rationale entry carries its own Reviewer-checked references.
+    # The Worker encodes its assigned item ID in the point field without changing the runtime schema.
+    evidence_refs = {item['ref']: item for item in evidence}
+    claims = []
+    for position, point in enumerate(team['rationale'], 1):
+        item_id, separator, fact = point['point'].partition(':')
+        refs = point['evidence_refs']
+        if separator and item_id and fact.strip() and refs and all(ref in evidence_refs for ref in refs):
+            claims.append(dict(item_id=item_id, claim_id=f'{name}:{position}', fact=fact.strip(),
+                               evidence=[evidence_refs[ref] for ref in refs]))
+    if claims:
+        conclusion['item_claims'] = claims
     return dict(run=dict(branch=name, run_id=status.run_id, thread_id=status.thread_id,
                          review_id=review['review_id']), evidence=evidence, conclusion=conclusion)
 
@@ -114,6 +129,14 @@ def render_query(task, upstream, context):
         structured['confirmed_scope'] = context['confirmed_scope']
     if context.get('entity_leads'):
         structured['entity_leads_unverified'] = context['entity_leads']
+    if task.get('item_ids'):
+        items = context.get('required_items', {})
+        structured['required_items'] = {key: items[key] for key in task['item_ids'] if key in items}
+        structured['final_coverage_instruction'] = (
+            'In Final rationale, give one point per actual supported answer as '
+            '"item_id: atomic answer value". Use the exact assigned ID before the colon. '
+            'Include evidence_refs specific to that point. Omit unanswered items. '
+            'Use the answer value alone, without explanation or additional facts.')
     if upstream:
         structured['verified_upstream_results'] = upstream
     if not structured:
@@ -133,13 +156,13 @@ def _read(path):
 
 
 def paid_without_receipt(root):
-    """True when a previous process reserved provider requests in this directory and left no receipt.
+    """True when a previous process sent provider requests in this directory and left no receipt.
 
-    The budget journal is fsynced before each request crosses the transport, so reserved requests with no
+    The Provider journal is fsynced before each request crosses the transport, so recorded requests with no
     receipt mean the process died while a paid call may have been in flight. Its outcome is unknown, and it
     is never sent again."""
-    journal = _read(Path(root) / 'budget.json')
-    return isinstance(journal, dict) and (journal.get('requests_reserved') or 0) > 0
+    journal = read_provider_journal(root)
+    return journal is not None and journal_request_count(journal) > 0
 
 
 def close_session(session, timeout=1.0):
@@ -164,26 +187,27 @@ def _run(deps, task, query):
         receipt = dict(run_status=None, failure='PROVIDER_UNCERTAIN', error=None)
         write_json(root / 'status.json', receipt)
         return receipt
-    limits = deps.limits.per_task
+    limits = deps.limits.provider
     session = TaskProviderSession(root, limits, deps.validate)
     status, error = None, None
     try:
-        turns = 3
-        if limits.max_requests < turns or limits.max_output_tokens < turns:
-            session._error('TASK_PROVIDER_BUDGET_EXHAUSTED')
-            raise ValueError('WORKER_BUDGET_INSUFFICIENT')
-        turns = min(turns + 1, limits.max_requests, limits.max_output_tokens)
+        # Run-level step count. The Runtime keeps the last step for the final answer (reserve_final_turn), so a
+        # long investigation that reaches max_steps still publishes what it read.
+        steps = deps.limits.max_steps
         adapter = OutputBoundedAdapter(session.bind(deps.model_factory(task['description']), 'runtime'),
-                                        min(OrchestrationLimits.WORKER_MAX_OUTPUT_PER_REQUEST,
-                                            limits.max_output_tokens // turns))
+                                        deps.limits.max_request_output_tokens, deps.limits.max_final_output_tokens)
+        # Workers answer in team-decision-result/v1 prose with cited reads. The typed-claim host checks (confirmed
+        # facts, blocked entities) do not run on this path; blocked entities are filtered from task descriptions by
+        # the Supervisor. v1 prose is verified for span integrity only: its claims carry no semantic support and are
+        # unverified, never confirmed. Only a typed claim matching a Host-confirmed fact is SUPPORTED.
         engine = RuntimeEngine(vault_root=deps.vault, index_path=deps.index,
             checkpoint_dir=root / 'runtime', trace_dir=root / 'traces', model=adapter,
             memory_enabled=False, decision_memory_enabled=False,
             decision_memory_workspace_id=deps.workspace_id)
         thread = f"{deps.run_id}-{task['id']}-{task['epoch']}-{task['attempt']}"
         status = engine.start_multi_agent(RunRequest(request_id=thread, thread_id=thread, query=query,
-            workflow='team_decision', task_plan=None, planning_mode='template', max_steps=turns,
-            max_provider_requests=turns, dry_run=True, caller='product_ui', reserve_final_turn=True,
+            workflow='team_decision', task_plan=None, planning_mode='template', max_steps=steps,
+            dry_run=True, caller='product_ui', reserve_final_turn=True,
             cited_answer=True))
     except Exception as exc:
         error = str(exc) if isinstance(exc, ValueError) and str(exc).isupper() else 'WORKER_RUNTIME_FAILED'

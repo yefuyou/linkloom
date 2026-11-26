@@ -13,7 +13,6 @@ from linkloom.loader import VaultReader
 from linkloom.runtime.graph import RuntimeEngine
 from linkloom.runtime.models import RunRequest, RunStatus
 from linkloom.runtime.errors import CheckpointError
-from linkloom.runtime.team_decision_planner import plan_team_decision_query
 from linkloom.runtime.task_plan import validate_model_proposed_plan
 from linkloom.ui.lifecycle import BackgroundTasks, DEFAULT_SHUTDOWN_TIMEOUT, shutdown_deadline
 from linkloom.ui.projection import (
@@ -60,19 +59,17 @@ class RuntimeRunBackend:
         engine: RuntimeEngine,
         workspace: WorkspacePresentationContext,
         max_steps: int = 8,
-        max_provider_requests: int = 8,
         final_protocol: str = "team-decision-result/v1",
         planning_mode: str | None = None,
         workflow: str = "team_decision",
     ) -> None:
         if not isinstance(engine, RuntimeEngine):
             raise TypeError("RuntimeRunBackend requires a RuntimeEngine.")
-        if max_steps < 1 or max_provider_requests < 1:
-            raise ValueError("RuntimeRunBackend requires positive execution limits.")
+        if max_steps < 1:
+            raise ValueError("RuntimeRunBackend requires a positive max_steps.")
         self.engine = engine
         self.workspace = workspace
         self.max_steps = max_steps
-        self.max_provider_requests = max_provider_requests
         self.final_protocol = final_protocol
         self.planning_mode = planning_mode
         if workflow not in {"team_decision", "task_relations"}:
@@ -145,14 +142,11 @@ class RuntimeRunBackend:
                     workflow=self.workflow,
                     query=job.query,
                     task_plan=job.task_plan,
+                    # The model plans when it can; the question wording never selects a template.
                     planning_mode=("template" if self.workflow == 'task_relations' or job.task_plan is not None else self.planning_mode) or (
-                        "model" if (
-                            callable(getattr(self.engine.model, "propose_task_plan", None))
-                            and plan_team_decision_query(job.query) is None
-                        ) else "template"
+                        "model" if callable(getattr(self.engine.model, "propose_task_plan", None)) else "template"
                     ),
                     max_steps=self.max_steps,
-                    max_provider_requests=self.max_provider_requests,
                     dry_run=True,
                     caller="product_ui",
                     final_protocol=self.final_protocol,
@@ -211,7 +205,7 @@ class RuntimeRunBackend:
         if self.workflow == "task_relations":
             from linkloom.ui.task_result import project_task_snapshot
             snapshot = project_task_snapshot(job.query, self.workspace, status, state, artifact)
-            snapshot['metrics'].update(max_model_turns=self.max_steps, max_provider_requests=self.max_provider_requests)
+            snapshot['metrics'].update(max_model_turns=self.max_steps)
             snapshot["run"]["runtime_id"] = snapshot["run"]["id"]
             snapshot["run"]["id"] = job.ui_run_id
             return snapshot
@@ -242,6 +236,9 @@ class RuntimeRunBackend:
                 tool_ledger=ledger,
             )
         snapshot["reviewer"] = project_reviewer(artifact)
+        claims = ((artifact or {}).get("result") or {}).get("typed_claims") if snapshot["kind"] != "error" else None
+        if isinstance(claims, list):
+            snapshot["typed_claims"] = claims
         if state is not None and state.request_ref:
             request = json.loads((self.engine.checkpoint_dir / state.request_ref).read_text(encoding="utf-8"))
             if request.get("task_plan") is not None:
@@ -249,7 +246,7 @@ class RuntimeRunBackend:
                 snapshot["planning"] = {
                     "origin": "model" if request.get("planning_mode") == "model" else "rules",
                     "validated": True,
-                    "provider_requests": self.max_provider_requests - request["max_provider_requests"],
+                    "provider_requests": 1 if request.get("planning_mode") == "model" else 0,
                 }
         snapshot["run"]["runtime_id"] = snapshot["run"]["id"]
         snapshot["run"]["id"] = job.ui_run_id

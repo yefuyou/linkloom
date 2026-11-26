@@ -81,7 +81,7 @@ def test_offline_mps_runtime_uses_seeded_product_memory_path():
         runtime = RuntimeEngine(vault, index, root / 'checkpoints', trace_dir=root / 'traces', model=model)
         result = runtime.start_multi_agent(RunRequest(request_id='m12-offline', thread_id='m12-offline',
             workflow='team_decision', query=h.PUBLIC_CASES[0].user_question,
-            max_steps=6, max_provider_requests=6, dry_run=True))
+            max_steps=6, dry_run=True))
         assert result.status == 'completed', result.error
         assert len(model.requests) == 4
         assert binding.constructions >= 1  # actual RuntimeEngine received the seeded adapter

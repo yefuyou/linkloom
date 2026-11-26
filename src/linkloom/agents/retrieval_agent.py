@@ -10,9 +10,7 @@ from linkloom.agents.base import AgentResult, AgentTask
 from linkloom.agents.model_adapter import (
     ModelTurnProposal, ModelTurnRequest, is_verified_evidence_result,
 )
-from linkloom.agents.claim_grounding import (
-    verified_relation_conflict_refs, verified_subgoal_conflict_refs,
-)
+from linkloom.agents.claim_grounding import claim_conflicts
 from linkloom.agents.team_decision import (
     CLAIM_PROPOSAL_SCHEMA_VERSION,
     SCHEMA_VERSION,
@@ -24,10 +22,7 @@ from linkloom.runtime.errors import ValidationError
 from linkloom.runtime.model_loop import ModelLoopResult, SingleAgentModelLoop
 from linkloom.runtime.models import RuntimeState, ToolExecutionRecord
 from linkloom.runtime.task_plan import (
-    TaskPlan, _explicit_goal_anchors, assess_task_plan, refusal_missing_subgoals,
-    pending_alternate_subgoals,
-    conflicted_subgoals,
-    validate_relation_final,
+    TaskPlan, assess_task_plan, refusal_missing_subgoals, pending_alternate_subgoals,
 )
 from linkloom.agents.task_relation_result import _parse_final_json
 from linkloom.tools.contracts import ToolError
@@ -121,6 +116,8 @@ class RetrievalAgent:
         context_runtime: Any | None = None,
         reserve_final_turn: bool = False,
         cited_answer: bool = False,
+        confirmed_fact_index: Callable[[], Any] | None = None,
+        blocked_entities: tuple[str, ...] = (),
     ) -> None:
         self.agent_id = agent_id
         self.model = model
@@ -139,6 +136,11 @@ class RetrievalAgent:
         self.context_runtime = context_runtime
         self.reserve_final_turn = reserve_final_turn
         self.cited_answer = cited_answer
+        # Host callable returning a fresh ConfirmedFactIndex (or None) on each
+        # check, so reviewed facts revoked during the run stop counting.
+        self.confirmed_fact_index = confirmed_fact_index
+        self.blocked_entities = tuple(blocked_entities)
+        self.last_verified_claims: list[dict[str, Any]] = []
         if prompt_profile not in PROMPT_PROFILES:
             raise ValidationError("Unsupported retrieval prompt profile.")
         self.prompt_profile = prompt_profile
@@ -297,25 +299,14 @@ class RetrievalAgent:
                 "the structure and then independently verifies each fact against its cited "
                 "evidence. Do not produce a free-text factual answer.\n"
                 if final_protocol == CLAIM_PROPOSAL_SCHEMA_VERSION else
-                "Every material claim is checked against only its cited verified source passages. "
-                "Use one semicolon-separated atomic statement per supported fact, in one of these "
-                "forms: 'OLD was replaced by NEW on YYYY-MM-DD' when the source gives "
-                "a date, or 'OLD was replaced by NEW' without one; never print square "
-                "brackets from a template. Also use 'OWNER is the accountable "
-                "owner of PLAN', 'PERSON reports directly to LEADER', or 'ALIAS is the team alias "
-                "for PLAN'. A deterministic runtime gate rejects unsupported relation types and "
-                "paraphrases it cannot verify; valid evidence IDs alone do not establish support. "
-                "For a source saying 'LEADER is PERSON's direct leader', write "
-                "'PERSON reports directly to LEADER'; reversing that direction is unsupported. "
-                "Keep this atomic relation free of trailing project or rollout qualifiers; "
-                "the cited source carries that scope. "
-                "For Chinese answers, preserve Chinese entity names but separate each atomic "
-                "claim in decision.value with a literal semicolon (;), not a Chinese full stop. "
-                "Use only direct relation wording present in the sources; do not add a date to "
-                "a relation unless that source states it. "
-                "If a requested fact cannot be stated in a supported form from the cited passages, "
-                "return a null decision with insufficient_evidence and no unsupported rationale, "
-                "action, alternative, or uncertainty statement.\n"
+                # TeamDecisionResult/v1 prose is not re-parsed by the Host: every cited
+                # span must be an intact verified read, so no sentence template applies.
+                "Answer the question directly in natural language in decision.value, citing for "
+                "each conclusion the evidence_refs you actually read in this run. Use only facts "
+                "the cited passages state; do not add a date to a relation unless that source "
+                "states it. If the material you read cannot answer the question, return a null "
+                "decision with insufficient_evidence and no unsupported rationale, action, "
+                "alternative, or uncertainty statement.\n"
             )
             legacy_plan_instruction = (
                 "The Host binds the source identity for every search. Never issue an unscoped "
@@ -505,6 +496,14 @@ class RetrievalAgent:
             if isinstance(ref, str) and ref and ref not in refs:
                 refs.append(ref)
         return refs
+
+    def _confirmed_facts(self) -> Any | None:
+        if self.confirmed_fact_index is None:
+            return None
+        try:
+            return self.confirmed_fact_index()
+        except Exception as error:  # A Host store failure becomes a structured Final failure.
+            raise ValidationError("Confirmed source facts could not be loaded.") from error
 
     def _final_model_visible_evidence(
         self,
@@ -900,6 +899,8 @@ class RetrievalAgent:
                     read_evidence_ids=read_refs,
                     observed_temporal_decision_ids=observed_temporal_decision_ids,
                     require_read_evidence=True,
+                    confirmed_facts=self._confirmed_facts(),
+                    blocked_entities=self.blocked_entities,
                 )
             except ValidationError as error:
                 temporal_reason = error.details.get("reason") if isinstance(error.details, dict) else None
@@ -950,7 +951,10 @@ class RetrievalAgent:
                         "The model reported missing evidence without a completed search.",
                     ), warnings,
                 )
-            if self.task_plan is None and null_result and read_refs and not self.cited_answer:
+            # A Typed partial keeps only verified claims and names its unknown_fields; it
+            # does not assert absence, so it needs no plan coverage proof.
+            if (self.task_plan is None and null_result and read_refs and not self.cited_answer
+                    and decision.verified_claims is None):
                 return self._failed_result(
                     task, usage,
                     self._safe_error(
@@ -965,71 +969,41 @@ class RetrievalAgent:
                     expected_workspace_id=self.expected_workspace_id or "",
                 )
                 material = not null_result
-                if decision.verified_claims is None:
-                    try:
-                        validate_relation_final(
-                            self.task_plan, assessment, decision.to_dict(), visible_evidence, read_refs,
-                        )
-                    except ValidationError:
-                        return self._failed_result(
-                            task, usage, self._safe_error(
-                                'TASK_PLAN_FINAL_SCOPE_MISMATCH', 'runtime',
-                                'Final must cite read evidence and match the requested relation chain.',
-                            ), warnings,
-                        )
                 if not material:
                     uncertainty = decision.uncertainty
-                    typed_conflict_refs: dict[str, tuple[str, str]] = {}
+                    # Conflicts are what the model's own typed claims state; the Host
+                    # never re-reads source wording to find them.
+                    typed_conflict_refs: dict[str, tuple[str, ...]] = {}
                     if (decision.verified_claims is not None
                             and uncertainty["status"] == "conflicting_evidence"):
-                        claims = decision.verified_claims.claims
-                        for subgoal in self.task_plan.subgoals:
-                            if subgoal.depends_on:
-                                continue
-                            goal_anchors = set(_explicit_goal_anchors(self.task_plan.goal))
-                            question_anchors = set(_explicit_goal_anchors(subgoal.question))
-                            for left in claims:
-                                relation = {
-                                    "owner_of_project": "owner_of",
-                                    "alias_of_project": "alias_of",
-                                }.get(left.predicate)
-                                if (relation is None
-                                        or left.subject.casefold() not in goal_anchors
-                                        or left.subject.casefold() not in question_anchors):
-                                    continue
-                                refs = verified_relation_conflict_refs(
-                                    relation, left.subject,
-                                    assessment.evidence_by_subgoal[subgoal.subgoal_id],
-                                )
-                                if not refs:
-                                    continue
-                                for right in claims:
-                                    if (right is left or right.predicate != left.predicate
-                                            or right.subject.casefold() != left.subject.casefold()
-                                            or right.object_value.casefold() == left.object_value.casefold()
-                                            or right.valid_on != left.valid_on
-                                            or right.temporal_kind != left.temporal_kind):
-                                        continue
-                                    if ((refs[0] in left.evidence_ids and refs[1] in right.evidence_ids)
-                                            or (refs[1] in left.evidence_ids and refs[0] in right.evidence_ids)):
-                                        typed_conflict_refs[subgoal.subgoal_id] = refs
-                                        break
-                                if subgoal.subgoal_id in typed_conflict_refs:
-                                    break
-                    conflict_set = set(conflicted_subgoals(self.task_plan, assessment)) | set(typed_conflict_refs)
+                        for left, right in claim_conflicts(decision.verified_claims.claims):
+                            refs = tuple(dict.fromkeys((*left.evidence_ids, *right.evidence_ids)))
+                            for subgoal in self.task_plan.subgoals:
+                                rows = {value["evidence_id"] for value in
+                                        assessment.evidence_by_subgoal[subgoal.subgoal_id]}
+                                if rows & set(left.evidence_ids) and rows & set(right.evidence_ids):
+                                    typed_conflict_refs.setdefault(subgoal.subgoal_id, refs)
+                    known_slots = {item.subgoal_id for item in self.task_plan.subgoals}
+                    reported = uncertainty["unknown_fields"]
+                    if decision.verified_claims is not None:
+                        reported_slots = set(reported)
+                    else:
+                        reported_slots = {slot for slot in known_slots
+                                          if any(slot.casefold() in field.casefold() for field in reported)}
+                    if decision.verified_claims is None and uncertainty["status"] == "conflicting_evidence":
+                        # TeamDecisionResult/v1 has no typed claims: the model states which
+                        # subgoals conflict and must cite both sides in uncertainty.
+                        typed_conflict_refs = {slot: tuple(uncertainty["evidence_refs"])
+                                               for slot in reported_slots}
+                    conflict_set = set(typed_conflict_refs)
                     conflicts = tuple(item.subgoal_id for item in self.task_plan.subgoals
                                       if item.subgoal_id in conflict_set)
-                    missing_set = set(refusal_missing_subgoals(self.task_plan, assessment)) | conflict_set
+                    # Missing: no verified read (structural), a stated conflict, or a
+                    # subgoal the model reports as unanswered by what it read.
+                    unread = set(refusal_missing_subgoals(self.task_plan, assessment))
+                    missing_set = unread | conflict_set | (reported_slots & known_slots)
                     missing = tuple(item.subgoal_id for item in self.task_plan.subgoals
                                     if item.subgoal_id in missing_set)
-                    if not missing:
-                        return self._failed_result(
-                            task, usage,
-                            self._safe_error(
-                                "WRONG_ABSTENTION", "runtime",
-                                "The verified relation chain supports the required subgoals.",
-                            ), warnings,
-                        )
                     attempted_searches = {
                         record.arguments["source_context"]["subgoal_id"]
                         for record in state.tool_ledger
@@ -1071,48 +1045,16 @@ class RetrievalAgent:
                                 {"pending_alternate_subgoals": list(pending_alternates)},
                             ), warnings,
                         )
-                    reported = uncertainty["unknown_fields"]
                     expected_uncertainty = (
                         "conflicting_evidence" if conflicts else "insufficient_evidence"
                     )
-                    reported_slots = set(reported)
-                    missing_slots = set(missing)
-                    known_slots = {item.subgoal_id for item in self.task_plan.subgoals}
-                    unreported_missing = missing_slots - reported_slots
-                    reported_extra = reported_slots - missing_slots
-                    # A comparison subgoal may summarize two already verified
-                    # conflicting roots. The model can name that unresolved
-                    # comparison without repeating both source lookup IDs, but
-                    # only when each omitted root has a strict typed/source
-                    # conflict and the reported child depends on those roots.
-                    verified_comparison_summary = (
-                        uncertainty["status"] == "conflicting_evidence"
-                        and bool(typed_conflict_refs)
-                        and bool(reported_slots)
-                        and reported_slots <= known_slots
-                        and bool(unreported_missing)
-                        and unreported_missing <= set(typed_conflict_refs)
-                        and all(
-                            any(root in self.task_plan.get(slot).depends_on
-                                for slot in reported_slots)
-                            for root in unreported_missing
-                        )
-                        and all(
-                            any(parent in unreported_missing
-                                for parent in self.task_plan.get(slot).depends_on)
-                            and (slot in attempted_searches
-                                 or len(self.task_plan.get(slot).depends_on) >= 2)
-                            for slot in reported_extra
-                        )
-                    )
                     safely_incomplete = (
                         decision.decision["value"] is None
+                        and bool(missing)
                         and uncertainty["status"] == expected_uncertainty
                         and bool(reported)
-                        and (reported_slots == missing_slots or verified_comparison_summary
-                             if decision.verified_claims is not None
-                             else all(any(slot.casefold() in field.casefold()
-                                          for slot in missing) for field in reported))
+                        and unread | conflict_set <= reported_slots
+                        and (decision.verified_claims is None or reported_slots <= known_slots)
                         and not decision.rejected_alternatives
                         and not decision.actions
                         and not decision.unresolved_items
@@ -1127,14 +1069,10 @@ class RetrievalAgent:
                                  "conflicted_subgoals": list(conflicts)},
                             ), warnings,
                         )
-                    if (self.final_protocol == CLAIM_PROPOSAL_SCHEMA_VERSION
-                            and conflicts and any(
-                                not set(typed_conflict_refs.get(slot) or verified_subgoal_conflict_refs(
-                                    self.task_plan.get(slot).question,
-                                    assessment.evidence_by_subgoal[slot],
-                                )).issubset(set(decision.evidence_refs))
-                                for slot in conflicts
-                            )):
+                    if conflicts and any(
+                            len(typed_conflict_refs[slot]) < 2
+                            or not set(typed_conflict_refs[slot]).issubset(set(decision.evidence_refs))
+                            for slot in conflicts):
                         return self._failed_result(
                             task, usage,
                             self._safe_error(
@@ -1166,7 +1104,7 @@ class RetrievalAgent:
                         warnings,
                         )
             try:
-                if self.cited_answer:
+                if self.cited_answer and decision.verified_claims is None:
                     # Cited answers rely on evidence binding only (observed, read,
                     # verified, same workspace; quotes are re-checked by the Reviewer
                     # and synthesizer). Binding is not semantic correctness: a
@@ -1193,6 +1131,16 @@ class RetrievalAgent:
                     ),
                     warnings,
                 )
+            # Verified typed claims, for structured projection by the Host (never re-parsed).
+            verified = decision.verified_claims
+            self.last_verified_claims = [
+                {"subject": claim.subject, "predicate": claim.predicate, "object": claim.object_value,
+                 "valid_on": claim.valid_on, "temporal_kind": claim.temporal_kind,
+                 "evidence_ids": list(claim.evidence_ids), "quote": claim.quote,
+                 "support": ("CONFIRMED_FACT" if index < len(verified.semantic_support)
+                             and verified.semantic_support[index] == "CONFIRMED_FACT" else "UNVERIFIED")}
+                for index, claim in enumerate(verified.claims if verified else ())
+            ]
             return AgentResult(
                 task_id=task.task_id,
                 agent_id=self.agent_id,
@@ -1323,33 +1271,13 @@ class RetrievalAgent:
                 self.prompt_profile, self.memory_hints, self.final_protocol,
                 self.cited_answer,
             )
-            consumed_provider_requests = max(
-                self.initial_state.usage.provider_requests,
-                len(self.initial_state.model_executions),
-            )
-            remaining_provider_requests = (
-                self.initial_state.policy.max_provider_requests
-                - consumed_provider_requests
-            )
             durable_final_reuse = (
                 self.resume_model_loop
                 and self._has_durable_final(self.initial_state, task, self.agent_id)
             )
-            if remaining_provider_requests <= 0 and not durable_final_reuse:
-                return self._failed_result(
-                    task,
-                    usage,
-                    self._safe_error(
-                        "MODEL_PROVIDER_BUDGET_EXHAUSTED",
-                        "budget",
-                        "The retrieval model request budget is exhausted.",
-                    ),
-                    [],
-                )
             max_steps = min(
                 task.max_steps,
                 self.initial_state.policy.max_steps,
-                remaining_provider_requests,
             )
             if self.resume_model_loop:
                 spent = [record for record in self.initial_state.model_executions
@@ -1375,9 +1303,9 @@ class RetrievalAgent:
                     task,
                     usage,
                     self._safe_error(
-                        "MODEL_PROVIDER_BUDGET_EXHAUSTED",
+                        "MODEL_MAX_STEPS_EXCEEDED",
                         "budget",
-                        "The retrieval model request budget is exhausted.",
+                        "The retrieval model step limit is exhausted.",
                     ),
                     [],
                 )

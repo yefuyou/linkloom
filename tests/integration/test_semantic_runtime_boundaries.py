@@ -53,7 +53,7 @@ def test_new_public_variant_discloses_required_counter_and_investigation_sources
         assert bool(row["coverage"]["missing_source_versions"]) == missing
 
 
-@pytest.mark.parametrize("kind", ["workspace", "stale", "revoked_source", "revoked_endpoint", "missing_source", "missing_competitor", "truncated", "chars", "tokens", "cost", "provider", "request_budget"])
+@pytest.mark.parametrize("kind", ["workspace", "stale", "revoked_source", "revoked_endpoint", "missing_source", "missing_competitor", "truncated", "chars", "tokens", "provider"])
 def test_semantic_admission_blocks_before_inner_request(tmp_path, kind):
     bound, call, model, snapshot = prepared(tmp_path)
     policy = bound.owner.policy
@@ -68,9 +68,7 @@ def test_semantic_admission_blocks_before_inner_request(tmp_path, kind):
     if kind == "truncated": snapshot = replace(snapshot, truncated=True)
     if kind == "chars": snapshot = replace(snapshot, limits=replace(snapshot.limits, max_allowed_chars=1))
     if kind == "tokens": policy = replace(policy, max_input_tokens=1)
-    if kind == "cost": policy = replace(policy, request_cost_upper_bound_usd=0.01)
     if kind == "provider": bound.owner.adapter = None
-    if kind == "request_budget": policy = replace(policy, max_requests=0)
     bound.owner.policy = policy
     bound.owner.snapshot_provider = lambda: snapshot
     value = bound.execute(call)

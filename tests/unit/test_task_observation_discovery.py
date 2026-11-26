@@ -50,7 +50,7 @@ def setup(artifact, claims=(), *, payload=None, limits=None, hook=None):
     provider = FakeModel(payload if payload is not None else {"claims": list(claims)}, hook)
     extractor = ProviderNeutralSemanticExtractor(provider, provider_id="fake", model_id="fake-discovery",
         request_guard=lambda request: ProviderRequestAuthorization.approve(request,
-            guard_id="discovery-test", reservation_id="fake", estimated_cost_upper_bound_usd=0),
+            guard_id="discovery-test", reservation_id="fake"),
         request_guard_id="discovery-test", max_attempts=1)
     service = TaskObservationDiscoveryService(extractor, source_registry=registry,
         current_source=lambda workspace, identity: current[0], limits=limits or DiscoveryLimits())
@@ -220,17 +220,17 @@ def test_exact_duplicate_task_proposals_are_collapsed_but_conflicting_same_locat
     assert result.failures[0].reason == "OBSERVATION_EXTRACTION_CONFLICT"
 
 
-def test_whole_document_budget_saturation_and_unicode_size_are_reported():
+def test_cumulative_extraction_calls_never_leave_sources_unprocessed_and_size_is_reported():
     artifact = source("安排完成索引测试。")
     other = replace(artifact, artifact_id="other")
-    service, provider, registry, current = setup(artifact, limits=DiscoveryLimits(max_calls=1))
+    service, provider, registry, current = setup(artifact)
     # The explicit host lookup authorizes both documents independently.
     service.current_source = lambda ws, identity: artifact if identity == artifact.artifact_id else other
     for segment in parse_source_text(other).segments:
         registry.register_evidence(other.workspace_id, segment.evidence_span.evidence_ref,
             content_hash=other.content_hash, source_version=other.artifact_version_id)
     result = discover(service, artifact, other)
-    assert len(provider.requests) == 1 and result.unprocessed_sources[0].reason == "CALL_BUDGET_EXHAUSTED"
+    assert len(provider.requests) == 2 and not result.unprocessed_sources
     service, provider, _, _ = setup(artifact, limits=DiscoveryLimits(max_bytes=5))
     assert discover(service, artifact).unprocessed_sources[0].reason == "SOURCE_TOO_LARGE"
     assert not provider.requests
@@ -240,7 +240,7 @@ def test_whole_document_budget_saturation_and_unicode_size_are_reported():
     assert not result.coverage_complete and result.failures[0].reason == "CLAIM_LIMIT_REACHED"
 
 
-@pytest.mark.parametrize("limits", [dict(max_sources=0), dict(max_calls=True), dict(max_chars=17000), dict(max_bytes=-1)])
+@pytest.mark.parametrize("limits", [dict(max_sources=0), dict(max_sources=True), dict(max_chars=17000), dict(max_bytes=-1)])
 def test_invalid_limits_are_rejected(limits):
     with pytest.raises(ValueError):
         DiscoveryLimits(**limits)

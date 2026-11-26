@@ -710,16 +710,16 @@
       <div class="meeting-scope"><span>${askLabel('Meetings used', '将使用')} ${config.investigation_context?.source_count || 0} ${askLabel('meetings:', '场会议：')}</span>${meetings.map(source => `<span class="source-chip">${escapeHtml(source.name)}</span>`).join('')}</div>
       <details class="ask-source-details"><summary>${askLabel('Source details', '来源详情')}</summary><ul>${meetings.map(source => `<li>${escapeHtml(source.name)} <code>${escapeHtml(source.version)}</code></li>`).join('')}</ul><p class="hint">${askLabel('Permission covers this question and the listed source versions.', '仅授权本次问题及所列来源版本。')}</p></details>
         <div id="task-provider-status"><div id="task-setup-status" role="status" hidden><p>${config.agent?.task_investigation ? askLabel("Task investigation ready", "任务调查已就绪") : askLabel("Task investigation is unavailable in this setup.", "当前配置尚未启用任务调查。")}</p>
-          ${!config.agent?.task_investigation ? `<details><summary>${askLabel("Setup details", "配置详情")}</summary><p class="hint">${escapeHtml(config.agent?.task_provider?.setup || "--allow-external-provider --allow-task-investigation --task-max-requests 16 --task-max-input-tokens 500000 --task-max-output-tokens 100000 --task-max-cost-usd 2 --task-max-seconds 120 --task-request-timeout-seconds 30")}</p></details>` : ""}</div>
-          ${config.agent?.task_provider?.budgets ? `<div class="metadata">${askLabel("Per-question limits", "单次调查上限")}: ${escapeHtml(config.agent.task_provider.model_id)} · USD ${config.agent.task_provider.budgets.max_cost_usd} · ${config.agent.task_provider.budgets.max_requests} ${askLabel("requests", "次请求")} · ${config.agent.task_provider.budgets.max_seconds}s<details><summary>${askLabel("Token limits", "Token 上限")}</summary><p>${config.agent.task_provider.budgets.max_input_tokens} input / ${config.agent.task_provider.budgets.max_output_tokens} output</p></details></div>` : ""}
-        </div>        ${(config.agent?.available && config.agent?.external_provider) || (config.router?.available && config.router?.external_provider) ? `<label class="ask-permission"><input id="ask-external" type="checkbox">${config.router?.available && config.router?.external_provider ? askLabel("Allow this request to send the question and confirmed candidate labels to DeepSeek for routing, and sources to the configured investigation provider when needed. Model costs are bounded.", "仅授权本次向 DeepSeek 发送问题和已确认候选标签以路由，必要时向已配置的调查模型发送来源内容；模型费用有上限。") : askLabel("Allow this request to send sources to the configured external AI provider and incur bounded model costs.", "仅授权本次向已配置的外部 AI 发送来源内容，并产生有上限的模型费用。")}</label>` : `<p class="hint">${config.agent?.available ? askLabel("Offline investigation demo is available.", "可使用离线调查演示。") : askLabel("AI investigation is not configured. Reviewed record queries remain available.", "尚未配置 AI 调查；可信决策查询可直接使用。")}</p>`}
+          ${!config.agent?.task_investigation ? `<details><summary>${askLabel("Setup details", "配置详情")}</summary><p class="hint">${escapeHtml(config.agent?.task_provider?.setup || "--allow-external-provider --allow-task-investigation --task-max-seconds 120 --task-request-timeout-seconds 30")}</p></details>` : ""}</div>
+          ${config.agent?.task_provider?.model_id ? `<div class="metadata">${askLabel("Investigation model", "调查模型")}: ${escapeHtml(config.agent.task_provider.model_id)}</div>` : ""}
+        </div>        ${(config.agent?.available && config.agent?.external_provider) || (config.router?.available && config.router?.external_provider) ? `<label class="ask-permission"><input id="ask-external" type="checkbox">${config.router?.available && config.router?.external_provider ? askLabel("Allow this request to send the question and confirmed candidate labels to DeepSeek for routing, and sources to the configured investigation provider when needed. Model usage is recorded, not limited.", "仅授权本次向 DeepSeek 发送问题和已确认候选标签以路由，必要时向已配置的调查模型发送来源内容；模型用量仅记录，不设上限。") : askLabel("Allow this request to send sources to the configured external AI provider and incur model costs.", "仅授权本次向已配置的外部 AI 发送来源内容，并产生模型费用。")}</label>` : `<p class="hint">${config.agent?.available ? askLabel("Offline investigation demo is available.", "可使用离线调查演示。") : askLabel("AI investigation is not configured. Reviewed record queries remain available.", "尚未配置 AI 调查；可信决策查询可直接使用。")}</p>`}
       <div class="ask-input-row"><label class="sr-only" for="ask-query">${askLabel('Your question', '你的问题')}</label><textarea id="ask-query" name="query" required maxlength="4000" placeholder="${escapeHtml(askCopy('What supplier are we currently using?', '我们现在采用哪家供应商？'))}"></textarea><button id="ask-submit-button" class="button" type="submit">${askLabel('Ask', '提问')}</button></div>
       <details id="ask-advanced"><summary>${askLabel('Advanced options', '高级选项')}</summary><div class="advanced-grid">
       <div class="field ask-language"><label for="ask-language">${askLabel("Answer language", "回答语言")}</label>
       <select id="ask-language"><option value="auto" ${state.askLanguage === "auto" ? "selected" : ""}>Auto / 跟随问题</option><option value="zh" ${state.askLanguage === "zh" ? "selected" : ""}>中文</option><option value="en" ${state.askLanguage === "en" ? "selected" : ""}>English</option></select></div>        <div class="field"><label for="ask-domain">${askLabel("Investigation scope", "调查范围")}</label><select id="ask-domain" name="investigation_domain">
           <option value="" data-ask-en="Automatic" data-ask-zh="自动选择">${askCopy("Automatic", "自动选择")}</option>
           <option value="tasks" data-ask-en="Tasks across the current workspace records" data-ask-zh="当前工作区记录中的任务">${askCopy("Tasks across the current workspace records", "当前工作区记录中的任务")}</option>
-          <option value="source_relations" data-ask-en="Project → owner → direct leader" data-ask-zh="项目 → 负责人 → 直属领导">${askCopy("Project → owner → direct leader", "项目 → 负责人 → 直属领导")}</option></select>
+          <option value="source_relations" data-ask-en="Project → owner → reports to" data-ask-zh="项目 → 负责人 → 汇报对象">${askCopy("Project → owner → reports to", "项目 → 负责人 → 汇报对象")}</option></select>
           <span class="hint">${askLabel("Choose a scope to focus your question. Refresh after updating sources.", "可选择领域缩小范围；来源更新后请刷新页面。")}</span></div>
         <div class="field"><label for="ask-slot">${askLabel("Decision", "指定决定")}</label><select id="ask-slot">
           <option value="" data-ask-en="Discover automatically from my question" data-ask-zh="根据问题自动查找">${askCopy("Discover automatically from my question", "根据问题自动查找")}</option>${state.askScopes.map((slot, index) => `<option value="${index}" data-ask-subject="${escapeHtml(slot.subject)}" data-ask-relation="${escapeHtml(slot.relation)}" ${index === selected ? "selected" : ""}>${escapeHtml(slot.subject)} · ${escapeHtml(decisionCategory(slot.relation, askLocale()))}</option>`).join("")}</select>
@@ -868,15 +868,22 @@
 
   function renderBranchTrace(trace, t) {
     const na = value => value === null || value === undefined ? `<span class="trace-na">N/A</span>` : escapeHtml(value);
-    const usd = value => (value === null || value === undefined ? value : `$${Number(value).toFixed(6)}`);
+    const usageLine = telemetry => {
+      if (!telemetry || !telemetry.usage) return "";
+      const value = field => field && field.value !== null && field.value !== undefined ? escapeHtml(field.value) : na(null);
+      const tag = field => field && field.value != null && field.source === "estimated" ? ` (${t("derived", "推算")})` : "";
+      const cost = telemetry.cost || {};
+      const usd = field => field && field.value != null ? `$${escapeHtml(field.value)}` : na(null);
+      return `<p class="trace-usage">${t("Run usage", "本次用量")}: ${t("input", "输入")} ${value(telemetry.usage.input_tokens)} · ${t("output", "输出")} ${value(telemetry.usage.output_tokens)} · ${t("total", "合计")} ${value(telemetry.usage.total_tokens)}${tag(telemetry.usage.total_tokens)} · ${t("cached input", "缓存输入")} ${value(telemetry.usage.cached_input_tokens)} · ${t("reasoning", "推理")} ${value(telemetry.usage.reasoning_tokens)} · ${t("Cost estimate", "估算费用")} ${usd(cost.estimated_usd)} · ${t("Provider reported cost", "Provider 报告费用")} ${usd(cost.provider_reported_usd)}</p>`;
+    };
     const attempts = task => (task.attempts || []).map(row => `<tr data-attempt="${escapeHtml(row.attempt)}"><td>${escapeHtml(row.attempt)}</td>
-      <td>${na(row.requests_reserved)}</td><td>${na(row.input_tokens_reserved)} / ${na(row.output_tokens_reserved)}</td>
-      <td>${na(usd(row.cost_reserved_usd))}</td><td>${row.failure ? escapeHtml(row.failure) : escapeHtml((row.attempts || []).map(item => item.outcome).join(", "))}</td></tr>`).join("");
+      <td>${na(row.requests)}</td><td>${na(row.input_tokens)} / ${na(row.output_tokens)}</td>
+      <td>${row.failure ? escapeHtml(row.failure) : escapeHtml((row.attempts || []).map(item => item.outcome).join(", "))}</td></tr>`).join("");
     const tasks = (trace.tasks || []).map(task => `<details class="trace-task" data-task="${escapeHtml(task.id)}"><summary><strong>${escapeHtml(task.id)}</strong> · ${escapeHtml(task.status)}${(task.depends_on || []).length ? ` · ${t("after", "依赖")} ${task.depends_on.map(escapeHtml).join(", ")}` : ""}</summary>
       <p>${escapeHtml(task.description)}</p>
       ${task.spawn_reason ? `<p>${t("Why this task exists", "派生原因")}: ${escapeHtml(task.spawn_reason)}</p>` : ""}
       ${task.failure ? `<p>${t("Stopped because", "停止原因")}: ${escapeHtml(task.failure)}</p>` : ""}
-      ${task.attempts && task.attempts.length ? `<table class="trace-attempts"><thead><tr><th>${t("Attempt", "尝试")}</th><th>${t("Requests", "请求数")}</th><th>${t("Tokens in / out", "输入 / 输出 Token")}</th><th>${t("Reserved ceiling", "预留上限")}</th><th>${t("Outcome", "结果")}</th></tr></thead><tbody>${attempts(task)}</tbody></table>` : ""}</details>`).join("");
+      ${task.attempts && task.attempts.length ? `<table class="trace-attempts"><thead><tr><th>${t("Attempt", "尝试")}</th><th>${t("Requests", "请求数")}</th><th>${t("Tokens in / out", "输入 / 输出 Token")}</th><th>${t("Outcome", "结果")}</th></tr></thead><tbody>${attempts(task)}</tbody></table>` : ""}</details>`).join("");
     const decisions = (trace.events || []).filter(event => event.event === "supervisor_decision").map(event =>
       `<li>${t("Round", "轮次")} ${escapeHtml(event.round)} · ${escapeHtml(event.action)}${(event.tasks || []).length ? ` · ${event.tasks.map(escapeHtml).join(", ")}` : ""}${event.reason ? ` · ${escapeHtml(event.reason)}` : ""}</li>`).join("");
     const waves = (trace.events || []).filter(event => event.event === "wave_dispatched").map(event =>
@@ -886,12 +893,13 @@
     const synth = trace.synthesizer || {};
     const leads = (trace.entity_leads || []).map(escapeHtml).join(", ");
     return `<section class="ask-trace-view" data-trace-status="${escapeHtml(trace.status)}">
-      <p class="hint">${t("Costs are reservations recorded before each request, not a bill.", "费用为每次请求前记录的预留额度，不是账单。")}</p>
+      <p class="hint">${t("Token counts are the usage the Provider reported. They are recorded for observation and never limit a run.", "Token 数为 Provider 返回的用量，仅用于观测，不限制运行。")}</p>
       ${leads ? `<p>${t("Names to verify in sources (not confirmed)", "待来源核实的名称（未确认）")}: ${leads}</p>` : ""}
       ${decisions ? `<h3>${t("Supervisor decisions", "Supervisor 决策")}</h3><ol class="trace-decisions">${decisions}</ol>` : ""}
       ${waves ? `<h3>${t("Waves (tasks in one wave ran in parallel)", "批次（同一批次并行）")}</h3><ol class="trace-waves">${waves}</ol>` : ""}
       ${tasks}
-      <p>${t("Requests", "请求数")}: ${na(totals.requests_reserved)} · ${t("Reserved ceiling", "预留上限")}: ${na(usd(totals.cost_reserved_usd))}</p>
+      <p>${t("Requests", "请求数")}: ${na(totals.requests)} · ${t("Tokens in / out", "输入 / 输出 Token")}: ${na(totals.input_tokens)} / ${na(totals.output_tokens)}</p>
+      ${usageLine(trace.telemetry)}
       <p>${t("Shared evidence", "共享证据")}: ${escapeHtml((board.verified_evidence || []).length)} · ${t("unreviewed retrievals", "未核验检索")}: ${escapeHtml(board.raw_retrievals || 0)} · ${t("Agent inferences", "Agent 推断")}: ${escapeHtml(board.inferences || 0)} · ${t("approved decisions", "已批准决策")}: ${escapeHtml((board.approved_decisions || []).length)}</p>
       <p>${t("Synthesizer", "汇总")}: ${na(synth.status)} · ${synth.published ? t("published", "已发布") : t("not published", "未发布")}${synth.fallback_reason ? ` · ${escapeHtml(synth.fallback_reason)}` : ""}</p>
       <p class="trace-conflict-check" data-conflict-check="${escapeHtml(synth.conflict_check || "")}">${t("Conflict check", "冲突检查")}: ${na(synth.conflict_check)}${synth.conflict_check_verified === false ? ` · ${t("not verified", "未核验")}` : ""}</p></section>`;
@@ -1014,9 +1022,9 @@
     if (result.path === "TASK_INVESTIGATION" && result.status === "BLOCKED") {
       const unavailable = result.error?.code === "TASK_INVESTIGATION_UNAVAILABLE";
       const permission = result.error?.code === "EXTERNAL_PROVIDER_PERMISSION_REQUIRED";
-      let stopMessage = t("Check the investigation setup, source access and budget before trying again.", "请检查调查配置、来源权限和预算后重试。");
+      let stopMessage = t("Check the investigation setup, source access before trying again.", "请检查调查配置和来源权限后重试。");
       if (unavailable) stopMessage = t("Task investigation is unavailable in the current configuration. No investigation or external model call was started.", "当前配置不支持任务调查，尚未启动调查或外部模型调用。");
-      else if (permission) stopMessage = t("Check the per-request permission above, then ask again. Sources are sent only after permission is granted.", "请查看上方来源清单与预算，勾选本次授权后再次提问；授权前不会发送来源内容。");
+      else if (permission) stopMessage = t("Check the per-request permission above, then ask again. Sources are sent only after permission is granted.", "请查看上方来源清单，勾选本次授权后再次提问；授权前不会发送来源内容。");
       else if (["PROVIDER_UNCERTAIN", "PROVIDER_TIMEOUT_UNCERTAIN"].includes(result.error?.code)) stopMessage = t("The AI service response is uncertain. Check the run details before retrying; automatic retry is off.", "AI 服务响应状态不明，请检查运行详情后再决定是否重试；自动重试已停止。");
       else if (result.error?.code === "TASK_DATE_SCOPE_UNSUPPORTED") stopMessage = t("Clear the advanced decision date and state the investigation period in your question. The original question is kept.", "请清除高级选项中的决策日期，并在原问题中说明调查时段。原问题已保留。");
       else if (["SOURCE_SNAPSHOT_CHANGED", "SOURCE_EVIDENCE_NOT_CURRENT", "TASK_SOURCE_AUTHORIZATION_CHANGED", "RELATION_OR_SOURCE_CHANGED"].includes(result.error?.code)) stopMessage = t("The sources, access or relationship evidence changed. Previous task details are hidden. Refresh the source list and investigate again.", "来源、访问权限或关系证据已变化，旧任务详情已隐藏。请刷新来源清单后重新调查。");
@@ -1058,7 +1066,7 @@
         : uncertain ? t("Investigation outcome uncertain", "调查执行结果不确定")
         : noMatch ? t("No matching reviewed decision found", "暂未找到与问题匹配的可信决策")
         : t("No verified answer is available", "本次尚未得到可核验的答案");
-      const message = admissionMessage ? admissionMessage[1] : unsupported ? t("Try: Who is the direct leader of the owner of PROJECT? Or: Who owns the project behind ALIAS and who leads that owner? Clear any advanced decision selection first.", "支持项目 → 负责人 → 直属领导，以及英文别名 → 项目 → 负责人 → 直属领导问法。请修改问题，并清除高级选项中指定的正式决策。") : memoryConflict ? t("Revoke the conflicting mapping below, or choose a reviewed decision in advanced options.", "请在下方撤销冲突映射，或在高级选项中指定可信决策。") : ambiguous ? t("Choose one decision to continue your original question.", "选择一项后继续原问题，无需重新输入。")
+      const message = admissionMessage ? admissionMessage[1] : unsupported ? t("Try: Who does the owner of PROJECT report to? Or: Who owns the project behind ALIAS and who does that owner report to? Clear any advanced decision selection first.", "支持项目 → 负责人 → 汇报对象，以及英文别名 → 项目 → 负责人 → 汇报对象问法。请修改问题，并清除高级选项中指定的正式决策。") : memoryConflict ? t("Revoke the conflicting mapping below, or choose a reviewed decision in advanced options.", "请在下方撤销冲突映射，或在高级选项中指定可信决策。") : ambiguous ? t("Choose one decision to continue your original question.", "选择一项后继续原问题，无需重新输入。")
         : dateNeeded ? t("Select one exact date above to check which decision was valid. Your question and confirmed decision are retained.", "请在上方选择精确日期，以核实当时有效的决策。原问题和已确认的决策会保留。")
         : permission ? t("Check the per-request permission above, then ask again. Sources are sent only after permission is granted.", "请勾选上方的本次授权，再次提问后才会发送来源内容并启动调查。")
         : uncertain ? t("Check the run details before retrying. No verified answer was returned.", "请检查运行详情后再决定是否重试，本次未返回可核验答案。")
@@ -1129,7 +1137,7 @@
     const graphAmbiguous = source.graph_query?.status === "AMBIGUOUS";
     const complete = result.status === "COMPLETED" && source.answer;
     const conflict = result.uncertainty?.status === "conflicting_evidence";
-    const labels = {owner_of: t("Owner → work", "负责人 → 工作"), supersedes: t("New → previous", "新版本 → 旧版本"), alias_of: t("Alias → canonical", "别名 → 正式名称"), same_task: t("Merged observation → task", "已合并观察 → 任务"), alias_of_project: t("Alias → project", "别名 → 项目"), owner_of_project: t("Project → owner", "项目 → 负责人"), reports_to: t("Person → direct manager", "人员 → 直属上级")};
+    const labels = {owner_of: t("Owner → work", "负责人 → 工作"), supersedes: t("New → previous", "新版本 → 旧版本"), alias_of: t("Alias → canonical", "别名 → 正式名称"), same_task: t("Merged observation → task", "已合并观察 → 任务"), alias_of_project: t("Alias → project", "别名 → 项目"), owner_of_project: t("Project → owner", "项目 → 负责人"), reports_to: t("Person → reports to", "人员 → 汇报对象")};
     const facts = source.facts || [];
     const coreRefs = new Set([...facts.flatMap(fact => fact.evidence_refs || []), ...Object.values(source.conflicts || {}).flat()]);
     const coreEvidence = (result.evidence || []).filter(item => coreRefs.has(item.evidence_ref));
@@ -1142,7 +1150,7 @@
     }).join("");
     target.innerHTML = `<section class="panel ask-answer ${complete ? "" : "ask-answer--notice"}"><p class="ask-answer-status">${facts.length ? t("Source-supported relationship", "来源支持的关系") : t("Source investigation; no relationship verified", "来源调查，尚无关系得到核实")}</p>
       <h2 class="${complete ? "ask-answer-value" : "ask-answer-headline"}">${title}</h2>
-      <p>${complete ? t("Source evidence supports this relationship.", "已核验的来源证据支持此关系。") : conflict ? t("The known upstream facts are retained. Opposing sources prevent a unique downstream conclusion.", "已确认的上游关系予以保留；下游来源互相矛盾，不能选择唯一结论。") : t("The known upstream facts are retained. The requested final relationship remains unknown.", "已确认的上游关系予以保留；尚未找到足够证据确认最终关系。")}</p>
+      <p>${complete && source.unverified_claim_count > 0 ? t("Citations are verified, but the relationship itself was not independently confirmed.", "引用已核验，但关系本身未经独立确认。") : complete ? t("Source evidence supports this relationship.", "已核验的来源证据支持此关系。") : conflict ? t("The known upstream facts are retained. Opposing sources prevent a unique downstream conclusion.", "已确认的上游关系予以保留；下游来源互相矛盾，不能选择唯一结论。") : t("The known upstream facts are retained. The requested final relationship remains unknown.", "已确认的上游关系予以保留；尚未找到足够证据确认最终关系。")}</p>
       <p class="hint">${t("Source findings · business approval separate", "来源调查结果 · 业务批准需单独进行")}</p>
       <div class="ask-pills"><span>${(source.plan?.subgoals || []).length} ${t("relationship checks", "项关系核查")}</span></div>
       ${steps}<section class="ask-core-evidence"><h2>${t("Sources supporting the verified facts or conflict", "支持已核实关系或冲突的来源")}</h2>${coreEvidence.map((item, index) => askEvidence(item, index, locale)).join("")}</section>

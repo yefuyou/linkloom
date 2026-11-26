@@ -24,9 +24,10 @@ from linkloom.ui.ask_admission import admission_restriction, router_safety_reaso
 ])
 def test_identity_claim_alone_has_no_host_authority_effect(query):
     assert admission_restriction(query) is None
-    assert router_safety_reason(query) is None
-    assert router_safety_reason(query, operation='READ', reason='ENTITY_NOT_FOUND') is None
-    assert router_safety_reason(query, operation='READ', reason='NONE') is None
+    # Wording is never inspected: only structured codes carry authority.
+    assert router_safety_reason() is None
+    assert router_safety_reason(operation='READ', reason='ENTITY_NOT_FOUND') is None
+    assert router_safety_reason(operation='READ', reason='NONE') is None
 
 
 @pytest.mark.parametrize('query', [
@@ -49,9 +50,8 @@ def test_identity_claim_alone_has_no_host_authority_effect(query):
 ])
 def test_normal_authority_question_has_no_safety_signal(query):
     assert admission_restriction(query) is None
-    assert router_safety_reason(query) is None
 
 
 def test_model_safety_can_only_tighten_normal_question():
-    assert router_safety_reason('Who owns Meadow?', reason='SECRET_OR_POLICY_OVERRIDE') == 'SECRET_OR_POLICY_OVERRIDE'
-    assert router_safety_reason('Who owns Meadow?', operation='WRITE_REQUEST') == 'WRITE_NOT_ALLOWED'
+    assert router_safety_reason(reason='SECRET_OR_POLICY_OVERRIDE') == 'SECRET_OR_POLICY_OVERRIDE'
+    assert router_safety_reason(operation='WRITE_REQUEST') == 'WRITE_NOT_ALLOWED'

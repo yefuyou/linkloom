@@ -60,7 +60,7 @@ def _run(tmp_path, monkeypatch, build, *, cited=True, search=True):
                            model=Scripted(), memory_enabled=False, decision_memory_enabled=False)
     result = engine.start_multi_agent(RunRequest(request_id="cited", thread_id="cited",
         workflow="team_decision", query="Why was Meridian A replaced?", max_steps=3,
-        max_provider_requests=3, reserve_final_turn=True, cited_answer=cited))
+        reserve_final_turn=True, cited_answer=cited))
     if result.status == "completed":
         artifact = json.loads((engine.checkpoint_dir / result.result_ref).read_text(encoding="utf-8"))
         return result, artifact["result"]["team_decision"]
@@ -72,11 +72,6 @@ def test_cited_answer_publishes_natural_language_with_read_evidence(tmp_path, mo
     result, decision = _run(tmp_path, monkeypatch, lambda read, other: _final(value, [read]))
     assert result.status == "completed", result.error
     assert decision["decision"]["value"] == value and decision["evidence_refs"]
-
-
-def test_cited_answer_off_keeps_semantic_claim_validation(tmp_path, monkeypatch):
-    result, _ = _run(tmp_path, monkeypatch, lambda read, other: _final(REASON, [read]), cited=False)
-    assert result.status == "failed" and result.error["code"] == "TEAM_DECISION_CONTRACT_ERROR"
 
 
 def test_cited_answer_allows_abstention_after_reading_but_not_without_search(tmp_path, monkeypatch):
@@ -132,10 +127,10 @@ def test_every_orchestration_worker_requests_a_cited_answer(tmp_path, monkeypatc
 
     monkeypatch.setattr(worker, "RuntimeEngine", Engine)
     monkeypatch.setattr(worker, "RunRequest", lambda **kwargs: kwargs)
-    limits = TaskProviderLimits(20, 1_000_000, 50_000, 1.0, 60, 10, .01)
+    limits = TaskProviderLimits(60, 10)
     deps = SimpleNamespace(root=tmp_path, run_id="run", vault=tmp_path, index=tmp_path, workspace_id="w",
         model_factory=lambda question: None, validate=lambda: None,
-        limits=SimpleNamespace(per_task=limits))
+        limits=SimpleNamespace(provider=limits, max_steps=4, max_request_output_tokens=4096))
     for number in (1, 2):
         task = dict(id=f"task-{number}", description="q", epoch=0, attempt=1)
         worker._run(deps, task, "q")

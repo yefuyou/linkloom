@@ -7,7 +7,6 @@ from copy import deepcopy
 import json
 from pathlib import Path
 from time import monotonic, sleep
-from dataclasses import replace
 
 import pytest
 
@@ -84,14 +83,7 @@ class Harness:
         self.legacy_models = []
         def factory(query):
             controller = SourceOnlyController()
-            def respond(request):
-                action = controller(request)
-                if action.kind == 'tool_call' and action.tool_call.tool_id == 'search_notes':
-                    call = action.tool_call
-                    action = ModelAction.tool(replace(call, arguments=dict(call.arguments,
-                        limit=4 if call.arguments['source_context']['subgoal_id'] == 'leader' else 2)))
-                return action
-            model = FakeModelAdapter([respond] * 12)
+            model = FakeModelAdapter([controller] * 12)
             self.legacy_models.append(model)
             return model
         self.service.model_factory = factory
@@ -143,7 +135,7 @@ class Harness:
             model = Model(raw); self.models.append(model)
             return GraphQuestionPlanner(model, model_id='fake', guard_id='compat', mention_grounding=mentions,
                 request_guard=lambda request: ProviderRequestAuthorization.approve(request,
-                    guard_id='compat', reservation_id='offline', estimated_cost_upper_bound_usd=0))
+                    guard_id='compat', reservation_id='offline'))
         return GraphInvestigationService(lambda workspace: store, factory)
 
     def ask_service(self, worker):
@@ -176,11 +168,12 @@ def offline(monkeypatch):
 
 @pytest.fixture
 def legacy_spy(monkeypatch):
+    """Counts entries into the old (non-graph) source investigation path."""
     import linkloom.ui.unified_ask as module
-    original = module.plan_relation_investigation
+    original = module.UnifiedAskService._source_request
     calls = []
-    def spy(question): calls.append(question); return original(question)
-    monkeypatch.setattr(module, 'plan_relation_investigation', spy)
+    def spy(self, run, *args, **kwargs): calls.append(run.query); return original(self, run, *args, **kwargs)
+    monkeypatch.setattr(module.UnifiedAskService, '_source_request', spy)
     return calls
 
 
@@ -337,7 +330,7 @@ def dated_graph(h):
         h.models.append(model)
         return GraphQuestionPlanner(model, model_id='fake', guard_id='dated',
             request_guard=lambda r: ProviderRequestAuthorization.approve(r, guard_id='dated',
-                reservation_id='offline', estimated_cost_upper_bound_usd=0))
+                reservation_id='offline'))
     return workspace, store, GraphInvestigationService(lambda ws: store, factory)
 
 
@@ -395,12 +388,12 @@ def test_revoking_legacy_evidence_on_reopen_never_replays_old_answer(tmp_path, l
     finally: h.close()
 
 
-def test_graph_and_legacy_share_one_provider_reservation(tmp_path, legacy_spy):
+def test_graph_and_legacy_share_one_provider_session_without_request_quota(tmp_path, legacy_spy):
     from linkloom.ui.graph_investigation import _GRAPH_PROVIDER
     from linkloom.ui.task_provider import TaskProviderSession, TaskProviderLimits
     h = Harness(tmp_path, 'DEV-A')
     try:
-        limits = TaskProviderLimits(1, 100000, 10000, 1, 30, 5, .001)
+        limits = TaskProviderLimits(30, 5)
         session = TaskProviderSession(tmp_path / 'shared', limits, lambda: None)
         h.service._provider_sessions.append(session)
         worker = h.worker('unknown'); original = worker.planner_factory
@@ -413,6 +406,6 @@ def test_graph_and_legacy_share_one_provider_reservation(tmp_path, legacy_spy):
         actual, status = finish(h.ask_service(worker), h.payload())
         assert status == 200 and actual['graph_status'] == 'UNKNOWN'
         assert actual['status'] == 'INSUFFICIENT' and actual['decided_by'] == 'graph'
-        assert session.requests == 1 and session.failure == 'TASK_PROVIDER_BUDGET_EXHAUSTED'
-        assert len(legacy_spy) == 1 and all(m.call_count == 0 for m in h.legacy_models)
+        assert session.requests == 1 and session.failure is None
+        assert len(legacy_spy) == 1
     finally: h.close()

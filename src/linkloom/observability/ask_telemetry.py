@@ -1,16 +1,19 @@
-"""Read-only B1-6 projection of existing, Host-authorized Ask records."""
+"""Read-only projection of existing, Host-authorized Ask records.
+
+Usage is an observation of what Providers reported. Nothing here calls a Provider, schedules work or
+decides whether an answer is published."""
 from __future__ import annotations
 
 from collections import Counter
 from collections.abc import Collection, Mapping
 from typing import Any
 
+from linkloom.observability.pricing import INPUT_USD_PER_MILLION, OUTPUT_USD_PER_MILLION, estimate_cost_usd
 from linkloom.observability.redaction import safe_ref
 from linkloom.runtime.models import RuntimeState
 from linkloom.ui.projection import collect_observed_evidence
 
 _TOKEN_FIELDS = ("input_tokens", "output_tokens", "total_tokens")
-_RESERVATIONS = ("input_tokens_reserved", "output_tokens_reserved", "cost_reserved_usd")
 _PROVIDER_OUTCOMES = {"SUCCEEDED", "FAILED", "UNCERTAIN", "WITHHELD", "PENDING"}
 _EVENT_KINDS = {
     "supervisor_decision": "supervisor", "supervisor_aborted": "supervisor",
@@ -83,7 +86,7 @@ def build_ask_telemetry(
     if router and router.get("reason_code") not in {None, "NONE"}:
         failures.add(router["reason_code"])
     return {
-        "schema_version": "ask-telemetry/v1",
+        "schema_version": "ask-telemetry/v2",
         "run_id": run_id, "workspace_id": workspace_id, "status": status,
         "total_duration_ms": total_duration_ms,
         **provider, "nodes": nodes, "failure_codes": sorted(failures),
@@ -121,92 +124,106 @@ def _runtime_nodes(scope_id, state, authorized):
 
 def _provider_summary(journals, complete):
     attempts = []
-    reservations = {key: [] for key in _RESERVATIONS}
     failures = []
     for scope, journal in journals.items():
         if journal is None:
             complete = False
             continue
         rows = journal.get("attempts", ())
-        complete &= journal.get("requests_reserved") == len(rows)
-        for key in reservations:
-            reservations[key].append(journal.get(key))
+        complete &= journal.get("requests", journal.get("requests_reserved")) == len(rows)
+        legacy = "schema_version" not in journal
         if journal.get("failure"):
             failures.append({"kind": "provider_session", "scope_id": scope, "failure": journal["failure"]})
-        limits = journal.get("limits") or {}
         for row in rows:
-            attempts.append(_provider_attempt(scope, row, limits))
+            attempts.append(_provider_attempt(scope, row, legacy))
 
     counts = Counter(row["status"] for row in attempts)
     observed_attempted = sum(counts[key] for key in ("SUCCEEDED", "FAILED", "WITHHELD", "UNCERTAIN"))
     complete &= counts["UNKNOWN"] == 0
-    usage_rows = [row["reported_usage"] for row in attempts]
-    estimates = [row["estimated_usage_usd"] for row in attempts]
-    actual_estimate = _complete_sum(estimates, complete)
-    known_estimate = sum(value for value in estimates if value is not None)
-    known_count = sum(value is not None for value in estimates)
-
+    final = complete and not counts["PENDING"]
+    # Run-level totals are the plain sum over every attempt of every scope (router, security, supervisor,
+    # each worker attempt, comparison). Cached and reasoning tokens are sub-counts of input/output and
+    # are summed only as their own fields, never added to input, output or total again.
+    usage = {key: _aggregate([row["usage"][key] for row in attempts], complete)
+             for key in (*_TOKEN_FIELDS, "cached_input_tokens", "reasoning_tokens", "duration_ms")}
+    estimated = _aggregate([row["cost"]["estimated_usd"] for row in attempts], complete)
+    reported = _aggregate([row["cost"]["provider_reported_usd"] for row in attempts], complete)
     return {
         "provider_calls": {
-            "attempted": observed_attempted if complete and not counts["PENDING"] else None,
-            "completed": counts["SUCCEEDED"] + counts["WITHHELD"] if complete and not counts["PENDING"] else None,
-            "failed": counts["FAILED"] if complete and not counts["PENDING"] else None,
-            "uncertain": counts["UNCERTAIN"] if complete and not counts["PENDING"] else None,
+            "attempted": observed_attempted if final else None,
+            "completed": counts["SUCCEEDED"] + counts["WITHHELD"] if final else None,
+            "failed": counts["FAILED"] if final else None,
+            "uncertain": counts["UNCERTAIN"] if final else None,
             "observed_attempted": observed_attempted,
             "pending": counts["PENDING"],
             "journal_coverage": "COMPLETE" if complete else "PARTIAL" if journals else "UNKNOWN",
         },
-        "usage": {
-            **{f"reported_{key}": _complete_sum([row[key] for row in usage_rows], complete) for key in _TOKEN_FIELDS},
-            "reported_cached_input_tokens": None,
-            "reasoning_tokens": None,
-            "reserved_input_upper_bound": _complete_sum(reservations["input_tokens_reserved"], complete),
-            "reserved_output_upper_bound": _complete_sum(reservations["output_tokens_reserved"], complete),
-        },
+        "usage": usage,
         "cost": {
-            "estimated_actual_usage_usd": actual_estimate,
-            "known_estimated_usage_usd": known_estimate if known_count else None,
-            "reserved_upper_bound_usd": _complete_sum(reservations["cost_reserved_usd"], complete),
-            "observed_reserved_upper_bound_usd": _complete_sum(
-                reservations["cost_reserved_usd"], bool(reservations["cost_reserved_usd"]),
-            ),
-            "unresolved_reserved_upper_bound_usd": _complete_sum(
-                [row["reserved_usd"] for row in attempts if row["estimated_usage_usd"] is None], complete,
-            ),
-            "pricing_basis": "recorded_budget_token_rates" if known_count else None,
-            "billing_status": "KNOWN_ESTIMATE" if actual_estimate is not None else "PARTIAL" if known_count else "UNKNOWN",
-            "actual_billed_usd": None,
+            "estimated_usd": estimated,
+            "provider_reported_usd": reported,
+            "pricing_basis": "observability_token_rates" if estimated["known_value"] is not None else None,
         },
         "attempt_nodes": attempts + failures,
     }
 
 
-def _provider_attempt(scope, row, limits):
+def _provider_attempt(scope, row, legacy):
     outcome = row.get("outcome")
     status = outcome if outcome in _PROVIDER_OUTCOMES else "UNKNOWN"
-    # Reservation is written before transport. Only a usable response receipt
-    # supplies usage. A timeout envelope may be durable while usage isn't.
-    if status in {"SUCCEEDED", "FAILED", "WITHHELD"} and row.get("response_sha256"):
-        reported = row.get("usage") or {}
+    # Only a usable response receipt supplies usage. A timeout envelope may be durable while usage isn't.
+    # Legacy budget.json rows carry reservation fields (cost_reserved_usd, ...). Those were ceilings, not
+    # observations, so they are never read as usage.
+    receipt = status in {"SUCCEEDED", "FAILED", "WITHHELD"} and row.get("response_sha256")
+    reported = (row.get("usage") or {}) if receipt else {}
+    usage = {key: _field(reported.get(key)) for key in (*_TOKEN_FIELDS, "cached_input_tokens", "reasoning_tokens")}
+    if usage["total_tokens"]["value"] is None and None not in (usage["input_tokens"]["value"],
+                                                                usage["output_tokens"]["value"]):
+        derived = usage["input_tokens"]["value"] + usage["output_tokens"]["value"]
+        usage["total_tokens"] = {"value": derived, "source": "estimated"}
+    if reported.get("duration_ms") is not None:
+        usage["duration_ms"] = _field(reported["duration_ms"])
+    elif receipt and row.get("duration_ms") is not None:
+        usage["duration_ms"] = {"value": row["duration_ms"], "source": "estimated"}
     else:
-        reported = {}
-    usage = {key: reported.get(key) for key in _TOKEN_FIELDS}
-    rates = (limits.get("input_usd_per_million"), limits.get("output_usd_per_million"))
-    tokens = (usage["input_tokens"], usage["output_tokens"])
-    estimate = None
-    pricing = None
-    if all(value is not None for value in (*tokens, *rates)):
-        estimate = sum(token * rate for token, rate in zip(tokens, rates)) / 1_000_000
-        pricing = dict(input_usd_per_million=rates[0], output_usd_per_million=rates[1])
+        usage["duration_ms"] = _field(None)
+    estimate = row.get("estimated_cost_usd") if receipt and "estimated_cost_usd" in row else None
+    if estimate is None and receipt:
+        estimate = estimate_cost_usd(usage["input_tokens"]["value"], usage["output_tokens"]["value"])
+    billed = reported.get("provider_reported_cost_usd", row.get("provider_reported_cost_usd") if receipt else None)
+    cost = {"estimated_usd": {"value": estimate, "source": "estimated" if estimate is not None else "unknown"},
+            "provider_reported_usd": _field(billed)}
     return {
         "kind": "provider_attempt", "scope_id": scope, "status": status,
         **_select(row, "sequence", "stage", "request_sha256", "response_sha256"),
-        "error_code": row.get("code"), "reported_usage": usage, "duration_ms": reported.get("duration_ms"),
-        "input_reserved": row.get("input_reserved"), "output_reserved": row.get("output_reserved"),
-        "reserved_usd": row.get("cost_reserved_usd"), "estimated_usage_usd": estimate,
-        "token_rates": pricing,
+        "error_code": row.get("code"), "usage": usage, "cost": cost,
+        "journal_format": "legacy" if legacy else "current",
+        "token_rates": ({"input_usd_per_million": INPUT_USD_PER_MILLION, "output_usd_per_million": OUTPUT_USD_PER_MILLION}
+                        if estimate is not None else None),
     }
 
 
-def _complete_sum(values, complete):
-    return sum(values) if complete and all(value is not None for value in values) else None
+def _field(value):
+    return {"value": value, "source": "provider_reported" if value is not None else "unknown"}
+
+
+def _aggregate(fields, complete):
+    """Sum per-attempt {value, source} fields.
+
+    The total is exact (value set) only when the journals are complete and every attempt has a value.
+    Otherwise value is None (unknown) and known_value holds the sum of what was observed. The source is
+    provider_reported only if every summed value was; any derived or rate-based value makes it estimated.
+    """
+    known = [field for field in fields if field["value"] is not None]
+    known_value = sum(field["value"] for field in known) if known else None
+    if known and all(field["source"] == "provider_reported" for field in known):
+        source = "provider_reported"
+    elif known:
+        source = "estimated"
+    else:
+        source = "unknown"
+    exact = complete and len(known) == len(fields)
+    if exact and not fields:
+        return {"value": 0, "source": "provider_reported", "known_value": 0, "unreported_requests": 0}
+    return {"value": known_value if exact else None, "source": source if exact else "unknown",
+            "known_value": known_value, "unreported_requests": len(fields) - len(known)}

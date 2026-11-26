@@ -16,7 +16,7 @@ from linkloom.ui.lifecycle import BackgroundShutdownTimeout, BackgroundTasks, Ba
 from linkloom.ui.product import ProductApplication, ProductApplicationError
 from linkloom.ui.server import create_http_server
 from linkloom.ui.task_provider import TaskProviderSession
-from tests.unit.test_m3q_provider_budget import limits, request
+from tests.unit.test_task_provider_session import limits, request
 
 
 def launch(call):

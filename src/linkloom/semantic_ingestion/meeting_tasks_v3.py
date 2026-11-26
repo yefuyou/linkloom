@@ -158,8 +158,6 @@ class MeetingTaskExtractor(v2.MeetingTaskExtractor):
                 if low == len(segments):
                     break
                 left = max(left + 1, low - self.config.overlap_messages)
-        if len(windows) > self.config.max_calls:
-            raise ValueError("Meeting windows exceed Host call limit; no requests made")
         candidates, rejected, responses, coverage = [], [], [], True
         for index, (left, right) in enumerate(windows):
             text = prompt(left, right)

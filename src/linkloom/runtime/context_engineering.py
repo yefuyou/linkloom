@@ -319,7 +319,7 @@ class RuntimeWorkingContext:
             report = self._budget(prepared, request, working, bundle.rendered_text)
             audit["budget"] = report
             if not self._fits(report, prepared):
-                raise ValidationError("Complete request exceeds configured allocation.", details={"code": "CONTEXT_REQUEST_BUDGET_EXHAUSTED"})
+                raise ValidationError("Complete request exceeds the per-request context capacity.", details={"code": "CONTEXT_REQUEST_CAPACITY_EXCEEDED"})
             audit.update(status="COMPLETE", prepared_request_sha256=canonical_hash(prepared.to_dict()),
                 mapping_ref=self._record(prefix, "mapping", {"entries": current}), task_plan=self.plan.to_dict(),
                 task_plan_scope="OPERATIONAL_EVIDENCE_COVERAGE; typed questions are NOT accepted relations",

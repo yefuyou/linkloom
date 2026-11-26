@@ -49,7 +49,7 @@ def setup(root, name="revision", *, snapshot=None, adapter=None, policy=None, be
 
 def execute(engine, root, question, *, steps=4):
     status = engine.start_multi_agent(RunRequest(request_id="m3d", workflow="task_relations", query=question,
-        max_steps=steps, max_provider_requests=steps))
+        max_steps=steps))
     state = engine.checkpointer.get_latest(status.thread_id)
     result = json.loads((root / "checkpoints" / state.result_ref).read_text(encoding="utf8")) if state and state.result_ref else None
     return status, state, result

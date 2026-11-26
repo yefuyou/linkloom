@@ -18,8 +18,9 @@ from linkloom.semantic_ingestion.extraction import ProviderRequestAuthorization,
 from linkloom.ui.task_provider import TaskProviderLimits, TaskProviderSession
 
 ROOT = Path(__file__).resolve().parents[1]
-LIMITS = TaskProviderLimits(30, 1_400_000, 122_880, 8, 3600, 90, .25,
-                          input_usd_per_million=4, output_usd_per_million=20)
+LIMITS = TaskProviderLimits(3600, 90)
+# Population guards of this dev-only live canary script, not Provider session limits.
+CANARY_MAX_INPUT_TOKENS = 1_400_000
 PROFILES = {'null': None, 'TASK_RECALL_V3': TaskDiscoveryProfile.TASK_RECALL_V3}
 
 
@@ -56,7 +57,7 @@ def prepare(inputs, output, profile):
     extract_sources(sources, Offline(), plan, lambda row: None, task_profile=PROFILES[profile])
     sizes = [len(json.dumps(r, ensure_ascii=False).encode('utf8')) + 4096 for r in requests]
     reserves = [max(.25, (s * 4 + 4096 * 20) / 1e6) for s in sizes]
-    if (len(requests) != 28 or sum(sizes) > LIMITS.max_input_tokens
+    if (len(requests) != 28 or sum(sizes) > CANARY_MAX_INPUT_TOKENS
             or sum(reserves) > 8 or len(requests) > 30):
         raise ValueError('offline budget/population mismatch')
     config = dict(model=MODEL, task_profile=profile, max_output_tokens=4096, thinking='low',
@@ -201,7 +202,7 @@ def run(inputs, output, *, profile='TASK_RECALL_V3', execute=False, gate=None):
         active.clear()
         active.update(ticket=ticket, sdk_entered=False)
         return ProviderRequestAuthorization.approve(request, guard_id=GUARD,
-            reservation_id=sha(canonical(request.to_dict())), estimated_cost_upper_bound_usd=.25)
+            reservation_id=sha(canonical(request.to_dict())))
 
     def record_batch(row):
         save_new(output / f'discovery/{row["meeting_id"]}-{row["batch_start"]:04d}.json', row)

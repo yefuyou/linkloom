@@ -26,8 +26,8 @@ _GRAPH_PROVIDER=ContextVar('graph_request_provider',default=None)
 
 
 @contextmanager
-def graph_request_budget():
-    # Thread/task-local; a different Ask must never inherit this reservation.
+def graph_request_scope():
+    # Thread/task-local; a different Ask must never inherit this Provider session.
     token=_GRAPH_PROVIDER.set(None)
     try:yield
     finally:_GRAPH_PROVIDER.reset(token)
@@ -155,7 +155,7 @@ class GraphInvestigationService:
 
 
 def product_graph_service(app,investigation):
-    """Compose with existing Host model/Provider budgets, never discover credentials."""
+    """Compose with existing Host model/Provider configuration, never discover credentials."""
     def store_factory(workspace):
         if app._workspace_id()!=workspace: raise PermissionError('CURRENT_WORKSPACE_CHANGED')
         def authorized(ws,source,version):
@@ -171,7 +171,7 @@ def product_graph_service(app,investigation):
         if service.task_only:return None
         models=service.task_models
         if service.external_provider:
-            # Live graph planning must have the existing Host's explicit Provider budget.
+            # Live graph planning must have the existing Host's explicit Provider configuration.
             if models is None or models.execution_kind!='LIVE':return None
             from linkloom.ui.task_provider import TaskProviderSession
             root=Path(app.repository.database_path).parent/'graph-provider'/uuid4().hex
@@ -179,21 +179,21 @@ def product_graph_service(app,investigation):
                 if context.validate_current() is not True:raise PermissionError('SOURCE_CHANGED')
             session=TaskProviderSession(root,models.provider_limits,validate_provider)
             # Existing Host owns the session through async legacy completion/shutdown.
-            # A failed decomposition never grants a new per-question budget.
+            # A failed decomposition never opens a second Provider session for the question.
             with service._lock:service._provider_sessions.append(session)
             _GRAPH_PROVIDER.set(session)
             adapter=session.bind(models.planner,'graph-planning'); model_id=models.model_id
-            close=None; cost=models.provider_limits.request_cost_upper_bound_usd
+            close=None
         else:
             if service.model_factory is None or models is None:return None
             adapter=models.planner if models is not None else service.model_factory(context.question)
             model_id=models.model_id if models is not None else getattr(adapter,'model_id',None) or 'offline-graph-planner'
-            close=None;cost=0
+            close=None
         guard_id='product-graph-host'
         def guard(request):
             if context.validate_current() is not True:raise PermissionError('SOURCE_CHANGED')
             return ProviderRequestAuthorization.approve(request,guard_id=guard_id,
-                reservation_id=digest(request.to_dict()),estimated_cost_upper_bound_usd=cost)
+                reservation_id=digest(request.to_dict()))
         planner=GraphQuestionPlanner(adapter,model_id=model_id,request_guard=guard,guard_id=guard_id,alignment_review=False,grounding_required=True,mention_grounding=True)
         return (planner,close) if close else planner
     def admitted_planner_factory(context):

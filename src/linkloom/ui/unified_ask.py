@@ -17,11 +17,8 @@ from linkloom.ui.question_routing import classify_task, route_question
 from linkloom.ui.feedback_memory import FeedbackMemory
 from linkloom.ui.structured_router import rule_date_blocker, rule_needs_router
 from linkloom.decision_memory.models import normalize_temporal_component
-from linkloom.runtime.team_decision_planner import plan_relation_investigation
-from linkloom.ui.ask_admission import (accept_model_safety, admission_restriction, model_safety_scope,
-    parse_context, source_context, validate_context)
+from linkloom.ui.ask_admission import admission_restriction, parse_context, source_context, validate_context
 
-_RELATION_QUESTION = re.compile(r"\b(owner|owns|leader|supervisor|alias)\b|\breports?\s+(?:directly\s+)?to\b|负责人|领导|汇报|别名", re.I)
 
 @dataclass(frozen=True)
 class _AskRun:
@@ -49,6 +46,8 @@ class UnifiedAskService:
         self.router_provider = router_provider
         self.slot_embedder = slot_embedder
         self._runs: dict[str, tuple[_AskRun, ProductInvestigationService]] = {}
+        # Slots excluded from the last trusted index per workspace, with their isolation diagnostics.
+        self.unverified_slots: dict[str, list[dict[str, Any]]] = {}
         self._lock = Lock()
         self._graph_runs = {}
         self._graph_fallbacks: dict[str, dict[str, str]] = {}
@@ -99,8 +98,16 @@ class UnifiedAskService:
                         for record in records
                         if record.subject and record.relation})
         trusted = []
+        unverified = []
         for subject, relation in slots:
             view = self.app.recover_decision(subject, relation, _workspace_id=workspace_id)
+            if view.get("unverifiable"):
+                # One unverifiable reviewed decision removes the whole slot from the
+                # trusted index (current and historical values). It is reported as
+                # not yet verified, never as non-existent.
+                unverified.append({"subject": subject, "relation": relation,
+                                   "isolated_candidates": list(view["isolated_candidates"])})
+                continue
             history = view["history"]
             last_effective_at = max(record.valid_from for record in records
                                     if record.subject and record.relation
@@ -109,8 +116,13 @@ class UnifiedAskService:
             if last_effective_at > datetime.fromisoformat(view["as_of"]):
                 # Approved scheduled slots are trusted identities too. Query
                 # validity still uses the request date, never this index date.
-                history = self.app.recover_decision(subject, relation, last_effective_at.isoformat(),
-                                                   _workspace_id=workspace_id)["history"]
+                scheduled = self.app.recover_decision(subject, relation, last_effective_at.isoformat(),
+                                                      _workspace_id=workspace_id)
+                if scheduled.get("unverifiable"):
+                    unverified.append({"subject": subject, "relation": relation,
+                                       "isolated_candidates": list(scheduled["isolated_candidates"])})
+                    continue
+                history = scheduled["history"]
             if not history:
                 continue
             trusted.append({"workspace_id": workspace_id, "reviewed": True,
@@ -143,6 +155,7 @@ class UnifiedAskService:
                             "values": list(dict.fromkeys(record.value for record in records)),
                             "reference_values": [], "decision_ids": [record.undated_decision_id for record in records],
                             "current_value": None, "effective_time_unknown": True})
+        self.unverified_slots[workspace_id] = unverified
         return trusted
 
     @staticmethod
@@ -178,13 +191,12 @@ class UnifiedAskService:
 
     def ask(self, payload: dict[str, Any]) -> tuple[dict[str, Any], int]:
         security = {}
-        with model_safety_scope():
-            if self.graph_service is None and self.router_provider is None:
+        if self.graph_service is None and self.router_provider is None:
+            result, status = self._ask(payload, security=security)
+        else:
+            from linkloom.ui.graph_investigation import graph_request_scope
+            with graph_request_scope():
                 result, status = self._ask(payload, security=security)
-            else:
-                from linkloom.ui.graph_investigation import graph_request_budget
-                with graph_request_budget():
-                    result, status = self._ask(payload, security=security)
         if security:
             if security.get("status") == "COMPLETED":
                 security["decided_by"] = "llm"
@@ -217,7 +229,7 @@ class UnifiedAskService:
             result["attempted"] = True
             if provider.external_provider:
                 with owner._starts.operation(request.run_id):
-                    session = provider.reserve(self.app, owner, request, validate)
+                    session = provider.open_session(self.app, owner, request, validate)
                     decision = classify(session.bind(provider.security_adapter, "ask-security"), request,
                                         record=result)
             else:
@@ -227,9 +239,9 @@ class UnifiedAskService:
             result["fallback_reason"] = str(error) if isinstance(error, RouterInvalid) else "PROVIDER_UNAVAILABLE"
             if session is not None and session.failure in {"PROVIDER_TIMEOUT_UNCERTAIN", "PROVIDER_UNCERTAIN"}:
                 result["fallback_reason"] = session.failure
-            elif session is not None and session.failure == "TASK_PROVIDER_BUDGET_EXHAUSTED":
-                # Known not sent: the session budget ran out before dispatch (same code as the Router path).
-                result["fallback_reason"] = "BUDGET_EXHAUSTED"
+            elif session is not None and session.failure == "TASK_PROVIDER_DEADLINE":
+                # Known not sent: the session's wall-clock window ended before dispatch (same code as the Router path).
+                result["fallback_reason"] = "PROVIDER_DEADLINE"
         finally:
             if session is not None:
                 session.record_validation(result)
@@ -270,15 +282,14 @@ class UnifiedAskService:
                     if context:
                         validate_context(self.app, run.workspace_id, context)
                     security.update(self._classify_security(run, payload))
-                    accept_model_safety(security)
                     if security.get("decision") == "BLOCK":
                         blocked, status = self._router_stop(run, None, security["reason_code"])
                         blocked["router"]["source"] = blocked["decided_by"] = "llm"
                         return blocked, status
                     # A configured security model whose classification fails or is invalid never
-                    # releases the input to keyword rules or routing. Without a configured security
-                    # model the rule mode keeps its existing behavior; missing user consent is not
-                    # a model failure and also keeps its existing handling.
+                    # releases the input to routing. Without a configured security model the
+                    # structured checks (read-only Tool ACL, workspace binding, output protection)
+                    # apply; missing user consent is not a model failure and keeps its handling.
                     if (self.router_provider.security_adapter is not None
                             and security.get("status") != "COMPLETED"
                             and security.get("fallback_reason") != "PROVIDER_PERMISSION_REQUIRED"):
@@ -286,18 +297,12 @@ class UnifiedAskService:
                 ordinary_router = (self.router_provider is not None and not context
                                    and not (values["subject"] or values["relation"]))
                 cascade = ordinary_router and self.router_provider.mode == "cascade"
-                if ordinary_router:
-                    from linkloom.ui.ask_admission import router_safety_reason
-                    safety = router_safety_reason(run.query)
-                    if safety:
-                        return self._router_stop(run, None, safety)
                 if ordinary_router and not cascade:
                     return self._route_ordinary(run, payload)
                 restriction = admission_restriction(run.query)
                 if restriction:
                     if cascade:
-                        from linkloom.ui.ask_admission import legacy_denial_reason
-                        return self._router_stop(run, None, legacy_denial_reason(run.query))
+                        return self._router_stop(run, None, "POLICY_BLOCKED")
                     result["path"] = None
                     return self._failure(result, *restriction, status="NEEDS_SCOPE"), 200
                 if cascade:
@@ -310,15 +315,12 @@ class UnifiedAskService:
                     routed_graph = self._run_graph_request(run, payload)
                     if routed_graph is not None:
                         return routed_graph
-                plan = plan_relation_investigation(run.query)
                 if context:
                     validate_context(self.app, run.workspace_id, context)
                     if context["domain"] == "tasks":
-                        # The explicit structured domain owns task wording.  A
-                        # task question may mention an owner/leader naturally;
-                        # only an advanced decision scope or an independently
-                        # recognized relation plan is a real admission conflict.
-                        if values["subject"] or values["relation"] or plan is not None:
+                        # The explicit structured domain owns task wording; only an
+                        # advanced decision scope is a real admission conflict.
+                        if values["subject"] or values["relation"]:
                             result["path"] = None
                             return self._failure(result, "INVESTIGATION_DOMAIN_CONFLICT",
                                 "Clear the advanced decision selection and choose the task domain for a task question.", status="NEEDS_SCOPE"), 200
@@ -348,10 +350,9 @@ class UnifiedAskService:
                     return routing
                 orchestrated = bool(not context and values["subject"] and values["relation"]
                                     and service is not None and service.orchestration_enabled())
-                eligible = bool(orchestrated and (plan is not None
-                                                  or (not cascade and _RELATION_QUESTION.search(run.query))
-                                                  or (routed_once()[2]["route"] == "INVESTIGATION"
-                                                      and routed_once()[2]["scope"] is not None and routed_once()[2]["supported"])))
+                # The question wording never decides here: with the user's explicit scope the
+                # Supervisor reads the question and decides whether to delegate.
+                eligible = orchestrated
                 if eligible:
                     as_of, date_error = resolve_query_date(run.query, payload.get("as_of"))
                     if date_error:
@@ -371,14 +372,6 @@ class UnifiedAskService:
                     blocker = blocked_entity_reason(run.query, self._router_blocked_entities(run.workspace_id))
                     if blocker:
                         return self._router_stop(run, None, blocker)
-                if plan is not None or (not cascade and _RELATION_QUESTION.search(run.query)):
-                    if cascade:
-                        from linkloom.ui.router_context import router_query_date
-                        _, time_error = router_query_date(run.query, payload.get("as_of"))
-                        invalid_date = rule_date_blocker(time_error, has_scope=False)
-                        if invalid_date:
-                            return self._router_stop(run, None, invalid_date)
-                    return self._source_request(run, payload, plan)
                 slots, memory, routed = routed_once()
                 discovery = routed["discovery"]
                 if memory is not None:
@@ -422,6 +415,14 @@ class UnifiedAskService:
                         fact = self._fact_request(run, result, payload)
                         if fact is not None:
                             return fact
+                    if (not cascade and discovery["status"] == "NO_MATCH"
+                            and not (values["subject"] or values["relation"])
+                            and service is not None and service.model_factory is not None
+                            and not getattr(service, "task_only", False)):
+                        # No reviewed decision matches: the question is still a legitimate
+                        # source question. The model investigates the workspace sources
+                        # instead of the Host refusing an unrecognized phrasing.
+                        return self._source_request(run, payload, discovery)
                     result["path"] = None
                     return self._failure(result, "DECISION_SCOPE_" + discovery["status"],
                                          discovery["reason"], status="NEEDS_SCOPE"), 200
@@ -432,8 +433,6 @@ class UnifiedAskService:
                     result["path"] = None
                     return self._failure(result, date_error["code"], date_error["message"],
                                          status="NEEDS_SCOPE"), 200
-                if not routed["supported"]:
-                    return self._failure(result, "TASK_UNCLASSIFIED", run.route["reason"], status="NEEDS_SCOPE"), 200
                 return self._decision_request(run, result, payload, values, as_of)
         except ProductApplicationError as error:
             if self.router_provider is not None:
@@ -559,13 +558,17 @@ class UnifiedAskService:
         slots = self._trusted_slots(workspace_id) if slots is None else slots
         known = {normalize_mention(name) for slot in slots
                  for name in (slot["subject"], *slot.get("subject_aliases", []))}
+        # Subjects with an unverifiable reviewed decision are leads to check in the
+        # original sources, reported as unverified rather than missing.
+        unverified = tuple((item["subject"], "DECISION_UNVERIFIED")
+                           for item in self.unverified_slots.get(workspace_id, ()))
         other_workspaces = ((item["name"], "WORKSPACE_DENIED")
                             for item in self.app.repository.list_workspaces()
                             if item["workspace_id"] != workspace_id)
         proposals = ((item["subject"], "NO_CONFIRMED_RECORD") for item in self.app._supporting_proposals()
                      if item["subject"] and item["source"]["active"])
-        return tuple(sorted({(name, reason) for name, reason in (*other_workspaces, *proposals)
-                             if normalize_mention(name) not in known},
+        return tuple(sorted({*unverified, *((name, reason) for name, reason in (*other_workspaces, *proposals)
+                                            if normalize_mention(name) not in known)},
                             key=lambda fact: (fact[1] != "WORKSPACE_DENIED", fact[0])))
 
     def _router_context(self, run, payload, snapshot_hash, *, query_time=None):
@@ -597,13 +600,9 @@ class UnifiedAskService:
         binding needs a valid model reply whose entity_mentions hold no unknown entity; without one the
         request clarifies."""
         from linkloom.ui.structured_router import RouterInvalid, request_for, route_with_adapter
+        from linkloom.ui.task_provider import pass_router_source_validation
         from linkloom.ui.router_context import blocked_entity_reason, handoff_blocker
-        from linkloom.ui.task_provider import pass_router_reservation
         from linkloom.ui.lifecycle import BackgroundWorkStopped
-        from linkloom.ui.ask_admission import router_safety_reason
-        safety = router_safety_reason(run.query)
-        if safety:
-            return self._router_stop(run, None, safety)
         provider = self.router_provider
         owner = self.investigation()
         def stop(reason, attempted=False, code=None):
@@ -643,7 +642,7 @@ class UnifiedAskService:
             attempted = True
             if provider.external_provider:
                 with owner._starts.operation(request.run_id):
-                    session = provider.reserve(self.app, owner, request, validate_snapshot)
+                    session = provider.open_session(self.app, owner, request, validate_snapshot)
                     route = route_with_adapter(session.bind(provider.adapter, 'ask-router'), request, context,
                                                record=reply_record)
             else:
@@ -657,22 +656,22 @@ class UnifiedAskService:
             validate_sources()
             if str(error) == "EVIDENCE_INVALID":
                 return self._router_stop(run, None, "EVIDENCE_INVALID", http=409)
-            with pass_router_reservation(session):
+            with pass_router_source_validation(session):
                 result, status = stop(str(error), attempted)
                 result["router"].update(reply_record)
                 return result, status
         except (ImportError, OSError, ValueError):
             # Optional local retrieval can fail without any usable catalogue.
             validate_sources()
-            with pass_router_reservation(session):
+            with pass_router_source_validation(session):
                 return stop('RETRIEVAL_UNAVAILABLE', attempted)
         finally:
             if session is not None:
                 session.record_validation(reply_record)
         if value_only and route.decision == "ROUTE" and not route.entity_mentions:
-            with pass_router_reservation(session):
+            with pass_router_source_validation(session):
                 return stop('ENTITY_MENTIONS_MISSING', attempted)
-        with pass_router_reservation(session):
+        with pass_router_source_validation(session):
             result, status = self._execute_router(run, payload, context, route)
             result["router"].update(reply_record)
             return result, status
@@ -774,7 +773,7 @@ class UnifiedAskService:
         # graph_query_status was already counted by the worker; count this attempt once.
         self.graph_service.metrics.record('legacy_fallback', context['reason'])
         # Re-enter the unchanged admission/routing path without a second graph call
-        # or a new Provider reservation. The outer graph_request_budget stays active.
+        # or a new Provider session. The outer graph_request_scope stays active.
         legacy, status = self._ask(payload, use_graph=False)
         if legacy.get('agent_run_id'):
             with self._lock:
@@ -825,7 +824,7 @@ class UnifiedAskService:
         if config.get('external_provider'):
             if payload.get('allow_external_provider') is not True:
                 return self._failure(result, 'EXTERNAL_PROVIDER_PERMISSION_REQUIRED',
-                    'Authorize this question to send the selected workspace source snapshot within the displayed budgets.',
+                    'Authorize this question to send the selected workspace source snapshot',
                     category='permission', status='BLOCKED'), 403
             from linkloom.semantic_ingestion.task_relation_models import canonical_hash
             authorization = dict(workspace_id=run.workspace_id, snapshot_hash=context['snapshot_hash'],
@@ -845,31 +844,23 @@ class UnifiedAskService:
             scope=run.scope, route=run.route, discovery=run.discovery))
         return self._from_snapshot(run, snapshot), 202
 
-    def _source_request(self, run, payload, plan):
-        route = {"intent": "SOURCE_RELATION", "code": "SOURCE_RELATION_MULTIHOP",
-                 "reason": "A bounded directed source-relation chain; no business approval is implied.",
-                 "plan": plan.to_dict() if plan else None}
-        run = _AskRun(run.query, run.workspace_id, run.scope, route)
+    def _source_request(self, run, payload, discovery=None):
+        route = {"intent": "SOURCE_RELATION", "code": "SOURCE_INVESTIGATION",
+                 "reason": "A source investigation without a reviewed decision slot; no business approval is implied."}
+        run = _AskRun(run.query, run.workspace_id, run.scope, route, discovery)
         result = self._base(run)
-        if plan is None:
-            return self._failure(result, "UNSUPPORTED_QUERY",
-                "This relationship question cannot be reliably decomposed. Supported paths: project → owner → direct leader; alias → project → owner → direct leader.", status="NEEDS_SCOPE"), 200
         if run.scope["subject"] or run.scope["relation"]:
             return self._failure(result, "TASK_SCOPE_CONFLICT",
-                "A source-relation question cannot use an approved decision slot. Clear the advanced decision selection or clarify the question.", status="NEEDS_SCOPE"), 200
+                "A source investigation cannot use an approved decision slot. Clear the advanced decision selection or clarify the question.", status="NEEDS_SCOPE"), 200
         as_of, error = resolve_query_date(run.query, payload.get("as_of"))
         if error:
             return self._failure(result, error["code"], error["message"], status="NEEDS_SCOPE"), 200
         if as_of and re.fullmatch(r"\d{4}-\d{2}-\d{2}", as_of) is None:
-            return self._failure(result, "DATE_SCOPE_REQUIRED", "Source relationships require an exact snapshot date, without a time of day.", status="NEEDS_SCOPE"), 200
+            return self._failure(result, "DATE_SCOPE_REQUIRED", "Source investigations require an exact snapshot date, without a time of day.", status="NEEDS_SCOPE"), 200
         runtime_query = run.query
-        if as_of and not re.search(r"\d{4}-\d{2}-\d{2}", run.query):
+        if as_of and as_of not in run.query:
+            # The selected snapshot date is Host context for the model, not a template.
             runtime_query = f"As of {as_of}, {run.query}"
-            plan = plan_relation_investigation(runtime_query)
-        if plan is None:
-            return self._failure(result, "UNSUPPORTED_QUERY", "The dated relationship plan exceeds the supported bounds.", status="NEEDS_SCOPE"), 200
-        route["plan"] = plan.to_dict()
-        route["relations"] = [goal.relation_path[0] for goal in plan.subgoals]
         result["scope"] = {"subject": "", "relation": "", "as_of": as_of}
         service = self.investigation()
         config = service.config() if service else {}
@@ -882,14 +873,21 @@ class UnifiedAskService:
         if not route["can_start"]:
             return self._failure(result, "EXTERNAL_PROVIDER_PERMISSION_REQUIRED", "Allow this request before sources are sent or model costs are incurred.", category="permission"), 403
         try:
-            snapshot = service.start(runtime_query, run.workspace_id, task_plan=plan)
+            if service.orchestration_enabled():
+                # Supervisor -> Worker: the Supervisor decomposes the question itself.
+                snapshot = service.start_orchestrated(runtime_query, run.workspace_id,
+                    blocked_entities=self._authorization_blocks(run.workspace_id))
+            else:
+                snapshot = service.start(runtime_query, run.workspace_id, source_relation=True)
         except ProductApplicationError as error:
             return self._failure(result, error.code, str(error)), error.status
         except Exception:
-            return self._failure(result, "INVESTIGATION_START_FAILED", "The bounded source investigation could not start.", category="runtime"), 500
-        pinned = _AskRun(run.query, run.workspace_id, dict(result["scope"]), route)
+            return self._failure(result, "INVESTIGATION_START_FAILED", "The source investigation could not start.", category="runtime"), 500
+        pinned = _AskRun(run.query, run.workspace_id, dict(result["scope"]), route, run.discovery)
         with self._lock:
             self._runs[snapshot["run"]["id"]] = (pinned, service)
+        service.save_parallel_ask(snapshot["run"]["id"], dict(query=pinned.query, workspace_id=pinned.workspace_id,
+            scope=pinned.scope, route=pinned.route, discovery=pinned.discovery))
         return self._from_snapshot(pinned, snapshot), 202
 
     @staticmethod
@@ -1046,6 +1044,10 @@ class UnifiedAskService:
                 status={"RUNNING": "INVESTIGATING", "COMPLETE": "COMPLETED", "PARTIAL": "PARTIAL",
                         "UNKNOWN": "UNKNOWN", "CANCELLED": "CANCELLED"}.get(parallel["status"], "FAILED"),
                 error=deepcopy(snapshot["error"]))
+            answer = parallel.get("answer") or {}
+            if answer.get("published") and "answer_coverage" in answer:
+                result["conclusions"] = [dict(kind="ANSWER_COVERAGE", value=item["text"], **item)
+                                         for item in answer["answers"]]
             if parallel["status"] in ("PARTIAL", "UNKNOWN"):
                 unknowns = (parallel.get("answer") or {}).get("unknowns") or []
                 result["uncertainty"] = {"unknown_fields": [row.get("question") or row.get("branch") for row in unknowns],

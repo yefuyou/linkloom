@@ -77,7 +77,7 @@ def replay(inputs, historical_run, output):
         if request.to_dict() != original_requests[cursor]:
             raise ValueError('historical request contract drift')
         return ProviderRequestAuthorization.approve(request, guard_id=GUARD,
-            reservation_id=sha(canonical(request.to_dict())), estimated_cost_upper_bound_usd=.25)
+            reservation_id=sha(canonical(request.to_dict())))
 
     class Replay:
         def complete(self, request):

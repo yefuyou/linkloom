@@ -29,8 +29,8 @@ def build(tmp_path):
 
 def test_every_candidate_unchanged_but_missing_time_not_a_trusted_edge(tmp_path,monkeypatch):
     path,workspace,store=build(tmp_path)
-    import linkloom.agents.claim_grounding as legacy
-    monkeypatch.setattr(legacy,'_source_facts',lambda *a:(_ for _ in ()).throw(AssertionError('raw parse forbidden')))
+    import linkloom.agents.claim_grounding as grounding
+    assert not hasattr(grounding,'_source_facts')  # no raw sentence parser exists to call
     before=hashlib.sha256(path.read_bytes()).hexdigest(); snapshot=store.load_edges(workspace)
     assert len(snapshot.edges)==2 and snapshot.exclusions[0]['reason']=='TIME_NOT_CONFIRMED'
     assert hashlib.sha256(path.read_bytes()).hexdigest()==before
@@ -100,7 +100,7 @@ def test_real_human_approval_receipt_projects_production_records_without_raw_rel
     claim=dict(claim_type='FACT',subject='Ada',relation='reports_to',value='Bo',temporal_status='EXPLICIT',
                valid_from='2026-04-01',valid_to=None,confidence=dict.fromkeys(('claim_type','entity','relation','temporal','overall'),.95))
     extractor=ProviderNeutralSemanticExtractor(RecordedProvider(claim),provider_id='offline',model_id='recorded',
-      request_guard=lambda r:ProviderRequestAuthorization.approve(r,guard_id='offline',reservation_id='offline',estimated_cost_upper_bound_usd=0),
+      request_guard=lambda r:ProviderRequestAuthorization.approve(r,guard_id='offline',reservation_id='offline'),
       request_guard_id='offline',max_attempts=1)
     try:
         with TemporalDecisionStore(path,source_registry=registry) as temporal:
@@ -114,8 +114,8 @@ def test_real_human_approval_receipt_projects_production_records_without_raw_rel
             assert store.load_edges(workspace).edges==()
             materializer.approve(workspace,cid,reviewer_id='human-reviewer',expected_candidate_fingerprint=materializer.candidate_fingerprint(workspace,cid),reason='checked original',now=now)
             materializer.materialize(workspace,cid,now=now)
-            import linkloom.agents.claim_grounding as legacy
-            monkeypatch.setattr(legacy,'_source_facts',lambda *a:(_ for _ in ()).throw(AssertionError('raw relation regex forbidden')))
+            import linkloom.agents.claim_grounding as grounding
+            assert not hasattr(grounding,'_source_facts')  # no raw relation regex exists to call
             snapshot=store.load_edges(workspace)
             assert len(snapshot.edges)==1,snapshot.exclusions
             assert snapshot.edges[0].source.label=='Ada' and snapshot.edges[0].target.label=='Bo'

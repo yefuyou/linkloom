@@ -416,8 +416,8 @@ def route_with_adapter(adapter, request, context, record=None):
         code = response.error.code
         if response.error.details.get("reason") == "TASK_SOURCE_AUTHORIZATION_CHANGED":
             raise RouterInvalid("EVIDENCE_INVALID")
-        if response.error.details.get("reason") == "TASK_PROVIDER_BUDGET_EXHAUSTED":
-            raise RouterInvalid("BUDGET_EXHAUSTED")
+        if response.error.details.get("reason") == "TASK_PROVIDER_DEADLINE":
+            raise RouterInvalid("PROVIDER_DEADLINE")
         if code in {"MODEL_RESPONSE_MALFORMED", "MODEL_RESPONSE_UNSUPPORTED", "MODEL_TOOL_CALL_PARSE_FAILED"}:
             record_invalid(record, "schema_invalid")
             raise RouterInvalid("ROUTER_SCHEMA_INVALID")
@@ -446,11 +446,10 @@ def route_with_adapter(adapter, request, context, record=None):
         record_invalid(record, proposal["wire_invalid"])
         raise RouterInvalid("ROUTER_SCHEMA_INVALID")
     host_reason = blocked_entity_reason(context.query, context.blocked_entities)
-    safety = router_safety_reason(context.query, operation=proposed_operation, reason=proposed_reason, host_reason=host_reason)
+    safety = router_safety_reason(operation=proposed_operation, reason=proposed_reason, host_reason=host_reason)
     if (safety == "WORKSPACE_DENIED" and not host_reason and proposed_operation == "READ"
             and isinstance(proposal, dict) and proposal.get("intent") == "AS_OF"
-            and proposal.get("time_role") == "AS_OF"
-            and not router_safety_reason(context.query)):
+            and proposal.get("time_role") == "AS_OF"):
         # A model-only denial paired with an unusable date and a local, grounded
         # candidate can be corrected to a clarification. It still cannot execute.
         try:

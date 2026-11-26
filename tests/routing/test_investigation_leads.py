@@ -109,3 +109,46 @@ def test_without_orchestration_a_lead_only_route_still_ends_in_entity_not_found(
     proposed = route(ctx, bind=False, mentions=(), entities=("ghostwood",))
     assert admit_route(ctx, proposed).reason == "ENTITY_NOT_FOUND"
     assert admit_route(ctx, proposed).executor is None
+
+
+MULTIHOP = "How does the chain from ghostwood reach the search_engine owner at Tamarack?"
+
+
+def multihop(ctx, *, decision="CLARIFY", reason="ENTITY_NOT_FOUND", operation="READ", time_role="NONE"):
+    args = dict(decision=decision, operation=operation, intent="RELATION_MULTIHOP", candidate_id="", mentions=[],
+                unresolved_names=["ghostwood"], entity_mentions=["ghostwood"], time_text="", time_role=time_role,
+                reason_code=reason)
+    message = dict(content=None, tool_calls=[dict(type="function", function=dict(
+        name="submit_route", arguments=json.dumps(args)))])
+    raw = _route_text(message, route_payload(ctx))
+    adapter = SimpleNamespace(complete=lambda _: ModelResponse(action=ModelAction.final(raw)))
+    return route_with_adapter(adapter, request_for(ctx), ctx)
+
+
+def test_multihop_without_a_confirmed_root_hands_off_its_names_as_leads_only():
+    ctx = base_context(MULTIHOP)
+    proposed = multihop(ctx)
+    assert admit_route(ctx, proposed).reason == "ENTITY_NOT_FOUND"
+    admission = admit_route(ctx, proposed, leads_allowed=True)
+    assert admission.executor == "investigation" and admission.leads == ("ghostwood",)
+    assert admission.candidate is None and admission.as_of is None
+
+
+@pytest.mark.parametrize("kwargs", [dict(decision="REFUSE", reason="WRITE_NOT_ALLOWED", operation="WRITE_REQUEST"),
+                                    dict(decision="REFUSE", reason="WORKSPACE_DENIED"),
+                                    dict(reason="TIME_SCOPE_UNRESOLVED")])
+def test_multihop_refusals_writes_and_scope_conflicts_do_not_hand_off(kwargs):
+    ctx = base_context(MULTIHOP)
+    proposed = multihop(ctx, **kwargs)
+    assert admit_route(ctx, proposed, leads_allowed=True).executor is None
+
+
+def test_multihop_with_a_date_in_the_question_is_not_handed_off():
+    ctx = replace(base_context(MULTIHOP), unresolved_time=True)
+    assert admit_route(ctx, multihop(ctx), leads_allowed=True).executor is None
+
+
+def test_multihop_in_another_workspace_still_stops():
+    ctx = replace(base_context(MULTIHOP), blocked_entities=(("ghostwood", "WORKSPACE_DENIED"),))
+    admission = admit_route(ctx, multihop(ctx), leads_allowed=True)
+    assert admission.executor is None and admission.reason == "WORKSPACE_DENIED"
